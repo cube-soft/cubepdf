@@ -1,0 +1,52 @@
+------------------------------------------------------------
+CubePDF デベロッパーズガイド
+Copyright (c) 2010 CubeSoft Inc. All rights reserved.
+Mailto: support@cube-soft.jp
+URL: http://www.cube-soft.jp/cubepdf/
+Last-updated: Sat 17 Jul 2010 12:52:00 JST
+------------------------------------------------------------
+
+1. ライブラリのインストール
+CubePDF は以下のライブラリを利用しています．
+CubePDF をソースファイルからビルドして使用する場合は，まず始めに
+これらのライブラリをダウンロードし，実行環境にインストールして下さい．
+
+ - GPL Ghostscript ( http://www.gnu.org/licenses/gpl.html )
+ - RedMon ( http://www.artifex.com/downloads/doc/Public.htm )
+
+RedMon については，仮想プリンタ用のポートの構成にて以下のように設定します．
+
+ Redirect this port to the program: <working dir>\cubepdf-redirect.exe
+ Arguments for this program are: <空白>
+ Output: Program handles output
+ Run: Hidden
+ Run as User: チェックする
+
+2. cubepdf, cubepdf-redirect, cliffsharp のビルド
+cubepdf, cubepdf-redirect, cliffsharp は Visual Studio 2010 にてプロジェクト
+ファイルを作成しています．それより古いバージョンの Visual Studio を使用した場合，
+プロジェクトファイルが開けないなどの不都合が発生します．
+
+ディレクトリ構成は，以下のようになっています．
+
+<working dir>
+  + cliffsharp
+  + cubepdf
+  + cubepdf-redirect
+  + release
+
+ビルド結果は release フォルダに生成されます．cubepdf.exe は cliff.dll を参照するので，
+cliffsharp のプロジェクトをビルドして cliff.dll を生成して下さい．
+
+CubePDF は，gsdll32.dll を利用しますが，gsdll32.dll は x86, x64 でファイルが異なります．
+このため，Any CPU でビルドすると実行時にエラーが発生します．
+インストールした Ghostscript にあわせて x86, x64 どちらでビルドするかを選択して下さい．
+
+3. Ghostscript の扱い
+Ghostscript をただ配置するのみで使用する（インストール・プログラムを実行しない）場合，
+リソースへのパスを適切に設定する必要があります．この設定は，cubepdf の
+MainForm::AddInclude() で行っています．リソースファイル (lib, Resource, etc) を
+適当なフォルダに配置し，そのフォルダへのパスを AddInclude() に記述して下さい．
+
+尚，Ghostscript はパスに日本語が含まれているとエラーが発生します．
+リソースファイルまでのパスには，ASCII コードのみが含まれるようにして下さい．
