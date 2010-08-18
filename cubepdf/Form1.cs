@@ -303,7 +303,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         //  Ghostscript に指定する引数の設定処理
         /* ----------------------------------------------------------------- */
-#region Ghostscript settings
+        #region Ghostscript settings
         /* ----------------------------------------------------------------- */
         ///
         /// IsImageFile
@@ -596,12 +596,12 @@ namespace CubePDF {
                 converter.AddOption("MonoImageFilter", "/CCITTFaxEncode");
             }
         }
-#endregion
+        #endregion
 
         /* ----------------------------------------------------------------- */
         //  各種初期化処理
         /* ----------------------------------------------------------------- */
-#region Initializing methods
+        #region Initializing methods
         
         /* ----------------------------------------------------------------- */
         ///
@@ -752,12 +752,12 @@ namespace CubePDF {
             }
         }
         
-#endregion
+        #endregion
         
         /* ----------------------------------------------------------------- */
         //  各種イベント・ハンドラ
         /* ----------------------------------------------------------------- */
-#region Evernt handlers
+        #region Evernt handlers
         
         /* ----------------------------------------------------------------- */
         ///
@@ -1017,19 +1017,19 @@ namespace CubePDF {
                 postproc_ = dialog.FileName;
             }
         }
-#endregion
+        #endregion
 
         /* ----------------------------------------------------------------- */
         //  メンバ変数の定義
         /* ----------------------------------------------------------------- */
-#region Member variables
+        #region Member variables
         private string postproc_ = Properties.Settings.Default.POSTPROC_OPEN;
-#endregion
+        #endregion
         
         /* ----------------------------------------------------------------- */
         //  定数定義
         /* ----------------------------------------------------------------- */
-#region Constant variables
+        #region Constant variables
         // PDF, PS, EPS, SVG, PNG, JPEG, BMP, TIFF
         private readonly string[] FILE_TYPES = new[] {
             Properties.Settings.Default.FILETYPE_PDF,
@@ -1125,6 +1125,6 @@ namespace CubePDF {
         // Ghostscript
         private readonly string GS_LIB = System.Environment.GetEnvironmentVariable("windir") + @"\CubePDF\";
         
-#endregion
+        #endregion
     }
 }
