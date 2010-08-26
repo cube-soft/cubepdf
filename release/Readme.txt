@@ -30,6 +30,11 @@ CubePDF‚ÍAˆÈ‰º‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ð—˜—p‚µ‚Ä‚¢‚Ü‚·B‚»‚ê‚¼‚ê‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚É‚Â‚¢‚Ä‚ÍA‹L
 @ Aladdin Free Public License ( http://www.artifex.com/downloads/doc/Public.htm )
 
 ¡ƒo[ƒWƒ‡ƒ“—š—ð
+2010/09/?? version 0.9.2ƒÀ
+- 10 ƒy[ƒWˆÈã‚Ìƒtƒ@ƒCƒ‹‚ð‰æ‘œƒtƒ@ƒCƒ‹‚É•ÏŠ·‚·‚éÛ‚ÉAƒy[ƒW‚Ì•À‚Ñ‚ª‚¨‚©‚µ‚­‚È‚é–â‘è‚ðC³
+- ƒŠƒ‚[ƒgƒzƒXƒg‚©‚çƒƒOƒCƒ“‚µ‚½ê‡‚ÉAƒ[ƒJƒ‹ƒ}ƒVƒ“ã‚ÉƒEƒBƒ“ƒhƒE‚ª•\Ž¦‚³‚ê‚é–â‘è‚ðC³
+- ƒ_ƒEƒ“ƒTƒ“ƒvƒŠƒ“ƒOƒIƒvƒVƒ‡ƒ“‚ðuƒTƒuƒTƒ“ƒvƒ‹v‚ÉŽw’è‚µ‚½ê‡‚ÉƒGƒ‰[‚ª”­¶‚·‚é–â‘è‚ðC³
+
 2010/07/23 version 0.9.1ƒÀ
 - •¶‘ƒvƒƒpƒeƒB‚É“Á’è‚Ì•¶Žš‚ð“ü—Í‚·‚é‚Æ Adobe reader ‚È‚Ç‚Å•\Ž¦‚Å‚«‚È‚¢–â‘è‚ðC³
 - •¶‘ƒvƒƒpƒeƒB‚ðÝ’è‚µ‚È‚¢ê‡‚ÉAƒtƒ@ƒCƒ‹–¼‚È‚Ç‚ª“ú–{Œê‚¾‚Æ PDF ƒtƒ@ƒCƒ‹‚ÌƒvƒƒpƒeƒB‚ª•¶Žš‰»‚¯‚·‚é–â‘è‚ðC³

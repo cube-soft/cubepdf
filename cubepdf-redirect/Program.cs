@@ -31,6 +31,7 @@ namespace CubePDF {
         static void Main(string[] args) {
             var exec = System.Reflection.Assembly.GetEntryAssembly();
             var dir = System.IO.Path.GetDirectoryName(exec.Location);
+            var domain = Environment.GetEnvironmentVariable("REDMON_MACHINE");
             var redmon = Environment.GetEnvironmentVariable("REDMON_USER");
             
             /*
@@ -44,7 +45,7 @@ namespace CubePDF {
             System.Diagnostics.Debug.Assert(environments["USERNAME"] != null);
             System.Diagnostics.Debug.Assert(environments["USERPROFILE"] != null);
             
-            if (redmon != null) ChangeEnvironments(redmon);
+            if (redmon != null) ChangeEnvironments(domain, redmon);
             
             var filename = Utility.GetFileName(System.Environment.GetEnvironmentVariable("REDMON_DOCNAME"));
             filename = FileNameModifier.ModifyFileName(filename);
@@ -98,15 +99,16 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// ChangeEnvironments
         /* ----------------------------------------------------------------- */
-        private static void ChangeEnvironments(string username) {
+        private static void ChangeEnvironments(string domain, string username) {
             Environment.SetEnvironmentVariable("USERNAME", username);
             
             var os = System.Environment.OSVersion;
             if (os.Version.Major <= 4) return; // Windows 95/98/ME/NT は対象外．
             
             string profile = "";
+            var login = domain.Length > 0 ? domain + '\\' + username : username;
             var registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(
-                @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\" + Utility.GetSID(username), false);
+                @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\" + Utility.GetSID(login), false);
             if (registry != null) profile = (string)registry.GetValue("ProfileImagePath", "");
             if (profile.Length == 0) {
                 profile = (os.Version.Major == 5) ?

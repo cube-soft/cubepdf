@@ -590,7 +590,7 @@ namespace CubePDF {
                 converter.AddOption("AutoFilterColorImages", true);
                 converter.AddOption("DownsampleGrayImages", true);
                 converter.AddOption("GrayImageDownsampleType", "/Subsample");
-                converter.AddOption("AutoFilterColorImages", true);
+                converter.AddOption("AutoFilterGrayImages", true);
                 converter.AddOption("DownsampleMonoImages", true);
                 converter.AddOption("MonoImageDownsampleType", "/Subsample");
                 converter.AddOption("MonoImageFilter", "/CCITTFaxEncode");

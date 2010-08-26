@@ -62,7 +62,7 @@ namespace Cliff {
                 var inputfiles = new Container.List<string>();
                 var dtmp = (this.device_ == Device.PDF || this.device_ == Device.PDF_Opt || this.device_ == Device.PS) ?
                     work + '\\' + System.IO.Path.GetRandomFileName() + ext :
-                    work + '\\' + System.IO.Path.GetRandomFileName().Replace('.', '_') + "-%d" + ext;
+                    work + '\\' + System.IO.Path.GetRandomFileName().Replace('.', '_') + "-%08d" + ext;
 
                 foreach (var src in sources) {
                     var stmp = work + '\\' +
@@ -92,7 +92,7 @@ namespace Cliff {
                             foreach (var path in files) {
                                 if (System.IO.Path.GetExtension(path) == ".ps") continue;
                                 var leaf = System.IO.Path.GetFileName(path);
-                                var target = System.String.Format("{0}\\{1}-{2}{3}", root, filename, i, ext);
+                                var target = System.String.Format("{0}\\{1}-{2:D4}{3}", root, filename, i, ext);
                                 if (System.IO.File.Exists(target)) System.IO.File.Delete(target);
                                 System.IO.File.Move(work + '\\' + leaf, target);
                                 i++;
