@@ -92,7 +92,7 @@ namespace Cliff {
                             foreach (var path in files) {
                                 if (System.IO.Path.GetExtension(path) == ".ps") continue;
                                 var leaf = System.IO.Path.GetFileName(path);
-                                var target = System.String.Format("{0}\\{1}-{2:D4}{3}", root, filename, i, ext);
+                                var target = System.String.Format("{0}\\{1}-{2:D3}{3}", root, filename, i, ext);
                                 if (System.IO.File.Exists(target)) System.IO.File.Delete(target);
                                 System.IO.File.Move(work + '\\' + leaf, target);
                                 i++;

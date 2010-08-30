@@ -26,9 +26,9 @@
 ::  password: username È—ª‚Íg—p‚µ‚È‚¢
 ::
 :: ------------------------------------------------------------------------- ::
-set evernote="C:\Program Files\Evernote\Evernote3.5\ENScript.exe"
-set username=""
-set password=""
+set evernote="C:\Program Files (x86)\Evernote\Evernote3.5\ENScript.exe"
+set username="cielquis"
+set password="evercl0"
 
 :: ------------------------------------------------------------------------- ::
 ::

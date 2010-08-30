@@ -31,15 +31,14 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.SelectUserProgramButton = new System.Windows.Forms.Button();
+            this.UserProgramTextBox = new System.Windows.Forms.TextBox();
             this.PostProcessComboBox = new System.Windows.Forms.ComboBox();
             this.PostProcessLabel = new System.Windows.Forms.Label();
             this.existedFileComboBox = new System.Windows.Forms.ComboBox();
-            this.LastInputAccessCheckBox = new System.Windows.Forms.CheckBox();
-            this.DeleteInputFileCheckBox = new System.Windows.Forms.CheckBox();
             this.SelectFileButton = new System.Windows.Forms.Button();
             this.InputPathTextBox = new System.Windows.Forms.TextBox();
             this.InputPathLabel = new System.Windows.Forms.Label();
-            this.LastAccessCheckBox = new System.Windows.Forms.CheckBox();
             this.ResolutionComboBox = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.SaveFileButton = new System.Windows.Forms.Button();
@@ -80,6 +79,9 @@
             this.UserPasswordTextBox = new System.Windows.Forms.TextBox();
             this.UserPasswordCheckBox = new System.Windows.Forms.CheckBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.SaveOptionsCheckBox = new System.Windows.Forms.CheckBox();
+            this.PostProcessLiteComboBox = new System.Windows.Forms.ComboBox();
+            this.PostProcessLiteLabel = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.UpdateCheckBox = new System.Windows.Forms.CheckBox();
             this.WebOptimizeCheckBox = new System.Windows.Forms.CheckBox();
@@ -96,8 +98,6 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.bgWorker = new System.ComponentModel.BackgroundWorker();
-            this.PostProcessLiteComboBox = new System.Windows.Forms.ComboBox();
-            this.PostProcessLiteLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -132,15 +132,14 @@
             // 
             this.tabPage1.BackColor = System.Drawing.Color.Transparent;
             this.tabPage1.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
+            this.tabPage1.Controls.Add(this.SelectUserProgramButton);
+            this.tabPage1.Controls.Add(this.UserProgramTextBox);
             this.tabPage1.Controls.Add(this.PostProcessComboBox);
             this.tabPage1.Controls.Add(this.PostProcessLabel);
             this.tabPage1.Controls.Add(this.existedFileComboBox);
-            this.tabPage1.Controls.Add(this.LastInputAccessCheckBox);
-            this.tabPage1.Controls.Add(this.DeleteInputFileCheckBox);
             this.tabPage1.Controls.Add(this.SelectFileButton);
             this.tabPage1.Controls.Add(this.InputPathTextBox);
             this.tabPage1.Controls.Add(this.InputPathLabel);
-            this.tabPage1.Controls.Add(this.LastAccessCheckBox);
             this.tabPage1.Controls.Add(this.ResolutionComboBox);
             this.tabPage1.Controls.Add(this.label16);
             this.tabPage1.Controls.Add(this.SaveFileButton);
@@ -157,11 +156,29 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "一般";
             // 
+            // SelectUserProgramButton
+            // 
+            this.SelectUserProgramButton.BackColor = System.Drawing.Color.LightGray;
+            this.SelectUserProgramButton.Location = new System.Drawing.Point(394, 158);
+            this.SelectUserProgramButton.Name = "SelectUserProgramButton";
+            this.SelectUserProgramButton.Size = new System.Drawing.Size(33, 20);
+            this.SelectUserProgramButton.TabIndex = 35;
+            this.SelectUserProgramButton.Text = "...";
+            this.SelectUserProgramButton.UseVisualStyleBackColor = false;
+            this.SelectUserProgramButton.Click += new System.EventHandler(this.SelectUserProgramButton_Click);
+            // 
+            // UserProgramTextBox
+            // 
+            this.UserProgramTextBox.Location = new System.Drawing.Point(120, 159);
+            this.UserProgramTextBox.Name = "UserProgramTextBox";
+            this.UserProgramTextBox.Size = new System.Drawing.Size(266, 19);
+            this.UserProgramTextBox.TabIndex = 34;
+            // 
             // PostProcessComboBox
             // 
             this.PostProcessComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PostProcessComboBox.FormattingEnabled = true;
-            this.PostProcessComboBox.Location = new System.Drawing.Point(119, 153);
+            this.PostProcessComboBox.Location = new System.Drawing.Point(119, 132);
             this.PostProcessComboBox.Name = "PostProcessComboBox";
             this.PostProcessComboBox.Size = new System.Drawing.Size(308, 20);
             this.PostProcessComboBox.TabIndex = 32;
@@ -170,7 +187,7 @@
             // PostProcessLabel
             // 
             this.PostProcessLabel.AutoSize = true;
-            this.PostProcessLabel.Location = new System.Drawing.Point(23, 156);
+            this.PostProcessLabel.Location = new System.Drawing.Point(23, 135);
             this.PostProcessLabel.Name = "PostProcessLabel";
             this.PostProcessLabel.Size = new System.Drawing.Size(71, 12);
             this.PostProcessLabel.TabIndex = 33;
@@ -184,26 +201,6 @@
             this.existedFileComboBox.Name = "existedFileComboBox";
             this.existedFileComboBox.Size = new System.Drawing.Size(80, 20);
             this.existedFileComboBox.TabIndex = 22;
-            // 
-            // LastInputAccessCheckBox
-            // 
-            this.LastInputAccessCheckBox.AutoSize = true;
-            this.LastInputAccessCheckBox.Location = new System.Drawing.Point(120, 233);
-            this.LastInputAccessCheckBox.Name = "LastInputAccessCheckBox";
-            this.LastInputAccessCheckBox.Size = new System.Drawing.Size(210, 16);
-            this.LastInputAccessCheckBox.TabIndex = 20;
-            this.LastInputAccessCheckBox.Text = "最後にファイルを選択したフォルダを記憶";
-            this.LastInputAccessCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // DeleteInputFileCheckBox
-            // 
-            this.DeleteInputFileCheckBox.AutoSize = true;
-            this.DeleteInputFileCheckBox.Location = new System.Drawing.Point(120, 211);
-            this.DeleteInputFileCheckBox.Name = "DeleteInputFileCheckBox";
-            this.DeleteInputFileCheckBox.Size = new System.Drawing.Size(160, 16);
-            this.DeleteInputFileCheckBox.TabIndex = 7;
-            this.DeleteInputFileCheckBox.Text = "変換後に入力ファイルを削除";
-            this.DeleteInputFileCheckBox.UseVisualStyleBackColor = true;
             // 
             // SelectFileButton
             // 
@@ -232,16 +229,6 @@
             this.InputPathLabel.Size = new System.Drawing.Size(77, 12);
             this.InputPathLabel.TabIndex = 18;
             this.InputPathLabel.Text = "入力ファイル名:";
-            // 
-            // LastAccessCheckBox
-            // 
-            this.LastAccessCheckBox.AutoSize = true;
-            this.LastAccessCheckBox.Location = new System.Drawing.Point(120, 127);
-            this.LastAccessCheckBox.Name = "LastAccessCheckBox";
-            this.LastAccessCheckBox.Size = new System.Drawing.Size(210, 16);
-            this.LastAccessCheckBox.TabIndex = 5;
-            this.LastAccessCheckBox.Text = "最後にファイルを保存したフォルダを記憶";
-            this.LastAccessCheckBox.UseVisualStyleBackColor = true;
             // 
             // ResolutionComboBox
             // 
@@ -630,6 +617,7 @@
             // 
             this.tabPage4.BackColor = System.Drawing.Color.Transparent;
             this.tabPage4.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
+            this.tabPage4.Controls.Add(this.SaveOptionsCheckBox);
             this.tabPage4.Controls.Add(this.PostProcessLiteComboBox);
             this.tabPage4.Controls.Add(this.PostProcessLiteLabel);
             this.tabPage4.Controls.Add(this.label5);
@@ -648,6 +636,35 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "詳細設定";
             // 
+            // SaveOptionsCheckBox
+            // 
+            this.SaveOptionsCheckBox.AutoSize = true;
+            this.SaveOptionsCheckBox.Location = new System.Drawing.Point(119, 134);
+            this.SaveOptionsCheckBox.Name = "SaveOptionsCheckBox";
+            this.SaveOptionsCheckBox.Size = new System.Drawing.Size(100, 16);
+            this.SaveOptionsCheckBox.TabIndex = 38;
+            this.SaveOptionsCheckBox.Text = "設定を保存する";
+            this.SaveOptionsCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // PostProcessLiteComboBox
+            // 
+            this.PostProcessLiteComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.PostProcessLiteComboBox.FormattingEnabled = true;
+            this.PostProcessLiteComboBox.Location = new System.Drawing.Point(119, 181);
+            this.PostProcessLiteComboBox.Name = "PostProcessLiteComboBox";
+            this.PostProcessLiteComboBox.Size = new System.Drawing.Size(308, 20);
+            this.PostProcessLiteComboBox.TabIndex = 36;
+            this.PostProcessLiteComboBox.SelectedIndexChanged += new System.EventHandler(this.PostProcessComboBox_SelectedIndexChanged);
+            // 
+            // PostProcessLiteLabel
+            // 
+            this.PostProcessLiteLabel.AutoSize = true;
+            this.PostProcessLiteLabel.Location = new System.Drawing.Point(23, 184);
+            this.PostProcessLiteLabel.Name = "PostProcessLiteLabel";
+            this.PostProcessLiteLabel.Size = new System.Drawing.Size(71, 12);
+            this.PostProcessLiteLabel.TabIndex = 37;
+            this.PostProcessLiteLabel.Text = "ポストプロセス:";
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -660,7 +677,7 @@
             // UpdateCheckBox
             // 
             this.UpdateCheckBox.AutoSize = true;
-            this.UpdateCheckBox.Location = new System.Drawing.Point(119, 134);
+            this.UpdateCheckBox.Location = new System.Drawing.Point(119, 156);
             this.UpdateCheckBox.Name = "UpdateCheckBox";
             this.UpdateCheckBox.Size = new System.Drawing.Size(174, 16);
             this.UpdateCheckBox.TabIndex = 34;
@@ -812,25 +829,6 @@
             this.bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
             this.bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
             // 
-            // PostProcessLiteComboBox
-            // 
-            this.PostProcessLiteComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.PostProcessLiteComboBox.FormattingEnabled = true;
-            this.PostProcessLiteComboBox.Location = new System.Drawing.Point(119, 157);
-            this.PostProcessLiteComboBox.Name = "PostProcessLiteComboBox";
-            this.PostProcessLiteComboBox.Size = new System.Drawing.Size(308, 20);
-            this.PostProcessLiteComboBox.TabIndex = 36;
-            this.PostProcessLiteComboBox.SelectedIndexChanged += new System.EventHandler(this.PostProcessComboBox_SelectedIndexChanged);
-            // 
-            // PostProcessLiteLabel
-            // 
-            this.PostProcessLiteLabel.AutoSize = true;
-            this.PostProcessLiteLabel.Location = new System.Drawing.Point(23, 160);
-            this.PostProcessLiteLabel.Name = "PostProcessLiteLabel";
-            this.PostProcessLiteLabel.Size = new System.Drawing.Size(71, 12);
-            this.PostProcessLiteLabel.TabIndex = 37;
-            this.PostProcessLiteLabel.Text = "ポストプロセス:";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -917,7 +915,6 @@
         private System.Windows.Forms.Button CancelBox;
         private System.Windows.Forms.ComboBox ResolutionComboBox;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.CheckBox LastAccessCheckBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.CheckBox WebOptimizeCheckBox;
@@ -930,18 +927,19 @@
         private System.Windows.Forms.Button SelectFileButton;
         private System.Windows.Forms.TextBox InputPathTextBox;
         private System.Windows.Forms.Label InputPathLabel;
-        private System.Windows.Forms.CheckBox DeleteInputFileCheckBox;
-        private System.Windows.Forms.CheckBox LastInputAccessCheckBox;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox UpdateCheckBox;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.ComponentModel.BackgroundWorker bgWorker;
         private System.Windows.Forms.ComboBox existedFileComboBox;
-        private System.Windows.Forms.ComboBox PostProcessComboBox;
         private System.Windows.Forms.Label PostProcessLabel;
         private System.Windows.Forms.ComboBox PostProcessLiteComboBox;
         private System.Windows.Forms.Label PostProcessLiteLabel;
+        private System.Windows.Forms.CheckBox SaveOptionsCheckBox;
+        private System.Windows.Forms.Button SelectUserProgramButton;
+        private System.Windows.Forms.TextBox UserProgramTextBox;
+        private System.Windows.Forms.ComboBox PostProcessComboBox;
     }
 }
 

@@ -42,12 +42,11 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public MainForm() {
             InitializeComponent();
-            
+
+            InitOptions();
             InitSelectDialog();
             InitSaveDialog();
-            InitComboBoxes();
-            InitSelections();
-            InitEnabled();
+            InitPostProcDialog();
         }
         
         /* ----------------------------------------------------------------- */
@@ -133,7 +132,7 @@ namespace CubePDF {
             
             if (!System.IO.File.Exists(path)) {
                 var dir = System.IO.Path.GetDirectoryName(path);
-                path = dir + '\\' + filename + "-1" + ext;
+                path = dir + '\\' + filename + "-001" + ext;
             }
             
             // Web表示用に最適化
@@ -232,13 +231,12 @@ namespace CubePDF {
                     Properties.Settings.Default.ERROR_TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally {
-                DeleteInputFile();
                 Cursor.Current = Cursors.Default;
                 progressBar.Increment(10);
                 this.Close();
             }
         }
-        
+
         /* ----------------------------------------------------------------- */
         ///
         /// SaveRegistry
@@ -249,57 +247,59 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         private void SaveRegistry() {
-            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(ROOT_KEY);
-            
-            if (LastAccessCheckBox.Checked) {
-                registry.SetValue(LAST_ACCESS, System.IO.Path.GetDirectoryName(FilePathTextBox.Text));
-            }
-            else registry.DeleteValue(LAST_ACCESS, false);
-            
-            var dir = System.IO.Path.GetDirectoryName(InputPathTextBox.Text);
-            if (LastInputAccessCheckBox.Checked) registry.SetValue(LAST_INPUT_ACCESS, dir);
-            else if (LastInputAccessCheckBox.Enabled) registry.DeleteValue(LAST_INPUT_ACCESS, false);
+            try {
+                var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
 
-            if (postproc_ != Properties.Settings.Default.POSTPROC_OPEN &&
-                postproc_ != Properties.Settings.Default.POSTPROC_NONE) {
-                dir = System.IO.Path.GetDirectoryName(postproc_);
-                registry.SetValue(LAST_EXEC_ACCESS, dir);
-            }
+                int is_save = this.SaveOptionsCheckBox.Checked ? 1 : 0;
+                registry.SetValue(REG_SAVE_OPTIONS, is_save);
+                if (is_save == 0) return;
 
-            var is_update = this.UpdateCheckBox.Checked ? 1 : 0;
-            registry.SetValue(CHECK_UPDATE, is_update);
-            
-            var updater = "cubepdf-checker";
-            var startup = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
-            if (is_update != 0) {
-                if (startup.GetValue(updater) == null) {
-                    var hklm = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(ROOT_KEY, false);
-                    if (hklm != null) {
-                        string path = (string)hklm.GetValue(INSTALL_DIRECTORY);
-                        if (path != null) startup.SetValue(updater, path + '\\' + updater + ".exe");
+                // 設定の保存
+                registry.SetValue(REG_FILE_TYPE, FILE_TYPES[FileTypeComboBox.SelectedIndex]);
+                registry.SetValue(REG_PDF_VERSION, VERSIONS[VersionComboBox.SelectedIndex]);
+                registry.SetValue(REG_RESOLUTION, RESOLUTIONS[ResolutionComboBox.SelectedIndex]);
+                registry.SetValue(REG_LAST_OUTPUT, output_dir_);
+                registry.SetValue(REG_EXISTED_FILE, DO_EXISTED_FILE[existedFileComboBox.SelectedIndex]);
+                registry.SetValue(REG_DOWN_SAMPLING, DOWN_SAMPLINGS[DownSamplingComboBox.SelectedIndex]);
+                registry.SetValue(REG_PAGE_ROTATION, AutoPageRotationCheckBox.Checked ? 1 : 0);
+                registry.SetValue(REG_EMBED_FONT, AutoFontCheckBox.Checked ? 1 : 0);
+                registry.SetValue(REG_GRAYSCALE, GrayCheckBox.Checked ? 1 : 0);
+                registry.SetValue(REG_WEB_OPTIMIZE, WebOptimizeCheckBox.Checked ? 1 : 0);
+
+                // アップデートチェックプログラム
+                var is_update = this.UpdateCheckBox.Checked ? 1 : 0;
+                registry.SetValue(REG_CHECK_UPDATE, is_update);
+
+                var updater = "cubepdf-checker";
+                var startup = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run");
+                if (is_update != 0) {
+                    if (startup.GetValue(updater) == null) {
+                        var hklm = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(REG_ROOT, false);
+                        if (hklm != null) {
+                            string path = (string)hklm.GetValue(REG_INSTALL_DIRECTORY);
+                            if (path != null) startup.SetValue(updater, path + '\\' + updater + ".exe");
+                        }
                     }
                 }
+                else startup.DeleteValue(updater, false);
+
+                // ポストプロセス
+                int advance = (int)registry.GetValue(REG_ADVANCED_MODE, 0);
+                if (advance == 1) {
+                    registry.SetValue(REG_POSTPROC, POST_PROCESSES[PostProcessComboBox.SelectedIndex]);
+                    if (POST_PROCESSES[PostProcessComboBox.SelectedIndex] == Properties.Settings.Default.POSTPROC_OTHER) {
+                        registry.SetValue(REG_USER_PROGRAM, postproc_);
+                    }
+                }
+                else registry.SetValue(REG_POSTPROC, POST_PROCESSES_LITE[PostProcessLiteComboBox.SelectedIndex]);
+
+                // 非公式の設定
+                int unofficial = (int)registry.GetValue(REG_SELECT_INPUT, 0);
+                if (unofficial == 1) registry.SetValue(REG_LAST_INPUT, input_dir_);
             }
-            else startup.DeleteValue(updater, false);
+            catch (System.Exception /*err*/) { }
         }
         
-        /* ----------------------------------------------------------------- */
-        ///
-        /// DeleteInputFile
-        ///
-        /// <summary>
-        /// 入力ファイルを削除する．入力ファイルを削除するかどうかは，
-        /// チェックボックスを通じてユーザに指定してもらう．
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void DeleteInputFile() {
-            //var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(ROOT_KEY);
-            if (DeleteInputFileCheckBox.Checked && System.IO.File.Exists(InputPathTextBox.Text)) {
-                System.IO.File.Delete(InputPathTextBox.Text);
-            }
-        }
-
         /* ----------------------------------------------------------------- */
         //  Ghostscript に指定する引数の設定処理
         /* ----------------------------------------------------------------- */
@@ -333,7 +333,20 @@ namespace CubePDF {
         private bool IsDocumentFile(string filetype) {
             return !IsImageFile(filetype);
         }
-        
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// IsPDF
+        ///
+        /// <summary>
+        /// PDF 文書ファイルの場合に真を返す．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private bool IsPDF(string filetype) {
+            return filetype == Properties.Settings.Default.FILETYPE_PDF;
+        }
+
         /* ----------------------------------------------------------------- */
         ///
         /// SelectFileType
@@ -414,7 +427,33 @@ namespace CubePDF {
             var tmp = FilePathTextBox.Text;
             FilePathTextBox.Text = System.IO.Path.ChangeExtension(tmp, FILE_EXTENSIONS[selected]);
         }
-        
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ChangePassword
+        ///
+        /// <summary>
+        /// Web 最適化とパスワードを同時には設定できないため，
+        /// Web 最適化のチェックボックスがチェックされているかどうかで
+        /// パスワードの入力を受け付けるかどうか変更する．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void ChangePassword(bool web_optimized) {
+            if (web_optimized) {
+                UserPasswordCheckBox.Enabled = false;
+                UserPasswordPanel.Enabled = false;
+                OwnerPasswordCheckBox.Enabled = false;
+                OwnerPasswordPanel.Enabled = false;
+            }
+            else {
+                UserPasswordCheckBox.Enabled = true;
+                UserPasswordPanel.Enabled = UserPasswordCheckBox.Checked;
+                OwnerPasswordCheckBox.Enabled = true;
+                OwnerPasswordPanel.Enabled = OwnerPasswordCheckBox.Checked;
+            }
+        }
+
         /* ----------------------------------------------------------------- */
         ///
         /// CheckPassword
@@ -602,108 +641,7 @@ namespace CubePDF {
         //  各種初期化処理
         /* ----------------------------------------------------------------- */
         #region Initializing methods
-        
-        /* ----------------------------------------------------------------- */
-        ///
-        /// InitSaveDialog
-        ///
-        /// <summary>
-        /// ファイル保存ダイアログを初期化する．
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void InitSaveDialog() {
-            var filename = System.Environment.GetEnvironmentVariable(Properties.Settings.Default.REDMON_FILENAME);
-            if (filename != null) filename = System.IO.Path.ChangeExtension(filename, ".pdf");
-            
-            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(ROOT_KEY);
-            var dir = (string)registry.GetValue(LAST_ACCESS);
-            if (dir == null) dir = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            else LastAccessCheckBox.Checked = true;
-            if (filename != null) FilePathTextBox.Text = dir + '\\' + filename;
-        }
-        
-        /* ----------------------------------------------------------------- */
-        ///
-        /// InitComboBoxes
-        ///
-        /// <summary>
-        /// 各コンボボックスを初期化する．
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void InitComboBoxes() {
-            FileTypeComboBox.Items.AddRange(FILE_TYPES);
-            FileTypeComboBox.SelectedIndex = Array.IndexOf(FILE_TYPES, Properties.Settings.Default.FILETYPE_PDF);
-            
-            VersionComboBox.Items.AddRange(VERSIONS);
-            VersionComboBox.SelectedIndex = Array.IndexOf(VERSIONS, Properties.Settings.Default.VERSION_1_7);
-            
-            existedFileComboBox.Items.AddRange(DO_EXISTED_FILE);
-            existedFileComboBox.SelectedIndex = Array.IndexOf(DO_EXISTED_FILE, Properties.Settings.Default.EXISTED_FILE_OVERWRITE);
-            
-            PostProcessComboBox.Items.AddRange(POST_PROCESSES);
-            PostProcessComboBox.SelectedIndex = Array.IndexOf(POST_PROCESSES, Properties.Settings.Default.POSTPROC_OPEN);
 
-            PostProcessLiteComboBox.Items.AddRange(POST_PROCESSES_LITE);
-            PostProcessLiteComboBox.SelectedIndex = Array.IndexOf(POST_PROCESSES_LITE, Properties.Settings.Default.POSTPROC_OPEN);
-
-            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(ROOT_KEY);
-            var mode = (int)registry.GetValue(ADVANCED_MODE, 0);
-            if (mode > 0) {
-                PostProcessLiteLabel.Visible = false;
-                PostProcessLiteLabel.Enabled = false;
-                PostProcessLiteComboBox.Visible = false;
-                PostProcessLiteComboBox.Enabled = false;
-            }
-            else {
-                PostProcessLabel.Visible = false;
-                PostProcessLabel.Enabled = false;
-                PostProcessComboBox.Visible = false;
-                PostProcessComboBox.Enabled = false;
-            }
-
-            ResolutionComboBox.Items.AddRange(RESOLUTIONS);
-            ResolutionComboBox.SelectedIndex = Array.IndexOf(RESOLUTIONS, Properties.Settings.Default.RESOLUTION_300);
-            ResolutionComboBox.Enabled = false;
-            
-            DownSamplingComboBox.Items.AddRange(DOWN_SAMPLINGS);
-            DownSamplingComboBox.SelectedIndex = Array.IndexOf(DOWN_SAMPLINGS, Properties.Settings.Default.DOWNSAMPLE_NONE);
-        }
-        
-        /* ----------------------------------------------------------------- */
-        ///
-        /// InitSelections
-        ///
-        /// <summary>
-        /// 各チェックボックス，ラジオボタンを初期化する．
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void InitSelections() {
-            AutoPageRotationCheckBox.Checked = true;
-            LastAccessCheckBox.Checked = true;
-            AutoFontCheckBox.Checked = true;
-            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(ROOT_KEY);
-            bool is_update = ((int)registry.GetValue(CHECK_UPDATE, 0) != 0);
-            UpdateCheckBox.Checked = is_update;
-        }
-        
-        /* ----------------------------------------------------------------- */
-        ///
-        /// InitEnabled
-        ///
-        /// <summary>
-        /// 各要素のうち，Disabled にするアイテム（パスワードなど）を
-        /// 初期化する．
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void InitEnabled() {
-            UserPasswordPanel.Enabled = false;
-            OwnerPasswordPanel.Enabled = false;
-        }
-        
         /* ----------------------------------------------------------------- */
         ///
         /// InitSelectDialog
@@ -717,39 +655,167 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         private void InitSelectDialog() {
-            //InputPathTextBox.Text = Utility.GetCurrentPath() + '\\' + Properties.Settings.Default.INPUT_FILENAME;
+            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
+            input_dir_ = (string)registry.GetValue(REG_LAST_INPUT, "");
+
             var path = System.IO.Path.GetTempPath() + Properties.Settings.Default.INPUT_FILENAME;
             var check = (System.Environment.GetEnvironmentVariable(Properties.Settings.Default.REDMON_USER) != null);
             InputPathTextBox.Text = (check && System.IO.File.Exists(path)) ? path : "";
-            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(ROOT_KEY);
-            
+
             // 入力ファイルの選択を表示するかどうか。
-            int value = (int)registry.GetValue(SELECT_INPUT, 0);
+            int value = (int)registry.GetValue(REG_SELECT_INPUT, 0);
             bool visible = (value == 0) ? false : true;
             InputPathLabel.Visible = visible;
             InputPathTextBox.Visible = visible;
             SelectFileButton.Visible = visible;
-            DeleteInputFileCheckBox.Visible = visible;
-            LastInputAccessCheckBox.Visible = visible;
-            
+
             // 仮想プリンタドライバ (redmon) 経由の場合
             if (InputPathTextBox.TextLength > 0) {
-                DeleteInputFileCheckBox.Checked = true;
-                DeleteInputFileCheckBox.Enabled = false;
-                LastInputAccessCheckBox.Checked = false;
-                LastInputAccessCheckBox.Enabled = false;
                 InputPathTextBox.Enabled = false;
                 SelectFileButton.Enabled = false;
             }
-            else {
-                // 変換後に入力ファイルを削除するかどうか。
-                value = (int)registry.GetValue(DELETE_INPUT, 0);
-                DeleteInputFileCheckBox.Checked = (value != 0);
-                
-                // 最後にアクセスしたディレクトリを記憶するかどうか。
-                var dir = (string)registry.GetValue(LAST_INPUT_ACCESS);
-                LastInputAccessCheckBox.Checked = (dir != null);
+        }
+        
+        /* ----------------------------------------------------------------- */
+        ///
+        /// InitSaveDialog
+        ///
+        /// <summary>
+        /// ファイル保存ダイアログを初期化する．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void InitSaveDialog() {
+            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
+            output_dir_ = (string)registry.GetValue(REG_LAST_OUTPUT, System.Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+
+            var filename = System.Environment.GetEnvironmentVariable(Properties.Settings.Default.REDMON_FILENAME);
+            if (filename != null) {
+                var ext = FileTypeComboBox.SelectedIndex < FILE_EXTENSIONS.Length ?
+                    FILE_EXTENSIONS[FileTypeComboBox.SelectedIndex] :
+                    FILE_EXTENSIONS[0];
+                filename = System.IO.Path.ChangeExtension(filename, ext);
+                FilePathTextBox.Text = output_dir_ + '\\' + filename;
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// InitPostProcDialog
+        ///
+        /// <summary>
+        /// ポストプロセスダイアログを初期化する．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void InitPostProcDialog() {
+            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
+            int advance = (int)registry.GetValue(REG_ADVANCED_MODE, 0);
+
+            if (advance != 0) {
+                string selected = (string)registry.GetValue(REG_POSTPROC, Properties.Settings.Default.POSTPROC_OPEN);
+                PostProcessComboBox.Items.AddRange(POST_PROCESSES);
+                PostProcessComboBox.SelectedIndex = Math.Max(Array.IndexOf(POST_PROCESSES, selected), 0);
+
+                string postproc = (string)registry.GetValue(REG_USER_PROGRAM, "");
+                if (postproc.Length > 0) {
+                    postproc_ = postproc;
+                    UserProgramTextBox.Text = postproc;
+                }
+
+                bool is_user = (selected == Properties.Settings.Default.POSTPROC_OTHER);
+                UserProgramTextBox.Enabled = is_user;
+                SelectUserProgramButton.Enabled = is_user;
+
+                PostProcessLiteLabel.Visible = false;
+                PostProcessLiteLabel.Enabled = false;
+                PostProcessLiteComboBox.Visible = false;
+                PostProcessLiteComboBox.Enabled = false;
+            }
+            else {
+                string selected = (string)registry.GetValue(REG_POSTPROC, Properties.Settings.Default.POSTPROC_OPEN);
+                PostProcessLiteComboBox.Items.AddRange(POST_PROCESSES_LITE);
+                PostProcessLiteComboBox.SelectedIndex = Math.Max(Array.IndexOf(POST_PROCESSES_LITE, selected), 0);
+
+                PostProcessLabel.Visible = false;
+                PostProcessLabel.Enabled = false;
+                PostProcessComboBox.Visible = false;
+                PostProcessComboBox.Enabled = false;
+
+                UserProgramTextBox.Enabled = false;
+                UserProgramTextBox.Visible = false;
+                SelectUserProgramButton.Enabled = false;
+                SelectUserProgramButton.Visible = false;
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// InitOptions
+        ///
+        /// <summary>
+        /// 各オプションを初期化する．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void InitOptions() {
+            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
+
+            // ファイルタイプ
+            string filetype = (string)registry.GetValue(REG_FILE_TYPE, Properties.Settings.Default.FILETYPE_PDF);
+            FileTypeComboBox.Items.AddRange(FILE_TYPES);
+            FileTypeComboBox.SelectedIndex = Math.Max(Array.IndexOf(FILE_TYPES, filetype), 0);
+            
+            // PDF バージョン
+            string version = (string)registry.GetValue(REG_PDF_VERSION, Properties.Settings.Default.VERSION_1_7);
+            VersionComboBox.Items.AddRange(VERSIONS);
+            VersionComboBox.SelectedIndex = Math.Max(Array.IndexOf(VERSIONS, version), 0);
+            VersionComboBox.Enabled = IsPDF(filetype);
+
+            // 解像度
+            string resolution = (string)registry.GetValue(REG_RESOLUTION, Properties.Settings.Default.RESOLUTION_300);
+            ResolutionComboBox.Items.AddRange(RESOLUTIONS);
+            ResolutionComboBox.SelectedIndex = Math.Max(Array.IndexOf(RESOLUTIONS, resolution), 0);
+            ResolutionComboBox.Enabled = IsImageFile(filetype);
+
+            // 既に存在するファイルへの対処
+            string existed = (string)registry.GetValue(REG_EXISTED_FILE, Properties.Settings.Default.EXISTED_FILE_OVERWRITE);
+            existedFileComboBox.Items.AddRange(DO_EXISTED_FILE);
+            existedFileComboBox.SelectedIndex = Math.Max(Array.IndexOf(DO_EXISTED_FILE, existed), 0);
+
+            // パスワード
+            UserPasswordPanel.Enabled = false;
+            OwnerPasswordPanel.Enabled = false;
+
+            // ダウンサンプリング
+            string sampling = (string)registry.GetValue(REG_DOWN_SAMPLING, Properties.Settings.Default.DOWNSAMPLE_NONE);
+            DownSamplingComboBox.Items.AddRange(DOWN_SAMPLINGS);
+            DownSamplingComboBox.SelectedIndex = Math.Max(Array.IndexOf(DOWN_SAMPLINGS, sampling), 0);
+
+            // ページの自動回転
+            int rotation = (int)registry.GetValue(REG_PAGE_ROTATION, 1);
+            AutoPageRotationCheckBox.Checked = (rotation != 0);
+
+            // フォントの埋め込み
+            int embed = (int)registry.GetValue(REG_EMBED_FONT, 1);
+            AutoFontCheckBox.Checked = (embed != 0);
+
+            // グレースケール
+            int gray = (int)registry.GetValue(REG_GRAYSCALE, 0);
+            GrayCheckBox.Checked = (gray != 0);
+
+            // Web 最適化
+            int web = (int)registry.GetValue(REG_WEB_OPTIMIZE, 0);
+            WebOptimizeCheckBox.Checked = (web != 0);
+            ChangePassword(WebOptimizeCheckBox.Checked);
+
+            // オプションの保存
+            int saveopt = (int)registry.GetValue(REG_SAVE_OPTIONS, 0);
+            SaveOptionsCheckBox.Checked = (saveopt != 0);
+
+            // アップデートのチェック
+            int update = (int)registry.GetValue(REG_CHECK_UPDATE, 1);
+            UpdateCheckBox.Checked = (update != 0);
         }
         
         #endregion
@@ -852,11 +918,7 @@ namespace CubePDF {
             dialog.FileName = (FilePathTextBox.TextLength > 0) ?
                 System.IO.Path.GetFileNameWithoutExtension(FilePathTextBox.Text) :
                 System.IO.Path.GetFileNameWithoutExtension(InputPathTextBox.Text);
-            
-            // 初期表示フォルダの設定
-            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(ROOT_KEY);
-            var dir = (string)registry.GetValue(LAST_ACCESS, System.Environment.GetFolderPath(Environment.SpecialFolder.Personal));
-            dialog.InitialDirectory = dir;
+            dialog.InitialDirectory = output_dir_;
             
             // ファイルタイプの設定
             var filetype = FILE_TYPES[FileTypeComboBox.SelectedIndex];
@@ -868,6 +930,7 @@ namespace CubePDF {
             
             if (dialog.ShowDialog() == DialogResult.OK) {
                 FilePathTextBox.Text = dialog.FileName;
+                output_dir_ = System.IO.Path.GetDirectoryName(dialog.FileName);
             }
         }
         
@@ -886,16 +949,12 @@ namespace CubePDF {
             // ファイル名の設定
             var dialog = new OpenFileDialog();
             dialog.FileName = System.IO.Path.GetFileName(InputPathTextBox.Text);
-
-            // 初期表示フォルダの設定
-            var subkey = @"Software\CubePDF";
-            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(subkey);
-            var dir = (string)registry.GetValue(LAST_INPUT_ACCESS);
-            if (dir != null) dialog.InitialDirectory = dir;
-            
-            // ファイルタイプの設定
+            dialog.InitialDirectory = input_dir_;
             dialog.Filter = Properties.Settings.Default.DIALOG_INPUT_FILTER;
-            if (dialog.ShowDialog() == DialogResult.OK) InputPathTextBox.Text = dialog.FileName;
+            if (dialog.ShowDialog() == DialogResult.OK) {
+                InputPathTextBox.Text = dialog.FileName;
+                input_dir_ = System.IO.Path.GetDirectoryName(dialog.FileName);
+            }
         }
         
         /* ----------------------------------------------------------------- */
@@ -940,18 +999,7 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         private void WebOptimizeCheckBox_CheckedChanged(object sender, EventArgs e) {
-            if (WebOptimizeCheckBox.Checked) {
-                UserPasswordCheckBox.Enabled = false;
-                UserPasswordPanel.Enabled = false;
-                OwnerPasswordCheckBox.Enabled = false;
-                OwnerPasswordPanel.Enabled = false;
-            }
-            else {
-                UserPasswordCheckBox.Enabled = true;
-                UserPasswordPanel.Enabled = UserPasswordCheckBox.Checked;
-                OwnerPasswordCheckBox.Enabled = true;
-                OwnerPasswordPanel.Enabled = OwnerPasswordCheckBox.Checked;
-            }
+            ChangePassword(WebOptimizeCheckBox.Checked);
         }
         
         /* ----------------------------------------------------------------- */
@@ -997,32 +1045,46 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void PostProcessComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             var combo = (ComboBox)sender;
-            if (POST_PROCESSES[combo.SelectedIndex] != Properties.Settings.Default.POSTPROC_OTHER) {
-                postproc_ = POST_PROCESSES[combo.SelectedIndex];
-                return;
+            if (POST_PROCESSES[combo.SelectedIndex] == Properties.Settings.Default.POSTPROC_OTHER) {
+                UserProgramTextBox.Enabled = true;
+                SelectUserProgramButton.Enabled = true;
             }
+            else {
+                UserProgramTextBox.Enabled = false;
+                SelectUserProgramButton.Enabled = false;
+                postproc_ = POST_PROCESSES[combo.SelectedIndex];
+            }
+        }
 
+
+        /* ----------------------------------------------------------------- */
+        /// SelectUserProgramButton_Click
+        /* ----------------------------------------------------------------- */
+        private void SelectUserProgramButton_Click(object sender, EventArgs e) {
             var dialog = new OpenFileDialog();
             dialog.Title = Properties.Settings.Default.DIALOG_TITLE_EXEC;
 
             // 初期表示フォルダの設定
-            var subkey = @"Software\CubePDF";
-            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(subkey);
-            var dir = (string)registry.GetValue(LAST_EXEC_ACCESS);
-            if (dir != null) dialog.InitialDirectory = dir;
+            if (UserProgramTextBox.Text.Length > 0) {
+                dialog.InitialDirectory = System.IO.Path.GetDirectoryName(UserProgramTextBox.Text);
+            }
 
             // ファイルタイプの設定
             dialog.Filter = Properties.Settings.Default.DIALOG_EXEC_FILTER;
             if (dialog.ShowDialog() == DialogResult.OK) {
                 postproc_ = dialog.FileName;
+                UserProgramTextBox.Text = postproc_;
             }
         }
+
         #endregion
 
         /* ----------------------------------------------------------------- */
         //  メンバ変数の定義
         /* ----------------------------------------------------------------- */
         #region Member variables
+        private string input_dir_    = "";
+        private string output_dir_   = "";
         private string postproc_ = Properties.Settings.Default.POSTPROC_OPEN;
         #endregion
         
@@ -1112,15 +1174,28 @@ namespace CubePDF {
         };
         
         // レジストリのキー
-        private readonly string ROOT_KEY = @"Software\CubePDF";
-        private readonly string LAST_ACCESS = "LastAccess";
-        private readonly string LAST_INPUT_ACCESS = "LastInputAccess";
-        private readonly string LAST_EXEC_ACCESS = "LastExecAccess";
-        private readonly string SELECT_INPUT = "SelectInputFile";
-        private readonly string DELETE_INPUT = "DeleteInputFile";
-        private readonly string CHECK_UPDATE = "CheckUpdate";
-        private readonly string INSTALL_DIRECTORY = "InstallDirectory";
-        private readonly string ADVANCED_MODE = "AdvancedMode";
+        private readonly string REG_ROOT                = @"Software\CubePDF";
+        private readonly string REG_INSTALL_DIRECTORY   = "InstallDirectory";
+        private readonly string REG_FILE_TYPE           = "FileType";           // ファイルタイプ
+        private readonly string REG_PDF_VERSION         = "PDFVersion";         // PDF バージョン
+        private readonly string REG_RESOLUTION          = "Resolution";         // 解像度
+        private readonly string REG_LAST_OUTPUT         = "LastAccess";         // 最後にアクセスした出力ディレクトリ
+        private readonly string REG_EXISTED_FILE        = "ExistedFile";        // 既に存在するファイルへの処理       
+        private readonly string REG_ADVANCED_MODE       = "AdvancedMode";       // ポストプロセスのアドバンスモード
+        private readonly string REG_POSTPROC            = "PostProcess";        // ポストプロセス
+        private readonly string REG_USER_PROGRAM        = "LastUserProgram";    // ユーザプログラム
+        private readonly string REG_DOWN_SAMPLING       = "DownSampling";       // ダウンサンプリング
+        private readonly string REG_PAGE_ROTATION       = "PageRotation";       // ページの自動回転
+        private readonly string REG_EMBED_FONT          = "EmbedFont";          // フォントの埋め込み
+        private readonly string REG_GRAYSCALE           = "Grayscale";          // グレースケール
+        private readonly string REG_WEB_OPTIMIZE        = "WebOptimize";        // Web 表示用に最適化
+        private readonly string REG_SAVE_OPTIONS        = "SaveOptions";        // オプションの保存
+        private readonly string REG_CHECK_UPDATE        = "CheckUpdate";        // アップデートチェックを行うかどうか
+
+        // これは今のところ非公式
+        private readonly string REG_SELECT_INPUT        = "SelectInputFile";
+        private readonly string REG_LAST_INPUT          = "LastInputAccess";
+        
 
         // Ghostscript
         private readonly string GS_LIB = System.Environment.GetEnvironmentVariable("windir") + @"\CubePDF\";
