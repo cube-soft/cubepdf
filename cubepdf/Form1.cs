@@ -222,7 +222,12 @@ namespace CubePDF {
                     progressBar.Increment(10);
                     
                     // ポストプロセス
-                    ExecPostProcess(postproc_);
+                    var selected = postproc_;
+                    if (PostProcessLiteComboBox.Enabled) selected = (string)PostProcessLiteComboBox.SelectedItem;
+                    else if (PostProcessComboBox.SelectedText != Properties.Settings.Default.POSTPROC_OTHER) {
+                        selected = (string)PostProcessComboBox.SelectedItem;
+                    }
+                    ExecPostProcess(selected);
                     progressBar.Increment(10);
                 }
             }
