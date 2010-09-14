@@ -78,14 +78,15 @@ namespace CubePDF {
             var converter = new Gs.Converter(SelectFileType(filetype));
             progressBar.Increment(5);
             
-            if (System.IO.File.Exists(FilePathTextBox.Text) &&
+            var dest = this.GetOutputPath();
+            if (System.IO.File.Exists(dest) &&
                 DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_TAIL) {
-                converter.AddSource(FilePathTextBox.Text);
+                converter.AddSource(dest);
             }
             converter.AddSource(InputPathTextBox.Text);
-            if (System.IO.File.Exists(FilePathTextBox.Text) &&
+            if (System.IO.File.Exists(dest) &&
                 DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_HEAD) {
-                converter.AddSource(FilePathTextBox.Text);
+                converter.AddSource(dest);
             }
             progressBar.Increment(5);
             
@@ -111,7 +112,7 @@ namespace CubePDF {
             progressBar.Increment(5);
             
             // Ghostscriptの実行（バックグラウンド）
-            converter.Destination = FilePathTextBox.Text;
+            converter.Destination = dest;
             bgWorker.RunWorkerAsync(converter);
         }
         
@@ -126,7 +127,7 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         private void ExecPostProcess(string selected) {
-            var path = FilePathTextBox.Text;
+            var path = this.GetOutputPath();
             var filename = System.IO.Path.GetFileNameWithoutExtension(path);
             var ext = System.IO.Path.GetExtension(path);
             
@@ -218,7 +219,7 @@ namespace CubePDF {
                 else {
                     progressBar.Increment(30);
                     
-                    ModifyResult(FilePathTextBox.Text);
+                    ModifyResult(this.GetOutputPath());
                     progressBar.Increment(10);
                     
                     // ポストプロセス
@@ -304,7 +305,24 @@ namespace CubePDF {
             }
             catch (System.Exception /*err*/) { }
         }
-        
+
+        /* ----------------------------------------------------------------- */
+        /// SetOutputPath
+        /* ----------------------------------------------------------------- */
+        private void SetOutputPath(string path) {
+            var dir = System.IO.Path.GetDirectoryName(path);
+            if (dir.Length > 0) dir += '\\';
+            this.OutputDirLabel.Text = dir;
+            this.OutputFileTextBox.Text = System.IO.Path.GetFileName(path);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// GetOutputPath
+        /* ----------------------------------------------------------------- */
+        private string GetOutputPath() {
+            return this.OutputDirLabel.Text + this.OutputFileTextBox.Text;
+        }
+
         /* ----------------------------------------------------------------- */
         //  Ghostscript に指定する引数の設定処理
         /* ----------------------------------------------------------------- */
@@ -429,8 +447,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void ChangeFileExtensions(int selected) {
             if (selected >= FILE_EXTENSIONS.Length) selected = 0;
-            var tmp = FilePathTextBox.Text;
-            FilePathTextBox.Text = System.IO.Path.ChangeExtension(tmp, FILE_EXTENSIONS[selected]);
+            var tmp = OutputFileTextBox.Text;
+            OutputFileTextBox.Text = System.IO.Path.ChangeExtension(tmp, FILE_EXTENSIONS[selected]);
         }
 
         /* ----------------------------------------------------------------- */
@@ -700,7 +718,7 @@ namespace CubePDF {
                     FILE_EXTENSIONS[FileTypeComboBox.SelectedIndex] :
                     FILE_EXTENSIONS[0];
                 filename = System.IO.Path.ChangeExtension(filename, ext);
-                FilePathTextBox.Text = output_dir_ + '\\' + filename;
+                this.SetOutputPath(output_dir_ + '\\' + filename);
             }
         }
 
@@ -877,8 +895,9 @@ namespace CubePDF {
                 return;
             }
             
-            if (System.IO.File.Exists(FilePathTextBox.Text)) {
-                var warning = FilePathTextBox.Text +
+            var dest = this.GetOutputPath();
+            if (System.IO.File.Exists(dest)) {
+                var warning = dest +
                     Properties.Settings.Default.WARNING_FILE_EXIST +
                     DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] +
                     Properties.Settings.Default.WARNING_DO;
@@ -920,8 +939,8 @@ namespace CubePDF {
         private void SaveFileButton_Click(object sender, EventArgs e) {
             // ファイル名の設定
             var dialog = new SaveFileDialog();
-            dialog.FileName = (FilePathTextBox.TextLength > 0) ?
-                System.IO.Path.GetFileNameWithoutExtension(FilePathTextBox.Text) :
+            dialog.FileName = (OutputFileTextBox.TextLength > 0) ?
+                System.IO.Path.GetFileNameWithoutExtension(OutputFileTextBox.Text) :
                 System.IO.Path.GetFileNameWithoutExtension(InputPathTextBox.Text);
             dialog.InitialDirectory = output_dir_;
             
@@ -934,8 +953,8 @@ namespace CubePDF {
             dialog.OverwritePrompt = false;
             
             if (dialog.ShowDialog() == DialogResult.OK) {
-                FilePathTextBox.Text = dialog.FileName;
-                output_dir_ = System.IO.Path.GetDirectoryName(dialog.FileName);
+                this.SetOutputPath(dialog.FileName);
+                output_dir_ = OutputDirLabel.Text;
             }
         }
         

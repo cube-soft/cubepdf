@@ -42,7 +42,6 @@
             this.ResolutionComboBox = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.SaveFileButton = new System.Windows.Forms.Button();
-            this.FilePathTextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.VersionComboBox = new System.Windows.Forms.ComboBox();
             this.FileTypeComboBox = new System.Windows.Forms.ComboBox();
@@ -98,6 +97,8 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.bgWorker = new System.ComponentModel.BackgroundWorker();
+            this.OutputFileTextBox = new System.Windows.Forms.TextBox();
+            this.OutputDirLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -132,6 +133,8 @@
             // 
             this.tabPage1.BackColor = System.Drawing.Color.Transparent;
             this.tabPage1.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
+            this.tabPage1.Controls.Add(this.OutputDirLabel);
+            this.tabPage1.Controls.Add(this.OutputFileTextBox);
             this.tabPage1.Controls.Add(this.SelectUserProgramButton);
             this.tabPage1.Controls.Add(this.UserProgramTextBox);
             this.tabPage1.Controls.Add(this.PostProcessComboBox);
@@ -143,7 +146,6 @@
             this.tabPage1.Controls.Add(this.ResolutionComboBox);
             this.tabPage1.Controls.Add(this.label16);
             this.tabPage1.Controls.Add(this.SaveFileButton);
-            this.tabPage1.Controls.Add(this.FilePathTextBox);
             this.tabPage1.Controls.Add(this.label6);
             this.tabPage1.Controls.Add(this.VersionComboBox);
             this.tabPage1.Controls.Add(this.FileTypeComboBox);
@@ -159,35 +161,35 @@
             // SelectUserProgramButton
             // 
             this.SelectUserProgramButton.BackColor = System.Drawing.Color.LightGray;
-            this.SelectUserProgramButton.Location = new System.Drawing.Point(394, 158);
+            this.SelectUserProgramButton.Location = new System.Drawing.Point(394, 181);
             this.SelectUserProgramButton.Name = "SelectUserProgramButton";
             this.SelectUserProgramButton.Size = new System.Drawing.Size(33, 20);
-            this.SelectUserProgramButton.TabIndex = 35;
+            this.SelectUserProgramButton.TabIndex = 10;
             this.SelectUserProgramButton.Text = "...";
             this.SelectUserProgramButton.UseVisualStyleBackColor = false;
             this.SelectUserProgramButton.Click += new System.EventHandler(this.SelectUserProgramButton_Click);
             // 
             // UserProgramTextBox
             // 
-            this.UserProgramTextBox.Location = new System.Drawing.Point(120, 159);
+            this.UserProgramTextBox.Location = new System.Drawing.Point(120, 182);
             this.UserProgramTextBox.Name = "UserProgramTextBox";
             this.UserProgramTextBox.Size = new System.Drawing.Size(266, 19);
-            this.UserProgramTextBox.TabIndex = 34;
+            this.UserProgramTextBox.TabIndex = 9;
             // 
             // PostProcessComboBox
             // 
             this.PostProcessComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PostProcessComboBox.FormattingEnabled = true;
-            this.PostProcessComboBox.Location = new System.Drawing.Point(119, 132);
+            this.PostProcessComboBox.Location = new System.Drawing.Point(119, 155);
             this.PostProcessComboBox.Name = "PostProcessComboBox";
             this.PostProcessComboBox.Size = new System.Drawing.Size(308, 20);
-            this.PostProcessComboBox.TabIndex = 32;
+            this.PostProcessComboBox.TabIndex = 8;
             this.PostProcessComboBox.SelectedIndexChanged += new System.EventHandler(this.PostProcessComboBox_SelectedIndexChanged);
             // 
             // PostProcessLabel
             // 
             this.PostProcessLabel.AutoSize = true;
-            this.PostProcessLabel.Location = new System.Drawing.Point(23, 135);
+            this.PostProcessLabel.Location = new System.Drawing.Point(23, 158);
             this.PostProcessLabel.Name = "PostProcessLabel";
             this.PostProcessLabel.Size = new System.Drawing.Size(71, 12);
             this.PostProcessLabel.TabIndex = 33;
@@ -197,18 +199,18 @@
             // 
             this.existedFileComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.existedFileComboBox.FormattingEnabled = true;
-            this.existedFileComboBox.Location = new System.Drawing.Point(347, 102);
+            this.existedFileComboBox.Location = new System.Drawing.Point(120, 128);
             this.existedFileComboBox.Name = "existedFileComboBox";
-            this.existedFileComboBox.Size = new System.Drawing.Size(80, 20);
-            this.existedFileComboBox.TabIndex = 22;
+            this.existedFileComboBox.Size = new System.Drawing.Size(307, 20);
+            this.existedFileComboBox.TabIndex = 7;
             // 
             // SelectFileButton
             // 
             this.SelectFileButton.BackColor = System.Drawing.Color.LightGray;
-            this.SelectFileButton.Location = new System.Drawing.Point(394, 184);
+            this.SelectFileButton.Location = new System.Drawing.Point(394, 207);
             this.SelectFileButton.Name = "SelectFileButton";
             this.SelectFileButton.Size = new System.Drawing.Size(33, 20);
-            this.SelectFileButton.TabIndex = 19;
+            this.SelectFileButton.TabIndex = 12;
             this.SelectFileButton.TabStop = false;
             this.SelectFileButton.Text = "...";
             this.SelectFileButton.UseVisualStyleBackColor = false;
@@ -216,19 +218,19 @@
             // 
             // InputPathTextBox
             // 
-            this.InputPathTextBox.Location = new System.Drawing.Point(120, 185);
+            this.InputPathTextBox.Location = new System.Drawing.Point(120, 208);
             this.InputPathTextBox.Name = "InputPathTextBox";
             this.InputPathTextBox.Size = new System.Drawing.Size(266, 19);
-            this.InputPathTextBox.TabIndex = 6;
+            this.InputPathTextBox.TabIndex = 11;
             // 
             // InputPathLabel
             // 
             this.InputPathLabel.AutoSize = true;
-            this.InputPathLabel.Location = new System.Drawing.Point(23, 188);
+            this.InputPathLabel.Location = new System.Drawing.Point(23, 211);
             this.InputPathLabel.Name = "InputPathLabel";
-            this.InputPathLabel.Size = new System.Drawing.Size(77, 12);
+            this.InputPathLabel.Size = new System.Drawing.Size(65, 12);
             this.InputPathLabel.TabIndex = 18;
-            this.InputPathLabel.Text = "入力ファイル名:";
+            this.InputPathLabel.Text = "入力ファイル:";
             // 
             // ResolutionComboBox
             // 
@@ -252,30 +254,23 @@
             // SaveFileButton
             // 
             this.SaveFileButton.BackColor = System.Drawing.Color.LightGray;
-            this.SaveFileButton.Location = new System.Drawing.Point(308, 101);
+            this.SaveFileButton.Location = new System.Drawing.Point(394, 101);
             this.SaveFileButton.Name = "SaveFileButton";
             this.SaveFileButton.Size = new System.Drawing.Size(33, 20);
-            this.SaveFileButton.TabIndex = 0;
+            this.SaveFileButton.TabIndex = 6;
             this.SaveFileButton.TabStop = false;
             this.SaveFileButton.Text = "...";
             this.SaveFileButton.UseVisualStyleBackColor = false;
             this.SaveFileButton.Click += new System.EventHandler(this.SaveFileButton_Click);
-            // 
-            // FilePathTextBox
-            // 
-            this.FilePathTextBox.Location = new System.Drawing.Point(120, 102);
-            this.FilePathTextBox.Name = "FilePathTextBox";
-            this.FilePathTextBox.Size = new System.Drawing.Size(182, 19);
-            this.FilePathTextBox.TabIndex = 4;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(23, 105);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(77, 12);
+            this.label6.Size = new System.Drawing.Size(65, 12);
             this.label6.TabIndex = 12;
-            this.label6.Text = "出力ファイル名:";
+            this.label6.Text = "出力ファイル:";
             // 
             // VersionComboBox
             // 
@@ -829,6 +824,24 @@
             this.bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
             this.bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
             // 
+            // OutputFileTextBox
+            // 
+            this.OutputFileTextBox.Location = new System.Drawing.Point(256, 102);
+            this.OutputFileTextBox.Name = "OutputFileTextBox";
+            this.OutputFileTextBox.Size = new System.Drawing.Size(130, 19);
+            this.OutputFileTextBox.TabIndex = 5;
+            // 
+            // OutputDirLabel
+            // 
+            this.OutputDirLabel.AutoEllipsis = true;
+            this.OutputDirLabel.Location = new System.Drawing.Point(118, 105);
+            this.OutputDirLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.OutputDirLabel.Name = "OutputDirLabel";
+            this.OutputDirLabel.Size = new System.Drawing.Size(135, 17);
+            this.OutputDirLabel.TabIndex = 34;
+            this.OutputDirLabel.Text = "C:\\Program Files\\";
+            this.OutputDirLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -881,7 +894,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ComboBox VersionComboBox;
         private System.Windows.Forms.Button SaveFileButton;
-        private System.Windows.Forms.TextBox FilePathTextBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox KeywordTextBox;
@@ -940,6 +952,8 @@
         private System.Windows.Forms.Button SelectUserProgramButton;
         private System.Windows.Forms.TextBox UserProgramTextBox;
         private System.Windows.Forms.ComboBox PostProcessComboBox;
+        private System.Windows.Forms.TextBox OutputFileTextBox;
+        private System.Windows.Forms.Label OutputDirLabel;
     }
 }
 
