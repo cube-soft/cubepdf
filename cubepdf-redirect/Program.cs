@@ -49,9 +49,7 @@ namespace CubePDF {
             
             var filename = Utility.GetFileName(System.Environment.GetEnvironmentVariable("REDMON_DOCNAME"));
             filename = FileNameModifier.ModifyFileName(filename);
-            
-            byte[] data = ReadBinaryData(Console.OpenStandardInput());
-            if (data.Length > 0) WritePostscript(data, System.IO.Path.GetTempPath() + @"TempInput.ps");
+            SavePostscript(Console.OpenStandardInput(), System.IO.Path.GetTempPath() + @"TempInput.ps");
             
             System.Environment.SetEnvironmentVariable("REDMON_FILENAME", filename);
             var proc = new System.Diagnostics.Process();
@@ -136,39 +134,17 @@ namespace CubePDF {
         }
         
         /* ----------------------------------------------------------------- */
-        /// ReadBinaryData
+        /// SavePostscript
         /* ----------------------------------------------------------------- */
-        private static byte[] ReadBinaryData(System.IO.Stream st) {
+        private static void SavePostscript(System.IO.Stream src, string dest) {
             byte[] buf = new byte[32768];
-            using (var ms = new System.IO.MemoryStream()) {
+            using (var output = new System.IO.FileStream(dest, System.IO.FileMode.Create, System.IO.FileAccess.Write)) {
                 while (true) {
-                    int read = st.Read(buf, 0, buf.Length);
-                    if (read > 0) ms.Write(buf, 0, read);
+                    int read = src.Read(buf, 0, buf.Length);
+                    if (read > 0) output.Write(buf, 0, read);
                     else break;
                 }
-                return ms.ToArray();
             }
-        }
-        
-        /* ----------------------------------------------------------------- */
-        /// WritePostscript
-        /* ----------------------------------------------------------------- */
-        private static void WritePostscript(byte[] src, System.String dest) {
-            var ofs = new System.IO.FileStream(dest, System.IO.FileMode.Create, System.IO.FileAccess.Write);
-            ofs.Write(src, 0, src.Length);
-            ofs.Close();
-            ofs.Dispose();
-        }
-        
-        /* ----------------------------------------------------------------- */
-        /// Compare
-        /* ----------------------------------------------------------------- */
-        private static bool Compare(byte[] s1, byte[] s2, int offset, int count) {
-            if (offset + count > s1.Length || count > s2.Length) return false;
-            for (int i = 0; i < count; i++) {
-                if (s1[offset + i] != s2[i]) return false;
-            }
-            return true;
         }
     }
 }
