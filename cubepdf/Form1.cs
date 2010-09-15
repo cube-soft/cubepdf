@@ -139,7 +139,7 @@ namespace CubePDF {
             // Web表示用に最適化
             if (FILE_TYPES[FileTypeComboBox.SelectedIndex] == Properties.Settings.Default.FILETYPE_PDF &&
                 WebOptimizeCheckBox.Checked && System.IO.File.Exists(path)) {
-                var tmp = System.IO.Path.GetTempPath() + filename + ext;
+                var tmp = Cliff.Path.GetTempPath() + filename + ext;
                 
                 try {
                     if (System.IO.File.Exists(tmp)) System.IO.File.Delete(tmp);
@@ -681,7 +681,7 @@ namespace CubePDF {
             var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
             input_dir_ = (string)registry.GetValue(REG_LAST_INPUT, "");
 
-            var path = System.IO.Path.GetTempPath() + Properties.Settings.Default.INPUT_FILENAME;
+            var path = Cliff.Path.GetTempPath() + Properties.Settings.Default.INPUT_FILENAME;
             var check = (System.Environment.GetEnvironmentVariable(Properties.Settings.Default.REDMON_USER) != null);
             InputPathTextBox.Text = (check && System.IO.File.Exists(path)) ? path : "";
 

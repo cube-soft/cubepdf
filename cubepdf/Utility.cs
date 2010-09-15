@@ -29,23 +29,7 @@ namespace CubePDF {
     /* --------------------------------------------------------------------- */
     //  Utility
     /* --------------------------------------------------------------------- */
-    public abstract class Utility {
-        /* ----------------------------------------------------------------- */
-        ///
-        /// GetCurrentPath
-        ///
-        /// <summary>
-        /// 現在の実行ディレクトリへのパスを返す．
-        /// </summary>
-        ///
-        /// <returns>現在の実行ディレクトリへのパス</returns>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static string GetCurrentPath() {
-            var exec = System.Reflection.Assembly.GetEntryAssembly();
-            return System.IO.Path.GetDirectoryName(exec.Location);
-        }
-        
+    public abstract class Utility {        
         /* ----------------------------------------------------------------- */
         ///
         /// UTF8ToUnicode

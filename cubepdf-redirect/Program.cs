@@ -21,7 +21,7 @@
  */
 /* ------------------------------------------------------------------------- */
 using System;
-using System.Text;
+using System.Diagnostics;
 using System.Security.Principal;
 using System.Runtime.InteropServices;
 using Container = System.Collections.Generic;
@@ -34,6 +34,9 @@ namespace CubePDF {
             var domain = Environment.GetEnvironmentVariable("REDMON_MACHINE");
             var redmon = Environment.GetEnvironmentVariable("REDMON_USER");
             
+            SetupLog(dir + @"\cubepdf.log");
+            Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe start");
+
             /*
              * ユーザに依存する環境変数．記憶しておいて，終了直前に元に戻す．
              * RedMon は，ユーザプロセスとして実行された場合でも
@@ -44,40 +47,49 @@ namespace CubePDF {
             SaveEnvironments(environments);
             System.Diagnostics.Debug.Assert(environments["USERNAME"] != null);
             System.Diagnostics.Debug.Assert(environments["USERPROFILE"] != null);
-            
-            if (redmon != null) ChangeEnvironments(domain, redmon);
-            
-            var filename = Utility.GetFileName(System.Environment.GetEnvironmentVariable("REDMON_DOCNAME"));
-            filename = FileNameModifier.ModifyFileName(filename);
-            SavePostscript(Console.OpenStandardInput(), System.IO.Path.GetTempPath() + @"TempInput.ps");
-            
-            System.Environment.SetEnvironmentVariable("REDMON_FILENAME", filename);
-            var proc = new System.Diagnostics.Process();
-            proc.StartInfo.FileName = dir + @"\cubepdf.exe";
-            proc.StartInfo.CreateNoWindow = false;
-            proc.StartInfo.UseShellExecute = false;
-            proc.StartInfo.LoadUserProfile = true;
-            proc.StartInfo.RedirectStandardInput = false;
-            
+            Trace.WriteLine(DateTime.Now.ToString() + ": USERNAME: " + environments["USERNAME"]);
+            Trace.WriteLine(DateTime.Now.ToString() + ": USERNAME: " + environments["USERPROFILE"]);
+
             try {
+                if (redmon != null) ChangeEnvironments(domain, redmon);
+                else Trace.WriteLine(DateTime.Now.ToString() + ": REDMON_USER: parameter not found");
+
+                var filename = Utility.GetFileName(System.Environment.GetEnvironmentVariable("REDMON_DOCNAME"));
+                filename = FileNameModifier.ModifyFileName(filename);
+                SavePostscript(Console.OpenStandardInput(), Utility.GetTempPath() + "TempInput.ps");
+                Trace.WriteLine(DateTime.Now.ToString() + ": OUTPUT: " + filename);
+
+                System.Environment.SetEnvironmentVariable("REDMON_FILENAME", filename);
+                var proc = new System.Diagnostics.Process();
+                proc.StartInfo.FileName = dir + @"\cubepdf.exe";
+                proc.StartInfo.CreateNoWindow = false;
+                proc.StartInfo.UseShellExecute = false;
+                proc.StartInfo.LoadUserProfile = true;
+                proc.StartInfo.RedirectStandardInput = false;
+
                 proc.Start();
+                Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe end");
+                Trace.Close();
+
                 proc.WaitForExit();
                 proc.Close();
                 proc.Dispose();
             }
             catch (Exception e) {
-                System.IO.StreamWriter err = new System.IO.StreamWriter(dir + @"\cubepdf-redirect.log");
-                err.WriteLine(e.Message);
-                err.WriteLine(proc.StartInfo.FileName);
-                err.Close();
-                err.Dispose();
+                Trace.WriteLine(DateTime.Now.ToString() + ": exception occured");
+                Trace.WriteLine(DateTime.Now.ToString() + ": TYPE: " + e.GetType().ToString());
+                Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: " + e.Source);
+                Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + e.Message);
+                Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + e.StackTrace);
             }
-            
-            // 環境変数の復元．
-            if (redmon != null) {
-                foreach (var elem in environments) {
-                    if (elem.Value != null) Environment.SetEnvironmentVariable(elem.Key, elem.Value);
+            finally {
+                // 環境変数の復元．
+                if (redmon != null) {
+                    foreach (var elem in environments) {
+                        if (elem.Value != null) Environment.SetEnvironmentVariable(elem.Key, elem.Value);
+                    }
                 }
+                //Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe end");
             }
         }
         
@@ -145,6 +157,16 @@ namespace CubePDF {
                     else break;
                 }
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// SetupLog
+        /* ----------------------------------------------------------------- */
+        private static void SetupLog(string src) {
+            if (System.IO.File.Exists(src)) System.IO.File.Delete(src);
+            Trace.Listeners.Remove("Default");
+            Trace.Listeners.Add(new TextWriterTraceListener(src));
+            Trace.AutoFlush = true;
         }
     }
 }
