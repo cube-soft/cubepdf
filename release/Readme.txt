@@ -2,47 +2,47 @@
 CubePDF
 Copyright (c) 2010 CubeSoft Inc. All rights reserved.
 
-�J���E�z�z�F������ЃL���[�u�E�\�t�g
+開発・配布：株式会社キューブ・ソフト
 Mailto: support@cube-soft.jp
 URL: http://www.cube-soft.jp/cubepdf/
 
 Last-updated: Fri 23 Jul 2010 00:00:00 JST
 ------------------------------------------------------------
 
-��What's this
-CubePDF�́A���g���̗l�X�ȃA�v���P�[�V��������A���ł��K�v�Ȏ��ɁA
-���΂₭PDF�`���Ȃǂ̕����������o�����Ƃ��ł���A�ƂĂ��֗���PDF�쐬�\�t�g�ł��B
-�������̂Ɠ�������ŃT�b�ƃf�[�^�����o�����s����̂ŁA����Ɍ˘f�����Ƃ�����܂���B
-�ڍׂȗ��p���@�ɂ��ẮA�������� CubePDF_���[�U�[�Y�}�j���A��.pdf ���Q�Ƃ��ĉ������B
+■What's this
+CubePDFは、お使いの様々なアプリケーションから、いつでも必要な時に、
+すばやくPDF形式などの文書を書き出すことができる、とても便利なPDF作成ソフトです。
+印刷するのと同じ操作でサッとデータ書き出しが行えるので、操作に戸惑うこともありません。
+詳細な利用方法については、同梱した CubePDF_ユーザーズマニュアル.pdf を参照して下さい。
 
-CubePDF ���g�p���邽�߂ɂ́AMicrosoft .NetFramework 2.0 ���C���X�g�[������Ă���K�v������܂��B
-Microsoft .NetFramework 2.0 �́A�ȉ��� URL ����_�E�����[�h���ĉ������B
+CubePDF を使用するためには、Microsoft .NetFramework 2.0 がインストールされている必要があります。
+Microsoft .NetFramework 2.0 は、以下の URL からダウンロードして下さい。
 http://www.microsoft.com/downloads/details.aspx?FamilyId=0856eacb-4362-4b0d-8edd-aab15c5e04f5&displaylang=ja
 
-CubePDF�́A�ȉ��̃��C�u�����𗘗p���Ă��܂��B���ꂼ��̃��C�u�����ɂ��ẮA�L�ڂ��� URL ����擾���邱�Ƃ��ł��܂��B
+CubePDFは、以下のライブラリを利用しています。それぞれのライブラリについては、記載した URL から取得することができます。
 - GPL Ghostscript 8.71
-�@ Copyright (c) Artifex Software, Inc. All rights reserved.
-�@ URL: http://pages.cs.wisc.edu/~ghost/
-�@ GNU General Public License ( http://www.gnu.org/licenses/gpl.html )
+　 Copyright (c) Artifex Software, Inc. All rights reserved.
+　 URL: http://pages.cs.wisc.edu/~ghost/
+　 GNU General Public License ( http://www.gnu.org/licenses/gpl.html )
 - RedMon
-�@ Copyright (C) 1997-2000, Ghostgum Software Pty Ltd.  All rights reserved.
-�@ URL: http://pages.cs.wisc.edu/~ghost/redmon/
-�@ Aladdin Free Public License ( http://www.artifex.com/downloads/doc/Public.htm )
+　 Copyright (C) 1997-2000, Ghostgum Software Pty Ltd.  All rights reserved.
+　 URL: http://pages.cs.wisc.edu/~ghost/redmon/
+　 Aladdin Free Public License ( http://www.artifex.com/downloads/doc/Public.htm )
 
-���o�[�W��������
-2010/09/?? version 0.9.2��
-- 10 �y�[�W�ȏ�̃t�@�C�����摜�t�@�C���ɕϊ�����ۂɁA�y�[�W�̕��т����������Ȃ�����C��
-- �����[�g�z�X�g���烍�O�C�������ꍇ�ɁA���[�J���}�V����ɃE�B���h�E���\�����������C��
-- �_�E���T���v�����O�I�v�V�������u�T�u�T���v���v�Ɏw�肵���ꍇ�ɃG���[��������������C��
+■バージョン履歴
+2010/09/?? version 0.9.2β
+- 10 ページ以上のファイルを画像ファイルに変換する際に、ページの並びがおかしくなる問題を修正
+- リモートホストからログインした場合に、ローカルマシン上にウィンドウが表示される問題を修正
+- ダウンサンプリングオプションを「サブサンプル」に指定した場合にエラーが発生する問題を修正
 
-2010/07/23 version 0.9.1��
-- �����v���p�e�B�ɓ���̕�������͂���� Adobe reader �Ȃǂŕ\���ł��Ȃ������C��
-- �����v���p�e�B��ݒ肵�Ȃ��ꍇ�ɁA�t�@�C�����Ȃǂ����{�ꂾ�� PDF �t�@�C���̃v���p�e�B������������������C��
-- CubePDF �̋N�����ɃE�B���h�E���őO�ʂɕ\������Ȃ������C��
-- ���[�U���ƃ��[�U�v���t�@�C���̃f�B���N�g�������قȂ�ꍇ�ɕs�s����������������C��
-- �ϊ��������Ƀv���O���X�o�[��\������悤�ɕύX
-- �|�X�g�v���Z�X�Łu���[�U�[�v���O�����v��I���ł���悤�ɕύX�i�A�h�o���X���[�h�̏ꍇ�̂݁j
-- �����̃t�@�C�������݂���ꍇ�Ɂu�㏑���v�����ł͂Ȃ��u�擪�Ɍ����v�A�u�����Ɍ����v����@�\��ǉ�
+2010/07/23 version 0.9.1β
+- 文書プロパティに特定の文字を入力すると Adobe reader などで表示できない問題を修正
+- 文書プロパティを設定しない場合に、ファイル名などが日本語だと PDF ファイルのプロパティが文字化けする問題を修正
+- CubePDF の起動時にウィンドウが最前面に表示されない問題を修正
+- ユーザ名とユーザプロファイルのディレクトリ名が異なる場合に不都合が発生する問題を修正
+- 変換処理中にプログレスバーを表示するように変更
+- ポストプロセスで「ユーザープログラム」を選択できるように変更（アドバンスモードの場合のみ）
+- 同名のファイルが存在する場合に「上書き」だけではなく「先頭に結合」、「末尾に結合」する機能を追加
 
-2010/07/07 version 0.9.0��
-- �ŏ��̌��J�o�[�W����
+2010/07/07 version 0.9.0β
+- 最初の公開バージョン

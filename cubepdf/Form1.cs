@@ -1225,5 +1225,9 @@ namespace CubePDF {
         private readonly string GS_LIB = System.Environment.GetEnvironmentVariable("windir") + @"\CubePDF\";
         
         #endregion
+
+        private void panel1_Paint(object sender, PaintEventArgs e) {
+
+        }
     }
 }
