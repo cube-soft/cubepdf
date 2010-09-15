@@ -6,7 +6,7 @@ Copyright (c) 2010 CubeSoft Inc. All rights reserved.
 Mailto: support@cube-soft.jp
 URL: http://www.cube-soft.jp/cubepdf/
 
-Last-updated: Fri 23 Jul 2010 00:00:00 JST
+Last-updated: Wed 15 Sep 2010 10:57:00 JST
 ------------------------------------------------------------
 
 ■What's this
@@ -28,6 +28,10 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
 　 Copyright (C) 1997-2000, Ghostgum Software Pty Ltd.  All rights reserved.
 　 URL: http://pages.cs.wisc.edu/~ghost/redmon/
 　 Aladdin Free Public License ( http://www.artifex.com/downloads/doc/Public.htm )
+- Painting Your Own Tabs - Second Edition
+   Copyright (c) 2010, Mark Jackson. All rights reserved.
+   URL: http://www.codeproject.com/KB/tabs/NewCustomTabControl.aspx
+   The Code Project Open License (CPOL) 1.02 ( http://www.codeproject.com/info/cpol10.aspx )
 
 ■バージョン履歴
 2010/09/?? version 0.9.2β
