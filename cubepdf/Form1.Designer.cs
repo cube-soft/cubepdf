@@ -29,6 +29,12 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.progressBar = new System.Windows.Forms.ProgressBar();
+            this.CancelBox = new System.Windows.Forms.Button();
+            this.MakePDFBox = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.bgWorker = new System.ComponentModel.BackgroundWorker();
             this.tabControl1 = new System.Windows.Forms.CustomTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.OutputDirLabel = new System.Windows.Forms.Label();
@@ -50,7 +56,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.TextPropertyPanel = new System.Windows.Forms.Panel();
             this.KeywordTextBox = new System.Windows.Forms.TextBox();
             this.TitleTextBox = new System.Windows.Forms.TextBox();
             this.SubTitleTextBox = new System.Windows.Forms.TextBox();
@@ -92,25 +97,86 @@
             this.AutoPageRotationCheckBox = new System.Windows.Forms.CheckBox();
             this.DownSamplingComboBox = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.CancelBox = new System.Windows.Forms.Button();
-            this.MakePDFBox = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.bgWorker = new System.ComponentModel.BackgroundWorker();
+            this.TextPropertyPanel = new System.Windows.Forms.Panel();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.TextPropertyPanel.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.PermissionGroupBox.SuspendLayout();
             this.OwnerPasswordPanel.SuspendLayout();
             this.SecurityGroupBox.SuspendLayout();
             this.UserPasswordPanel.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.TextPropertyPanel.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.BackgroundImage = global::CubePDF.Properties.Resources.background;
+            this.panel1.Controls.Add(this.progressBar);
+            this.panel1.Controls.Add(this.CancelBox);
+            this.panel1.Controls.Add(this.MakePDFBox);
+            this.panel1.Controls.Add(this.tabControl1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(0, 80);
+            this.panel1.Margin = new System.Windows.Forms.Padding(0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(496, 423);
+            this.panel1.TabIndex = 4;
+            // 
+            // progressBar
+            // 
+            this.progressBar.BackColor = System.Drawing.Color.Gainsboro;
+            this.progressBar.Location = new System.Drawing.Point(12, 396);
+            this.progressBar.Name = "progressBar";
+            this.progressBar.Size = new System.Drawing.Size(200, 15);
+            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressBar.TabIndex = 0;
+            this.progressBar.Visible = false;
+            // 
+            // CancelBox
+            // 
+            this.CancelBox.BackgroundImage = global::CubePDF.Properties.Resources.buttion_cancel;
+            this.CancelBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.CancelBox.Location = new System.Drawing.Point(368, 362);
+            this.CancelBox.Margin = new System.Windows.Forms.Padding(0);
+            this.CancelBox.Name = "CancelBox";
+            this.CancelBox.Size = new System.Drawing.Size(117, 49);
+            this.CancelBox.TabIndex = 13;
+            this.CancelBox.UseVisualStyleBackColor = true;
+            this.CancelBox.Click += new System.EventHandler(this.CancelBox_Click);
+            // 
+            // MakePDFBox
+            // 
+            this.MakePDFBox.BackgroundImage = global::CubePDF.Properties.Resources.buttion_convert;
+            this.MakePDFBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.MakePDFBox.Location = new System.Drawing.Point(225, 362);
+            this.MakePDFBox.Margin = new System.Windows.Forms.Padding(0);
+            this.MakePDFBox.Name = "MakePDFBox";
+            this.MakePDFBox.Size = new System.Drawing.Size(137, 49);
+            this.MakePDFBox.TabIndex = 12;
+            this.MakePDFBox.UseVisualStyleBackColor = true;
+            this.MakePDFBox.Click += new System.EventHandler(this.MakePDFBox_Click);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pictureBox1.Image = global::CubePDF.Properties.Resources.header;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(496, 80);
+            this.pictureBox1.TabIndex = 5;
+            this.pictureBox1.TabStop = false;
+            // 
+            // bgWorker
+            // 
+            this.bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
+            this.bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
             // 
             // tabControl1
             // 
@@ -118,7 +184,26 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
+            // 
+            // 
+            // 
+            this.tabControl1.DisplayStyleProvider.BorderColor = System.Drawing.SystemColors.ControlDark;
+            this.tabControl1.DisplayStyleProvider.BorderColorHot = System.Drawing.SystemColors.ControlDark;
+            this.tabControl1.DisplayStyleProvider.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(130)))), ((int)(((byte)(132)))));
+            this.tabControl1.DisplayStyleProvider.CloserColor = System.Drawing.Color.DarkGray;
+            this.tabControl1.DisplayStyleProvider.FocusTrack = true;
+            this.tabControl1.DisplayStyleProvider.HotTrack = true;
+            this.tabControl1.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.tabControl1.DisplayStyleProvider.Opacity = 1F;
+            this.tabControl1.DisplayStyleProvider.Overlap = 0;
+            this.tabControl1.DisplayStyleProvider.Padding = new System.Drawing.Point(6, 3);
+            this.tabControl1.DisplayStyleProvider.Radius = 2;
+            this.tabControl1.DisplayStyleProvider.ShowTabCloser = false;
+            this.tabControl1.DisplayStyleProvider.TextColor = System.Drawing.SystemColors.ControlText;
+            this.tabControl1.DisplayStyleProvider.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
+            this.tabControl1.DisplayStyleProvider.TextColorSelected = System.Drawing.SystemColors.ControlText;
             this.tabControl1.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.tabControl1.HotTrack = true;
             this.tabControl1.Location = new System.Drawing.Point(12, 1);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -126,10 +211,11 @@
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl1.TabIndex = 0;
             this.tabControl1.TabStop = false;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPage1
             // 
-            this.tabPage1.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage1.BackColor = System.Drawing.Color.White;
             this.tabPage1.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.tabPage1.Controls.Add(this.OutputDirLabel);
             this.tabPage1.Controls.Add(this.OutputFileTextBox);
@@ -149,10 +235,10 @@
             this.tabPage1.Controls.Add(this.FileTypeComboBox);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 23);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(465, 329);
+            this.tabPage1.Size = new System.Drawing.Size(465, 328);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "一般";
             // 
@@ -328,49 +414,33 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage2.BackColor = System.Drawing.Color.White;
             this.tabPage2.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.tabPage2.Controls.Add(this.TextPropertyPanel);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 23);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(465, 329);
+            this.tabPage2.Size = new System.Drawing.Size(465, 328);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "文書プロパティ";
             // 
-            // TextPropertyPanel
-            // 
-            this.TextPropertyPanel.BackColor = System.Drawing.Color.Transparent;
-            this.TextPropertyPanel.Controls.Add(this.KeywordTextBox);
-            this.TextPropertyPanel.Controls.Add(this.TitleTextBox);
-            this.TextPropertyPanel.Controls.Add(this.SubTitleTextBox);
-            this.TextPropertyPanel.Controls.Add(this.label11);
-            this.TextPropertyPanel.Controls.Add(this.AuthorTextBox);
-            this.TextPropertyPanel.Controls.Add(this.label10);
-            this.TextPropertyPanel.Controls.Add(this.label9);
-            this.TextPropertyPanel.Controls.Add(this.label8);
-            this.TextPropertyPanel.Location = new System.Drawing.Point(0, 0);
-            this.TextPropertyPanel.Name = "TextPropertyPanel";
-            this.TextPropertyPanel.Size = new System.Drawing.Size(451, 136);
-            this.TextPropertyPanel.TabIndex = 8;
-            // 
             // KeywordTextBox
             // 
-            this.KeywordTextBox.Location = new System.Drawing.Point(120, 98);
+            this.KeywordTextBox.Location = new System.Drawing.Point(117, 95);
             this.KeywordTextBox.Name = "KeywordTextBox";
             this.KeywordTextBox.Size = new System.Drawing.Size(307, 19);
             this.KeywordTextBox.TabIndex = 4;
             // 
             // TitleTextBox
             // 
-            this.TitleTextBox.Location = new System.Drawing.Point(120, 17);
+            this.TitleTextBox.Location = new System.Drawing.Point(117, 15);
             this.TitleTextBox.Name = "TitleTextBox";
             this.TitleTextBox.Size = new System.Drawing.Size(307, 19);
             this.TitleTextBox.TabIndex = 1;
             // 
             // SubTitleTextBox
             // 
-            this.SubTitleTextBox.Location = new System.Drawing.Point(120, 71);
+            this.SubTitleTextBox.Location = new System.Drawing.Point(117, 68);
             this.SubTitleTextBox.Name = "SubTitleTextBox";
             this.SubTitleTextBox.Size = new System.Drawing.Size(307, 19);
             this.SubTitleTextBox.TabIndex = 3;
@@ -378,7 +448,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(23, 101);
+            this.label11.Location = new System.Drawing.Point(20, 98);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(55, 12);
             this.label11.TabIndex = 0;
@@ -386,7 +456,7 @@
             // 
             // AuthorTextBox
             // 
-            this.AuthorTextBox.Location = new System.Drawing.Point(120, 44);
+            this.AuthorTextBox.Location = new System.Drawing.Point(117, 40);
             this.AuthorTextBox.Name = "AuthorTextBox";
             this.AuthorTextBox.Size = new System.Drawing.Size(307, 19);
             this.AuthorTextBox.TabIndex = 2;
@@ -394,7 +464,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(23, 74);
+            this.label10.Location = new System.Drawing.Point(20, 71);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(61, 12);
             this.label10.TabIndex = 0;
@@ -403,7 +473,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(23, 47);
+            this.label9.Location = new System.Drawing.Point(20, 44);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(43, 12);
             this.label9.TabIndex = 0;
@@ -412,7 +482,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(23, 20);
+            this.label8.Location = new System.Drawing.Point(20, 18);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(42, 12);
             this.label8.TabIndex = 0;
@@ -420,13 +490,13 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage3.BackColor = System.Drawing.Color.White;
             this.tabPage3.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.tabPage3.Controls.Add(this.PermissionGroupBox);
             this.tabPage3.Controls.Add(this.SecurityGroupBox);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Location = new System.Drawing.Point(4, 23);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(465, 329);
+            this.tabPage3.Size = new System.Drawing.Size(465, 328);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "セキュリティ";
             // 
@@ -626,7 +696,7 @@
             // 
             // tabPage4
             // 
-            this.tabPage4.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage4.BackColor = System.Drawing.Color.White;
             this.tabPage4.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.tabPage4.Controls.Add(this.SaveOptionsCheckBox);
             this.tabPage4.Controls.Add(this.PostProcessLiteComboBox);
@@ -640,10 +710,10 @@
             this.tabPage4.Controls.Add(this.AutoPageRotationCheckBox);
             this.tabPage4.Controls.Add(this.DownSamplingComboBox);
             this.tabPage4.Controls.Add(this.label17);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Location = new System.Drawing.Point(4, 23);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(465, 329);
+            this.tabPage4.Size = new System.Drawing.Size(465, 328);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "詳細設定";
             // 
@@ -767,72 +837,23 @@
             this.label17.TabIndex = 32;
             this.label17.Text = "ダウンサンプリング:";
             // 
-            // panel1
+            // TextPropertyPanel
             // 
-            this.panel1.BackColor = System.Drawing.Color.Transparent;
-            this.panel1.BackgroundImage = global::CubePDF.Properties.Resources.background;
-            this.panel1.Controls.Add(this.progressBar);
-            this.panel1.Controls.Add(this.CancelBox);
-            this.panel1.Controls.Add(this.MakePDFBox);
-            this.panel1.Controls.Add(this.tabControl1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 80);
-            this.panel1.Margin = new System.Windows.Forms.Padding(0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(496, 423);
-            this.panel1.TabIndex = 4;
-            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
-            // 
-            // progressBar
-            // 
-            this.progressBar.BackColor = System.Drawing.Color.Gainsboro;
-            this.progressBar.Location = new System.Drawing.Point(12, 396);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(200, 15);
-            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
-            this.progressBar.TabIndex = 0;
-            this.progressBar.Visible = false;
-            // 
-            // CancelBox
-            // 
-            this.CancelBox.BackgroundImage = global::CubePDF.Properties.Resources.buttion_cancel;
-            this.CancelBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.CancelBox.Location = new System.Drawing.Point(368, 362);
-            this.CancelBox.Margin = new System.Windows.Forms.Padding(0);
-            this.CancelBox.Name = "CancelBox";
-            this.CancelBox.Size = new System.Drawing.Size(117, 49);
-            this.CancelBox.TabIndex = 13;
-            this.CancelBox.UseVisualStyleBackColor = true;
-            this.CancelBox.Click += new System.EventHandler(this.CancelBox_Click);
-            // 
-            // MakePDFBox
-            // 
-            this.MakePDFBox.BackgroundImage = global::CubePDF.Properties.Resources.buttion_convert;
-            this.MakePDFBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.MakePDFBox.Location = new System.Drawing.Point(225, 362);
-            this.MakePDFBox.Margin = new System.Windows.Forms.Padding(0);
-            this.MakePDFBox.Name = "MakePDFBox";
-            this.MakePDFBox.Size = new System.Drawing.Size(137, 49);
-            this.MakePDFBox.TabIndex = 12;
-            this.MakePDFBox.UseVisualStyleBackColor = true;
-            this.MakePDFBox.Click += new System.EventHandler(this.MakePDFBox_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pictureBox1.Image = global::CubePDF.Properties.Resources.header;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(496, 80);
-            this.pictureBox1.TabIndex = 5;
-            this.pictureBox1.TabStop = false;
-            // 
-            // bgWorker
-            // 
-            this.bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
-            this.bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
+            this.TextPropertyPanel.BackColor = System.Drawing.Color.Transparent;
+            this.TextPropertyPanel.Controls.Add(this.label8);
+            this.TextPropertyPanel.Controls.Add(this.KeywordTextBox);
+            this.TextPropertyPanel.Controls.Add(this.AuthorTextBox);
+            this.TextPropertyPanel.Controls.Add(this.TitleTextBox);
+            this.TextPropertyPanel.Controls.Add(this.label10);
+            this.TextPropertyPanel.Controls.Add(this.label11);
+            this.TextPropertyPanel.Controls.Add(this.SubTitleTextBox);
+            this.TextPropertyPanel.Controls.Add(this.label9);
+            this.TextPropertyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextPropertyPanel.Location = new System.Drawing.Point(3, 3);
+            this.TextPropertyPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.TextPropertyPanel.Name = "TextPropertyPanel";
+            this.TextPropertyPanel.Size = new System.Drawing.Size(459, 322);
+            this.TextPropertyPanel.TabIndex = 5;
             // 
             // MainForm
             // 
@@ -850,12 +871,12 @@
             this.Text = "CubePDF";
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_KeyDown);
+            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            this.TextPropertyPanel.ResumeLayout(false);
-            this.TextPropertyPanel.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.PermissionGroupBox.ResumeLayout(false);
             this.PermissionGroupBox.PerformLayout();
@@ -867,8 +888,8 @@
             this.UserPasswordPanel.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.TextPropertyPanel.ResumeLayout(false);
+            this.TextPropertyPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -912,7 +933,6 @@
         private System.Windows.Forms.CheckBox InputFormEnableCheckBox;
         private System.Windows.Forms.CheckBox CopyEnableCheckBox;
         private System.Windows.Forms.CheckBox PrintEnableCheckBox;
-        private System.Windows.Forms.Panel TextPropertyPanel;
         private System.Windows.Forms.Button MakePDFBox;
         private System.Windows.Forms.Button CancelBox;
         private System.Windows.Forms.ComboBox ResolutionComboBox;
@@ -944,6 +964,7 @@
         private System.Windows.Forms.ComboBox PostProcessComboBox;
         private System.Windows.Forms.TextBox OutputFileTextBox;
         private System.Windows.Forms.Label OutputDirLabel;
+        private System.Windows.Forms.Panel TextPropertyPanel;
     }
 }
 

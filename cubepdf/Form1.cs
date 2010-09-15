@@ -42,6 +42,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public MainForm() {
             InitializeComponent();
+            this.DoubleBuffered = true;
 
             InitOptions();
             InitSelectDialog();
@@ -1226,8 +1227,11 @@ namespace CubePDF {
         
         #endregion
 
-        private void panel1_Paint(object sender, PaintEventArgs e) {
-
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e) {
+            var control = (CustomTabControl)sender;
+            //this.Refresh();
+            //control.SelectedTab.Refresh();
+            //control.Invalidate();
         }
     }
 }
