@@ -21,17 +21,17 @@ http://www.microsoft.com/downloads/details.aspx?FamilyId=0856eacb-4362-4b0d-8edd
 
 CubePDFは、以下のライブラリを利用しています。それぞれのライブラリについては、記載した URL から取得することができます。
 - GPL Ghostscript 8.71
-　 Copyright (c) Artifex Software, Inc. All rights reserved.
-　 URL: http://pages.cs.wisc.edu/~ghost/
-　 GNU General Public License ( http://www.gnu.org/licenses/gpl.html )
+  Copyright (c) Artifex Software, Inc. All rights reserved.
+  URL: http://pages.cs.wisc.edu/~ghost/
+  GNU General Public License ( http://www.gnu.org/licenses/gpl.html )
 - RedMon
-　 Copyright (C) 1997-2000, Ghostgum Software Pty Ltd.  All rights reserved.
-　 URL: http://pages.cs.wisc.edu/~ghost/redmon/
-　 Aladdin Free Public License ( http://www.artifex.com/downloads/doc/Public.htm )
+  Copyright (C) 1997-2000, Ghostgum Software Pty Ltd.  All rights reserved.
+  URL: http://pages.cs.wisc.edu/~ghost/redmon/
+  Aladdin Free Public License ( http://www.artifex.com/downloads/doc/Public.htm )
 - Painting Your Own Tabs - Second Edition
-   Copyright (c) 2010, Mark Jackson. All rights reserved.
-   URL: http://www.codeproject.com/KB/tabs/NewCustomTabControl.aspx
-   The Code Project Open License (CPOL) 1.02 ( http://www.codeproject.com/info/cpol10.aspx )
+  Copyright (c) 2010, Mark Jackson. All rights reserved.
+  URL: http://www.codeproject.com/KB/tabs/NewCustomTabControl.aspx
+  The Code Project Open License (CPOL) 1.02 ( http://www.codeproject.com/info/cpol10.aspx )
 
 ■バージョン履歴
 2010/09/?? version 0.9.2β
