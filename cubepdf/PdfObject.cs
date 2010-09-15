@@ -261,7 +261,7 @@ namespace CubePDF {
             if (!System.IO.File.Exists(path) ||
                 FILE_TYPES[FileTypeComboBox.SelectedIndex] != Properties.Settings.Default.FILETYPE_PDF) return;
 
-            var tmp = System.IO.Path.GetTempPath() + "TempOutput.pdf";
+            var tmp = Cliff.Path.GetTempPath() + "TempOutput.pdf";
             if (System.IO.File.Exists(tmp)) System.IO.File.Delete(tmp);
             System.IO.File.Move(path, tmp);
 

@@ -30,6 +30,13 @@ namespace CubePDF {
     /* --------------------------------------------------------------------- */
     public abstract class Utility {
         /* ----------------------------------------------------------------- */
+        /// GetTempPath
+        /* ----------------------------------------------------------------- */
+        public static string GetTempPath() {
+            return System.Environment.GetEnvironmentVariable("windir") + @"\CubePDF\";
+        }
+
+        /* ----------------------------------------------------------------- */
         ///
         /// GetFileName
         ///

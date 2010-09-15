@@ -21,6 +21,7 @@
  */
 /* ------------------------------------------------------------------------- */
 using System;
+using System.Diagnostics;
 using Interop = System.Runtime.InteropServices;
 using Container = System.Collections.Generic;
 
@@ -53,16 +54,20 @@ namespace Cliff {
             //  Convert
             /* ------------------------------------------------------------- */
             public void Convert(string[] sources, string dest) {
+                Cliff.Log.Setup(Cliff.Path.GetCurrentPath() + "cubepdf.log");
+                Trace.WriteLine(DateTime.Now.ToString() + ": cliff start");
+
                 var root = System.IO.Path.GetDirectoryName(dest);
                 var filename = System.IO.Path.GetFileNameWithoutExtension(dest);
                 var ext = System.IO.Path.GetExtension(dest);
-                var work = System.IO.Path.GetTempPath() + "cubepdf";
+                var work = Cliff.Path.GetTempPath() + "cubepdf";
                 if (!System.IO.File.Exists(work)) System.IO.Directory.CreateDirectory(work);
 
                 var inputfiles = new Container.List<string>();
                 var dtmp = (this.device_ == Device.PDF || this.device_ == Device.PDF_Opt || this.device_ == Device.PS) ?
                     work + '\\' + System.IO.Path.GetRandomFileName() + ext :
                     work + '\\' + System.IO.Path.GetRandomFileName().Replace('.', '_') + "-%08d" + ext;
+                Trace.WriteLine(DateTime.Now.ToString() + ": TMP_DEST: " + dtmp);
 
                 foreach (var src in sources) {
                     var stmp = work + '\\' +
@@ -73,11 +78,15 @@ namespace Cliff {
                         System.IO.File.Copy(src, stmp, true); // TODO: このコピーのコスト
                         inputfiles.Add(stmp);
                     }
+                    Trace.WriteLine(DateTime.Now.ToString() + ": TMP_SOURCE: " + stmp);
                 }
 
                 if (inputfiles.Count > 0) {
+                    if (!ExecConvert(inputfiles.ToArray(), dtmp)) {
+                        throw new Exception("Cliff: ghostscript error");
+                    }
+
                     try {
-                        ExecConvert(inputfiles.ToArray(), dtmp);
                         foreach (var path in inputfiles) {
                             if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
                         }
@@ -86,6 +95,7 @@ namespace Cliff {
                         if (files.Length == 1) {
                             if (System.IO.File.Exists(dest)) System.IO.File.Delete(dest);
                             System.IO.File.Move(work + '\\' + System.IO.Path.GetFileName(files[0]), dest);
+                            Trace.WriteLine(DateTime.Now.ToString() + ": DEST: " + dest);
                         }
                         else if (files.Length > 1) {
                             int i = 1;
@@ -96,10 +106,16 @@ namespace Cliff {
                                 if (System.IO.File.Exists(target)) System.IO.File.Delete(target);
                                 System.IO.File.Move(work + '\\' + leaf, target);
                                 i++;
+                                Trace.WriteLine(DateTime.Now.ToString() + ": DEST: " + target);
                             }
                         }
                     }
                     catch (Exception e) {
+                        Trace.WriteLine(DateTime.Now.ToString() + ": exception occured");
+                        Trace.WriteLine(DateTime.Now.ToString() + ": TYPE: " + e.GetType().ToString());
+                        Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: " + e.Source);
+                        Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + e.Message);
+                        Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + e.StackTrace);
                         throw new Exception("Cliff: " + e.Message);
                     }
                     finally {
@@ -107,6 +123,8 @@ namespace Cliff {
                             if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
                         }
                         System.IO.Directory.Delete(work, true);
+                        Trace.WriteLine(DateTime.Now.ToString() + ": cliff end");
+                        Trace.Close();
                     }
                 }
             }
@@ -235,8 +253,8 @@ namespace Cliff {
              *  
              */
             /* ------------------------------------------------------------- */
-            protected virtual void ExecConvert(string[] sources, string dest) {
-                Execute(this.MakeArgs(sources, dest));
+            protected virtual bool ExecConvert(string[] sources, string dest) {
+                return Execute(this.MakeArgs(sources, dest));
             }
             
             /* ------------------------------------------------------------- */
@@ -327,8 +345,9 @@ namespace Cliff {
             /* ------------------------------------------------------------- */
             //  Execute (private)
             /* ------------------------------------------------------------- */
-            private static void Execute(string[] args) {
+            private static bool Execute(string[] args) {
                 IntPtr instance = IntPtr.Zero;
+                bool status = true;
                 lock (gslock_) {
                     gsapi_new_instance(out instance, IntPtr.Zero);
                     System.Diagnostics.Debug.Assert(instance != IntPtr.Zero);
@@ -338,24 +357,32 @@ namespace Cliff {
                         // 生成されたファイルを見ると正常に生成されているため，
                         // 暫定的に -101 は OK とする。エラーコードが返る理由を要調査．
                         if (result < 0 && result != -101) {
-                            var exec = System.Reflection.Assembly.GetEntryAssembly();
-                            var dir = System.IO.Path.GetDirectoryName(exec.Location);
-                            var errlog = new System.IO.StreamWriter(dir + @"\cliff.log");
-                            errlog.WriteLine("Error was occured in gsapi_init_with_args()");
-                            errlog.WriteLine("Current Directory: {0}", System.IO.Directory.GetCurrentDirectory());
-                            errlog.WriteLine("Arguments:");
-                            foreach (var s in args) errlog.WriteLine("\t{0}", s);
-                            errlog.WriteLine("Result code: {0}", result);
-                            errlog.Close();
-                            errlog.Dispose();
+                            Trace.WriteLine(DateTime.Now.ToString() + ": error occured");
+                            Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: gsapi_init_with_args()");
+                            Trace.WriteLine(DateTime.Now.ToString() + ": Current Directory: " + Cliff.Path.GetCurrentPath());
+                            Trace.WriteLine(DateTime.Now.ToString() + ": ARGUMENTS:");
+                            foreach (var s in args) Trace.WriteLine("\t{0}", s);
+                            Trace.WriteLine(DateTime.Now.ToString() + ": RESULT: " + result.ToString());
                             throw new Interop.ExternalException(result.ToString() + ": ghostscript conversion error");
                         }
+                    }
+                    catch (Exception e) {
+                        Trace.WriteLine(DateTime.Now.ToString() + ": exception occured");
+                        Trace.WriteLine(DateTime.Now.ToString() + ": TYPE: " + e.GetType().ToString());
+                        Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: " + e.Source);
+                        Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + e.Message);
+                        Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + e.StackTrace);
+                        Trace.WriteLine(DateTime.Now.ToString() + ": ARGUMENTS:");
+                        foreach (var s in args) Trace.WriteLine("\t{0}", s);
+                        status = false;
                     }
                     finally {
                         gsapi_exit(instance);
                         gsapi_delete_instance(instance);
                     }
                 }
+
+                return status;
             }
 
             /* ------------------------------------------------------------- */
