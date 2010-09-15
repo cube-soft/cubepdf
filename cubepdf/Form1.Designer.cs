@@ -29,8 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new System.Windows.Forms.CustomTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.OutputDirLabel = new System.Windows.Forms.Label();
+            this.OutputFileTextBox = new System.Windows.Forms.TextBox();
             this.SelectUserProgramButton = new System.Windows.Forms.Button();
             this.UserProgramTextBox = new System.Windows.Forms.TextBox();
             this.PostProcessComboBox = new System.Windows.Forms.ComboBox();
@@ -94,11 +96,8 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.CancelBox = new System.Windows.Forms.Button();
             this.MakePDFBox = new System.Windows.Forms.Button();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.bgWorker = new System.ComponentModel.BackgroundWorker();
-            this.OutputFileTextBox = new System.Windows.Forms.TextBox();
-            this.OutputDirLabel = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -110,7 +109,6 @@
             this.UserPasswordPanel.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -157,6 +155,24 @@
             this.tabPage1.Size = new System.Drawing.Size(465, 329);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "一般";
+            // 
+            // OutputDirLabel
+            // 
+            this.OutputDirLabel.AutoEllipsis = true;
+            this.OutputDirLabel.Location = new System.Drawing.Point(118, 105);
+            this.OutputDirLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.OutputDirLabel.Name = "OutputDirLabel";
+            this.OutputDirLabel.Size = new System.Drawing.Size(135, 17);
+            this.OutputDirLabel.TabIndex = 34;
+            this.OutputDirLabel.Text = "C:\\Program Files\\";
+            this.OutputDirLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // OutputFileTextBox
+            // 
+            this.OutputFileTextBox.Location = new System.Drawing.Point(256, 102);
+            this.OutputFileTextBox.Name = "OutputFileTextBox";
+            this.OutputFileTextBox.Size = new System.Drawing.Size(130, 19);
+            this.OutputFileTextBox.TabIndex = 5;
             // 
             // SelectUserProgramButton
             // 
@@ -758,13 +774,14 @@
             this.panel1.Controls.Add(this.progressBar);
             this.panel1.Controls.Add(this.CancelBox);
             this.panel1.Controls.Add(this.MakePDFBox);
-            this.panel1.Controls.Add(this.pictureBox2);
             this.panel1.Controls.Add(this.tabControl1);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 80);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(497, 460);
+            this.panel1.Size = new System.Drawing.Size(496, 423);
             this.panel1.TabIndex = 4;
+            this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
             // progressBar
             // 
@@ -800,22 +817,15 @@
             this.MakePDFBox.UseVisualStyleBackColor = true;
             this.MakePDFBox.Click += new System.EventHandler(this.MakePDFBox_Click);
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.BackgroundImage = global::CubePDF.Properties.Resources.background;
-            this.pictureBox2.Location = new System.Drawing.Point(400, 1);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(85, 20);
-            this.pictureBox2.TabIndex = 4;
-            this.pictureBox2.TabStop = false;
-            // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.pictureBox1.Image = global::CubePDF.Properties.Resources.header;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(500, 80);
+            this.pictureBox1.Size = new System.Drawing.Size(496, 80);
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
             // 
@@ -823,24 +833,6 @@
             // 
             this.bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
             this.bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
-            // 
-            // OutputFileTextBox
-            // 
-            this.OutputFileTextBox.Location = new System.Drawing.Point(256, 102);
-            this.OutputFileTextBox.Name = "OutputFileTextBox";
-            this.OutputFileTextBox.Size = new System.Drawing.Size(130, 19);
-            this.OutputFileTextBox.TabIndex = 5;
-            // 
-            // OutputDirLabel
-            // 
-            this.OutputDirLabel.AutoEllipsis = true;
-            this.OutputDirLabel.Location = new System.Drawing.Point(118, 105);
-            this.OutputDirLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.OutputDirLabel.Name = "OutputDirLabel";
-            this.OutputDirLabel.Size = new System.Drawing.Size(135, 17);
-            this.OutputDirLabel.TabIndex = 34;
-            this.OutputDirLabel.Text = "C:\\Program Files\\";
-            this.OutputDirLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // MainForm
             // 
@@ -876,7 +868,6 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
@@ -884,7 +875,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.CustomTabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
@@ -922,7 +913,6 @@
         private System.Windows.Forms.CheckBox CopyEnableCheckBox;
         private System.Windows.Forms.CheckBox PrintEnableCheckBox;
         private System.Windows.Forms.Panel TextPropertyPanel;
-        private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Button MakePDFBox;
         private System.Windows.Forms.Button CancelBox;
         private System.Windows.Forms.ComboBox ResolutionComboBox;
