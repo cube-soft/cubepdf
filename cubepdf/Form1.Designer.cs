@@ -33,12 +33,8 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.CancelBox = new System.Windows.Forms.Button();
             this.MakePDFBox = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.bgWorker = new System.ComponentModel.BackgroundWorker();
             this.tabControl1 = new System.Windows.Forms.CustomTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.OutputDirLabel = new System.Windows.Forms.Label();
-            this.OutputFileTextBox = new System.Windows.Forms.TextBox();
             this.SelectUserProgramButton = new System.Windows.Forms.Button();
             this.UserProgramTextBox = new System.Windows.Forms.TextBox();
             this.PostProcessComboBox = new System.Windows.Forms.ComboBox();
@@ -56,14 +52,15 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.KeywordTextBox = new System.Windows.Forms.TextBox();
-            this.TitleTextBox = new System.Windows.Forms.TextBox();
-            this.SubTitleTextBox = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.AuthorTextBox = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.TextPropertyPanel = new System.Windows.Forms.Panel();
             this.label8 = new System.Windows.Forms.Label();
+            this.KeywordTextBox = new System.Windows.Forms.TextBox();
+            this.AuthorTextBox = new System.Windows.Forms.TextBox();
+            this.TitleTextBox = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.SubTitleTextBox = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.PermissionGroupBox = new System.Windows.Forms.GroupBox();
             this.OwnerPasswordCheckBox = new System.Windows.Forms.CheckBox();
@@ -97,19 +94,21 @@
             this.AutoPageRotationCheckBox = new System.Windows.Forms.CheckBox();
             this.DownSamplingComboBox = new System.Windows.Forms.ComboBox();
             this.label17 = new System.Windows.Forms.Label();
-            this.TextPropertyPanel = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.bgWorker = new System.ComponentModel.BackgroundWorker();
+            this.OutputPathTextBox = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.TextPropertyPanel.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.PermissionGroupBox.SuspendLayout();
             this.OwnerPasswordPanel.SuspendLayout();
             this.SecurityGroupBox.SuspendLayout();
             this.UserPasswordPanel.SuspendLayout();
             this.tabPage4.SuspendLayout();
-            this.TextPropertyPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -161,23 +160,6 @@
             this.MakePDFBox.UseVisualStyleBackColor = true;
             this.MakePDFBox.Click += new System.EventHandler(this.MakePDFBox_Click);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pictureBox1.Image = global::CubePDF.Properties.Resources.header;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(496, 80);
-            this.pictureBox1.TabIndex = 5;
-            this.pictureBox1.TabStop = false;
-            // 
-            // bgWorker
-            // 
-            this.bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
-            this.bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
-            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
@@ -211,14 +193,12 @@
             this.tabControl1.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.tabControl1.TabIndex = 0;
             this.tabControl1.TabStop = false;
-            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.White;
             this.tabPage1.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
-            this.tabPage1.Controls.Add(this.OutputDirLabel);
-            this.tabPage1.Controls.Add(this.OutputFileTextBox);
+            this.tabPage1.Controls.Add(this.OutputPathTextBox);
             this.tabPage1.Controls.Add(this.SelectUserProgramButton);
             this.tabPage1.Controls.Add(this.UserProgramTextBox);
             this.tabPage1.Controls.Add(this.PostProcessComboBox);
@@ -242,28 +222,10 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "一般";
             // 
-            // OutputDirLabel
-            // 
-            this.OutputDirLabel.AutoEllipsis = true;
-            this.OutputDirLabel.Location = new System.Drawing.Point(118, 105);
-            this.OutputDirLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.OutputDirLabel.Name = "OutputDirLabel";
-            this.OutputDirLabel.Size = new System.Drawing.Size(135, 17);
-            this.OutputDirLabel.TabIndex = 34;
-            this.OutputDirLabel.Text = "C:\\Program Files\\";
-            this.OutputDirLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // OutputFileTextBox
-            // 
-            this.OutputFileTextBox.Location = new System.Drawing.Point(256, 102);
-            this.OutputFileTextBox.Name = "OutputFileTextBox";
-            this.OutputFileTextBox.Size = new System.Drawing.Size(130, 19);
-            this.OutputFileTextBox.TabIndex = 5;
-            // 
             // SelectUserProgramButton
             // 
             this.SelectUserProgramButton.BackColor = System.Drawing.Color.LightGray;
-            this.SelectUserProgramButton.Location = new System.Drawing.Point(394, 181);
+            this.SelectUserProgramButton.Location = new System.Drawing.Point(394, 130);
             this.SelectUserProgramButton.Name = "SelectUserProgramButton";
             this.SelectUserProgramButton.Size = new System.Drawing.Size(33, 20);
             this.SelectUserProgramButton.TabIndex = 10;
@@ -273,25 +235,27 @@
             // 
             // UserProgramTextBox
             // 
-            this.UserProgramTextBox.Location = new System.Drawing.Point(120, 182);
+            this.UserProgramTextBox.Location = new System.Drawing.Point(220, 131);
             this.UserProgramTextBox.Name = "UserProgramTextBox";
-            this.UserProgramTextBox.Size = new System.Drawing.Size(266, 19);
+            this.UserProgramTextBox.Size = new System.Drawing.Size(166, 19);
             this.UserProgramTextBox.TabIndex = 9;
+            this.UserProgramTextBox.Click += new System.EventHandler(this.FilePathTextBoxFocused);
+            this.UserProgramTextBox.Leave += new System.EventHandler(this.FilePathTextBoxLeaved);
             // 
             // PostProcessComboBox
             // 
             this.PostProcessComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PostProcessComboBox.FormattingEnabled = true;
-            this.PostProcessComboBox.Location = new System.Drawing.Point(119, 155);
+            this.PostProcessComboBox.Location = new System.Drawing.Point(119, 131);
             this.PostProcessComboBox.Name = "PostProcessComboBox";
-            this.PostProcessComboBox.Size = new System.Drawing.Size(308, 20);
+            this.PostProcessComboBox.Size = new System.Drawing.Size(95, 20);
             this.PostProcessComboBox.TabIndex = 8;
             this.PostProcessComboBox.SelectedIndexChanged += new System.EventHandler(this.PostProcessComboBox_SelectedIndexChanged);
             // 
             // PostProcessLabel
             // 
             this.PostProcessLabel.AutoSize = true;
-            this.PostProcessLabel.Location = new System.Drawing.Point(23, 158);
+            this.PostProcessLabel.Location = new System.Drawing.Point(23, 134);
             this.PostProcessLabel.Name = "PostProcessLabel";
             this.PostProcessLabel.Size = new System.Drawing.Size(71, 12);
             this.PostProcessLabel.TabIndex = 33;
@@ -301,15 +265,15 @@
             // 
             this.existedFileComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.existedFileComboBox.FormattingEnabled = true;
-            this.existedFileComboBox.Location = new System.Drawing.Point(120, 128);
+            this.existedFileComboBox.Location = new System.Drawing.Point(357, 101);
             this.existedFileComboBox.Name = "existedFileComboBox";
-            this.existedFileComboBox.Size = new System.Drawing.Size(307, 20);
+            this.existedFileComboBox.Size = new System.Drawing.Size(70, 20);
             this.existedFileComboBox.TabIndex = 7;
             // 
             // SelectFileButton
             // 
             this.SelectFileButton.BackColor = System.Drawing.Color.LightGray;
-            this.SelectFileButton.Location = new System.Drawing.Point(394, 207);
+            this.SelectFileButton.Location = new System.Drawing.Point(394, 160);
             this.SelectFileButton.Name = "SelectFileButton";
             this.SelectFileButton.Size = new System.Drawing.Size(33, 20);
             this.SelectFileButton.TabIndex = 12;
@@ -320,15 +284,17 @@
             // 
             // InputPathTextBox
             // 
-            this.InputPathTextBox.Location = new System.Drawing.Point(120, 208);
+            this.InputPathTextBox.Location = new System.Drawing.Point(120, 161);
             this.InputPathTextBox.Name = "InputPathTextBox";
             this.InputPathTextBox.Size = new System.Drawing.Size(266, 19);
             this.InputPathTextBox.TabIndex = 11;
+            this.InputPathTextBox.Click += new System.EventHandler(this.FilePathTextBoxFocused);
+            this.InputPathTextBox.Leave += new System.EventHandler(this.FilePathTextBoxLeaved);
             // 
             // InputPathLabel
             // 
             this.InputPathLabel.AutoSize = true;
-            this.InputPathLabel.Location = new System.Drawing.Point(23, 211);
+            this.InputPathLabel.Location = new System.Drawing.Point(23, 164);
             this.InputPathLabel.Name = "InputPathLabel";
             this.InputPathLabel.Size = new System.Drawing.Size(65, 12);
             this.InputPathLabel.TabIndex = 18;
@@ -356,7 +322,7 @@
             // SaveFileButton
             // 
             this.SaveFileButton.BackColor = System.Drawing.Color.LightGray;
-            this.SaveFileButton.Location = new System.Drawing.Point(394, 101);
+            this.SaveFileButton.Location = new System.Drawing.Point(318, 101);
             this.SaveFileButton.Name = "SaveFileButton";
             this.SaveFileButton.Size = new System.Drawing.Size(33, 20);
             this.SaveFileButton.TabIndex = 6;
@@ -424,6 +390,33 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "文書プロパティ";
             // 
+            // TextPropertyPanel
+            // 
+            this.TextPropertyPanel.BackColor = System.Drawing.Color.Transparent;
+            this.TextPropertyPanel.Controls.Add(this.label8);
+            this.TextPropertyPanel.Controls.Add(this.KeywordTextBox);
+            this.TextPropertyPanel.Controls.Add(this.AuthorTextBox);
+            this.TextPropertyPanel.Controls.Add(this.TitleTextBox);
+            this.TextPropertyPanel.Controls.Add(this.label10);
+            this.TextPropertyPanel.Controls.Add(this.label11);
+            this.TextPropertyPanel.Controls.Add(this.SubTitleTextBox);
+            this.TextPropertyPanel.Controls.Add(this.label9);
+            this.TextPropertyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TextPropertyPanel.Location = new System.Drawing.Point(3, 3);
+            this.TextPropertyPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.TextPropertyPanel.Name = "TextPropertyPanel";
+            this.TextPropertyPanel.Size = new System.Drawing.Size(459, 322);
+            this.TextPropertyPanel.TabIndex = 5;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(20, 18);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(42, 12);
+            this.label8.TabIndex = 0;
+            this.label8.Text = "タイトル:";
+            // 
             // KeywordTextBox
             // 
             this.KeywordTextBox.Location = new System.Drawing.Point(117, 95);
@@ -431,35 +424,19 @@
             this.KeywordTextBox.Size = new System.Drawing.Size(307, 19);
             this.KeywordTextBox.TabIndex = 4;
             // 
-            // TitleTextBox
-            // 
-            this.TitleTextBox.Location = new System.Drawing.Point(117, 15);
-            this.TitleTextBox.Name = "TitleTextBox";
-            this.TitleTextBox.Size = new System.Drawing.Size(307, 19);
-            this.TitleTextBox.TabIndex = 1;
-            // 
-            // SubTitleTextBox
-            // 
-            this.SubTitleTextBox.Location = new System.Drawing.Point(117, 68);
-            this.SubTitleTextBox.Name = "SubTitleTextBox";
-            this.SubTitleTextBox.Size = new System.Drawing.Size(307, 19);
-            this.SubTitleTextBox.TabIndex = 3;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(20, 98);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(55, 12);
-            this.label11.TabIndex = 0;
-            this.label11.Text = "キーワード:";
-            // 
             // AuthorTextBox
             // 
             this.AuthorTextBox.Location = new System.Drawing.Point(117, 40);
             this.AuthorTextBox.Name = "AuthorTextBox";
             this.AuthorTextBox.Size = new System.Drawing.Size(307, 19);
             this.AuthorTextBox.TabIndex = 2;
+            // 
+            // TitleTextBox
+            // 
+            this.TitleTextBox.Location = new System.Drawing.Point(117, 15);
+            this.TitleTextBox.Name = "TitleTextBox";
+            this.TitleTextBox.Size = new System.Drawing.Size(307, 19);
+            this.TitleTextBox.TabIndex = 1;
             // 
             // label10
             // 
@@ -470,6 +447,22 @@
             this.label10.TabIndex = 0;
             this.label10.Text = "サブタイトル:";
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(20, 98);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(55, 12);
+            this.label11.TabIndex = 0;
+            this.label11.Text = "キーワード:";
+            // 
+            // SubTitleTextBox
+            // 
+            this.SubTitleTextBox.Location = new System.Drawing.Point(117, 68);
+            this.SubTitleTextBox.Name = "SubTitleTextBox";
+            this.SubTitleTextBox.Size = new System.Drawing.Size(307, 19);
+            this.SubTitleTextBox.TabIndex = 3;
+            // 
             // label9
             // 
             this.label9.AutoSize = true;
@@ -478,15 +471,6 @@
             this.label9.Size = new System.Drawing.Size(43, 12);
             this.label9.TabIndex = 0;
             this.label9.Text = "作成者:";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(20, 18);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(42, 12);
-            this.label8.TabIndex = 0;
-            this.label8.Text = "タイトル:";
             // 
             // tabPage3
             // 
@@ -837,23 +821,31 @@
             this.label17.TabIndex = 32;
             this.label17.Text = "ダウンサンプリング:";
             // 
-            // TextPropertyPanel
+            // pictureBox1
             // 
-            this.TextPropertyPanel.BackColor = System.Drawing.Color.Transparent;
-            this.TextPropertyPanel.Controls.Add(this.label8);
-            this.TextPropertyPanel.Controls.Add(this.KeywordTextBox);
-            this.TextPropertyPanel.Controls.Add(this.AuthorTextBox);
-            this.TextPropertyPanel.Controls.Add(this.TitleTextBox);
-            this.TextPropertyPanel.Controls.Add(this.label10);
-            this.TextPropertyPanel.Controls.Add(this.label11);
-            this.TextPropertyPanel.Controls.Add(this.SubTitleTextBox);
-            this.TextPropertyPanel.Controls.Add(this.label9);
-            this.TextPropertyPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TextPropertyPanel.Location = new System.Drawing.Point(3, 3);
-            this.TextPropertyPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.TextPropertyPanel.Name = "TextPropertyPanel";
-            this.TextPropertyPanel.Size = new System.Drawing.Size(459, 322);
-            this.TextPropertyPanel.TabIndex = 5;
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pictureBox1.Image = global::CubePDF.Properties.Resources.header;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(496, 80);
+            this.pictureBox1.TabIndex = 5;
+            this.pictureBox1.TabStop = false;
+            // 
+            // bgWorker
+            // 
+            this.bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
+            this.bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
+            // 
+            // OutputPathTextBox
+            // 
+            this.OutputPathTextBox.Location = new System.Drawing.Point(120, 102);
+            this.OutputPathTextBox.Name = "OutputPathTextBox";
+            this.OutputPathTextBox.Size = new System.Drawing.Size(192, 19);
+            this.OutputPathTextBox.TabIndex = 4;
+            this.OutputPathTextBox.Click += new System.EventHandler(this.FilePathTextBoxFocused);
+            this.OutputPathTextBox.Leave += new System.EventHandler(this.FilePathTextBoxLeaved);
             // 
             // MainForm
             // 
@@ -872,11 +864,12 @@
             this.Shown += new System.EventHandler(this.Form_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form_KeyDown);
             this.panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.TextPropertyPanel.ResumeLayout(false);
+            this.TextPropertyPanel.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.PermissionGroupBox.ResumeLayout(false);
             this.PermissionGroupBox.PerformLayout();
@@ -888,8 +881,7 @@
             this.UserPasswordPanel.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
-            this.TextPropertyPanel.ResumeLayout(false);
-            this.TextPropertyPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -962,9 +954,8 @@
         private System.Windows.Forms.Button SelectUserProgramButton;
         private System.Windows.Forms.TextBox UserProgramTextBox;
         private System.Windows.Forms.ComboBox PostProcessComboBox;
-        private System.Windows.Forms.TextBox OutputFileTextBox;
-        private System.Windows.Forms.Label OutputDirLabel;
         private System.Windows.Forms.Panel TextPropertyPanel;
+        private System.Windows.Forms.TextBox OutputPathTextBox;
     }
 }
 

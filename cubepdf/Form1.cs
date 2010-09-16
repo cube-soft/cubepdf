@@ -311,17 +311,23 @@ namespace CubePDF {
         /// SetOutputPath
         /* ----------------------------------------------------------------- */
         private void SetOutputPath(string path) {
-            var dir = System.IO.Path.GetDirectoryName(path);
-            if (dir.Length > 0) dir += '\\';
-            this.OutputDirLabel.Text = dir;
-            this.OutputFileTextBox.Text = System.IO.Path.GetFileName(path);
+            // ディレクトリとファイル名を分離するかも．
+            //var dir = System.IO.Path.GetDirectoryName(path);
+            //if (dir.Length > 0) dir += '\\';
+            //this.OutputDirLabel.Text = dir;
+            //this.OutputFileTextBox.Text = System.IO.Path.GetFileName(path);
+
+            this.OutputPathTextBox.Text = path;
         }
 
         /* ----------------------------------------------------------------- */
         /// GetOutputPath
         /* ----------------------------------------------------------------- */
         private string GetOutputPath() {
-            return this.OutputDirLabel.Text + this.OutputFileTextBox.Text;
+            // ディレクトリとファイル名を分離するかも．
+            //return this.OutputDirLabel.Text + this.OutputFileTextBox.Text;
+
+            return this.OutputPathTextBox.Text;
         }
 
         /* ----------------------------------------------------------------- */
@@ -448,8 +454,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void ChangeFileExtensions(int selected) {
             if (selected >= FILE_EXTENSIONS.Length) selected = 0;
-            var tmp = OutputFileTextBox.Text;
-            OutputFileTextBox.Text = System.IO.Path.ChangeExtension(tmp, FILE_EXTENSIONS[selected]);
+            var tmp = OutputPathTextBox.Text;
+            OutputPathTextBox.Text = System.IO.Path.ChangeExtension(tmp, FILE_EXTENSIONS[selected]);
         }
 
         /* ----------------------------------------------------------------- */
@@ -940,8 +946,8 @@ namespace CubePDF {
         private void SaveFileButton_Click(object sender, EventArgs e) {
             // ファイル名の設定
             var dialog = new SaveFileDialog();
-            dialog.FileName = (OutputFileTextBox.TextLength > 0) ?
-                System.IO.Path.GetFileNameWithoutExtension(OutputFileTextBox.Text) :
+            dialog.FileName = (OutputPathTextBox.TextLength > 0) ?
+                System.IO.Path.GetFileNameWithoutExtension(OutputPathTextBox.Text) :
                 System.IO.Path.GetFileNameWithoutExtension(InputPathTextBox.Text);
             dialog.InitialDirectory = output_dir_;
             
@@ -955,7 +961,7 @@ namespace CubePDF {
             
             if (dialog.ShowDialog() == DialogResult.OK) {
                 this.SetOutputPath(dialog.FileName);
-                output_dir_ = OutputDirLabel.Text;
+                output_dir_ = System.IO.Path.GetDirectoryName(dialog.FileName);
             }
         }
         
@@ -1102,6 +1108,39 @@ namespace CubePDF {
             }
         }
 
+        /* ----------------------------------------------------------------- */
+        /// FilePathTextBoxFocused
+        /* ----------------------------------------------------------------- */
+        private void FilePathTextBoxFocused(object sender, EventArgs e) {
+            try {
+                var control = (TextBox)sender;
+                if (control.Tag == null && control.Text.Length > 0) {
+                    if (control.Text[control.Text.Length - 1] == '\\') {
+                        control.SelectionStart = control.Text.Length;
+                    }
+                    else {
+                        var dir = System.IO.Path.GetDirectoryName(control.Text);
+                        var pos = (dir != null) ? dir.Length : 0;
+                        while (pos < control.Text.Length && control.Text[pos] == '\\') pos += 1;
+                        control.Select(pos, Math.Max(control.Text.Length - pos, 0));
+                    }
+                }
+                control.Tag = true;
+            }
+            catch (Exception /* err */) { }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// FilePathTextBoxLeaved
+        /* ----------------------------------------------------------------- */
+        private void FilePathTextBoxLeaved(object sender, EventArgs e) {
+            try {
+                var control = (TextBox)sender;
+                control.Tag = null;
+            }
+            catch (Exception /* err */) { }
+        }
+
         #endregion
 
         /* ----------------------------------------------------------------- */
@@ -1226,12 +1265,5 @@ namespace CubePDF {
         private readonly string GS_LIB = System.Environment.GetEnvironmentVariable("windir") + @"\CubePDF\";
         
         #endregion
-
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e) {
-            var control = (CustomTabControl)sender;
-            //this.Refresh();
-            //control.SelectedTab.Refresh();
-            //control.Invalidate();
-        }
     }
 }
