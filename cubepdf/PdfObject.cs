@@ -134,10 +134,10 @@ namespace CubePDF {
             writer.WriteLine("<<");
             try {
                 foreach (var elem in this.elements_) {
-                    if (elem.Key == "Title" && this.title_ != null) continue;
-                    if (elem.Key == "Subject" && this.subject_ != null) continue;
-                    if (elem.Key == "Author" && this.author_ != null) continue;
-                    if (elem.Key == "Keywords" && this.keyword_ != null) continue;
+                    if (elem.Key == "Title") continue;
+                    if (elem.Key == "Author") continue;
+                    if (elem.Key == "Subject") continue;
+                    if (elem.Key == "Keywords") continue;
                     else if (elem.Key == "Producer" && this.producer_ != "") writer.WriteLine("/{0} ({1})", elem.Key, this.producer_);
                     else if (elem.Key == "Creator" && this.creator_ != "") writer.WriteLine("/{0} ({1})", elem.Key, this.creator_);
                     else writer.WriteLine("/{0} {1}", elem.Key, elem.Value.Trim());
@@ -275,18 +275,12 @@ namespace CubePDF {
                     writer.Write(catalog);
                 }
                 else if (i == 2) {
-                    var docname = System.Environment.GetEnvironmentVariable("REDMON_DOCNAME");
-                    var user = System.Environment.GetEnvironmentVariable("USERNAME");
+                    //var docname = System.Environment.GetEnvironmentVariable("REDMON_DOCNAME");
+                    //var user = System.Environment.GetEnvironmentVariable("USERNAME");
 
                     var info = new Information(reader.GetObject((uint)i));
-                    info.Title = (TitleTextBox.TextLength > 0) ?
-                        Utility.UTF8ToUnicode(TitleTextBox.Text) :
-                        Utility.UTF8ToUnicode(docname);
-
-                    info.Author = (AuthorTextBox.TextLength > 0) ?
-                        Utility.UTF8ToUnicode(AuthorTextBox.Text) :
-                        Utility.UTF8ToUnicode(user);
-
+                    info.Title = (TitleTextBox.TextLength > 0) ? Utility.UTF8ToUnicode(TitleTextBox.Text) : null;
+                    info.Author = (AuthorTextBox.TextLength > 0) ? Utility.UTF8ToUnicode(AuthorTextBox.Text) : null;
                     info.Subject = (SubTitleTextBox.TextLength > 0) ? Utility.UTF8ToUnicode(SubTitleTextBox.Text) : null;
                     info.Keyword = (KeywordTextBox.TextLength > 0) ? Utility.UTF8ToUnicode(KeywordTextBox.Text) : null;
                     writer.Write(info);
