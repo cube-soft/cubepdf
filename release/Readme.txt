@@ -6,7 +6,7 @@ Copyright (c) 2010 CubeSoft Inc. All rights reserved.
 Mailto: support@cube-soft.jp
 URL: http://www.cube-soft.jp/cubepdf/
 
-Last-updated: Wed 15 Sep 2010 20:12:00 JST
+Last-updated: Mon 27 Sep 2010 07:39:00 JST
 ------------------------------------------------------------
 
 ■What's this
@@ -34,14 +34,14 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   The Code Project Open License (CPOL) 1.02 ( http://www.codeproject.com/info/cpol10.aspx )
 
 ■バージョン履歴
-2010/09/15 version 0.9.2β
+2010/09/27 version 0.9.2β
 - 10 ページ以上のファイルを画像ファイルに変換する際に、ファイル名の連番がずれる問題を修正
 - リモートホストからログインした場合に、ローカルマシン上にウィンドウが表示される問題を修正
 - ダウンサンプリングオプションを「サブサンプル」に指定した場合にエラーが発生する問題を修正
 - 一般ユーザで実行するとエラーになる問題を修正
+- .NetFramework 4 のみがインストールされている環境で起動しない問題を修正
 - タブの外観を調整
 - 設定の保存機能を追加
-- 出力ディレクトリ名と出力ファイル名を分離
 
 2010/07/23 version 0.9.1β
 - 文書プロパティに特定の文字を入力すると Adobe reader などで表示できない問題を修正

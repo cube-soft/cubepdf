@@ -258,7 +258,7 @@ namespace CubePDF {
                 var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
 
                 int is_save = this.SaveOptionsCheckBox.Checked ? 1 : 0;
-                registry.SetValue(REG_SAVE_OPTIONS, is_save);
+                //registry.SetValue(REG_SAVE_OPTIONS, is_save);
                 if (is_save == 0) return;
 
                 // 設定の保存
@@ -840,8 +840,9 @@ namespace CubePDF {
             ChangePassword(WebOptimizeCheckBox.Checked);
 
             // オプションの保存
-            int saveopt = (int)registry.GetValue(REG_SAVE_OPTIONS, 0);
-            SaveOptionsCheckBox.Checked = (saveopt != 0);
+            //int saveopt = (int)registry.GetValue(REG_SAVE_OPTIONS, 0);
+            //SaveOptionsCheckBox.Checked = (saveopt != 0);
+            SaveOptionsCheckBox.Checked = false;
 
             // アップデートのチェック
             int update = (int)registry.GetValue(REG_CHECK_UPDATE, 1);
@@ -1253,7 +1254,7 @@ namespace CubePDF {
         private readonly string REG_EMBED_FONT          = "EmbedFont";          // フォントの埋め込み
         private readonly string REG_GRAYSCALE           = "Grayscale";          // グレースケール
         private readonly string REG_WEB_OPTIMIZE        = "WebOptimize";        // Web 表示用に最適化
-        private readonly string REG_SAVE_OPTIONS        = "SaveOptions";        // オプションの保存
+        //private readonly string REG_SAVE_OPTIONS        = "SaveOptions";        // オプションの保存
         private readonly string REG_CHECK_UPDATE        = "CheckUpdate";        // アップデートチェックを行うかどうか
 
         // これは今のところ非公式
