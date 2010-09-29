@@ -348,6 +348,11 @@ namespace Cliff {
             private static bool Execute(string[] args) {
                 IntPtr instance = IntPtr.Zero;
                 bool status = true;
+
+                Trace.WriteLine(DateTime.Now.ToString() + ": Current Directory: " + Cliff.Path.GetCurrentPath());
+                Trace.WriteLine(DateTime.Now.ToString() + ": ARGUMENTS:");
+                foreach (var s in args) Trace.WriteLine('\t' + s);
+
                 lock (gslock_) {
                     gsapi_new_instance(out instance, IntPtr.Zero);
                     System.Diagnostics.Debug.Assert(instance != IntPtr.Zero);
@@ -361,7 +366,6 @@ namespace Cliff {
                             Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: gsapi_init_with_args()");
                             Trace.WriteLine(DateTime.Now.ToString() + ": Current Directory: " + Cliff.Path.GetCurrentPath());
                             Trace.WriteLine(DateTime.Now.ToString() + ": ARGUMENTS:");
-                            foreach (var s in args) Trace.WriteLine("\t{0}", s);
                             Trace.WriteLine(DateTime.Now.ToString() + ": RESULT: " + result.ToString());
                             throw new Interop.ExternalException(result.ToString() + ": ghostscript conversion error");
                         }
@@ -373,7 +377,6 @@ namespace Cliff {
                         Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + e.Message);
                         Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + e.StackTrace);
                         Trace.WriteLine(DateTime.Now.ToString() + ": ARGUMENTS:");
-                        foreach (var s in args) Trace.WriteLine("\t{0}", s);
                         status = false;
                     }
                     finally {
