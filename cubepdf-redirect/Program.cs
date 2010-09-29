@@ -31,8 +31,9 @@ namespace CubePDF {
         static void Main(string[] args) {
             var exec = System.Reflection.Assembly.GetEntryAssembly();
             var dir = System.IO.Path.GetDirectoryName(exec.Location);
-            var domain = Environment.GetEnvironmentVariable("REDMON_MACHINE");
             var redmon = Environment.GetEnvironmentVariable("REDMON_USER");
+            var domain = Environment.GetEnvironmentVariable("REDMON_MACHINE");
+            domain = domain.TrimStart('\\');
             
             SetupLog(dir + @"\cubepdf.log");
             Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe start");
@@ -47,8 +48,9 @@ namespace CubePDF {
             SaveEnvironments(environments);
             System.Diagnostics.Debug.Assert(environments["USERNAME"] != null);
             System.Diagnostics.Debug.Assert(environments["USERPROFILE"] != null);
+            Trace.WriteLine(DateTime.Now.ToString() + ": DOMAIN: " + domain);
             Trace.WriteLine(DateTime.Now.ToString() + ": USERNAME: " + environments["USERNAME"]);
-            Trace.WriteLine(DateTime.Now.ToString() + ": USERNAME: " + environments["USERPROFILE"]);
+            Trace.WriteLine(DateTime.Now.ToString() + ": USERPROFILE: " + environments["USERPROFILE"]);
 
             try {
                 if (redmon != null) ChangeEnvironments(domain, redmon);
@@ -121,11 +123,14 @@ namespace CubePDF {
                 @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\" + Utility.GetSID(login), false);
             if (registry != null) profile = (string)registry.GetValue("ProfileImagePath", "");
             if (profile.Length == 0) {
+                Trace.WriteLine(DateTime.Now.ToString() + ": ProfileImagePath: registry not found");
+                Trace.WriteLine(DateTime.Now.ToString() + ": LOGIN: " + login);
+                Trace.WriteLine(DateTime.Now.ToString() + ": SID: " + Utility.GetSID(login));
                 profile = (os.Version.Major == 5) ?
                     Environment.GetEnvironmentVariable("SystemDrive") + @"\Documents and Settings\" + username :
                     Environment.GetEnvironmentVariable("SystemDrive") + @"\Users\" + username;
             }
-            
+
             var app = (os.Version.Major == 5) ? @"\Application Data" : @"\AppData\Roaming";
             var app_local = (os.Version.Major == 5) ? @"\Local Settings\Application Data" : @"\AppData\Local";
             //var temp = (os.Version.Major == 5) ? @"\Local Settings\Local\Temp" : @"\AppData\Local\Temp";
@@ -135,7 +140,8 @@ namespace CubePDF {
             Environment.SetEnvironmentVariable("HOMEPATH", profile);
             Environment.SetEnvironmentVariable("APPDATA", profile + app);
             Environment.SetEnvironmentVariable("LOCALAPPDATA", profile + app_local);
-            
+            Trace.WriteLine(DateTime.Now.ToString() + ": USERPROFILE: " + profile);
+
             /*
              * Note: Ghostscript が日本語を含むパスを認識しないため，
              * 現状ではシステムの Temp (Windows\Temp) をそのまま使用している
