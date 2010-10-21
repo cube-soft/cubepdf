@@ -558,6 +558,8 @@ namespace CubePDF {
             // PDF バージョン
             converter.AddOption("CompatibilityLevel", VERSIONS[VersionComboBox.SelectedIndex]);
             
+            converter.AddOption("UseFlateCompression", "false");
+
             // パスワード (文書を開く際のパスワード)
             if (UserPasswordCheckBox.Enabled && UserPasswordCheckBox.Checked && UserPasswordTextBox.Text.Length > 0) {
                 converter.AddOption("UserPassword", UserPasswordTextBox.Text);

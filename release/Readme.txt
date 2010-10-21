@@ -6,7 +6,7 @@ Copyright (c) 2010 CubeSoft Inc. All rights reserved.
 Mailto: support@cube-soft.jp
 URL: http://www.cube-soft.jp/cubepdf/
 
-Last-updated: Mon 27 Sep 2010 07:39:00 JST
+Last-updated: Thu 21 Oct 2010 13:17:00 JST
 ------------------------------------------------------------
 
 ■What's this
@@ -34,6 +34,9 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   The Code Project Open License (CPOL) 1.02 ( http://www.codeproject.com/info/cpol10.aspx )
 
 ■バージョン履歴
+2010/10/21 version 0.9.2.1β
+- ユーザ名とユーザプロファイルが異なる場合の問題を修正 ( http://blog.cube-soft.jp/?p=87 )
+- アンインストール時にアップデートチェックプログラムが削除されない問題を修正 ( http://blog.cube-soft.jp/?p=124 )
 2010/09/27 version 0.9.2β
 - 10 ページ以上のファイルを画像ファイルに変換する際に、ファイル名の連番がずれる問題を修正
 - リモートホストからログインした場合に、ローカルマシン上にウィンドウが表示される問題を修正
