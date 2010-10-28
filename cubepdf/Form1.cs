@@ -720,6 +720,9 @@ namespace CubePDF {
         private void InitSaveDialog() {
             var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
             output_dir_ = (string)registry.GetValue(REG_LAST_OUTPUT, System.Environment.GetFolderPath(Environment.SpecialFolder.Personal));
+            if (System.IO.Directory.Exists(output_dir_)) {
+                output_dir_ = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            }
 
             var filename = System.Environment.GetEnvironmentVariable(Properties.Settings.Default.REDMON_FILENAME);
             if (filename != null) {
