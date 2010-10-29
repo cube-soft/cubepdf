@@ -720,7 +720,7 @@ namespace CubePDF {
         private void InitSaveDialog() {
             var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
             output_dir_ = (string)registry.GetValue(REG_LAST_OUTPUT, System.Environment.GetFolderPath(Environment.SpecialFolder.Personal));
-            if (System.IO.Directory.Exists(output_dir_)) {
+            if (!System.IO.Directory.Exists(output_dir_)) {
                 output_dir_ = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             }
 
@@ -753,7 +753,7 @@ namespace CubePDF {
                 PostProcessComboBox.SelectedIndex = Math.Max(Array.IndexOf(POST_PROCESSES, selected), 0);
 
                 string postproc = (string)registry.GetValue(REG_USER_PROGRAM, "");
-                if (postproc.Length > 0) {
+                if (postproc.Length > 0 && System.IO.File.Exists(postproc)) {
                     postproc_ = postproc;
                     UserProgramTextBox.Text = postproc;
                 }
