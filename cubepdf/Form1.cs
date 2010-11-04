@@ -226,7 +226,7 @@ namespace CubePDF {
                     // ポストプロセス
                     var selected = postproc_;
                     if (PostProcessLiteComboBox.Enabled) selected = (string)PostProcessLiteComboBox.SelectedItem;
-                    else if (PostProcessComboBox.SelectedText != Properties.Settings.Default.POSTPROC_OTHER) {
+                    else if (POST_PROCESSES[PostProcessComboBox.SelectedIndex] != Properties.Settings.Default.POSTPROC_OTHER) {
                         selected = (string)PostProcessComboBox.SelectedItem;
                     }
                     ExecPostProcess(selected);
@@ -234,7 +234,7 @@ namespace CubePDF {
                 }
             }
             catch (System.Exception err) {
-                MessageBox.Show(System.String.Format("{0}\n{1}", Properties.Settings.Default.ERROR_CONVERT, err.Message),
+                MessageBox.Show(System.String.Format("ポストプロセスの実行中にエラーが発生しました。\n{1}", err.Message),
                     Properties.Settings.Default.ERROR_TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally {
