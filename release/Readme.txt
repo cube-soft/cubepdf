@@ -20,7 +20,7 @@ Microsoft .NetFramework 2.0 は、以下の URL からダウンロードして�
 http://www.microsoft.com/downloads/details.aspx?FamilyId=0856eacb-4362-4b0d-8edd-aab15c5e04f5&displaylang=ja
 
 CubePDFは、以下のライブラリを利用しています。それぞれのライブラリについては、記載した URL から取得することができます。
-- GPL Ghostscript 8.71
+- GPL Ghostscript 9.00
   Copyright (c) Artifex Software, Inc. All rights reserved.
   URL: http://pages.cs.wisc.edu/~ghost/
   GNU General Public License ( http://www.gnu.org/licenses/gpl.html )
