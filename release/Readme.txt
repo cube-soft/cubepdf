@@ -6,7 +6,7 @@ Copyright (c) 2010 CubeSoft Inc. All rights reserved.
 Mailto: support@cube-soft.jp
 URL: http://www.cube-soft.jp/cubepdf/
 
-Last-updated: Thu 28 Oct 2010 12:45:00 JST
+Last-updated: Mon 08 Nov 2010 13:20:00 JST
 ------------------------------------------------------------
 
 ■What's this
@@ -34,6 +34,10 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   The Code Project Open License (CPOL) 1.02 ( http://www.codeproject.com/info/cpol10.aspx )
 
 ■バージョン履歴
+2010/11/08 version 0.9.2.3β
+- ポストプロセスの実行に失敗する問題を修正
+- アップデートチェック・プログラムの起動に関する問題を修正
+
 2010/11/01 version 0.9.2.2β
 - 設定保存されてある出力先ディレクトリが存在しない場合、初期設定の出力先ディレクトリを指定するように修正
 - アンインストール時に CubePDF 関連の各種プロセスが実行されているかどうかをチェックするように修正
