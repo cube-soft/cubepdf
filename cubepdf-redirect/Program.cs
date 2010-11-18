@@ -24,6 +24,7 @@ using System;
 using System.Diagnostics;
 using System.Security.Principal;
 using System.Runtime.InteropServices;
+using System.IO;
 using Container = System.Collections.Generic;
 
 namespace CubePDF {
@@ -34,6 +35,7 @@ namespace CubePDF {
             var redmon = Environment.GetEnvironmentVariable("REDMON_USER");
             var domain = Environment.GetEnvironmentVariable("REDMON_MACHINE");
             domain = domain.TrimStart('\\');
+            string psfilepath = "";
             
             SetupLog(dir + @"\cubepdf.log");
             Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe start");
@@ -58,12 +60,15 @@ namespace CubePDF {
 
                 var filename = Utility.GetFileName(System.Environment.GetEnvironmentVariable("REDMON_DOCNAME"));
                 filename = FileNameModifier.ModifyFileName(filename);
-                SavePostscript(Console.OpenStandardInput(), Utility.GetTempPath() + "TempInput.ps");
+                //SavePostscript(Console.OpenStandardInput(), Utility.GetTempPath() + "TempInput.ps");
+                psfilepath = Utility.GetTempPath() + Path.GetRandomFileName();
+                SavePostscript(Console.OpenStandardInput(), psfilepath);
                 Trace.WriteLine(DateTime.Now.ToString() + ": OUTPUT: " + filename);
 
                 System.Environment.SetEnvironmentVariable("REDMON_FILENAME", filename);
                 var proc = new System.Diagnostics.Process();
                 proc.StartInfo.FileName = dir + @"\cubepdf.exe";
+                proc.StartInfo.Arguments = @psfilepath;
                 proc.StartInfo.CreateNoWindow = false;
                 proc.StartInfo.UseShellExecute = false;
                 proc.StartInfo.LoadUserProfile = true;
@@ -92,6 +97,9 @@ namespace CubePDF {
                     }
                 }
                 //Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe end");
+                if (File.Exists(psfilepath)) {
+                    File.Delete(psfilepath);
+                }
             }
         }
         

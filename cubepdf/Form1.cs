@@ -49,6 +49,16 @@ namespace CubePDF {
             InitSaveDialog();
             InitPostProcDialog();
         }
+
+        public MainForm(string path) {
+            InitializeComponent();
+            this.DoubleBuffered = true;
+
+            InitOptions();
+            InitSelectDialog(path);
+            InitSaveDialog();
+            InitPostProcDialog();
+        }
         
         /* ----------------------------------------------------------------- */
         ///
@@ -686,13 +696,13 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void InitSelectDialog() {
+        private void InitSelectDialog(string path = "") {
             var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
             input_dir_ = (string)registry.GetValue(REG_LAST_INPUT, "");
 
-            var path = Cliff.Path.GetTempPath() + Properties.Settings.Default.INPUT_FILENAME;
+            //var path = Cliff.Path.GetTempPath() + Properties.Settings.Default.INPUT_FILENAME;
             var check = (System.Environment.GetEnvironmentVariable(Properties.Settings.Default.REDMON_USER) != null);
-            InputPathTextBox.Text = (check && System.IO.File.Exists(path)) ? path : "";
+            InputPathTextBox.Text = (check && path.Length > 0 && System.IO.File.Exists(path)) ? path : "";
 
             // 入力ファイルの選択を表示するかどうか。
             int value = (int)registry.GetValue(REG_SELECT_INPUT, 0);
