@@ -696,7 +696,7 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void InitSelectDialog(string path = "") {
+        private void InitSelectDialog(string path) {
             var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
             input_dir_ = (string)registry.GetValue(REG_LAST_INPUT, "");
 
@@ -716,6 +716,10 @@ namespace CubePDF {
                 InputPathTextBox.Enabled = false;
                 SelectFileButton.Enabled = false;
             }
+        }
+
+        private void InitSelectDialog() {
+            this.InitSelectDialog("");
         }
         
         /* ----------------------------------------------------------------- */
