@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cubepdf-redirect", "cubepdf-redirect.vs2008.csproj", "{56939244-2FC5-43A9-BDA1-3B9CC44F8193}"
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cubepdf-redirect2008", "cubepdf-redirect2008.csproj", "{56939244-2FC5-43A9-BDA1-3B9CC44F8193}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
