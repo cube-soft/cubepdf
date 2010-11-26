@@ -229,8 +229,9 @@ namespace CubePDF {
                 }
                 else {
                     progressBar.Increment(30);
-                    
+
                     ModifyResult(this.GetOutputPath());
+
                     progressBar.Increment(10);
                     
                     // ポストプロセス
