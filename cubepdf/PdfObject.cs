@@ -25,6 +25,9 @@ using System.Text;
 using System.Windows.Forms;
 using Container = System.Collections.Generic;
 using PDF = Cliff.PDF;
+using iTextPDF = iTextSharp.text.pdf;
+using System.IO;
+
 
 namespace CubePDF {
     /* --------------------------------------------------------------------- */
@@ -257,42 +260,62 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void ModifyResult(string path) {
+        private void ModifyResult(string path)
+        {
+            
             if (!System.IO.File.Exists(path) ||
                 FILE_TYPES[FileTypeComboBox.SelectedIndex] != Properties.Settings.Default.FILETYPE_PDF) return;
 
             var tmp = Cliff.Path.GetTempPath() + "TempOutput.pdf";
             if (System.IO.File.Exists(tmp)) System.IO.File.Delete(tmp);
             System.IO.File.Move(path, tmp);
+            iTextPDF.PdfReader reader = null;
+            try
+            {
+                reader = new iTextPDF.PdfReader(tmp);
+                var info = reader.Info;
+                info["Title"] = (TitleTextBox.TextLength > 0) ? TitleTextBox.Text : null;
+                info["Author"] = (AuthorTextBox.TextLength > 0) ? AuthorTextBox.Text : null;
+                info["Subject"] = (SubTitleTextBox.TextLength > 0) ? SubTitleTextBox.Text : null;
+                info["Keywords"] = (KeywordTextBox.TextLength > 0) ? KeywordTextBox.Text : null;
 
-            var reader = new PDF.Reader(tmp);
-            var writer = new PDF.Writer(path, double.Parse(VERSIONS[VersionComboBox.SelectedIndex]));
-            writer.Trailer = reader.Trailer;
-
-            for (int i = 1; i <= reader.Count(); i++) {
-                if (i == 1) {
-                    var catalog = new Catalog(reader.GetObject((uint)i));
-                    writer.Write(catalog);
+               
+                using (var os = new BufferedStream(new FileStream(path, FileMode.Create)))
+                {
+                    var writer = new iTextPDF.PdfStamper(reader, os, parsePDFVersion(VERSIONS[VersionComboBox.SelectedIndex])); //double.Parse(VERSIONS[VersionComboBox.SelectedIndex]));
+                    writer.MoreInfo = info;
+                    writer.Close();
                 }
-                else if (i == 2) {
-                    //var docname = System.Environment.GetEnvironmentVariable("REDMON_DOCNAME");
-                    //var user = System.Environment.GetEnvironmentVariable("USERNAME");
-
-                    var info = new Information(reader.GetObject((uint)i));
-                    info.Title = (TitleTextBox.TextLength > 0) ? Utility.UTF8ToUnicode(TitleTextBox.Text) : null;
-                    info.Author = (AuthorTextBox.TextLength > 0) ? Utility.UTF8ToUnicode(AuthorTextBox.Text) : null;
-                    info.Subject = (SubTitleTextBox.TextLength > 0) ? Utility.UTF8ToUnicode(SubTitleTextBox.Text) : null;
-                    info.Keyword = (KeywordTextBox.TextLength > 0) ? Utility.UTF8ToUnicode(KeywordTextBox.Text) : null;
-                    writer.Write(info);
-                }
-                else {
-                    writer.NewIndex();
-                    writer.Write(reader.GetObject((uint)i));
-                }
+                System.IO.File.Delete(tmp);
             }
-            writer.Dispose();
-            reader.Dispose();
-            System.IO.File.Delete(tmp);
+            finally
+            {
+                if (reader != null)
+                  reader.Close();
+            }
         }
+
+        /// <summary>
+        /// ModifyResultの補助関数
+        /// 1.7 => PdfWriter.VERSION_1_7のように変換する
+        /// (できればModifyResultの関数内関数にしたい)
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        private char parsePDFVersion(string s)
+        {
+            switch (s)
+            {
+                case "1.7": return iTextPDF.PdfWriter.VERSION_1_7; 
+                case "1.6": return iTextPDF.PdfWriter.VERSION_1_6; 
+                case "1.5": return iTextPDF.PdfWriter.VERSION_1_5; 
+                case "1.4": return iTextPDF.PdfWriter.VERSION_1_4; 
+                case "1.3": return iTextPDF.PdfWriter.VERSION_1_3; 
+                case "1.2": return iTextPDF.PdfWriter.VERSION_1_2;
+                default: return iTextPDF.PdfWriter.VERSION_1_7;
+            }
+        }
+        
+
     }
 }
