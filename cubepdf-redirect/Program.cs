@@ -141,8 +141,8 @@ namespace CubePDF {
 
             var app = (os.Version.Major == 5) ? @"\Application Data" : @"\AppData\Roaming";
             var app_local = (os.Version.Major == 5) ? @"\Local Settings\Application Data" : @"\AppData\Local";
-            //var temp = (os.Version.Major == 5) ? @"\Local Settings\Local\Temp" : @"\AppData\Local\Temp";
-            //var tmp = (os.Version.Major == 5) ? @"\Local Settings\Temp" : @"\AppData\Local\Temp";
+            var temp = (os.Version.Major == 5) ? @"\Local Settings\Temp" : @"\AppData\Local\Temp";
+            var tmp = (os.Version.Major == 5) ? @"\Local Settings\Temp" : @"\AppData\Local\Temp";
             
             Environment.SetEnvironmentVariable("USERPROFILE", profile);
             Environment.SetEnvironmentVariable("HOMEPATH", profile);
@@ -155,8 +155,8 @@ namespace CubePDF {
              * 現状ではシステムの Temp (Windows\Temp) をそのまま使用している
              * （ユーザ名が日本語の場合を考慮）．
              */
-            //Environment.SetEnvironmentVariable("TEMP", profile + temp);
-            //Environment.SetEnvironmentVariable("TMP", profile + tmp);
+            Environment.SetEnvironmentVariable("TEMP", profile + temp);
+            Environment.SetEnvironmentVariable("TMP", profile + tmp);
         }
         
         /* ----------------------------------------------------------------- */
