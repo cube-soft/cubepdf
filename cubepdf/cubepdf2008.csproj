@@ -118,6 +118,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="PDFMerger.cs" />
     <Compile Include="PdfObject.cs">
       <SubType>Form</SubType>
     </Compile>

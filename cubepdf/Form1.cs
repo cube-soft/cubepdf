@@ -25,6 +25,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using Container = System.Collections.Generic;
 using Gs = Cliff.Ghostscript;
@@ -89,16 +90,9 @@ namespace CubePDF {
             var converter = new Gs.Converter(SelectFileType(filetype));
             progressBar.Increment(5);
             
-            var dest = this.GetOutputPath();
-            if (System.IO.File.Exists(dest) &&
-                DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_TAIL) {
-                converter.AddSource(dest);
-            }
+            var outputPath = this.GetOutputPath();
             converter.AddSource(InputPathTextBox.Text);
-            if (System.IO.File.Exists(dest) &&
-                DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_HEAD) {
-                converter.AddSource(dest);
-            }
+
             progressBar.Increment(5);
             
             // Ghostscript の各種リソースファイルへのパス
@@ -123,7 +117,21 @@ namespace CubePDF {
             progressBar.Increment(5);
             
             // Ghostscriptの実行（バックグラウンド）
-            converter.Destination = dest;
+            converter.Destination = outputPath;
+
+            // 以下の場合、マージ先のファイル(outputPath)のファイルを退避する必要がある
+            // そもそもマージ先のファイルが無い場合のポリシーは？
+            if (System.IO.File.Exists(outputPath) && 
+                (DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_TAIL ||
+                DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_HEAD))
+            {
+                MessageBox.Show("before merge");
+                evacuatedFilePath = System.IO.Path.GetTempFileName(); // 書き込み権限の無い場所が与えられるかもしれないので、調整が必要らしい
+                System.IO.File.Copy(outputPath, evacuatedFilePath, true); // evacuatedFileが消去されるのはマージ後
+                
+            }
+
+
             bgWorker.RunWorkerAsync(converter);
         }
         
@@ -234,6 +242,26 @@ namespace CubePDF {
 
                     progressBar.Increment(10);
                     
+                    // マージ
+                    if (evacuatedFilePath != null)
+                    {
+                        MessageBox.Show("start marge");
+                        var tmpoutput = System.IO.Path.GetTempFileName();
+                        // 実際には2種しか無いがわかりやすさと念のため
+                        if (DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_TAIL)
+                        {
+                            PDFMerger.merge(this.evacuatedFilePath, this.GetOutputPath(), tmpoutput);
+                        }
+                        else if (DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_HEAD)
+                        {
+                            PDFMerger.merge(this.GetOutputPath(), this.evacuatedFilePath, tmpoutput);
+                        }
+                        if (File.Exists(this.GetOutputPath())) File.Delete(this.GetOutputPath());
+                        File.Move(tmpoutput, this.GetOutputPath());
+                        File.Delete(tmpoutput);
+                        File.Delete(evacuatedFilePath);
+                    }
+
                     // ポストプロセス
                     var selected = postproc_;
                     if (PostProcessLiteComboBox.Enabled) selected = (string)PostProcessLiteComboBox.SelectedItem;
@@ -1171,6 +1199,11 @@ namespace CubePDF {
         private string input_dir_    = "";
         private string output_dir_   = "";
         private string postproc_ = Properties.Settings.Default.POSTPROC_OPEN;
+        /// <summary>
+        /// evacuatedFilePathはマージの際、退避したファイルのパス。
+        /// null以外ならマージが必要なことを示す。
+        /// </summary>
+        private string evacuatedFilePath = null;
         #endregion
         
         /* ----------------------------------------------------------------- */
