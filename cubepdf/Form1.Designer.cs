@@ -33,8 +33,9 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.CancelBox = new System.Windows.Forms.Button();
             this.MakePDFBox = new System.Windows.Forms.Button();
-            this.tabControl1 = new System.Windows.Forms.CustomTabControl();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.OutputPathTextBox = new System.Windows.Forms.TextBox();
             this.SelectUserProgramButton = new System.Windows.Forms.Button();
             this.UserProgramTextBox = new System.Windows.Forms.TextBox();
             this.PostProcessComboBox = new System.Windows.Forms.ComboBox();
@@ -96,7 +97,6 @@
             this.label17 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.bgWorker = new System.ComponentModel.BackgroundWorker();
-            this.OutputPathTextBox = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -132,7 +132,7 @@
             this.progressBar.Location = new System.Drawing.Point(12, 396);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(200, 15);
-            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progressBar.TabIndex = 0;
             this.progressBar.Visible = false;
             // 
@@ -166,24 +166,6 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
-            // 
-            // 
-            // 
-            this.tabControl1.DisplayStyleProvider.BorderColor = System.Drawing.SystemColors.ControlDark;
-            this.tabControl1.DisplayStyleProvider.BorderColorHot = System.Drawing.SystemColors.ControlDark;
-            this.tabControl1.DisplayStyleProvider.BorderColorSelected = System.Drawing.Color.FromArgb(((int)(((byte)(132)))), ((int)(((byte)(130)))), ((int)(((byte)(132)))));
-            this.tabControl1.DisplayStyleProvider.CloserColor = System.Drawing.Color.DarkGray;
-            this.tabControl1.DisplayStyleProvider.FocusTrack = true;
-            this.tabControl1.DisplayStyleProvider.HotTrack = true;
-            this.tabControl1.DisplayStyleProvider.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.tabControl1.DisplayStyleProvider.Opacity = 1F;
-            this.tabControl1.DisplayStyleProvider.Overlap = 0;
-            this.tabControl1.DisplayStyleProvider.Padding = new System.Drawing.Point(6, 3);
-            this.tabControl1.DisplayStyleProvider.Radius = 2;
-            this.tabControl1.DisplayStyleProvider.ShowTabCloser = false;
-            this.tabControl1.DisplayStyleProvider.TextColor = System.Drawing.SystemColors.ControlText;
-            this.tabControl1.DisplayStyleProvider.TextColorDisabled = System.Drawing.SystemColors.ControlDark;
-            this.tabControl1.DisplayStyleProvider.TextColorSelected = System.Drawing.SystemColors.ControlText;
             this.tabControl1.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.tabControl1.HotTrack = true;
             this.tabControl1.Location = new System.Drawing.Point(12, 1);
@@ -215,12 +197,21 @@
             this.tabPage1.Controls.Add(this.FileTypeComboBox);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 23);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(465, 328);
+            this.tabPage1.Size = new System.Drawing.Size(465, 329);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "一般";
+            // 
+            // OutputPathTextBox
+            // 
+            this.OutputPathTextBox.Location = new System.Drawing.Point(120, 102);
+            this.OutputPathTextBox.Name = "OutputPathTextBox";
+            this.OutputPathTextBox.Size = new System.Drawing.Size(192, 19);
+            this.OutputPathTextBox.TabIndex = 4;
+            this.OutputPathTextBox.Click += new System.EventHandler(this.FilePathTextBoxFocused);
+            this.OutputPathTextBox.Leave += new System.EventHandler(this.FilePathTextBoxLeaved);
             // 
             // SelectUserProgramButton
             // 
@@ -383,10 +374,10 @@
             this.tabPage2.BackColor = System.Drawing.Color.White;
             this.tabPage2.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.tabPage2.Controls.Add(this.TextPropertyPanel);
-            this.tabPage2.Location = new System.Drawing.Point(4, 23);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(465, 328);
+            this.tabPage2.Size = new System.Drawing.Size(465, 329);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "文書プロパティ";
             // 
@@ -405,7 +396,7 @@
             this.TextPropertyPanel.Location = new System.Drawing.Point(3, 3);
             this.TextPropertyPanel.Margin = new System.Windows.Forms.Padding(0);
             this.TextPropertyPanel.Name = "TextPropertyPanel";
-            this.TextPropertyPanel.Size = new System.Drawing.Size(459, 322);
+            this.TextPropertyPanel.Size = new System.Drawing.Size(459, 323);
             this.TextPropertyPanel.TabIndex = 5;
             // 
             // label8
@@ -478,9 +469,9 @@
             this.tabPage3.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.tabPage3.Controls.Add(this.PermissionGroupBox);
             this.tabPage3.Controls.Add(this.SecurityGroupBox);
-            this.tabPage3.Location = new System.Drawing.Point(4, 23);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(465, 328);
+            this.tabPage3.Size = new System.Drawing.Size(465, 329);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "セキュリティ";
             // 
@@ -694,10 +685,10 @@
             this.tabPage4.Controls.Add(this.AutoPageRotationCheckBox);
             this.tabPage4.Controls.Add(this.DownSamplingComboBox);
             this.tabPage4.Controls.Add(this.label17);
-            this.tabPage4.Location = new System.Drawing.Point(4, 23);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(465, 328);
+            this.tabPage4.Size = new System.Drawing.Size(465, 329);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "詳細設定";
             // 
@@ -838,15 +829,6 @@
             this.bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
             this.bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
             // 
-            // OutputPathTextBox
-            // 
-            this.OutputPathTextBox.Location = new System.Drawing.Point(120, 102);
-            this.OutputPathTextBox.Name = "OutputPathTextBox";
-            this.OutputPathTextBox.Size = new System.Drawing.Size(192, 19);
-            this.OutputPathTextBox.TabIndex = 4;
-            this.OutputPathTextBox.Click += new System.EventHandler(this.FilePathTextBoxFocused);
-            this.OutputPathTextBox.Leave += new System.EventHandler(this.FilePathTextBoxLeaved);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -888,7 +870,7 @@
 
         #endregion
 
-        private System.Windows.Forms.CustomTabControl tabControl1;
+        private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabPage tabPage3;
