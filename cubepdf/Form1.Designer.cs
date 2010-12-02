@@ -97,6 +97,7 @@
             this.label17 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.bgWorker = new System.ComponentModel.BackgroundWorker();
+            this.BackgroundPatchPictureBox = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -109,6 +110,7 @@
             this.UserPasswordPanel.SuspendLayout();
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BackgroundPatchPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -829,12 +831,22 @@
             this.bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
             this.bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
             // 
+            // BackgroundPatchPictureBox
+            // 
+            this.BackgroundPatchPictureBox.BackgroundImage = global::CubePDF.Properties.Resources.background;
+            this.BackgroundPatchPictureBox.Location = new System.Drawing.Point(400, 80);
+            this.BackgroundPatchPictureBox.Name = "BackgroundPatchPictureBox";
+            this.BackgroundPatchPictureBox.Size = new System.Drawing.Size(85, 21);
+            this.BackgroundPatchPictureBox.TabIndex = 6;
+            this.BackgroundPatchPictureBox.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(496, 503);
+            this.Controls.Add(this.BackgroundPatchPictureBox);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -864,6 +876,7 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BackgroundPatchPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -938,6 +951,7 @@
         private System.Windows.Forms.ComboBox PostProcessComboBox;
         private System.Windows.Forms.Panel TextPropertyPanel;
         private System.Windows.Forms.TextBox OutputPathTextBox;
+        private System.Windows.Forms.PictureBox BackgroundPatchPictureBox;
     }
 }
 
