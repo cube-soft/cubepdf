@@ -84,37 +84,28 @@ namespace CubePDF {
             }
             
             progressBar.Visible = true;
-            progressBar.Increment(5);
             
             var filetype = FILE_TYPES[FileTypeComboBox.SelectedIndex];
             var converter = new Gs.Converter(SelectFileType(filetype));
-            progressBar.Increment(5);
             
             var outputPath = this.GetOutputPath();
             converter.AddSource(InputPathTextBox.Text);
-
-            progressBar.Increment(5);
             
             // Ghostscript の各種リソースファイルへのパス
             AddInclude(converter);
-            progressBar.Increment(5);
             
             // ページの自動回転
             converter.PageRotation = AutoPageRotationCheckBox.Checked;
-            progressBar.Increment(5);
             
             // 解像度
             converter.Resolution = int.Parse(RESOLUTIONS[ResolutionComboBox.SelectedIndex]);
-            progressBar.Increment(5);
             
             // ダウンサンプリング    
             AddDownsampleOption(converter, DOWN_SAMPLINGS[DownSamplingComboBox.SelectedIndex]);
-            progressBar.Increment(5);
             
             // ファイルタイプに依存するオプション    
             if (IsImageFile(filetype)) AddImageOption(converter);
             else AddDocumentOption(converter);
-            progressBar.Increment(5);
             
             // Ghostscriptの実行（バックグラウンド）
             converter.Destination = outputPath;
@@ -236,11 +227,7 @@ namespace CubePDF {
                         Properties.Settings.Default.ERROR_TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else {
-                    progressBar.Increment(30);
-
                     ModifyResult(this.GetOutputPath());
-
-                    progressBar.Increment(10);
                     
                     // マージ
                     if (evacuatedFilePath != null)
@@ -269,7 +256,6 @@ namespace CubePDF {
                         selected = (string)PostProcessComboBox.SelectedItem;
                     }
                     ExecPostProcess(selected);
-                    progressBar.Increment(10);
                 }
             }
             catch (System.Exception err) {
@@ -278,7 +264,6 @@ namespace CubePDF {
             }
             finally {
                 Cursor.Current = Cursors.Default;
-                progressBar.Increment(10);
                 this.Close();
             }
         }

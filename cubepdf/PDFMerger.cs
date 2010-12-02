@@ -27,7 +27,7 @@ namespace CubePDF
                 headReader.Close();
                 tailReader.Close();
             }
-            catch (Exception e)
+            catch (Exception /* e */)
             {
                 ret = false;
             }
