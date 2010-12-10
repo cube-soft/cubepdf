@@ -51,13 +51,14 @@ namespace CubePDF {
             InitPostProcDialog();
         }
 
-        public MainForm(string path) {
+        public MainForm(string[] args) {
+            // 既にargsの長さは1以上であることを確認済み
             InitializeComponent();
             this.DoubleBuffered = true;
 
             InitOptions();
-            InitSelectDialog(path);
-            InitSaveDialog();
+            InitSelectDialog(args[0]);
+            InitSaveDialog(args[1]);
             InitPostProcDialog();
         }
         
@@ -715,8 +716,14 @@ namespace CubePDF {
             input_dir_ = (string)registry.GetValue(REG_LAST_INPUT, "");
 
             //var path = Cliff.Path.GetTempPath() + Properties.Settings.Default.INPUT_FILENAME;
+#if false
+            // 現状不要となったのでコメントアウト
             var check = (System.Environment.GetEnvironmentVariable(Properties.Settings.Default.REDMON_USER) != null);
+            MessageBox.Show(System.Environment.GetEnvironmentVariable(Properties.Settings.Default.REDMON_USER));
             InputPathTextBox.Text = (check && path.Length > 0 && System.IO.File.Exists(path)) ? path : "";
+#else
+            InputPathTextBox.Text = (path.Length > 0 && System.IO.File.Exists(path)) ? path : "";
+#endif
 
             // 入力ファイルの選択を表示するかどうか。
             int value = (int)registry.GetValue(REG_SELECT_INPUT, 0);
@@ -745,7 +752,11 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void InitSaveDialog() {
+        private void InitSaveDialog()
+        {
+            InitSaveDialog(null);
+        }
+        private void InitSaveDialog(string args_filename) {
             var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(REG_ROOT);
             output_dir_ = (string)registry.GetValue(REG_LAST_OUTPUT, System.Environment.GetFolderPath(Environment.SpecialFolder.Personal));
             if (!System.IO.Directory.Exists(output_dir_)) {
@@ -753,7 +764,9 @@ namespace CubePDF {
             }
 
             var filename = System.Environment.GetEnvironmentVariable(Properties.Settings.Default.REDMON_FILENAME);
-            if (filename != null) {
+            if (filename == null && args_filename != null) filename = args_filename;
+            if (filename != null)
+            {
                 var ext = FileTypeComboBox.SelectedIndex < FILE_EXTENSIONS.Length ?
                     FILE_EXTENSIONS[FileTypeComboBox.SelectedIndex] :
                     FILE_EXTENSIONS[0];
