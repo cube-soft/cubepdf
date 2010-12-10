@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Management;
+
 
 namespace CubePDF
 {
     [StructLayout(LayoutKind.Sequential)]
-    internal struct PROCESS_INFORMATION
+    public struct PROCESS_INFORMATION
     {
         public IntPtr hProcess;
         public IntPtr hThread;
@@ -123,12 +125,12 @@ namespace CubePDF
         private const uint CREATE_UNICODE_ENVIRONMENT = 0x00000400;
 
 
-        private static bool LaunchProcessAsUser(string cmdLine, IntPtr token, IntPtr envBlock)
+        private static bool LaunchProcessAsUser(string cmdLine, IntPtr token, IntPtr envBlock, out PROCESS_INFORMATION pi)
         {
             bool result = false;
 
 
-            PROCESS_INFORMATION pi = new PROCESS_INFORMATION();
+            pi = new PROCESS_INFORMATION();
             SECURITY_ATTRIBUTES saProcess = new SECURITY_ATTRIBUTES();
             SECURITY_ATTRIBUTES saThread = new SECURITY_ATTRIBUTES();
             saProcess.nLength = (uint)Marshal.SizeOf(saProcess);
@@ -170,7 +172,6 @@ namespace CubePDF
                 int error = Marshal.GetLastWin32Error();
                 string message = String.Format("CreateProcessAsUser Error: {0}", error);
                 Debug.WriteLine(message);
-
             }
 
             return result;
@@ -257,31 +258,120 @@ namespace CubePDF
             return envBlock;
         }
 
-        public static bool Launch(string appCmdLine /*,int processId*/)
+        [DllImport("advapi32.dll", SetLastError = true)]
+        static extern bool GetTokenInformation(
+            IntPtr TokenHandle,
+            TOKEN_INFORMATION_CLASS TokenInformationClass,
+            IntPtr TokenInformation,
+            uint TokenInformationLength,
+            out uint ReturnLength);
+        enum TOKEN_INFORMATION_CLASS
+        {
+            TokenUser = 1,
+            TokenGroups,
+            TokenPrivileges,
+            TokenOwner,
+            TokenPrimaryGroup,
+            TokenDefaultDacl,
+            TokenSource,
+            TokenType,
+            TokenImpersonationLevel,
+            TokenStatistics,
+            TokenRestrictedSids,
+            TokenSessionId,
+            TokenGroupsAndPrivileges,
+            TokenSessionReference,
+            TokenSandBoxInert,
+            TokenAuditPolicy,
+            TokenOrigin
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SID_AND_ATTRIBUTES
+        {
+
+            public IntPtr Sid;
+            public int Attributes;
+        }
+
+        [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern bool LookupAccountSid(
+            string lpSystemName,
+            //[MarshalAs(UnmanagedType.LPArray)] byte[] Sid,
+            IntPtr Sid,
+            System.Text.StringBuilder lpName,
+            ref uint cchName,
+            System.Text.StringBuilder ReferencedDomainName,
+            ref uint cchReferencedDomainName,
+            out SID_NAME_USE peUse);
+
+        enum SID_NAME_USE
+        {
+            SidTypeUser = 1,
+            SidTypeGroup,
+            SidTypeDomain,
+            SidTypeAlias,
+            SidTypeWellKnownGroup,
+            SidTypeDeletedAccount,
+            SidTypeInvalid,
+            SidTypeUnknown,
+            SidTypeComputer
+        }
+        
+        static string GetProcessOwner(int processId)
+        {
+
+        string query = "Select * From Win32_Process Where ProcessID = " + processId;
+        ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+        ManagementObjectCollection processList = searcher.Get();
+
+        foreach (ManagementObject obj in processList)
+        {
+             string[] argList = new string[] { string.Empty };
+             int returnVal = Convert.ToInt32(obj.InvokeMethod("GetOwner",argList));
+             if (returnVal == 0)
+                  return argList[0];
+        }
+
+        return "NO OWNER";
+
+        }
+        public static bool Launch(string appCmdLine, string usename /*,int processId*/, out PROCESS_INFORMATION pi)
         {
 
             bool ret = false;
+            pi = new PROCESS_INFORMATION();
 
             //Either specify the processID explicitly
             //Or try to get it from a process owned by the user.
             //In this case assuming there is only one explorer.exe
-
-            Process[] ps = Process.GetProcessesByName("explorer");
+            Process[] processes = Process.GetProcessesByName("explorer");
             int processId = -1;//=processId
-            if (ps.Length > 0)
+            if (processes.Length > 0)
             {
-                processId = ps[0].Id;
+                foreach (var ps in processes)
+                {
+                    
+                    var _name = GetProcessOwner(ps.Id);
+                    //Trace.WriteLine("pid=" + ps.Id + " name=" + _name);
+                    if (_name == usename)
+                    {
+                        processId = ps.Id;
+                    }
+                }
             }
 
+            
             if (processId > 1)
             {
                 IntPtr token = GetPrimaryToken(processId);
-
+                
                 if (token != IntPtr.Zero)
                 {
 
                     IntPtr envBlock = GetEnvironmentBlock(token);
-                    ret = LaunchProcessAsUser(appCmdLine, token, envBlock);
+                    
+                    ret = LaunchProcessAsUser(appCmdLine, token, envBlock, out pi);
                     if (envBlock != IntPtr.Zero)
                         DestroyEnvironmentBlock(envBlock);
 

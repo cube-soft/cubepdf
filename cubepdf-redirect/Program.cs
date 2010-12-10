@@ -28,7 +28,14 @@ using System.IO;
 using Container = System.Collections.Generic;
 
 namespace CubePDF {
+
     class Program {
+        
+        [DllImport("kernel32.dll", SetLastError=true)]
+        static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool CloseHandle(IntPtr hObject);
+
         static void Main(string[] args) {
             var exec = System.Reflection.Assembly.GetEntryAssembly();
             var dir = System.IO.Path.GetDirectoryName(exec.Location);
@@ -66,21 +73,32 @@ namespace CubePDF {
                 Trace.WriteLine(DateTime.Now.ToString() + ": OUTPUT: " + filename);
 
                 System.Environment.SetEnvironmentVariable("REDMON_FILENAME", filename);
-                var proc = new System.Diagnostics.Process();
-                proc.StartInfo.FileName = dir + @"\cubepdf.exe";
-                proc.StartInfo.Arguments = @psfilepath;
-                proc.StartInfo.CreateNoWindow = false;
-                proc.StartInfo.UseShellExecute = false;
-                proc.StartInfo.LoadUserProfile = true;
-                proc.StartInfo.RedirectStandardInput = false;
+                
 
-                proc.Start();
-                Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe end");
-                Trace.Close();
+                Trace.WriteLine("redmon_user:" + System.Environment.GetEnvironmentVariable("REDMON_USER"));
+                PROCESS_INFORMATION pi;
+                bool result = ForCreateProcessAsUser.Launch(dir + @"\cubepdf.exe " + psfilepath + " \"" + filename + "\"" , System.Environment.GetEnvironmentVariable("REDMON_USER"), out pi);
+                if (result) {
+                    const UInt32 INFINITE = 0xFFFFFFFF;
+                    WaitForSingleObject(pi.hProcess, INFINITE);
+                    CloseHandle(pi.hProcess);
+                } else {
+                    var proc = new System.Diagnostics.Process();
+                    proc.StartInfo.FileName = dir + @"\cubepdf.exe";
+                    proc.StartInfo.Arguments = @psfilepath;
+                    proc.StartInfo.CreateNoWindow = false;
+                    proc.StartInfo.UseShellExecute = false;
+                    proc.StartInfo.LoadUserProfile = true;
+                    proc.StartInfo.RedirectStandardInput = false;
 
-                proc.WaitForExit();
-                proc.Close();
-                proc.Dispose();
+                    proc.Start();
+                    Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe end");
+                    Trace.Close();
+
+                    proc.WaitForExit();
+                    proc.Close();
+                    proc.Dispose();
+                }
             }
             catch (Exception e) {
                 Trace.WriteLine(DateTime.Now.ToString() + ": exception occured");
@@ -163,6 +181,7 @@ namespace CubePDF {
         /// SavePostscript
         /* ----------------------------------------------------------------- */
         private static void SavePostscript(System.IO.Stream src, string dest) {
+#if true
             byte[] buf = new byte[32768];
             using (var output = new System.IO.FileStream(dest, System.IO.FileMode.Create, System.IO.FileAccess.Write)) {
                 while (true) {
@@ -170,7 +189,14 @@ namespace CubePDF {
                     if (read > 0) output.Write(buf, 0, read);
                     else break;
                 }
+                output.Close();
             }
+#else
+            using (var output = new System.IO.BufferedStream(new System.IO.FileStream(dest, System.IO.FileMode.Create, System.IO.FileAccess.Write)))
+            {
+                
+            }
+#endif
         }
 
         /* ----------------------------------------------------------------- */
