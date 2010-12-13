@@ -274,10 +274,10 @@ namespace CubePDF {
             {
                 reader = new iTextPDF.PdfReader(tmp);
                 var info = reader.Info;
-                info["Title"] = (TitleTextBox.TextLength > 0) ? TitleTextBox.Text : null;
-                info["Author"] = (AuthorTextBox.TextLength > 0) ? AuthorTextBox.Text : null;
-                info["Subject"] = (SubTitleTextBox.TextLength > 0) ? SubTitleTextBox.Text : null;
-                info["Keywords"] = (KeywordTextBox.TextLength > 0) ? KeywordTextBox.Text : null;
+                info["Title"] = (TitleTextBox.TextLength > 0) ? TitleTextBox.Text : "";
+                info["Author"] = (AuthorTextBox.TextLength > 0) ? AuthorTextBox.Text : "";
+                info["Subject"] = (SubTitleTextBox.TextLength > 0) ? SubTitleTextBox.Text : "";
+                info["Keywords"] = (KeywordTextBox.TextLength > 0) ? KeywordTextBox.Text : "";
 
                
                 using (var os = new BufferedStream(new FileStream(path, FileMode.Create)))
