@@ -39,14 +39,18 @@ namespace CubePDF {
         static void Main(string[] args) {
             var exec = System.Reflection.Assembly.GetEntryAssembly();
             var dir = System.IO.Path.GetDirectoryName(exec.Location);
+            SetupLog(dir + @"\cubepdf.log");
+            Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe start");
+            
+            var os = System.Environment.OSVersion;
+            var edition = (IntPtr.Size == 4) ? "x86" : "x64";
+            Trace.WriteLine(String.Format("{0}: {1} ({2})", DateTime.Now.ToString(), os.VersionString, edition));
+
             var redmon = Environment.GetEnvironmentVariable("REDMON_USER");
             var domain = Environment.GetEnvironmentVariable("REDMON_MACHINE");
             domain = domain.TrimStart('\\');
             string psfilepath = "";
             
-            SetupLog(dir + @"\cubepdf.log");
-            Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe start");
-
             /*
              * ユーザに依存する環境変数．記憶しておいて，終了直前に元に戻す．
              * RedMon は，ユーザプロセスとして実行された場合でも
@@ -57,9 +61,6 @@ namespace CubePDF {
             SaveEnvironments(environments);
             System.Diagnostics.Debug.Assert(environments["USERNAME"] != null);
             System.Diagnostics.Debug.Assert(environments["USERPROFILE"] != null);
-            Trace.WriteLine(DateTime.Now.ToString() + ": DOMAIN: " + domain);
-            Trace.WriteLine(DateTime.Now.ToString() + ": USERNAME: " + environments["USERNAME"]);
-            Trace.WriteLine(DateTime.Now.ToString() + ": USERPROFILE: " + environments["USERPROFILE"]);
 
             try {
                 if (redmon != null) ChangeEnvironments(domain, redmon);
@@ -71,15 +72,14 @@ namespace CubePDF {
                 psfilepath = Utility.GetTempPath() + Path.GetRandomFileName();
                 SavePostscript(Console.OpenStandardInput(), psfilepath);
                 Trace.WriteLine(DateTime.Now.ToString() + ": OUTPUT: " + filename);
-
                 System.Environment.SetEnvironmentVariable("REDMON_FILENAME", filename);
                 
-
-                Trace.WriteLine("redmon_user:" + System.Environment.GetEnvironmentVariable("REDMON_USER"));
                 PROCESS_INFORMATION pi;
                 bool result = ForCreateProcessAsUser.Launch(dir + @"\cubepdf.exe " + psfilepath + " \"" + filename + "\"" , System.Environment.GetEnvironmentVariable("REDMON_USER"), out pi);
                 if (result) {
                     const UInt32 INFINITE = 0xFFFFFFFF;
+                    Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe end");
+                    Trace.Close();
                     WaitForSingleObject(pi.hProcess, INFINITE);
                     CloseHandle(pi.hProcess);
                 } else {
@@ -166,7 +166,6 @@ namespace CubePDF {
             Environment.SetEnvironmentVariable("HOMEPATH", profile);
             Environment.SetEnvironmentVariable("APPDATA", profile + app);
             Environment.SetEnvironmentVariable("LOCALAPPDATA", profile + app_local);
-            Trace.WriteLine(DateTime.Now.ToString() + ": USERPROFILE: " + profile);
 
             /*
              * Note: Ghostscript が日本語を含むパスを認識しないため，
@@ -175,13 +174,16 @@ namespace CubePDF {
              */
             Environment.SetEnvironmentVariable("TEMP", profile + temp);
             Environment.SetEnvironmentVariable("TMP", profile + tmp);
+
+            Trace.WriteLine(DateTime.Now.ToString() + ": DOMAIN: " + domain);
+            Trace.WriteLine(DateTime.Now.ToString() + ": USERNAME: " + username);
+            Trace.WriteLine(DateTime.Now.ToString() + ": USERPROFILE: " + profile);
         }
         
         /* ----------------------------------------------------------------- */
         /// SavePostscript
         /* ----------------------------------------------------------------- */
         private static void SavePostscript(System.IO.Stream src, string dest) {
-#if true
             byte[] buf = new byte[32768];
             using (var output = new System.IO.FileStream(dest, System.IO.FileMode.Create, System.IO.FileAccess.Write)) {
                 while (true) {
@@ -191,12 +193,6 @@ namespace CubePDF {
                 }
                 output.Close();
             }
-#else
-            using (var output = new System.IO.BufferedStream(new System.IO.FileStream(dest, System.IO.FileMode.Create, System.IO.FileAccess.Write)))
-            {
-                
-            }
-#endif
         }
 
         /* ----------------------------------------------------------------- */

@@ -148,6 +148,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="VersionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VersionDialog.Designer.cs">
+      <DependentUpon>VersionDialog.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\app.ico" />
@@ -160,6 +166,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\buttion_cancel.png" />
+    <EmbeddedResource Include="VersionDialog.resx">
+      <DependentUpon>VersionDialog.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -183,6 +192,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\header.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\title.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

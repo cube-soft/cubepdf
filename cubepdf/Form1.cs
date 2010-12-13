@@ -117,7 +117,6 @@ namespace CubePDF {
                 (DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_TAIL ||
                 DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_HEAD))
             {
-                MessageBox.Show("before merge");
                 evacuatedFilePath = System.IO.Path.GetTempFileName(); // 書き込み権限の無い場所が与えられるかもしれないので、調整が必要らしい
                 System.IO.File.Copy(outputPath, evacuatedFilePath, true); // evacuatedFileが消去されるのはマージ後
                 
@@ -233,7 +232,6 @@ namespace CubePDF {
                     // マージ
                     if (evacuatedFilePath != null)
                     {
-                        MessageBox.Show("start marge");
                         var tmpoutput = System.IO.Path.GetTempFileName();
                         // 実際には2種しか無いがわかりやすさと念のため
                         if (DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_TAIL)
@@ -1186,6 +1184,34 @@ namespace CubePDF {
                 control.Tag = null;
             }
             catch (Exception /* err */) { }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// pictureBox1_Click
+        /* ----------------------------------------------------------------- */
+        private void pictureBox1_Click(object sender, EventArgs e) {
+            var version = new Cube.VersionDialog();
+            version.ShowDialog(this);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// pictureBox1_MouseEnter
+        /* ----------------------------------------------------------------- */
+        private void pictureBox1_MouseEnter(object sender, EventArgs e) {
+            this.Cursor = Cursors.Hand;
+            
+            var tips = new ToolTip();
+            tips.InitialDelay = 500;
+            tips.ReshowDelay = 1000;
+            tips.AutoPopDelay = 1000;
+            tips.SetToolTip(pictureBox1, "CubePDF について");
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// pictureBox1_MouseLeave
+        /* ----------------------------------------------------------------- */
+        private void pictureBox1_MouseLeave(object sender, EventArgs e) {
+            this.Cursor = Cursors.Default;
         }
 
         #endregion

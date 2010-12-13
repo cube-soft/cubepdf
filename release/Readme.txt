@@ -6,7 +6,7 @@ Copyright (c) 2010 CubeSoft Inc. All rights reserved.
 Mailto: support@cube-soft.jp
 URL: http://www.cube-soft.jp/cubepdf/
 
-Last-updated: Mon 08 Nov 2010 13:20:00 JST
+Last-updated: Mon 13 Dec 2010 08:27:00 JST
 ------------------------------------------------------------
 
 ■What's this
@@ -20,7 +20,7 @@ Microsoft .NetFramework 2.0 は、以下の URL からダウンロードして�
 http://www.microsoft.com/downloads/details.aspx?FamilyId=0856eacb-4362-4b0d-8edd-aab15c5e04f5&displaylang=ja
 
 CubePDFは、以下のライブラリを利用しています。それぞれのライブラリについては、記載した URL から取得することができます。
-- GPL Ghostscript 9.00
+- GPL Ghostscript 8.71
   Copyright (c) Artifex Software, Inc. All rights reserved.
   URL: http://pages.cs.wisc.edu/~ghost/
   GNU General Public License ( http://www.gnu.org/licenses/gpl.html )
@@ -28,12 +28,18 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   Copyright (C) 1997-2000, Ghostgum Software Pty Ltd.  All rights reserved.
   URL: http://pages.cs.wisc.edu/~ghost/redmon/
   Aladdin Free Public License ( http://www.artifex.com/downloads/doc/Public.htm )
-- Painting Your Own Tabs - Second Edition
-  Copyright (c) 2010, Mark Jackson. All rights reserved.
-  URL: http://www.codeproject.com/KB/tabs/NewCustomTabControl.aspx
-  The Code Project Open License (CPOL) 1.02 ( http://www.codeproject.com/info/cpol10.aspx )
+- iTextSharp
+  URL: http://sourceforge.net/projects/itextsharp/
+  Affero GNU Public License ( http://www.gnu.org/licenses/agpl.html )
 
 ■バージョン履歴
+2010/12/13 version 0.9.3β
+- 複数のユーザがログオンしている時に発生する問題を修正
+- 生成された PDF ファイルを各種 PDF ビューア上でコピー&ペーストすると文字化けする問題を修正
+- 生成される PDF ファイルに一部フォーマット不正が存在した問題を修正
+- バージョンダイアログを表示するように変更
+- ghostscript を 8.71 にバージョンダウン
+
 2010/11/08 version 0.9.2.3β
 - ポストプロセスの実行に失敗する問題を修正
 - アップデートチェック・プログラムの起動に関する問題を修正
