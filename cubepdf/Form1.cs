@@ -230,25 +230,32 @@ namespace CubePDF {
                     // マージ
                     if (evacuatedFilePath != null)
                     {
+                        bool status = false;
                         var tmpoutput = System.IO.Path.GetTempFileName();
                         // 実際には2種しか無いがわかりやすさと念のため
                         if (DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_TAIL)
                         {
-                            PDFMerger.merge(this.evacuatedFilePath, this.GetOutputPath(), tmpoutput);
+                            status = PDFMerger.merge(this.evacuatedFilePath, this.GetOutputPath(), tmpoutput);
                         }
                         else if (DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_HEAD)
                         {
-                            PDFMerger.merge(this.GetOutputPath(), this.evacuatedFilePath, tmpoutput);
+                            status = PDFMerger.merge(this.GetOutputPath(), this.evacuatedFilePath, tmpoutput);
                         }
+
                         if (File.Exists(this.GetOutputPath())) File.Delete(this.GetOutputPath());
+                        if (!status) {
+                            File.Move(evacuatedFilePath, this.GetOutputPath());
+                            MessageBox.Show("ファイルの結合に失敗しました。結合元のファイルにパスワードが設定されていないか確認して下さい。",
+                                Properties.Settings.Default.ERROR_TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                        
                         File.Move(tmpoutput, this.GetOutputPath());
                         File.Delete(tmpoutput);
                         File.Delete(evacuatedFilePath);
                     }
 
-                    if (OwnerPasswordTextBox.Text.Length == 0 && UserPasswordTextBox.Text.Length == 0) {
-                        ModifyResult(this.GetOutputPath());
-                    }
+                    ModifyResult(this.GetOutputPath());
 
                     // ポストプロセス
                     var selected = postproc_;
@@ -585,27 +592,6 @@ namespace CubePDF {
             
             converter.AddOption("UseFlateCompression", "false");
 
-            // パスワード (文書を開く際のパスワード)
-            if (UserPasswordCheckBox.Enabled && UserPasswordCheckBox.Checked && UserPasswordTextBox.Text.Length > 0) {
-                converter.AddOption("UserPassword", UserPasswordTextBox.Text);
-                
-                // OwnerPasswordが設定されていなくても文書パスワードが設定されている場合
-                // OwnerPasswordに文書パスワードを設定
-                if (!OwnerPasswordCheckBox.Checked || OwnerPasswordTextBox.Text.Length == 0) {
-                    converter.AddOption("OwnerPassword", UserPasswordTextBox.Text);
-                    converter.AddOption("EncryptionR", "3");
-                    converter.AddOption("KeyLength", "128");
-                }
-            }
-            
-            // PDFファイルへの各種操作を許可するためのパスワード
-            if (OwnerPasswordCheckBox.Enabled && OwnerPasswordCheckBox.Checked && OwnerPasswordTextBox.Text.Length > 0) {
-                converter.AddOption("OwnerPassword", OwnerPasswordTextBox.Text);
-                converter.AddOption("EncryptionR", "3");
-                converter.AddOption("KeyLength", "128");
-                converter.AddOption("Permissions", SelectPermission());
-            }
-            
             // グレースケール
             if (GrayCheckBox.Checked) {
                 converter.AddOption("ProcessColorModel", "/DeviceGray");

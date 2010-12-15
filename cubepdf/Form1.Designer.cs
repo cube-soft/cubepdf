@@ -576,9 +576,9 @@
             this.InputFormEnableCheckBox.AutoSize = true;
             this.InputFormEnableCheckBox.Location = new System.Drawing.Point(120, 101);
             this.InputFormEnableCheckBox.Name = "InputFormEnableCheckBox";
-            this.InputFormEnableCheckBox.Size = new System.Drawing.Size(104, 16);
+            this.InputFormEnableCheckBox.Size = new System.Drawing.Size(138, 16);
             this.InputFormEnableCheckBox.TabIndex = 9;
-            this.InputFormEnableCheckBox.Text = "フォームへの入力";
+            this.InputFormEnableCheckBox.Text = "フォームフィールドの入力";
             this.InputFormEnableCheckBox.UseVisualStyleBackColor = true;
             // 
             // CopyEnableCheckBox
