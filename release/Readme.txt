@@ -6,7 +6,7 @@ Copyright (c) 2010 CubeSoft Inc. All rights reserved.
 Mailto: support@cube-soft.jp
 URL: http://www.cube-soft.jp/cubepdf/
 
-Last-updated: Mon 13 Dec 2010 08:27:00 JST
+Last-updated: Thu 16 Dec 2010 00:57:00 JST
 ------------------------------------------------------------
 
 ■What's this
@@ -33,6 +33,9 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
 ■バージョン履歴
+2010/12/16 version 0.9.3.1β
+- パスワードを設定した場合に正常に PDF ファイルが生成されない問題を修正
+
 2010/12/13 version 0.9.3β
 - 複数のユーザがログオンしている時に発生する問題を修正
 - 生成された PDF ファイルを各種 PDF ビューア上でコピー&ペーストすると文字化けする問題を修正
