@@ -227,8 +227,6 @@ namespace CubePDF {
                         Properties.Settings.Default.ERROR_TITLE, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else {
-                    ModifyResult(this.GetOutputPath());
-                    
                     // マージ
                     if (evacuatedFilePath != null)
                     {
@@ -246,6 +244,10 @@ namespace CubePDF {
                         File.Move(tmpoutput, this.GetOutputPath());
                         File.Delete(tmpoutput);
                         File.Delete(evacuatedFilePath);
+                    }
+
+                    if (OwnerPasswordTextBox.Text.Length == 0 && UserPasswordTextBox.Text.Length == 0) {
+                        ModifyResult(this.GetOutputPath());
                     }
 
                     // ポストプロセス

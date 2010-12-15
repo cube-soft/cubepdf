@@ -272,17 +272,35 @@ namespace CubePDF {
             iTextPDF.PdfReader reader = null;
             try
             {
+#if nouse
+                // パスワード対応
+                if (OwnerPasswordTextBox.Text.Length > 0) {
+                    MessageBox.Show("password");
+                    byte[] password = Encoding.UTF8.GetBytes(OwnerPasswordTextBox.Text);
+                    reader = new iTextPDF.PdfReader(tmp, password);
+                }
+                else reader = new iTextPDF.PdfReader(tmp);
+#endif
                 reader = new iTextPDF.PdfReader(tmp);
+
                 var info = reader.Info;
                 info["Title"] = (TitleTextBox.TextLength > 0) ? TitleTextBox.Text : "";
                 info["Author"] = (AuthorTextBox.TextLength > 0) ? AuthorTextBox.Text : "";
                 info["Subject"] = (SubTitleTextBox.TextLength > 0) ? SubTitleTextBox.Text : "";
                 info["Keywords"] = (KeywordTextBox.TextLength > 0) ? KeywordTextBox.Text : "";
+                info["Creator"] = "CubePDF";
+                info["Producer"] = "CubePDF";
 
                
                 using (var os = new BufferedStream(new FileStream(path, FileMode.Create)))
                 {
                     var writer = new iTextPDF.PdfStamper(reader, os, parsePDFVersion(VERSIONS[VersionComboBox.SelectedIndex])); //double.Parse(VERSIONS[VersionComboBox.SelectedIndex]));
+
+                    //パスワードを設定する方法．User/Owner で設定されてない箇所は null
+                    //writer.SetEncryption(iTextPDF.PdfWriter.STANDARD_ENCRYPTION_128,
+                    //    UserPassword, OwnerPassword,
+                    //    PdfWriter.AllowCopy | PdfWriter.AllowPrinting);
+
                     writer.MoreInfo = info;
                     writer.Close();
                 }

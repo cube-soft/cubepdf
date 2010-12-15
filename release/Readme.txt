@@ -30,7 +30,7 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   Aladdin Free Public License ( http://www.artifex.com/downloads/doc/Public.htm )
 - iTextSharp
   URL: http://sourceforge.net/projects/itextsharp/
-  Affero GNU Public License ( http://www.gnu.org/licenses/agpl.html )
+  GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
 ■バージョン履歴
 2010/12/13 version 0.9.3β
