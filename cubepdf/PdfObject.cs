@@ -287,23 +287,38 @@ namespace CubePDF {
                 {
                     var writer = new iTextPDF.PdfStamper(reader, os, parsePDFVersion(VERSIONS[VersionComboBox.SelectedIndex]));
                     
-                    //パスワードを設定する方法．User/Owner で設定されてない箇所は null
-                    string user = (UserPasswordCheckBox.Enabled && UserPasswordTextBox.Text.Length > 0) ? UserPasswordTextBox.Text : null;
-                    string owner = (OwnerPasswordCheckBox.Enabled && OwnerPasswordTextBox.Text.Length > 0) ? OwnerPasswordTextBox.Text : null;
-                    int permission = 0;
-                    if (PrintEnableCheckBox.Checked) permission |= iTextPDF.PdfWriter.AllowPrinting;
-                    if (CopyEnableCheckBox.Checked) permission |= iTextPDF.PdfWriter.AllowCopy;
+                    string user = (UserPasswordCheckBox.Checked && UserPasswordTextBox.Text.Length > 0) ? UserPasswordTextBox.Text : null;
+                    string owner = (OwnerPasswordCheckBox.Checked && OwnerPasswordTextBox.Text.Length > 0) ? OwnerPasswordTextBox.Text : null;
+                    if (owner == null && user != null) owner = user;
 
-                    if (InputFormEnableCheckBox.Checked) {
-                        permission |= iTextPDF.PdfWriter.AllowFillIn;
-                        permission |= iTextPDF.PdfWriter.AllowModifyAnnotations;
+                    int permission =
+                        iTextPDF.PdfWriter.AllowAssembly |
+                        iTextPDF.PdfWriter.AllowCopy |
+                        iTextPDF.PdfWriter.AllowFillIn |
+                        iTextPDF.PdfWriter.AllowModifyAnnotations |
+                        iTextPDF.PdfWriter.AllowModifyContents |
+                        iTextPDF.PdfWriter.AllowPrinting |
+                        iTextPDF.PdfWriter.AllowScreenReaders;
+
+                    if (OwnerPasswordCheckBox.Checked && !PrintEnableCheckBox.Checked) {
+                        permission &= ~iTextPDF.PdfWriter.AllowPrinting;
                     }
 
-                    if (PageInsertEtcEnableCheckBox.Checked) {
-                        permission |= iTextPDF.PdfWriter.AllowModifyContents;
-                        permission |= iTextPDF.PdfWriter.AllowScreenReaders;
+                    if (OwnerPasswordCheckBox.Checked && !CopyEnableCheckBox.Checked) {
+                        permission &= ~iTextPDF.PdfWriter.AllowCopy;
                     }
-                    writer.SetEncryption(iTextPDF.PdfWriter.STANDARD_ENCRYPTION_128, user, owner, permission);
+
+                    if (OwnerPasswordCheckBox.Checked && !InputFormEnableCheckBox.Checked) {
+                        permission &= ~iTextPDF.PdfWriter.AllowFillIn;
+                        permission &= ~iTextPDF.PdfWriter.AllowModifyAnnotations;
+                    }
+
+                    if (OwnerPasswordCheckBox.Checked && !PageInsertEtcEnableCheckBox.Checked) {
+                        permission &= ~iTextPDF.PdfWriter.AllowModifyContents;
+                        permission &= ~iTextPDF.PdfWriter.AllowScreenReaders;
+                    }
+                    
+                    if (user != null || owner != null) writer.SetEncryption(iTextPDF.PdfWriter.STANDARD_ENCRYPTION_128, user, owner, permission);
                     writer.MoreInfo = info;
                     writer.Close();
                 }
