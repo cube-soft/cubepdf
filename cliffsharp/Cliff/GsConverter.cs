@@ -433,7 +433,7 @@ namespace Cliff {
                 "-dNOSAFER",
                 "-dBATCH",
                 "-dNOPAUSE",
-                "-dWINKANJI",
+                //"-dWINKANJI",
             };
 
             private const string GS_DLL = "gsdll32.dll";
