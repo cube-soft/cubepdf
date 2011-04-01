@@ -117,6 +117,7 @@ namespace CubePDF {
                 (DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_TAIL ||
                 DO_EXISTED_FILE[existedFileComboBox.SelectedIndex] == Properties.Settings.Default.EXISTED_FILE_MERGE_HEAD))
             {
+                // TODO: C:\Windows\CubePDF\<tmppath> に展開するようにする．
                 evacuatedFilePath = System.IO.Path.GetTempFileName(); // 書き込み権限の無い場所が与えられるかもしれないので、調整が必要らしい
                 System.IO.File.Copy(outputPath, evacuatedFilePath, true); // evacuatedFileが消去されるのはマージ後
                 

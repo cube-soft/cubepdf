@@ -16,8 +16,6 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see < http://www.gnu.org/licenses/ >.
- *
- *  Last-modified: Fri 26 Nov 2010 22:44:00 JST
  */
 /* ------------------------------------------------------------------------- */
 using System;
