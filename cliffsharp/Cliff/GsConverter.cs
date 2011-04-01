@@ -159,10 +159,14 @@ namespace Cliff {
                 fonts_.Add(dir);
             }
 
+            public void AddOption(string key) {
+                options_.Add(key, null);
+            }
+
             /* ------------------------------------------------------------- */
             //  AddOption
             /* ------------------------------------------------------------- */
-            public void AddOption(string key, string value = null) {
+            public void AddOption(string key, string value) {
                 options_.Add(key, value);
             }
 
@@ -190,7 +194,7 @@ namespace Cliff {
             /* ------------------------------------------------------------- */
             //  Pages
             /* ------------------------------------------------------------- */
-            public void Pages(int first, int last = -1) {
+            public void Pages(int first, int last) {
                 this.first_ = first;
                 this.last_ = last;
             }

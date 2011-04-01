@@ -199,10 +199,10 @@
             this.tabPage1.Controls.Add(this.FileTypeComboBox);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 21);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(465, 329);
+            this.tabPage1.Size = new System.Drawing.Size(465, 330);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "一般";
             // 
@@ -376,10 +376,10 @@
             this.tabPage2.BackColor = System.Drawing.Color.White;
             this.tabPage2.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.tabPage2.Controls.Add(this.TextPropertyPanel);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 21);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(465, 329);
+            this.tabPage2.Size = new System.Drawing.Size(465, 330);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "文書プロパティ";
             // 
@@ -398,7 +398,7 @@
             this.TextPropertyPanel.Location = new System.Drawing.Point(3, 3);
             this.TextPropertyPanel.Margin = new System.Windows.Forms.Padding(0);
             this.TextPropertyPanel.Name = "TextPropertyPanel";
-            this.TextPropertyPanel.Size = new System.Drawing.Size(459, 323);
+            this.TextPropertyPanel.Size = new System.Drawing.Size(459, 324);
             this.TextPropertyPanel.TabIndex = 5;
             // 
             // label8
@@ -471,9 +471,9 @@
             this.tabPage3.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.tabPage3.Controls.Add(this.PermissionGroupBox);
             this.tabPage3.Controls.Add(this.SecurityGroupBox);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Location = new System.Drawing.Point(4, 21);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(465, 329);
+            this.tabPage3.Size = new System.Drawing.Size(465, 330);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "セキュリティ";
             // 
@@ -687,10 +687,10 @@
             this.tabPage4.Controls.Add(this.AutoPageRotationCheckBox);
             this.tabPage4.Controls.Add(this.DownSamplingComboBox);
             this.tabPage4.Controls.Add(this.label17);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Location = new System.Drawing.Point(4, 21);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(465, 329);
+            this.tabPage4.Size = new System.Drawing.Size(465, 330);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "詳細設定";
             // 
