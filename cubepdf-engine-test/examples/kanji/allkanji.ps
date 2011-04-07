@@ -1,0 +1,102 @@
+%!PS-Adobe-2.0
+%
+% Listing up all the kanji characters
+
+% Akira Tanaka <akr@jaist.ac.jp> modified for gs5.10-vflib-1.3. 1998/05/12
+
+/LEFT   110 def
+/TOP    750 def
+/BOTTOM  50 def
+/SIZE    28 def
+
+/FONT_NAME /Ryumin-Light-H def
+/FONT_WIDTH  1000 def
+/FONT_DESCENT 120 def
+/FONT_ASCENT  880 def
+/FONT_HEIGHT FONT_ASCENT FONT_DESCENT add def
+
+% Initialize
+
+/FONT_WIDTH FONT_WIDTH 1000 div SIZE mul def
+/FONT_DESCENT FONT_DESCENT 1000 div SIZE mul def
+/FONT_ASCENT FONT_ASCENT 1000 div SIZE mul def
+/FONT_HEIGHT FONT_HEIGHT 1000 div SIZE mul def
+
+/NUM_FONT /Courier findfont SIZE scalefont def
+/NUM_WIDTH gsave NUM_FONT setfont (0) stringwidth pop def grestore
+/LINES TOP BOTTOM sub FONT_HEIGHT div cvi def
+/STR2 2 string def
+
+/NEWLINE {
+	/ROW_CODE CODE 16 idiv 16 mul def
+	/LINE LINE 1 add def
+	LINE LINES eq { NEWPAGE } if
+	/BASE_LINE TOP LINE FONT_HEIGHT mul sub FONT_ASCENT sub def
+
+	% Draw Lines and Numbers
+
+	gsave
+	NUM_FONT setfont
+
+	LEFT NUM_WIDTH 5 mul sub BASE_LINE moveto
+	ROW_CODE 16 4 string cvrs show
+
+	LEFT TOP LINE FONT_HEIGHT mul sub moveto
+	0 FONT_HEIGHT neg rlineto FONT_WIDTH 16 mul 0 rlineto 
+	0 FONT_HEIGHT rlineto 
+	closepath stroke
+
+	0 1 15 {
+		/COLUMN exch def
+
+		LEFT FONT_WIDTH COLUMN 1 add mul add
+		TOP LINE FONT_HEIGHT mul sub 
+		moveto
+		0 FONT_HEIGHT neg rlineto
+		stroke
+
+		LINE 0 eq {
+			LEFT COLUMN FONT_WIDTH mul add
+			FONT_WIDTH NUM_WIDTH sub 2 div add
+			TOP FONT_DESCENT add
+			moveto
+			COLUMN 16 1 string cvrs
+			show
+		} if
+	} for
+
+	grestore
+} def
+
+/NEWPAGE { showpage /LINE 0 def } def	
+
+%
+% List up Characters
+%
+
+FONT_NAME findfont SIZE scalefont setfont
+/LINE -1 def
+/ROW_CODE 0 def
+
+[[16#2121 16#227E]
+ [16#2330 16#2658]
+ [16#2721 16#2771]
+ [16#2821 16#2841]
+ [16#3021 16#4F53]
+ [16#5021 16#7426]]
+{
+	dup 0 get /FROM exch def 1 get /TO exch def
+	FROM 1 TO {
+		/CODE exch def
+
+		CODE 256 mod dup 16#21 ge exch 16#7E le and {
+			CODE 16 idiv 16 mul ROW_CODE ne { NEWLINE } if
+
+			LEFT CODE 16 mod FONT_WIDTH mul add BASE_LINE moveto
+			STR2 0 CODE 256 idiv put
+			STR2 1 CODE 256 mod put
+			STR2 show
+		} if
+	} for
+} forall
+showpage

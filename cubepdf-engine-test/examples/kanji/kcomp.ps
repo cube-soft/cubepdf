@@ -1,0 +1,612 @@
+%
+% kcomp.ps  -  define /compositekanji operator
+%
+% Apr.10,1992 Programmed by N.Katayama
+%
+% Akira Tanaka <akr@jaist.ac.jp> modified for gs5.10/VFlib support. 1996/11/26
+
+%
+% font_name font_info COMPOSITEKANJI -
+%
+
+/compositekanji {
+
+	6 dict begin	% fontname, fontinfo,
+			% BEGIN, END, basefont and prototype
+
+	/fontinfo exch def
+	/fontname exch def
+	
+	/BEGIN {
+		prototype dup maxlength 3 -1 roll add dict copy begin
+	} def
+	/END {
+		currentdict end dup /FontName get exch definefont pop
+	} def
+	/basefont {
+		fontname 3 -1 roll 4 2 roll basefontname findfont
+	} def
+
+	%
+	% Define prototype
+	%
+
+	12 dict begin
+	/FontInfo fontinfo def
+	/PaintType 0 def
+	/FontType 0 def
+	/FontMatrix [ 1 0 0 1 0 0 ] readonly def
+	/FontBBox { 0 -120 1000 880 } readonly def
+%	/FontName
+%	/Encoding
+%	/FMapType
+%	/WMode
+%	/FDepVector
+	currentdict end /prototype exch def
+
+	% Define Composite Kanji Fonts
+
+	% JIS
+
+	0 BEGIN
+	/FontName fontname (-H) composename def
+	/WMode 0 def
+	/FMapType 2 def
+	/Encoding JISEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#21 1 16#28 { (.r) () basefont } for
+		16#30 1 16#74 { (.r) () basefont } for
+	] readonly def
+	END
+
+	0 BEGIN
+	/FontName fontname (-V) composename def
+	/WMode 1 def
+	/FMapType 2 def
+	/Encoding JISEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#21 1 16#22 { (.r) (v) basefont } for
+		16#23 (.r) () basefont
+		16#24 1 16#25 { (.r) (v) basefont } for
+		16#26 1 16#28 { (.r) () basefont } for
+		16#30 1 16#74 { (.r) () basefont } for
+	] readonly def
+	END
+
+	%
+	% Ext
+	%
+
+	0 BEGIN
+	/FontName fontname (-Ext-H) composename def
+	/WMode 0 def
+	/FMapType 2 def
+	/Encoding ExtEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#21 1 16#27 { (.r) () basefont } for
+		16#29 1 16#2D { (.r) () basefont } for
+		16#30 1 16#73 { (.r) () basefont } for
+	] readonly def
+	END
+
+	0 BEGIN
+	/FontName fontname (-Ext-V) composename def
+	/WMode 1 def
+	/FMapType 2 def
+	/Encoding ExtEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#21 1 16#22 { (.r) (v) basefont } for
+		16#23 (.r) () basefont
+		16#24 1 16#25 { (.r) (v) basefont } for
+		16#26 1 16#27 { (.r) () basefont } for
+		16#29 1 16#2D { (.r) () basefont } for
+		16#30 1 16#73 { (.r) () basefont } for
+	] readonly def
+	END
+
+	%
+	% EUC
+	%
+
+	0 BEGIN
+	/FontName fontname (-EUC-H) composename def
+	/WMode 0 def
+	/FMapType 2 def
+	/Encoding EUCEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#21 1 16#28 { (.r) () basefont } for
+		16#30 1 16#74 { (.r) () basefont } for
+	] readonly def
+	END
+
+	0 BEGIN
+	/FontName fontname (-EUC-V) composename def
+	/WMode 1 def
+	/FMapType 2 def
+	/Encoding EUCEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#21 1 16#22 { (.r) (v) basefont } for
+		16#23 (.r) () basefont
+		16#24 1 16#25 { (.r) (v) basefont } for
+		16#26 1 16#28 { (.r) () basefont } for
+		16#30 1 16#74 { (.r) () basefont } for
+	] readonly def
+	END
+
+	%
+	% Shift-JIS-SuppA
+	%
+
+	0 BEGIN
+	/FontName fontname (-SJ-SuppA-H) composename def
+	/WMode 0 def
+	/FMapType 2 def
+	/Encoding SJSuppAEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#81 1 16#9F { (.sr) () basefont } for
+	] readonly def
+	END
+
+	0 BEGIN
+	/FontName fontname (-SJ-SuppA-V) composename def
+	/WMode 1 def
+	/FMapType 2 def
+	/Encoding SJSuppAEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#81 1 16#83 { (.sr) (v) basefont } for
+		16#84 1 16#9F { (.sr) () basefont } for
+	] readonly def
+	END
+
+	%
+	% Shift-JIS-SuppB
+	%
+
+	0 BEGIN
+	/FontName fontname (-SJ-SuppB-HV) composename def
+	/WMode 0 def
+	/FMapType 2 def
+	/Encoding SJSuppBEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#E0 1 16#EA { (.sr) () basefont } for
+	] readonly def
+	END
+
+	%
+	% RKSJ
+	%
+
+	1 BEGIN
+	/FontName fontname (-RKSJ-H) composename def
+	/WMode 0 def
+	/FMapType 6 def
+	/Encoding RKSJEncoding def
+	/SubsVector RKSJSubsVector def
+	/FDepVector [
+		fontname (.Roman) composename findfont
+		/NotDefFont findfont
+		fontname (-SJ-SuppA-H) composename findfont
+		fontname (.SuppK) composename findfont
+		fontname (-SJ-SuppB-HV) composename findfont
+		/NotDefFont findfont
+	] readonly def
+	END
+
+	1 BEGIN
+	/FontName fontname (-RKSJ-V) composename def
+	/WMode 1 def
+	/FMapType 6 def
+	/Encoding RKSJEncoding def
+	/SubsVector RKSJSubsVector def
+	/FDepVector [
+		fontname (.Roman) composename findfont
+		/NotDefFont findfont
+		fontname (-SJ-SuppA-V) composename findfont
+		fontname (.SuppK) composename findfont
+		fontname (-SJ-SuppB-HV) composename findfont
+		/NotDefFont findfont
+	] readonly def
+	END
+
+	%
+	% 83pv-Shift-JIS-SuppB
+	%
+
+	0 BEGIN
+	/FontName fontname (-83pv-SJ-SuppB-H) composename def
+	/WMode 0 def
+	/FMapType 2 def
+	/Encoding 83pvSJSuppBEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#E0 1 16#EA { (.sr) () basefont } for
+		16#81 1 16#83 { (.sr) (v) basefont } for
+		/NotDefFont findfont	% 16#87
+	] readonly def
+	END
+
+	0 BEGIN
+	/FontName fontname (-83pv-SJ-SuppB-V) composename def
+	/WMode 1 def
+	/FMapType 2 def
+	/Encoding 83pvSJSuppBEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#E0 1 16#EA { (.sr) () basefont } for
+		16#81 1 16#83 { (.sr) (v) basefont } for
+		/NotDefFont findfont	% 16#87
+	] readonly def
+	END
+
+	%
+	% 83pv-RKSJ
+	%
+
+	1 BEGIN
+	/FontName fontname (-83pv-RKSJ-H) composename def
+	/WMode 0 def
+	/FMapType 6 def
+	/Encoding RKSJEncoding def
+	/SubsVector RKSJSubsVector def
+	/FDepVector [
+		2 dict begin
+			/Ryumin-Light		/Times-Roman	def
+			/GothicBBB-Medium	/Helvetica	def
+		currentdict
+		end
+		fontname 2 copy known {
+			get findfont
+		}{
+			pop pop	fontname (.Roman) composename findfont
+		} ifelse
+		/NotDefFont findfont
+		fontname (-SJ-SuppA-H) composename findfont
+		fontname (.SuppK) composename findfont
+		fontname (-83pv-SJ-SuppB-H) composename findfont
+		/NotDefFont findfont
+	] readonly def
+	END
+
+	1 BEGIN
+	/FontName fontname (-83pv-RKSJ-V) composename def
+	/WMode 1 def
+	/FMapType 6 def
+	/Encoding RKSJEncoding def
+	/SubsVector RKSJSubsVector def
+	/FDepVector [
+		2 dict begin
+			/Ryumin-Light		/Times-Roman	def
+			/GothicBBB-Medium	/Helvetica	def
+		currentdict
+		end
+		fontname 2 copy known {
+			get findfont
+		}{
+			pop pop	fontname (.Roman) composename findfont
+		} ifelse
+		/NotDefFont findfont
+		fontname (-SJ-SuppA-V) composename findfont
+		fontname (.SuppK) composename findfont
+		fontname (-83pv-SJ-SuppB-V) composename findfont
+		/NotDefFont findfont
+	] readonly def
+	END
+
+	%
+	% 90pv-SJ-SuppA-H
+	%
+
+	0 BEGIN
+	/FontName fontname (-90pv-SJ-SuppA-H) composename def
+	/WMode 0 def
+	/FMapType 2 def
+	/Encoding SJSuppAEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#81 1 16#84 { (.sr) () basefont } for
+		16#85 1 16#88 { (.90pv-sr) () basefont } for
+		16#89 1 16#9F { (.sr) () basefont } for
+	] readonly def
+	END
+
+	%
+	% 90pv-SJ-SuppA-V
+	%
+
+	0 BEGIN
+	/FontName fontname (-90pv-SJ-SuppA-V) composename def
+	/WMode 1 def
+	/FMapType 2 def
+	/Encoding SJSuppAEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#81 1 16#83 { (.sr) (v) basefont } for
+		16#84 1 16#86 { (.sr) () basefont } for
+		16#87 1 16#87 { (.90pv-sr) (v) basefont } for
+		16#88 1 16#9F { (.sr) () basefont } for
+	] readonly def
+	END
+
+	%
+	% 90pv-SJ-SuppB-HV
+	%
+
+	0 BEGIN
+	/FontName fontname (-90pv-SJ-SuppB-HV) composename def
+	/WMode 0 def
+	/FMapType 2 def
+	/Encoding 90pvSJSuppBEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#E0 1 16#EA { (.sr) () basefont } for
+		16#EB 1 16#ED { (.90pv-sr) () basefont } for
+	] readonly def
+	END
+
+	%
+	% 90pv-RKSJ-H
+	%
+
+	1 BEGIN
+	/FontName fontname (-90pv-RKSJ-H) composename def
+	/WMode 0 def
+	/FMapType 6 def
+	/Encoding RKSJEncoding def
+	/SubsVector RKSJSubsVector def
+	/FDepVector [
+		2 dict begin
+			/Ryumin-Light		/Times-Roman	def
+			/GothicBBB-Medium	/Helvetica	def
+		currentdict
+		end
+		fontname 2 copy known {
+			get findfont
+		}{
+			pop pop	fontname (.Roman) composename findfont
+		} ifelse
+		/NotDefFont findfont
+		fontname (-90pv-SJ-SuppA-H) composename findfont
+		fontname (.SuppK) composename findfont
+		fontname (-90pv-SJ-SuppB-HV) composename findfont
+		/NotDefFont findfont
+	] readonly def
+	END
+
+	%
+	% 90pv-RKSJ-V
+	%
+
+	1 BEGIN
+	/FontName fontname (-90pv-RKSJ-V) composename def
+	/WMode 1 def
+	/FMapType 6 def
+	/Encoding RKSJEncoding def
+	/SubsVector RKSJSubsVector def
+	/FDepVector [
+		2 dict begin
+			/Ryumin-Light		/Times-Roman	def
+			/GothicBBB-Medium	/Helvetica	def
+		currentdict
+		end
+		fontname 2 copy known {
+			get findfont
+		}{
+			pop pop	fontname (.Roman) composename findfont
+		} ifelse
+		/NotDefFont findfont
+		fontname (-90pv-SJ-SuppA-V) composename findfont
+		fontname (.SuppK) composename findfont
+		fontname (-90pv-SJ-SuppB-HV) composename findfont
+		/NotDefFont findfont
+	] readonly def
+	END
+
+	%
+	% 90ms-SJ-SuppA-H
+	%
+
+	0 BEGIN
+	/FontName fontname (-90ms-SJ-SuppA-H) composename def
+	/WMode 0 def
+	/FMapType 2 def
+	/Encoding SJSuppAEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#81 1 16#86 { (.sr) () basefont } for
+		16#87 1 16#87 { (.90ms-sr) () basefont } for
+		16#88 1 16#9F { (.sr) () basefont } for
+	] readonly def
+	END
+
+	%
+	% 90ms-SJ-SuppA-V
+	%
+
+	0 BEGIN
+	/FontName fontname (-90ms-SJ-SuppA-V) composename def
+	/WMode 1 def
+	/FMapType 2 def
+	/Encoding SJSuppAEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#81 1 16#83 { (.sr) (v) basefont } for
+		16#84 1 16#86 { (.sr) () basefont } for
+		16#87 1 16#87 { (.90ms-sr) (v) basefont } for
+		16#88 1 16#9F { (.sr) () basefont } for
+	] readonly def
+	END
+
+	%
+	% 90ms-SJ-SuppB
+	%
+
+	0 BEGIN
+	/FontName fontname (-90ms-SJ-SuppB-HV) composename def
+	/WMode 0 def
+	/FMapType 2 def
+	/Encoding 90msSJSuppBEncoding def
+	/FDepVector [
+		/NotDefFont findfont
+		16#E0 1 16#EA { (.sr) () basefont } for
+		16#ED 1 16#EE { (.90ms-sr) () basefont } for
+		16#FA 1 16#FC { (.90ms-sr) () basefont } for
+	] readonly def
+	END
+
+	%
+	% 90ms-RKSJ-H
+	%
+
+	1 BEGIN
+	/FontName fontname (-90ms-RKSJ-H) composename def
+	/WMode 0 def
+	/FMapType 6 def
+	/Encoding 90msRKSJEncoding def
+	/SubsVector 90msRKSJSubsVector def
+	/FDepVector [
+		fontname (.Roman) composename findfont
+		/NotDefFont findfont
+		fontname (-90ms-SJ-SuppA-H) composename findfont
+		fontname (.SuppK) composename findfont
+		fontname (-90ms-SJ-SuppB-HV) composename findfont
+		/NotDefFont findfont
+	] readonly def
+	END
+
+	%
+	% 90ms-RKSJ-V
+	%
+
+	1 BEGIN
+	/FontName fontname (-90ms-RKSJ-V) composename def
+	/WMode 1 def
+	/FMapType 6 def
+	/Encoding 90msRKSJEncoding def
+	/SubsVector 90msRKSJSubsVector def
+	/FDepVector [
+		fontname (.Roman) composename findfont
+		/NotDefFont findfont
+		fontname (-90ms-SJ-SuppA-V) composename findfont
+		fontname (.SuppK) composename findfont
+		fontname (-90ms-SJ-SuppB-HV) composename findfont
+		/NotDefFont findfont
+	] readonly def
+	END
+	%
+	% 90msp-RKSJ-H
+	%
+
+	1 BEGIN
+	/FontName fontname (-90msp-RKSJ-H) composename def
+	/WMode 0 def
+	/FMapType 6 def
+	/Encoding RKSJEncoding def
+	/SubsVector 90msRKSJSubsVector def
+	/FDepVector [
+		2 dict begin
+			/Ryumin-Light		/Times-Roman	def
+			/GothicBBB-Medium	/Helvetica	def
+		currentdict
+		end
+		fontname 2 copy known {
+			get findfont
+		}{
+			pop pop	fontname (.Roman) composename findfont
+		} ifelse
+		/NotDefFont findfont
+		fontname (-90ms-SJ-SuppA-H) composename findfont
+		fontname (.SuppK) composename findfont
+		fontname (-90ms-SJ-SuppB-HV) composename findfont
+		/NotDefFont findfont
+	] readonly def
+	END
+
+	%
+	% 90msp-RKSJ-V
+	%
+
+	1 BEGIN
+	/FontName fontname (-90msp-RKSJ-V) composename def
+	/WMode 1 def
+	/FMapType 6 def
+	/Encoding RKSJEncoding def
+	/SubsVector 90msRKSJSubsVector def
+	/FDepVector [
+		2 dict begin
+			/Ryumin-Light		/Times-Roman	def
+			/GothicBBB-Medium	/Helvetica	def
+		currentdict
+		end
+		fontname 2 copy known {
+			get findfont
+		}{
+			pop pop	fontname (.Roman) composename findfont
+		} ifelse
+		/NotDefFont findfont
+		fontname (-90ms-SJ-SuppA-V) composename findfont
+		fontname (.SuppK) composename findfont
+		fontname (-90ms-SJ-SuppB-HV) composename findfont
+		/NotDefFont findfont
+	] readonly def
+	END
+
+	end
+} bind def
+
+/copycompfont
+{
+  100 string 100 string
+
+  3 index 2 index cvs length
+  3 index 2 index cvs length
+
+  [ 
+    (-H)
+    (-V)
+    (-Ext-H)
+    (-Ext-V)
+    (-EUC-H)
+    (-EUC-V)
+    (-SJ-SuppA-H)
+    (-SJ-SuppA-V)
+    (-SJ-SuppB-HV)
+    (-RKSJ-H)
+    (-RKSJ-V)
+    (-83pv-SJ-SuppB-H)
+    (-83pv-SJ-SuppB-V)
+    (-83pv-RKSJ-H)
+    (-83pv-RKSJ-V)
+    (-90pv-SJ-SuppA-H)
+    (-90pv-SJ-SuppA-V)
+    (-90pv-SJ-SuppB-HV)
+    (-90pv-RKSJ-H)
+    (-90pv-RKSJ-V)
+    (-90ms-SJ-SuppA-H)
+    (-90ms-SJ-SuppA-V)
+    (-90ms-SJ-SuppB-HV)
+    (-90ms-RKSJ-H)
+    (-90ms-RKSJ-V)
+    (-90msp-RKSJ-H)
+    (-90msp-RKSJ-V)
+    (-Ext-RKSJ-H)
+    (-Ext-RKSJ-V)
+  ]
+  {
+    dup length
+    5 index 4 index 3 index putinterval 5 index 0 5 index 3 index add getinterval cvn
+    5 index 4 index 4 index putinterval 5 index 0 5 index 4 index add getinterval cvn
+    4 2 roll pop pop
+    copyfont
+  } forall
+
+  pop pop pop pop pop pop
+} bind def

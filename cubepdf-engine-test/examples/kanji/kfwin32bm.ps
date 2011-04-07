@@ -1,0 +1,37 @@
+%
+% kfwin32bm.ps - Configuration for Bitmap Fonts under 'Win32API'.
+%
+% I. Matsuda   Feb. 3, 1998        (A. Kakuto 2002, Win32API)
+%
+
+1 dict begin 		% /FontInfo
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Font Info Dictionary
+%
+
+/FontInfo 6 dict dup begin
+/Notice ("Win32 Bitmap Font Library") readonly def
+/FamilyName (Kanji) readonly def
+/FullName (Win32 Bitmap Font Library) readonly def
+/isFixedPitch true def
+/ItalicAngle 0 def
+/Weight (Medium) readonly def
+end readonly def
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Kanji Font Operator under the Win32API.
+%
+
+% font_name unique_id font_file win32BMkanji -
+
+/win32BMkanji {
+	//FontInfo [ 3 -1 roll /kfwin32BM load ] cvx
+	bitmapkanji pop
+} userdict 3 1 roll put
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+end
