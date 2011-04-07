@@ -1,0 +1,62 @@
+%
+% kbitmap.ps  -  define /bitmapkanji operator
+%
+% Apr. 6,1992 Programmed by N.Katayama
+%
+
+%
+% font_name unique_id font_info image_proc BITMAPKANJI unique_id
+%
+
+/bitmapkanji {
+	8 dict begin	% fontname, uniqueid, fontinfo, imageproc
+			% imagematrix, imagestring, private and buildchar
+
+	/imageproc exch def
+	/fontinfo exch def
+	/uniqueid exch def
+	/fontname exch def
+	/imagematrix matrix def
+%	/imagestring 8000 string noaccess def
+	/imagestring 10000 string noaccess def
+
+	% Private dictionary
+
+	/private 3 dict begin 
+	/ImageMatrix imagematrix def
+	/ImageString imagestring def
+	/ImageProc /imageproc load def
+	currentdict end def
+
+	% Define BuildChar procedure
+
+	/buildchar {		
+		exch begin
+		Encoding exch get dup Private /MappingProc get exec
+		currentfont /WMode 2 copy known { get }{ pop pop 0 } ifelse
+
+		Private begin ImageMatrix ImageString ImageProc end 
+
+		11 5 roll 0 -1000 500 880 16 -1 roll setmetrics2
+		3 -1 roll pop false 3 1 roll imagepath
+
+		PaintType 0 eq 
+		{ eofill }{
+			currentdict /StrokeWidth known
+			{StrokeWidth}{0} ifelse
+			setlinewidth stroke
+		} ifelse
+		end
+	} bind def
+
+	% Define base fonts
+
+	fontname uniqueid fontinfo private /buildchar load basekanji
+	/uniqueid exch def
+
+	% Define composite fonts
+
+	fontname fontinfo compositekanji
+
+	uniqueid end
+} def

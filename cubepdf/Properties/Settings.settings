@@ -2,194 +2,29 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CubePDF.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="INPUT_FILENAME" Type="System.String" Scope="User">
-      <Value Profile="(Default)">TempInput.ps</Value>
+    <Setting Name="UserProgramFilter" Type="System.String" Scope="User">
+      <Value Profile="(Default)">実行可能プログラム (*.exe;*.bat)|*.exe;*.bat|すべてのファイル(*.*)|*.*</Value>
     </Setting>
-    <Setting Name="REDMON_FILENAME" Type="System.String" Scope="User">
-      <Value Profile="(Default)">REDMON_FILENAME</Value>
+    <Setting Name="InputPathFilter" Type="System.String" Scope="User">
+      <Value Profile="(Default)">PDF ファイル (*.pdf)|*.pdf|PS ファイル (*.ps)|*.ps|EPS ファイル (*.eps)|*.eps</Value>
     </Setting>
-    <Setting Name="DEFAULT_OUT_FILENAME" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Cube.pdf</Value>
+    <Setting Name="About" Type="System.String" Scope="User">
+      <Value Profile="(Default)">CubePDF について</Value>
     </Setting>
-    <Setting Name="DIALOG_PDF_FILTER" Type="System.String" Scope="User">
-      <Value Profile="(Default)">PDF ファイル(*.pdf)|*.pdf|すべてのファイル(*.*)|*.*</Value>
-    </Setting>
-    <Setting Name="DIALOG_PNG_FILTER" Type="System.String" Scope="User">
-      <Value Profile="(Default)">PNG ファイル(*.png)|*.png|すべてのファイル(*.*)|*.*</Value>
-    </Setting>
-    <Setting Name="DIALOG_JPEG_FILTER" Type="System.String" Scope="User">
-      <Value Profile="(Default)">JPEG ファイル(*.jpg;*.jpeg)|*.jpg;*.jpeg|すべてのファイル(*.*)|*.*</Value>
-    </Setting>
-    <Setting Name="DIALOG_BMP_FILTER" Type="System.String" Scope="User">
-      <Value Profile="(Default)">BMP ファイル(*.bmp)|*.bmp|すべてのファイル(*.*)|*.*</Value>
-    </Setting>
-    <Setting Name="DIALOG_TIFF_FILTER" Type="System.String" Scope="User">
-      <Value Profile="(Default)">TIFF ファイル(*.tiff;*.tif)|*.tiff;*.tif|すべてのファイル(*.*)|*.*</Value>
-    </Setting>
-    <Setting Name="DIALOG_TITLE" Type="System.String" Scope="User">
-      <Value Profile="(Default)">名前を付けて保存</Value>
-    </Setting>
-    <Setting Name="FILETYPE_PDF" Type="System.String" Scope="User">
-      <Value Profile="(Default)">PDF</Value>
-    </Setting>
-    <Setting Name="FILETYPE_PNG" Type="System.String" Scope="User">
-      <Value Profile="(Default)">PNG</Value>
-    </Setting>
-    <Setting Name="FILETYPE_JPEG" Type="System.String" Scope="User">
-      <Value Profile="(Default)">JPEG</Value>
-    </Setting>
-    <Setting Name="FILETYPE_BMP" Type="System.String" Scope="User">
-      <Value Profile="(Default)">BMP</Value>
-    </Setting>
-    <Setting Name="FILETYPE_TIFF" Type="System.String" Scope="User">
-      <Value Profile="(Default)">TIFF</Value>
-    </Setting>
-    <Setting Name="VERSION_1_2" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1.2</Value>
-    </Setting>
-    <Setting Name="VERSION_1_3" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1.3</Value>
-    </Setting>
-    <Setting Name="VERSION_1_4" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1.4</Value>
-    </Setting>
-    <Setting Name="VERSION_1_5" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1.5</Value>
-    </Setting>
-    <Setting Name="VERSION_1_6" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1.6</Value>
-    </Setting>
-    <Setting Name="VERSION_1_7" Type="System.String" Scope="User">
-      <Value Profile="(Default)">1.7</Value>
-    </Setting>
-    <Setting Name="POSTPROC_OPEN" Type="System.String" Scope="User">
-      <Value Profile="(Default)">開く</Value>
-    </Setting>
-    <Setting Name="POSTPROC_NONE" Type="System.String" Scope="User">
-      <Value Profile="(Default)">何もしない</Value>
-    </Setting>
-    <Setting Name="RESOLUTION_72" Type="System.String" Scope="User">
-      <Value Profile="(Default)">72</Value>
-    </Setting>
-    <Setting Name="RESOLUTION_150" Type="System.String" Scope="User">
-      <Value Profile="(Default)">150</Value>
-    </Setting>
-    <Setting Name="RESOLUTION_300" Type="System.String" Scope="User">
-      <Value Profile="(Default)">300</Value>
-    </Setting>
-    <Setting Name="RESOLUTION_450" Type="System.String" Scope="User">
-      <Value Profile="(Default)">450</Value>
-    </Setting>
-    <Setting Name="RESOLUTION_600" Type="System.String" Scope="User">
-      <Value Profile="(Default)">600</Value>
-    </Setting>
-    <Setting Name="DOWNSAMPLE_NONE" Type="System.String" Scope="User">
-      <Value Profile="(Default)">なし</Value>
-    </Setting>
-    <Setting Name="DOWNSAMPLE_AVERAGE" Type="System.String" Scope="User">
-      <Value Profile="(Default)">平均化</Value>
-    </Setting>
-    <Setting Name="DOWNSAMPLE_BICUBIC" Type="System.String" Scope="User">
-      <Value Profile="(Default)">バイキュービック</Value>
-    </Setting>
-    <Setting Name="DOWNSAMPLE_SUBSAMPLE" Type="System.String" Scope="User">
-      <Value Profile="(Default)">サブサンプル</Value>
-    </Setting>
-    <Setting Name="ERROR_TITLE" Type="System.String" Scope="User">
+    <Setting Name="Error" Type="System.String" Scope="User">
       <Value Profile="(Default)">エラー</Value>
     </Setting>
-    <Setting Name="ERROR_INPUTFILE_NOT_EXIST" Type="System.String" Scope="User">
-      <Value Profile="(Default)">入力ファイルが見つかりませんでした。仮想プリンタ経由の場合は、印刷ジョブを正常に完了できなかった可能性があります。仮想プリンタの設定を確認して下さい。</Value>
-    </Setting>
-    <Setting Name="ERROR_CONVERT" Type="System.String" Scope="User">
-      <Value Profile="(Default)">ファイルの変換に失敗しました。</Value>
-    </Setting>
-    <Setting Name="ERROR_PASSWORD" Type="System.String" Scope="User">
+    <Setting Name="PasswordUnmatched" Type="System.String" Scope="User">
       <Value Profile="(Default)">入力されたパスワードが一致しません。</Value>
     </Setting>
-    <Setting Name="ERROR_PAGES" Type="System.String" Scope="User">
-      <Value Profile="(Default)">不正なページ範囲が指定されました。</Value>
+    <Setting Name="FileExists" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{0} は既に存在します。{1}しますか？</Value>
     </Setting>
-    <Setting Name="ERROR_WEBOPTIMIZE" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Web表示用の最適化に失敗しました。通常のPDFファイルを出力します。</Value>
+    <Setting Name="OverwritePrompt" Type="System.String" Scope="User">
+      <Value Profile="(Default)">上書きの確認</Value>
     </Setting>
-    <Setting Name="DIALOG_INPUT_FILTER" Type="System.String" Scope="User">
-      <Value Profile="(Default)">PS ファイル(*.ps)|*.ps|EPS ファイル(*.eps)|*.eps|PDF ファイル(*.pdf)|*.pdf</Value>
-    </Setting>
-    <Setting Name="REDMON_USER" Type="System.String" Scope="User">
-      <Value Profile="(Default)">REDMON_USER</Value>
-    </Setting>
-    <Setting Name="FILETYPE_PS" Type="System.String" Scope="User">
-      <Value Profile="(Default)">PS</Value>
-    </Setting>
-    <Setting Name="FILETYPE_EPS" Type="System.String" Scope="User">
-      <Value Profile="(Default)">EPS</Value>
-    </Setting>
-    <Setting Name="FILETYPE_SVG" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SVG</Value>
-    </Setting>
-    <Setting Name="DIALOG_PS_FILTER" Type="System.String" Scope="User">
-      <Value Profile="(Default)">PS ファイル(*.ps)|*.ps|すべてのファイル(*.*)|*.*</Value>
-    </Setting>
-    <Setting Name="DIALOG_EPS_FILTER" Type="System.String" Scope="User">
-      <Value Profile="(Default)">EPS ファイル(*.eps)|*.eps|すべてのファイル(*.*)|*.*</Value>
-    </Setting>
-    <Setting Name="DIALOG_SVG_FILTER" Type="System.String" Scope="User">
-      <Value Profile="(Default)">SVG ファイル(*.svg)|*.svg|すべてのファイル(*.*)|*.*</Value>
-    </Setting>
-    <Setting Name="FILEEXTENSION_PDF" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.pdf</Value>
-    </Setting>
-    <Setting Name="FILEEXTENSION_PS" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.ps</Value>
-    </Setting>
-    <Setting Name="FILEEXTENSION_EPS" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.eps</Value>
-    </Setting>
-    <Setting Name="FILEEXTENSION_SVG" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.svg</Value>
-    </Setting>
-    <Setting Name="FILEEXTENSION_PNG" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.png</Value>
-    </Setting>
-    <Setting Name="FILEEXTENSION_JPEG" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.jpg</Value>
-    </Setting>
-    <Setting Name="FILEEXTENSION_BMP" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.bmp</Value>
-    </Setting>
-    <Setting Name="FILEEXTENSION_TIFF" Type="System.String" Scope="User">
-      <Value Profile="(Default)">.tiff</Value>
-    </Setting>
-    <Setting Name="ERROR_CERTIFY" Type="System.String" Scope="User">
-      <Value Profile="(Default)">使用可能な期限を過ぎました。引き続き使用する場合は CubePDF のアップデートを行って下さい。今すぐ CubePDF の Web ページへ移動しますか？</Value>
-    </Setting>
-    <Setting Name="WARNING_FILE_EXIST" Type="System.String" Scope="User">
-      <Value Profile="(Default)">は既に存在します。</Value>
-    </Setting>
-    <Setting Name="WARNING_SAVE_TITLE" Type="System.String" Scope="User">
-      <Value Profile="(Default)">保存の確認</Value>
-    </Setting>
-    <Setting Name="EXISTED_FILE_OVERWRITE" Type="System.String" Scope="User">
-      <Value Profile="(Default)">上書き</Value>
-    </Setting>
-    <Setting Name="EXISTED_FILE_MERGE_TAIL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">末尾に結合</Value>
-    </Setting>
-    <Setting Name="EXISTED_FILE_MERGE_HEAD" Type="System.String" Scope="User">
-      <Value Profile="(Default)">先頭に結合</Value>
-    </Setting>
-    <Setting Name="WARNING_DO" Type="System.String" Scope="User">
-      <Value Profile="(Default)">しますか？</Value>
-    </Setting>
-    <Setting Name="POSTPROC_OTHER" Type="System.String" Scope="User">
-      <Value Profile="(Default)">ユーザープログラム</Value>
-    </Setting>
-    <Setting Name="DIALOG_EXEC_FILTER" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Windows バッチ ファイル(*.bat)|*.bat|アプリケーション(*.exe)|*.exe|すべてのファイル(*.*)|*.*</Value>
-    </Setting>
-    <Setting Name="DIALOG_TITLE_EXEC" Type="System.String" Scope="User">
-      <Value Profile="(Default)">外部プログラムを選択</Value>
+    <Setting Name="FileNotSpecified" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ファイルが指定されていません。</Value>
     </Setting>
   </Settings>
 </SettingsFile>

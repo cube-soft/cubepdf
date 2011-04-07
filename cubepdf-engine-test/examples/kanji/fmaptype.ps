@@ -1,0 +1,245 @@
+%!PS-Adobe-2.0
+%
+% Sample program of various FMapTypes
+
+/LEFT  50  def
+/TOP  700 def
+/SIZE  24 def
+
+%
+% Initialize
+%
+
+/NEWLINE { currentpoint exch pop SIZE 4 mul sub LEFT exch moveto } def
+/STRIPE {
+	gsave
+	true charpath gsave pathbbox grestore clip newpath
+	/ury exch def /urx exch def /lly exch def /llx exch def
+	/height ury lly sub def
+	llx height 15 div urx height add {
+		ury moveto
+		height neg height neg rlineto
+	} for
+	stroke
+	grestore
+} def
+/UNDERLINE {
+	dup gsave 
+	0 SIZE 3 div neg rmoveto stringwidth rlineto 
+	0.5 setgray SIZE 10 div setlinewidth stroke 
+	grestore show
+} def
+
+/ALPH /Courier findfont def
+
+/Ryumin-Light-H findfont 
+dup /FDepVector get /FDepVector exch def
+/Encoding get /Encoding exch def
+/KIGO FDepVector Encoding 16#21 get get def
+/HIRA FDepVector Encoding 16#24 get get def
+/KATA FDepVector Encoding 16#25 get get def
+
+/Ryumin-Light-EUC-H findfont
+dup /FDepVector get /FDepVector exch def
+/Encoding get /Encoding exch def
+/HIRA-EUC FDepVector Encoding 16#A4 get get def
+/KATA-EUC FDepVector Encoding 16#A5 get get def
+
+LEFT TOP moveto
+
+save
+
+/GothicBBB-Medium-H findfont SIZE 2 mul scalefont setfont
+<25552529257325482126255E2543255425732530> STRIPE
+
+restore
+NEWLINE
+
+%
+% FMapType2: 8/8 Mapping
+%
+
+save
+
+/FMapType2 11 dict begin
+/FontType 0 def
+/FontMatrix matrix def
+/FMapType 2 def
+/Encoding [ 0 1 2 3 ] def
+/FDepVector [
+	KIGO
+	ALPH
+	HIRA
+	KATA
+] def
+currentdict end
+definefont pop
+
+/FMapType2 findfont SIZE scalefont setfont
+<01 46 01 4D 01 61 01 70 01 54 01 79 01 70 01 65 01 32 02 4F 00 22 
+ 01 38 00 3F 01 38 03 5E 03 43 03 54 03 73 03 30 02 47 02 39 00 23> 
+UNDERLINE
+
+restore
+NEWLINE
+
+%
+% FMapType3: Escape Mapping
+%
+
+save
+
+/FMapType3-Child-1 11 dict begin
+/FontType 0 def
+/FontMatrix matrix def
+/FMapType 3 def
+/Encoding [ 0 1 ] def
+/FDepVector [
+	KIGO
+	ALPH
+] def
+currentdict end
+definefont pop
+
+/FMapType3-Child-2 11 dict begin
+/FontType 0 def
+/FontMatrix matrix def
+/FMapType 3 def
+/Encoding [ 0 1 ] def
+/FDepVector [
+	HIRA
+	KATA
+] def
+currentdict end
+definefont pop
+
+/FMapType3-Parent 11 dict begin
+/FontType 0 def
+/FontMatrix matrix def
+/FMapType 3 def
+/Encoding [ 0 1 ] def
+/FDepVector [
+	/FMapType3-Child-1 findfont
+	/FMapType3-Child-2 findfont
+] def
+currentdict end
+definefont pop
+
+/FMapType3-Parent findfont SIZE scalefont setfont
+<FF 00 FF 01 46 4D 61 70 54 79 70 65 33 FF FF 01 4F FF FF 00 22 
+ FF 01 45 73 63 61 70 65 FF FF 01 FF 00 FF 01 5E 43 54 73 30 FF 00 47 39 
+ FF FF 00 FF 00 23> 
+UNDERLINE
+
+restore
+NEWLINE
+
+%
+% FMapType4: 1/7 Mapping
+%
+
+save
+
+/FMapType4-Child-1 11 dict begin
+/FontType 0 def
+/FontMatrix matrix def
+/FMapType 2 def
+/Encoding [ 0 1 ] def
+/FDepVector [
+	KIGO
+	ALPH
+] def
+currentdict end
+definefont pop
+
+/FMapType4-Child-2 11 dict begin
+/FontType 0 def
+/FontMatrix matrix def
+/FMapType 2 def
+/Encoding [ 0 1 ] def
+/FDepVector [
+	HIRA-EUC
+	KATA-EUC
+] def
+currentdict end
+definefont pop
+
+/FMapType4-Parent 11 dict begin
+/FontType 0 def
+/FontMatrix matrix def
+/FMapType 4 def
+/Encoding [ 0 1 ] def
+/FDepVector [
+	/FMapType4-Child-1 findfont
+	/FMapType4-Child-2 findfont
+] def
+currentdict end
+definefont pop
+
+/FMapType4-Parent findfont SIZE scalefont setfont
+<01 46 01 4D 01 61 01 70 01 54 01 79 01 70 01 65 01 34 80 CF 00 22 
+ 01 31 00 3F 01 37 81 DE 81 C3 81 D4 81 F3 81 B0 80 C7 80 B9 00 23>
+UNDERLINE
+
+restore
+NEWLINE
+
+%
+% FMapType5: 9/7 Mapping
+%
+
+save
+
+/FMapType5 11 dict begin
+/FontType 0 def
+/FontMatrix matrix def
+/FMapType 5 def
+/Encoding [ 0 1 2 3 ] def
+/FDepVector [
+	KIGO
+	ALPH
+	HIRA
+	KATA
+] def
+currentdict end
+definefont pop
+
+/FMapType5 findfont SIZE scalefont setfont
+<00 C6 00 CD 00 E1 00 F0 00 D4 00 F9 00 F0 00 E5 00 B5 01 4F 00 22 
+ 00 B9 00 3F 00 B7 01 DE 01 C3 01 D4 01 F3 01 B0 01 47 01 39 00 23>
+UNDERLINE
+
+restore
+NEWLINE
+
+%
+% FMapType6: SubsVector Mapping
+%
+
+save
+
+/FMapType6 11 dict begin
+/FontType 0 def
+/FontMatrix matrix def
+/FMapType 6 def
+/Encoding [ 0 1 2 3 ] def
+/SubsVector <01 0100 0080 0080> def
+/FDepVector [
+	ALPH
+	KIGO
+	HIRA
+	KATA
+] def
+currentdict end
+definefont pop
+
+/FMapType6 findfont SIZE scalefont setfont
+<00 46 00 4D 00 61 00 70 00 54 00 79 00 70 00 65 00 36 01 CF 01 22
+ 00 53 00 75 00 62 00 73 00 56 00 65 00 63 00 74 00 6F 00 72
+ 02 5E 02 43 02 54 02 73 02 30 01 C7 01 B9 01 23>
+UNDERLINE
+
+restore
+NEWLINE
+
+showpage

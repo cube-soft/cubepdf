@@ -1,0 +1,69 @@
+%
+% Kanji Font Configuration File (Win32: Win32 API)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Example:
+% 	/Ryumin-Light  4300000  (ÇlÇr ñæí©) win32BMkanji
+% 	/Ryumin-Light  4300000  (ÇlÇr ñæí©) win32kanji
+%
+% Descriptions:
+% 	/Ryumin-Light
+%		is the name of the Kanji font group to be installed.
+%		/Ryumin-Light and /GothicBBB-Medium are standard.
+%
+%	4300000
+%		is the offset of the identifiers to be used by the group.
+%		You should specify the offset at intervals of 200,
+%		because each font group uses about 170 identifiers.
+%
+%	(ÇlÇr ñæí©)
+%		is the name of the TrueType font (NOT FILE NAME!!).
+%
+%	win32kanji
+%		is the operator to install Kanji outline font groups under
+%               Win32 API.
+%               
+%	win32BMkanji
+%		is the operator to install Kanji bitmap font groups under
+%               Win32 API.
+%               
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Bitmap fonts
+%%
+/Ryumin-Light		4300000	(ÇlÇr ñæí©)          win32BMkanji
+/GothicBBB-Medium	4300200	(ÇlÇr ÉSÉVÉbÉN)      win32BMkanji
+
+%/Ryumin-Light		4300000	(HGñæí©B)            win32BMkanji
+%/GothicBBB-Medium	4300200	(HG∫ﬁºØ∏M)           win32BMkanji
+
+%/Ryumin-Light		4300000	(HGã≥â»èëëÃ)         win32BMkanji
+%/GothicBBB-Medium	4300200	(HGä€∫ﬁºØ∏M-PRO)     win32BMkanji
+
+%/Ryumin-Light		4300000	(ìåïóñæí©)           win32BMkanji
+%/GothicBBB-Medium	4300200	(ìåïóÉSÉVÉbÉN)       win32BMkanji
+
+%/Ryumin-Light		4300000	(è¨íÀñæí© Std R)     win32BMkanji
+%/GothicBBB-Medium	4300200	(è¨íÀÉSÉVÉbÉN Std R) win32BMkanji
+
+%/Ryumin-Light		4300000	(è¨íÀñæí© Std B)     win32BMkanji
+%/GothicBBB-Medium	4300200	(è¨íÀÉSÉVÉbÉN Std B) win32BMkanji
+
+%%
+%% outline fonts
+%%
+%/Ryumin-Light		4300000	(ÇlÇr ñæí©)	win32kanji
+%/GothicBBB-Medium	4300200	(ÇlÇr ÉSÉVÉbÉN)	win32kanji
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Kanji Font Aliases
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+/Ryumin-Light-RKSJ-H /Ryumin-Light-Ext-RKSJ-H copyfont
+/Ryumin-Light-RKSJ-V /Ryumin-Light-Ext-RKSJ-V copyfont
+/GothicBBB-Medium-RKSJ-H /GothicBBB-Medium-Ext-RKSJ-H copyfont
+/GothicBBB-Medium-RKSJ-V /GothicBBB-Medium-Ext-RKSJ-V copyfont

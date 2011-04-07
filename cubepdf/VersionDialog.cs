@@ -21,7 +21,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace Cube {
+namespace CubePDF {
     /* --------------------------------------------------------------------- */
     /// VersionDialog
     /* --------------------------------------------------------------------- */
@@ -29,14 +29,10 @@ namespace Cube {
         /* ----------------------------------------------------------------- */
         /// Constructor
         /* ----------------------------------------------------------------- */
-        public VersionDialog() {
+        public VersionDialog(string version) {
             InitializeComponent();
-            var version = "unknown";
-            var registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(REG_ROOT, false);
-            if (registry != null) version = (string)registry.GetValue(REG_VERSION, "unknown");
             var edition = (IntPtr.Size == 4) ? "x86" : "x64";
             this.VersionLabel.Text = String.Format("Version: {0} ({1})", version, edition);
-            //LogoPictureBox.Image = Cube.Properties.Resources.cubepdf_viewer.ToBitmap();
         }
 
         /* ----------------------------------------------------------------- */
@@ -59,13 +55,5 @@ namespace Cube {
         private void OKButton_Click(object sender, EventArgs e) {
             this.Close();
         }
-
-        /* ----------------------------------------------------------------- */
-        //  定数定義
-        /* ----------------------------------------------------------------- */
-        #region constant variables
-        const string REG_ROOT       = @"Software\CubePDF";
-        const string REG_VERSION    = "Version";
-        #endregion
     }
 }

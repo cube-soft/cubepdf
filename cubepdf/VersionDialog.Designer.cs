@@ -1,4 +1,4 @@
-﻿namespace Cube
+﻿namespace CubePDF
 {
     partial class VersionDialog
     {
