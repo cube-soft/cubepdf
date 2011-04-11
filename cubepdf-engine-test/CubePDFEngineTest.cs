@@ -11,15 +11,15 @@ namespace CubePDF {
             UserSetting original = new UserSetting(true);
 
             UserSetting test1 = new UserSetting();
-            Assert.IsTrue(test1.Save());
+            Assert.IsTrue(test1.Save(), "test1.Save()");
 
             // デフォルト値のチェック
             UserSetting test2 = new UserSetting();
             string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             Assert.AreEqual(desktop, test2.OutputPath);
             Assert.AreEqual(desktop, test2.InputPath);
-            Assert.IsTrue(test2.UserProgram.Length == 0);
-            Assert.IsTrue(test2.Load());
+            Assert.IsTrue(test2.UserProgram.Length == 0, "test2.UserProgram.Length == 0");
+            Assert.IsTrue(test2.Load(), "test2.Load()");
             Assert.AreEqual((int)Parameter.FileTypes.PDF, test2.FileType);
             Assert.AreEqual((int)Parameter.PDFVersions.Ver1_7, test2.PDFVersion);
             Assert.AreEqual((int)Parameter.Resolutions.Resolution300, test2.Resolution);
@@ -79,6 +79,8 @@ namespace CubePDF {
             UserSetting setting = new UserSetting();
             Converter converter = new Converter();
 
+            setting.Load();
+
             // テストファイル
             String[] files = {
                 @"examples\alphabet.ps",
@@ -92,18 +94,18 @@ namespace CubePDF {
                 @"examples\waterfal.ps",
                 @"examples\japanese-simple-page.ps",
                 @"examples\japanese-multi-pages.ps",
-                @"examples\text-and-pictures.ps",
-                @"examples\vertical-writing.ps"
+                //@"examples\text-and-pictures.ps",
+                //@"examples\vertical-writing.ps"
             };
 
             // デフォルト設定でのテスト
             string suffix = "";
             foreach (string file in files) {
                 setting.InputPath =Path.GetFullPath(file);
-                setting.OutputPath = Path.GetDirectoryName(file) + Path.GetFileName(file)
+                setting.OutputPath = Path.GetDirectoryName(file) + '\\' + Path.GetFileNameWithoutExtension(file)
                     + suffix + Parameter.Extension((Parameter.FileTypes)setting.FileType);
-                Assert.IsTrue(converter.Run(setting), file);
-                Assert.IsTrue(File.Exists(setting.OutputPath), file);
+                Assert.IsTrue(converter.Run(setting), "converter.Run: " + file);
+                Assert.IsTrue(File.Exists(setting.OutputPath), "File.Exists: " + file);
             }
         }
     }
