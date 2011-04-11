@@ -46,7 +46,9 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public static string CurrentDirectory() {
             var exec = System.Reflection.Assembly.GetEntryAssembly();
-            return System.IO.Path.GetDirectoryName(exec.Location) + '\\';
+            if (exec != null )
+                return System.IO.Path.GetDirectoryName(exec.Location) + '\\';
+            return System.Environment.CurrentDirectory;
         }
 
         /* ------------------------------------------------------------- */
