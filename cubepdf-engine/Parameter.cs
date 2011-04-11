@@ -102,6 +102,31 @@ namespace CubePDF {
             return "";
         }
 
+        public static string VersionString(PDFVersions index) {
+            switch (index) {
+            case PDFVersions.Ver1_7: return "1.7";
+            case PDFVersions.Ver1_6: return "1.6";
+            case PDFVersions.Ver1_5: return "1.5";
+            case PDFVersions.Ver1_4: return "1.4";
+            case PDFVersions.Ver1_3: return "1.3";
+            case PDFVersions.Ver1_2: return "1.2";
+            default: break;
+            }
+            return "";
+        }
+
+        public static string ResolutionString(Resolutions index) {
+            switch (index) {
+            case Resolutions.Resolution72: return "72";
+            case Resolutions.Resolution150: return "150";
+            case Resolutions.Resolution300: return "300";
+            case Resolutions.Resolution450: return "450";
+            case Resolutions.Resolution600: return "600";
+            default: break;
+            }
+            return "";
+        }
+
 #if HAVE_GHOSTSCRIPT
         /* ----------------------------------------------------------------- */
         /// Device

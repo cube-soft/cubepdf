@@ -29,27 +29,38 @@ namespace CubePDF {
     /* --------------------------------------------------------------------- */
     public class Converter {
         /* ----------------------------------------------------------------- */
+        ///
         /// Run
-        /* ----------------------------------------------------------------- */
-        public bool Run() {
-            _setting = new UserSetting();
-            _setting.Load();
-            return true;
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// Run
+        /// 
+        /// NOTE: 文書プロパティ，パスワード関連とファイル結合は iText
+        /// に任せる．出力パスに指定されたファイルが存在する場合がある．
+        /// そのときは，_setting.ExistedFile の指定に従う．
+        /// ExistedFile: 上書き，先頭に結合，末尾に結合
+        /// 結合部分は，iText が行う．
+        /// 
         /* ----------------------------------------------------------------- */
         public bool Run(UserSetting setting) {
             _setting = setting;
-            return File.Exists(setting.InputPath);
+            _gs = new CubePDF.Ghostscript.Converter(Parameter.Device((Parameter.FileTypes)_setting.FileType, _setting.Grayscale));
+            _gs.AddInclude(_setting.LibPath);
+            
+            // AddFont
+            _gs.AddFont(@"C:\Windows\Fonts");
+            
+            // rotation
+            _gs.PageRotation = _setting.PageRotation;
+
+            // 必要な分だけ AddOption をしていく．
+            
+            _gs.Convert();
+            return true;
         }
 
         /* ----------------------------------------------------------------- */
         /// 変数の定義
         /* ----------------------------------------------------------------- */
         #region Variables
-        Ghostscript.Converter _gs;
+        Ghostscript.Converter _gs = null;
         UserSetting _setting = null;
         #endregion
     }
