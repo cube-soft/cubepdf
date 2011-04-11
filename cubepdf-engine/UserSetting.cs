@@ -188,10 +188,12 @@ namespace CubePDF {
                 else {
                     _version = subkey.GetValue(REG_PRODUCT_VERSION, REG_VALUE_UNKNOWN) as string;
                     _install = subkey.GetValue(REG_INSTALL_PATH, REG_VALUE_UNKNOWN) as string;
+                    _lib = subkey.GetValue(REG_LIB_PATH, REG_VALUE_UNKNOWN) as string;
                     subkey.Close();
                 }
                 if (_version == null) _version = REG_VALUE_UNKNOWN;
                 if (_install == null) _install = REG_VALUE_UNKNOWN;
+                if (_lib == null) _lib = REG_VALUE_UNKNOWN;
 
                 // ユーザ設定を読み込む
                 subkey = Registry.CurrentUser.OpenSubKey(REG_ROOT + '\\' + REG_VERSION, false);
@@ -329,8 +331,15 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// InstallDirectory
         /* ----------------------------------------------------------------- */
-        public string InstallDirectory {
+        public string InstallPath {
             get { return _install; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// LibPath
+        /* ----------------------------------------------------------------- */
+        public string LibPath {
+            get { return _lib; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -497,6 +506,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         #region Variables
         private string _install = REG_VALUE_UNKNOWN;
+        private string _lib = REG_VALUE_UNKNOWN;
         private string _version = REG_VALUE_UNKNOWN;
         private string _input = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         private string _output = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -527,6 +537,7 @@ namespace CubePDF {
         const string REG_ROOT               = @"Software\CubeSoft\CubePDF";
         const string REG_VERSION            = "v2";
         const string REG_INSTALL_PATH       = "InstallPath";
+        const string REG_LIB_PATH           = "LibPath";
         const string REG_PRODUCT_VERSION    = "Version";
         const string REG_ADVANCED_MODE      = "AdvancedMode";
         const string REG_CHECK_UPDATE       = "CheckUpdate";
