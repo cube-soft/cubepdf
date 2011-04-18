@@ -26,15 +26,16 @@ namespace CubePDF {
     ///  Parameter
     ///  
     ///  <summary>
-    ///  各種パラメータの値を定義したクラス．パラメータは，CubePDF の
-    ///  コンボボックスのインデックスと一致させている．コ
-    ///  ンボボックスの
-    ///  並びなどを変更してしまうと過去のバージョンと整合性が取れなくなる
-    ///  恐れがあるので注意する必要がある．
+    ///  各種パラメータの値を定義したクラス．
     ///  </summary>
     ///
     /* --------------------------------------------------------------------- */
     public abstract class Parameter {
+        /* ----------------------------------------------------------------- */
+        /// 各種パラメータの型 (enum) 定義
+        /* ----------------------------------------------------------------- */
+        #region Type definitions
+
         /* ----------------------------------------------------------------- */
         /// FileTypes
         /* ----------------------------------------------------------------- */
@@ -84,11 +85,40 @@ namespace CubePDF {
             None, Average, Bicubic, Subsample,
         };
 
+        #endregion
+
+        /* ----------------------------------------------------------------- */
+        //  各種チェックメソッド
+        /* ----------------------------------------------------------------- */
+        #region Checking methods
+
+        /* ----------------------------------------------------------------- */
+        /// IsImageType
+        /* ----------------------------------------------------------------- */
+        public static bool IsImageType(FileTypes id) {
+            if (id == FileTypes.PNG || id == FileTypes.JPEG || id == FileTypes.BMP || id == FileTypes.TIFF) return true;
+            else return false;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// IsDocumentType
+        /* ----------------------------------------------------------------- */
+        public static bool IsDocumentType(FileTypes id) {
+            return !IsImageType(id);
+        }
+
+        #endregion
+
+        /* ----------------------------------------------------------------- */
+        //  各種 types から別の何らかの値に変換するメソッド群
+        /* ----------------------------------------------------------------- */
+        #region Translation methods
+        
         /* ----------------------------------------------------------------- */
         /// Extension
         /* ----------------------------------------------------------------- */
-        public static string Extension(FileTypes index) {
-            switch (index) {
+        public static string Extension(FileTypes id) {
+            switch (id) {
             case FileTypes.PDF:  return ".pdf";
             case FileTypes.PS:   return ".ps";
             case FileTypes.EPS:  return ".eps";
@@ -102,57 +132,11 @@ namespace CubePDF {
             return "";
         }
 
-        public static string VersionString(PDFVersions index) {
-            switch (index) {
-            case PDFVersions.Ver1_7: return "1.7";
-            case PDFVersions.Ver1_6: return "1.6";
-            case PDFVersions.Ver1_5: return "1.5";
-            case PDFVersions.Ver1_4: return "1.4";
-            case PDFVersions.Ver1_3: return "1.3";
-            case PDFVersions.Ver1_2: return "1.2";
-            default: break;
-            }
-            return "";
-        }
-
-        public static string ResolutionString(Resolutions index) {
-            switch (index) {
-            case Resolutions.Resolution72: return "72";
-            case Resolutions.Resolution150: return "150";
-            case Resolutions.Resolution300: return "300";
-            case Resolutions.Resolution450: return "450";
-            case Resolutions.Resolution600: return "600";
-            default: break;
-            }
-            return "";
-        }
-
-#if HAVE_GHOSTSCRIPT
-        /* ----------------------------------------------------------------- */
-        /// Device
-        /* ----------------------------------------------------------------- */
-        public static Ghostscript.Device Device(FileTypes index, bool grayscale) {
-            switch (index) {
-            case FileTypes.PDF:  return Ghostscript.Device.PDF;
-            case FileTypes.PS:   return Ghostscript.Device.PS;
-            case FileTypes.EPS:  return Ghostscript.Device.EPS;
-            case FileTypes.PNG:  return grayscale ? Ghostscript.Device.PNG_Gray : Ghostscript.Device.PNG;
-            case FileTypes.JPEG: return grayscale ? Ghostscript.Device.JPEG_Gray : Ghostscript.Device.JPEG;
-            case FileTypes.BMP:  return grayscale ? Ghostscript.Device.BMP_Gray : Ghostscript.Device.BMP;
-            case FileTypes.TIFF: return grayscale ? Ghostscript.Device.TIFF_Gray : Ghostscript.Device.TIFF;
-            case FileTypes.SVG:  return Ghostscript.Device.SVG;
-            default:
-                break;
-            }
-            return Ghostscript.Device.PDF;
-        }
-#endif
-
         /* ----------------------------------------------------------------- */
         /// PDFVersionValue
         /* ----------------------------------------------------------------- */
-        public static double PDFVersionValue(PDFVersions index) {
-            switch (index) {
+        public static double PDFVersionValue(PDFVersions id) {
+            switch (id) {
             case PDFVersions.Ver1_7: return 1.7;
             case PDFVersions.Ver1_6: return 1.6;
             case PDFVersions.Ver1_5: return 1.5;
@@ -166,8 +150,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// ResolutionValue
         /* ----------------------------------------------------------------- */
-        public static int ResolutionValue(Resolutions index) {
-            switch (index) {
+        public static int ResolutionValue(Resolutions id) {
+            switch (id) {
             case Resolutions.Resolution72:  return 72;
             case Resolutions.Resolution150: return 150;
             case Resolutions.Resolution300: return 300;
@@ -177,5 +161,35 @@ namespace CubePDF {
             }
             return 300;
         }
+
+        #endregion
+
+#if HAVE_GHOSTSCRIPT
+        /* ----------------------------------------------------------------- */
+        //  GsConverter (Ghostscript) が使用するメソッド群
+        /* ----------------------------------------------------------------- */
+        #region Ghostscript extensions
+
+        /* ----------------------------------------------------------------- */
+        /// Device
+        /* ----------------------------------------------------------------- */
+        public static Ghostscript.Device Device(FileTypes id, bool grayscale) {
+            switch (id) {
+            case FileTypes.PDF:  return Ghostscript.Device.PDF;
+            case FileTypes.PS:   return Ghostscript.Device.PS;
+            case FileTypes.EPS:  return Ghostscript.Device.EPS;
+            case FileTypes.PNG:  return grayscale ? Ghostscript.Device.PNG_Gray : Ghostscript.Device.PNG;
+            case FileTypes.JPEG: return grayscale ? Ghostscript.Device.JPEG_Gray : Ghostscript.Device.JPEG;
+            case FileTypes.BMP:  return grayscale ? Ghostscript.Device.BMP_Gray : Ghostscript.Device.BMP;
+            case FileTypes.TIFF: return grayscale ? Ghostscript.Device.TIFF_Gray : Ghostscript.Device.TIFF;
+            case FileTypes.SVG:  return Ghostscript.Device.SVG;
+            default:
+                break;
+            }
+            return Ghostscript.Device.PDF;
+        }
+
+        #endregion
+#endif
     }
 }

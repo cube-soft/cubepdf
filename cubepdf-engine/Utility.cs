@@ -29,8 +29,9 @@ namespace CubePDF {
         /* ------------------------------------------------------------- */
         /// WorkingDirectory
         /* ------------------------------------------------------------- */
-        public static string WorkingDirectory() {
-            return System.Environment.GetEnvironmentVariable("windir") + @"\CubePDF\";
+        public static string WorkingDirectory {
+            get { return _work; }
+            set { _work = value; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -38,17 +39,18 @@ namespace CubePDF {
         /// CurrentDirectory
         ///
         /// <summary>
-        /// 現在の実行ディレクトリへのパスを返す．
+        /// 現在の実行ディレクトリへのパスを返す．GetEntryAssembly
+        /// メソッドが失敗した場合には，CurrentDirectory 環境変数の値を
+        /// 返す．
         /// </summary>
         ///
-        /// <returns>現在の実行ディレクトリへのパス</returns>
-        ///
         /* ----------------------------------------------------------------- */
-        public static string CurrentDirectory() {
-            var exec = System.Reflection.Assembly.GetEntryAssembly();
-            if (exec != null )
-                return System.IO.Path.GetDirectoryName(exec.Location) + '\\';
-            return System.Environment.CurrentDirectory;
+        public static string CurrentDirectory {
+            get {
+                var exec = System.Reflection.Assembly.GetEntryAssembly();
+                if (exec != null) return System.IO.Path.GetDirectoryName(exec.Location);
+                else return System.Environment.CurrentDirectory;
+            }
         }
 
         /* ------------------------------------------------------------- */
@@ -59,5 +61,12 @@ namespace CubePDF {
             Trace.Listeners.Add(new TextWriterTraceListener(src));
             Trace.AutoFlush = true;
         }
+
+        /* ------------------------------------------------------------- */
+        //  変数定義
+        /* ------------------------------------------------------------- */
+        #region Variables
+        private static string _work = System.IO.Path.GetTempPath();
+        #endregion
     }
 } // namespace CubePDF

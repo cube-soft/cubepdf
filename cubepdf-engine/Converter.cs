@@ -41,133 +41,160 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public bool Run(UserSetting setting) {
             _setting = setting;
+
+            // Ghostscript に指定するパスに日本語が入るとエラーが発生する
+            // 場合があるので，作業ディレクトリを変更する．
+            Utility.WorkingDirectory = _setting.LibPath;
+
             _gs = new CubePDF.Ghostscript.Converter(Parameter.Device((Parameter.FileTypes)_setting.FileType, _setting.Grayscale));
             _gs.AddInclude(_setting.LibPath);
             _gs.AddSource(setting.InputPath);
-
-            // AddFont
-            //_gs.AddFont(System.Environment.GetEnvironmentVariable("windir") + @"\Fonts");
-            
-            // rotation
             _gs.PageRotation = _setting.PageRotation;
-
-            // Resolution
-            //_gs.Resolution = Parameter.ResolutionString(setting.Resolution);
-
-            // ダウンサンプリング
-            _gs.AddOption("ColorImageResolution", Parameter.ResolutionString((Parameter.Resolutions)setting.Resolution));
-            _gs.AddOption("GrayImageResolution", Parameter.ResolutionString((Parameter.Resolutions)setting.Resolution));
-            _gs.AddOption("MonoImageResolution", 300);
-
-            if (setting.DownSampling == Parameter.DownSamplings.None)
-            {
-                _gs.AddOption("DownsampleColorImages", false);
-                _gs.AddOption("AutoFilterColorImages", false);
-                _gs.AddOption("DownsampleGrayImages", false);
-                _gs.AddOption("AutoFilterGrayImages", false);
-                _gs.AddOption("DownsampleMonoImages", false);
-                _gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
-            }
-            else if (setting.DownSampling == Parameter.DownSamplings.Average)
-            {
-                _gs.AddOption("DownsampleColorImages", true);
-                _gs.AddOption("ColorImageDownsampleType", "/Average");
-                _gs.AddOption("AutoFilterColorImages", true);
-                _gs.AddOption("DownsampleGrayImages", true);
-                _gs.AddOption("GrayImageDownsampleType", "/Average");
-                _gs.AddOption("AutoFilterGrayImages", true);
-                _gs.AddOption("DownsampleMonoImages", true);
-                _gs.AddOption("MonoImageDownsampleType", "/Average");
-                _gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
-            }
-            else if (setting.DownSampling == Parameter.DownSamplings.Bicubic)
-            {
-                _gs.AddOption("DownsampleColorImages", true);
-                _gs.AddOption("ColorImageDownsampleType", "/Bicubic");
-                _gs.AddOption("AutoFilterColorImages", true);
-                _gs.AddOption("DownsampleGrayImages", true);
-                _gs.AddOption("GrayImageDownsampleType", "/Bicubic");
-                _gs.AddOption("AutoFilterGrayImages", true);
-                _gs.AddOption("DownsampleMonoImages", true);
-                _gs.AddOption("MonoImageDownsampleType", "/Bicubic");
-                _gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
-            }
-            else if (setting.DownSampling == Parameter.DownSamplings.Subsample)
-            {
-                _gs.AddOption("DownsampleColorImages", true);
-                _gs.AddOption("ColorImageDownsampleType", "/Subsample");
-                _gs.AddOption("AutoFilterColorImages", true);
-                _gs.AddOption("DownsampleGrayImages", true);
-                _gs.AddOption("GrayImageDownsampleType", "/Subsample");
-                _gs.AddOption("AutoFilterGrayImages", true);
-                _gs.AddOption("DownsampleMonoImages", true);
-                _gs.AddOption("MonoImageDownsampleType", "/Subsample");
-                _gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
-            }
-            
-            // ファイルタイプに依存するオプション
-            if (setting.FileType == Parameter.FileTypes.PNG ||
-                setting.FileType == Parameter.FileTypes.JPEG ||
-                setting.FileType == Parameter.FileTypes.BMP ||
-                setting.FileType == Parameter.FileTypes.TIFF)
-            {
-                _gs.AddOption("GraphicsAlphaBits", 4);
-                _gs.AddOption("TextAlphaBits", 4);
-            }
-            else
-            {
-                // フォントの埋め込み
-                if (setting.EmbedFont)
-                {
-                    _gs.AddOption("EmbedAllFonts", "true");
-                    _gs.AddOption("SubsetFonts", "true");
-                }
-
-                if (setting.FileType == (int)Parameter.FileTypes.PDF)
-                {
-                    // PDF バージョン
-                    _gs.AddOption("CompatibilityLevel", Parameter.VersionString((Parameter.PDFVersions)setting.PDFVersion));
-
-                    _gs.AddOption("UseFlateCompression", "false");
-
-                    // グレースケール
-                    if (setting.Grayscale)
-                    {
-                        _gs.AddOption("ProcessColorModel", "/DeviceGray");
-                        _gs.AddOption("ColorConversionStrategy", "/Gray");
-                    }
-                }
-            }
-
+            _gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
             _gs.Destination = setting.OutputPath;
 
-            // 以下の場合、マージ先のファイル(outputPath)のファイルを退避する必要がある
-            // そもそもマージ先のファイルが無い場合のポリシーは？
-            if (System.IO.File.Exists(setting.OutputPath) &&
-                (setting.ExistedFile == Parameter.ExistedFiles.MergeTail ||
-                 setting.ExistedFile == Parameter.ExistedFiles.MergeHead))
-            {
-                // TODO: C:\Windows\CubePDF\<tmppath> に展開するようにする．
-                evacuatedFilePath = System.IO.Path.GetTempFileName(); // 書き込み権限の無い場所が与えられるかもしれないので、調整が必要らしい
-                System.IO.File.Copy(setting.OutputPath, evacuatedFilePath, true); // evacuatedFileが消去されるのはマージ後
+            this.ConfigDownSampling(_setting, _gs);
+            if (Parameter.IsImageType(setting.FileType)) this.ConfigImage(_setting, _gs);
+            else this.ConfigDocument(_setting, _gs);
 
-            }
+            // NOTE: マージオプションが有効なのは PDF のみ．
+            if (setting.FileType == Parameter.FileTypes.PDF) this.EscapeExistedFile(_setting);
 
             _gs.Convert();
             return true;
         }
 
         /* ----------------------------------------------------------------- */
-        /// 変数の定義
+        ///
+        /// EscapeExistedFile
+        ///
+        /// <summary>
+        /// マージオプションなどの関係で既に存在する同名ファイルを退避
+        /// させる．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void EscapeExistedFile(UserSetting setting) {
+            bool merge = (setting.ExistedFile == Parameter.ExistedFiles.MergeTail || setting.ExistedFile == Parameter.ExistedFiles.MergeHead);
+            if (System.IO.File.Exists(setting.OutputPath) && merge) {
+                // TODO: C:\Windows\CubePDF\<tmppath> に展開するようにする．
+                _escaped = System.IO.Path.GetTempFileName(); // 書き込み権限の無い場所が与えられるかもしれないので、調整が必要らしい
+                System.IO.File.Copy(setting.OutputPath, _escaped, true); // evacuatedFileが消去されるのはマージ後
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        //  UserSetting の値を基に各種設定を行う
+        /* ----------------------------------------------------------------- */
+        #region Configuration
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ConfigImage
+        ///
+        /// <summary>
+        /// bmp, png, jpeg, gif のビットマップ系ファイルに変換するために
+        /// 必要なオプションを設定する．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void ConfigImage(UserSetting setting, Ghostscript.Converter gs) {
+            gs.AddOption("GraphicsAlphaBits", 4);
+            gs.AddOption("TextAlphaBits", 4);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ConfigDocument
+        ///
+        /// <summary>
+        /// pdf, ps, eps, svg のベクター系ファイルに変換するために必要な
+        /// オプションを設定する．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void ConfigDocument(UserSetting setting, Ghostscript.Converter gs) {
+            if (setting.EmbedFont) {
+                gs.AddOption("EmbedAllFonts", "true");
+                gs.AddOption("SubsetFonts", "true");
+            }
+
+            if (setting.FileType == Parameter.FileTypes.PDF) this.ConfigPDF(setting, gs);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ConfigPDF
+        /* ----------------------------------------------------------------- */
+        public void ConfigPDF(UserSetting setting, Ghostscript.Converter gs) {
+            gs.AddOption("CompatibilityLevel", Parameter.PDFVersionValue(setting.PDFVersion));
+            gs.AddOption("UseFlateCompression", "false");
+            
+            if (setting.Grayscale) {
+                gs.AddOption("ProcessColorModel", "/DeviceGray");
+                gs.AddOption("ColorConversionStrategy", "/Gray");
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ConfigDownSampling
+        /* ----------------------------------------------------------------- */
+        public void ConfigDownSampling(UserSetting setting, Ghostscript.Converter gs) {
+            gs.AddOption("ColorImageResolution", Parameter.ResolutionValue(setting.Resolution));
+            gs.AddOption("GrayImageResolution", Parameter.ResolutionValue(setting.Resolution));
+            gs.AddOption("MonoImageResolution", 300);
+
+            if (setting.DownSampling == Parameter.DownSamplings.None) {
+                gs.AddOption("DownsampleColorImages", false);
+                gs.AddOption("AutoFilterColorImages", false);
+                gs.AddOption("DownsampleGrayImages", false);
+                gs.AddOption("AutoFilterGrayImages", false);
+                gs.AddOption("DownsampleMonoImages", false);
+                gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
+            }
+            else if (setting.DownSampling == Parameter.DownSamplings.Average) {
+                gs.AddOption("DownsampleColorImages", true);
+                gs.AddOption("ColorImageDownsampleType", "/Average");
+                gs.AddOption("AutoFilterColorImages", true);
+                gs.AddOption("DownsampleGrayImages", true);
+                gs.AddOption("GrayImageDownsampleType", "/Average");
+                gs.AddOption("AutoFilterGrayImages", true);
+                gs.AddOption("DownsampleMonoImages", true);
+                gs.AddOption("MonoImageDownsampleType", "/Average");
+                gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
+            }
+            else if (setting.DownSampling == Parameter.DownSamplings.Bicubic) {
+                gs.AddOption("DownsampleColorImages", true);
+                gs.AddOption("ColorImageDownsampleType", "/Bicubic");
+                gs.AddOption("AutoFilterColorImages", true);
+                gs.AddOption("DownsampleGrayImages", true);
+                gs.AddOption("GrayImageDownsampleType", "/Bicubic");
+                gs.AddOption("AutoFilterGrayImages", true);
+                gs.AddOption("DownsampleMonoImages", true);
+                gs.AddOption("MonoImageDownsampleType", "/Bicubic");
+                gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
+            }
+            else if (setting.DownSampling == Parameter.DownSamplings.Subsample) {
+                gs.AddOption("DownsampleColorImages", true);
+                gs.AddOption("ColorImageDownsampleType", "/Subsample");
+                gs.AddOption("AutoFilterColorImages", true);
+                gs.AddOption("DownsampleGrayImages", true);
+                gs.AddOption("GrayImageDownsampleType", "/Subsample");
+                gs.AddOption("AutoFilterGrayImages", true);
+                gs.AddOption("DownsampleMonoImages", true);
+                gs.AddOption("MonoImageDownsampleType", "/Subsample");
+                gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
+            }
+        }
+
+        #endregion
+
+        /* ----------------------------------------------------------------- */
+        //  変数の定義
         /* ----------------------------------------------------------------- */
         #region Variables
         Ghostscript.Converter _gs = null;
         UserSetting _setting = null;
-        /// <summary>
-        /// evacuatedFilePathはマージの際、退避したファイルのパス。
-        /// null以外ならマージが必要なことを示す。
-        /// </summary>
-        private string evacuatedFilePath = null;
+        private string _escaped = null; // null 以外ならマージが必要
         #endregion
     }
 }
