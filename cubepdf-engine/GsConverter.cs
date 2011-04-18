@@ -52,13 +52,13 @@ namespace CubePDF {
             //  Convert
             /* ------------------------------------------------------------- */
             public void Convert(string[] sources, string dest) {
-                Utility.SetupLog(Utility.CurrentDirectory() + "cubepdf.log");
-                Trace.WriteLine(DateTime.Now.ToString() + ": cliff start");
+                Utility.SetupLog(Utility.CurrentDirectory + @"\cubepdf.log");
+                Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-engine start");
 
                 var root = System.IO.Path.GetDirectoryName(dest);
                 var filename = System.IO.Path.GetFileNameWithoutExtension(dest);
                 var ext = System.IO.Path.GetExtension(dest);
-                var work = Utility.WorkingDirectory() + "cubepdf";
+                var work = Utility.WorkingDirectory + @"\cubepdf";
                 if (!System.IO.File.Exists(work)) System.IO.Directory.CreateDirectory(work);
 
                 var inputfiles = new Container.List<string>();
@@ -81,7 +81,7 @@ namespace CubePDF {
 
                 if (inputfiles.Count > 0) {
                     if (!ExecConvert(inputfiles.ToArray(), dtmp)) {
-                        throw new Exception("Cliff: ghostscript error");
+                        throw new Exception("Ghostscript error");
                     }
 
                     try {
@@ -114,14 +114,14 @@ namespace CubePDF {
                         Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: " + e.Source);
                         Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + e.Message);
                         Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + e.StackTrace);
-                        throw new Exception("Cliff: " + e.Message);
+                        throw new Exception(e.Message);
                     }
                     finally {
                         foreach (var path in inputfiles) {
                             if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
                         }
                         System.IO.Directory.Delete(work, true);
-                        Trace.WriteLine(DateTime.Now.ToString() + ": cliff end");
+                        Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-engine end");
                         Trace.Close();
                     }
                 }
@@ -351,7 +351,7 @@ namespace CubePDF {
                 IntPtr instance = IntPtr.Zero;
                 bool status = true;
 
-                Trace.WriteLine(DateTime.Now.ToString() + ": Current Directory: " + Utility.CurrentDirectory());
+                Trace.WriteLine(DateTime.Now.ToString() + ": Current Directory: " + Utility.CurrentDirectory);
                 Trace.WriteLine(DateTime.Now.ToString() + ": ARGUMENTS:");
                 foreach (var s in args) Trace.WriteLine('\t' + s);
 
@@ -366,7 +366,7 @@ namespace CubePDF {
                         if (result < 0 && result != -101) {
                             Trace.WriteLine(DateTime.Now.ToString() + ": error occured");
                             Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: gsapi_init_with_args()");
-                            Trace.WriteLine(DateTime.Now.ToString() + ": Current Directory: " + Utility.CurrentDirectory());
+                            Trace.WriteLine(DateTime.Now.ToString() + ": Current Directory: " + Utility.CurrentDirectory);
                             Trace.WriteLine(DateTime.Now.ToString() + ": ARGUMENTS:");
                             Trace.WriteLine(DateTime.Now.ToString() + ": RESULT: " + result.ToString());
                             throw new Interop.ExternalException(result.ToString() + ": ghostscript conversion error");

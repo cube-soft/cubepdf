@@ -61,4 +61,4 @@ namespace CubePDF {
             }
         };
     } // namespace Ghostscript
-} // namespace Cliff
+} // namespace CubePDF
