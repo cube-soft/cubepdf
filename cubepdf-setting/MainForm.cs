@@ -123,12 +123,12 @@ namespace CubePDF {
             this.UserProgramTextBox.Text = setting.UserProgram;
 
             // コンボボックスのインデックス関連
-            this.FileTypeCombBox.SelectedIndex = setting.FileType;
-            this.PDFVersionComboBox.SelectedIndex = setting.PDFVersion;
-            this.ResolutionComboBox.SelectedIndex = setting.Resolution;
-            this.ExistedFileComboBox.SelectedIndex = setting.ExistedFile;
-            this.PostProcessComboBox.SelectedIndex = setting.PostProcess;
-            this.DownSamplingComboBox.SelectedIndex = setting.DownSampling;
+            this.FileTypeCombBox.SelectedIndex      = Translator.FileTypeToIndex(setting.FileType);
+            this.PDFVersionComboBox.SelectedIndex   = Translator.PDFVersionToIndex(setting.PDFVersion);
+            this.ResolutionComboBox.SelectedIndex   = Translator.ResolutionToIndex(setting.Resolution);
+            this.ExistedFileComboBox.SelectedIndex  = Translator.ExistedFileToIndex(setting.ExistedFile);
+            this.PostProcessComboBox.SelectedIndex  = Translator.PostProcessToIndex(setting.PostProcess);
+            this.DownSamplingComboBox.SelectedIndex = Translator.DownSamplingToIndex(setting.DownSampling);
 
             // チェックボックスのフラグ関連
             this.PageLotationCheckBox.Checked = setting.PageRotation;
@@ -178,12 +178,12 @@ namespace CubePDF {
             setting.UserProgram = this.UserProgramTextBox.Text;
 
             // コンボボックスのインデックス関連
-            setting.FileType = this.FileTypeCombBox.SelectedIndex;
-            setting.PDFVersion = this.PDFVersionComboBox.SelectedIndex;
-            setting.Resolution = this.ResolutionComboBox.SelectedIndex;
-            setting.ExistedFile = this.ExistedFileComboBox.SelectedIndex;
-            setting.PostProcess = _postproc.SelectedIndex;
-            setting.DownSampling = this.DownSamplingComboBox.SelectedIndex;
+            setting.FileType     = Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex);
+            setting.PDFVersion   = Translator.IndexToPDFVersion(this.PDFVersionComboBox.SelectedIndex);
+            setting.Resolution   = Translator.IndexToResolution(this.ResolutionComboBox.SelectedIndex);
+            setting.ExistedFile  = Translator.IndexToExistedFile(this.ExistedFileComboBox.SelectedIndex);
+            setting.PostProcess  = Translator.IndexToPostProcess(_postproc.SelectedIndex);
+            setting.DownSampling = Translator.IndexToDownSampling(this.DownSamplingComboBox.SelectedIndex);
 
             // チェックボックスのフラグ関連
             setting.PageRotation = this.PageLotationCheckBox.Checked;

@@ -188,10 +188,12 @@ namespace CubePDF {
                 else {
                     _version = subkey.GetValue(REG_PRODUCT_VERSION, REG_VALUE_UNKNOWN) as string;
                     _install = subkey.GetValue(REG_INSTALL_PATH, REG_VALUE_UNKNOWN) as string;
+                    _lib = subkey.GetValue(REG_LIB_PATH, REG_VALUE_UNKNOWN) as string;
                     subkey.Close();
                 }
                 if (_version == null) _version = REG_VALUE_UNKNOWN;
                 if (_install == null) _install = REG_VALUE_UNKNOWN;
+                if (_lib == null) _lib = REG_VALUE_UNKNOWN;
 
                 // ユーザ設定を読み込む
                 subkey = Registry.CurrentUser.OpenSubKey(REG_ROOT + '\\' + REG_VERSION, false);
@@ -225,12 +227,12 @@ namespace CubePDF {
                 _selectable = (flag != 0);
 
                 // コンボボックスのインデックス関連
-                _type = (int)subkey.GetValue(REG_FILETYPE, 0);
-                _pdfver = (int)subkey.GetValue(REG_PDF_VERSION, 0);
-                _resolution = (int)subkey.GetValue(REG_RESOLUTION, 0);
-                _exist = (int)subkey.GetValue(REG_EXISTED_FILE, 0);
-                _postproc = (int)subkey.GetValue(REG_POST_PROCESS, 0);
-                _downsampling = (int)subkey.GetValue(REG_DOWNSAMPLING, 0);
+                _type = (Parameter.FileTypes)subkey.GetValue(REG_FILETYPE, 0);
+                _pdfver = (Parameter.PDFVersions)subkey.GetValue(REG_PDF_VERSION, 0);
+                _resolution = (Parameter.Resolutions)subkey.GetValue(REG_RESOLUTION, 0);
+                _exist = (Parameter.ExistedFiles)subkey.GetValue(REG_EXISTED_FILE, 0);
+                _postproc = (Parameter.PostProcesses)subkey.GetValue(REG_POST_PROCESS, 0);
+                _downsampling = (Parameter.DownSamplings)subkey.GetValue(REG_DOWNSAMPLING, 0);
             }
             catch (Exception /* err */) {
                 status = false;
@@ -329,8 +331,15 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// InstallDirectory
         /* ----------------------------------------------------------------- */
-        public string InstallDirectory {
+        public string InstallPath {
             get { return _install; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// LibPath
+        /* ----------------------------------------------------------------- */
+        public string LibPath {
+            get { return _lib; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -360,7 +369,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// FileType
         /* ----------------------------------------------------------------- */
-        public int FileType {
+        public Parameter.FileTypes FileType {
             get { return _type; }
             set { _type = value; }
         }
@@ -368,7 +377,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// PDFVersion
         /* ----------------------------------------------------------------- */
-        public int PDFVersion {
+        public Parameter.PDFVersions PDFVersion {
             get { return _pdfver; }
             set { _pdfver = value; }
         }
@@ -376,7 +385,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Resolution
         /* ----------------------------------------------------------------- */
-        public int Resolution {
+        public Parameter.Resolutions Resolution {
             get { return _resolution; }
             set { _resolution = value; }
         }
@@ -384,7 +393,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// ExistedFile
         /* ----------------------------------------------------------------- */
-        public int ExistedFile {
+        public Parameter.ExistedFiles ExistedFile {
             get { return _exist; }
             set { _exist = value; }
         }
@@ -392,7 +401,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// PostProcess
         /* ----------------------------------------------------------------- */
-        public int PostProcess {
+        public Parameter.PostProcesses PostProcess {
             get { return _postproc; }
             set { _postproc = value; }
         }
@@ -400,7 +409,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// DownSampling
         /* ----------------------------------------------------------------- */
-        public int DownSampling {
+        public Parameter.DownSamplings DownSampling {
             get { return _downsampling; }
             set { _downsampling = value; }
         }
@@ -497,17 +506,18 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         #region Variables
         private string _install = REG_VALUE_UNKNOWN;
+        private string _lib = REG_VALUE_UNKNOWN;
         private string _version = REG_VALUE_UNKNOWN;
         private string _input = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         private string _output = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         private string _program = "";
         private string _password = "";
-        private int _type = 0;
-        private int _pdfver = 0;
-        private int _resolution = 2;
-        private int _exist = 0;
-        private int _postproc = 0;
-        private int _downsampling = 0;
+        private Parameter.FileTypes _type = Parameter.FileTypes.PDF;
+        private Parameter.PDFVersions _pdfver = Parameter.PDFVersions.Ver1_7;
+        private Parameter.Resolutions _resolution = Parameter.Resolutions.Resolution300;
+        private Parameter.ExistedFiles _exist = Parameter.ExistedFiles.Overwrite;
+        private Parameter.PostProcesses _postproc = Parameter.PostProcesses.Open;
+        private Parameter.DownSamplings _downsampling = Parameter.DownSamplings.None;
         private bool _rotation = true;
         private bool _embed = true;
         private bool _grayscale = false;
@@ -527,6 +537,7 @@ namespace CubePDF {
         const string REG_ROOT               = @"Software\CubeSoft\CubePDF";
         const string REG_VERSION            = "v2";
         const string REG_INSTALL_PATH       = "InstallPath";
+        const string REG_LIB_PATH           = "LibPath";
         const string REG_PRODUCT_VERSION    = "Version";
         const string REG_ADVANCED_MODE      = "AdvancedMode";
         const string REG_CHECK_UPDATE       = "CheckUpdate";
