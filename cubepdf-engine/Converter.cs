@@ -59,7 +59,7 @@ namespace CubePDF {
             _gs.AddOption("GrayImageResolution", Parameter.ResolutionString((Parameter.Resolutions)setting.Resolution));
             _gs.AddOption("MonoImageResolution", 300);
 
-            if (setting.DownSampling == (int)Parameter.DownSamplings.None)
+            if (setting.DownSampling == Parameter.DownSamplings.None)
             {
                 _gs.AddOption("DownsampleColorImages", false);
                 _gs.AddOption("AutoFilterColorImages", false);
@@ -68,7 +68,7 @@ namespace CubePDF {
                 _gs.AddOption("DownsampleMonoImages", false);
                 _gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
             }
-            else if (setting.DownSampling == (int)Parameter.DownSamplings.Average)
+            else if (setting.DownSampling == Parameter.DownSamplings.Average)
             {
                 _gs.AddOption("DownsampleColorImages", true);
                 _gs.AddOption("ColorImageDownsampleType", "/Average");
@@ -80,7 +80,7 @@ namespace CubePDF {
                 _gs.AddOption("MonoImageDownsampleType", "/Average");
                 _gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
             }
-            else if (setting.DownSampling == (int)Parameter.DownSamplings.Bicubic)
+            else if (setting.DownSampling == Parameter.DownSamplings.Bicubic)
             {
                 _gs.AddOption("DownsampleColorImages", true);
                 _gs.AddOption("ColorImageDownsampleType", "/Bicubic");
@@ -92,7 +92,7 @@ namespace CubePDF {
                 _gs.AddOption("MonoImageDownsampleType", "/Bicubic");
                 _gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
             }
-            else if (setting.DownSampling == (int)Parameter.DownSamplings.Subsample)
+            else if (setting.DownSampling == Parameter.DownSamplings.Subsample)
             {
                 _gs.AddOption("DownsampleColorImages", true);
                 _gs.AddOption("ColorImageDownsampleType", "/Subsample");
@@ -106,10 +106,10 @@ namespace CubePDF {
             }
             
             // ファイルタイプに依存するオプション
-            if (setting.FileType == (int)Parameter.FileTypes.PNG ||
-                setting.FileType == (int)Parameter.FileTypes.JPEG ||
-                setting.FileType == (int)Parameter.FileTypes.BMP ||
-                setting.FileType == (int)Parameter.FileTypes.TIFF)
+            if (setting.FileType == Parameter.FileTypes.PNG ||
+                setting.FileType == Parameter.FileTypes.JPEG ||
+                setting.FileType == Parameter.FileTypes.BMP ||
+                setting.FileType == Parameter.FileTypes.TIFF)
             {
                 _gs.AddOption("GraphicsAlphaBits", 4);
                 _gs.AddOption("TextAlphaBits", 4);
@@ -144,8 +144,8 @@ namespace CubePDF {
             // 以下の場合、マージ先のファイル(outputPath)のファイルを退避する必要がある
             // そもそもマージ先のファイルが無い場合のポリシーは？
             if (System.IO.File.Exists(setting.OutputPath) &&
-                (setting.ExistedFile == (int)Parameter.ExistedFiles.MergeTail ||
-                 setting.ExistedFile == (int)Parameter.ExistedFiles.MergeHead))
+                (setting.ExistedFile == Parameter.ExistedFiles.MergeTail ||
+                 setting.ExistedFile == Parameter.ExistedFiles.MergeHead))
             {
                 // TODO: C:\Windows\CubePDF\<tmppath> に展開するようにする．
                 evacuatedFilePath = System.IO.Path.GetTempFileName(); // 書き込み権限の無い場所が与えられるかもしれないので、調整が必要らしい
