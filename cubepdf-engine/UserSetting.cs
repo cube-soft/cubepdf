@@ -132,7 +132,7 @@ namespace CubePDF {
         //  変数定義
         /* ----------------------------------------------------------------- */
         #region Variables
-        string _password;
+        string _password = "";
         bool _print;
         bool _copy;
         bool _form;
@@ -153,7 +153,9 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Constructor
         /* ----------------------------------------------------------------- */
-        public UserSetting() {}
+        public UserSetting() {
+            this.MustLoad();
+        }
 
         /* ----------------------------------------------------------------- */
         ///
@@ -166,7 +168,31 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public UserSetting(bool load) {
+            this.MustLoad();
             if (load) this.Load();
+        }
+
+        private bool MustLoad() {
+            bool status = true;
+
+            try {
+                RegistryKey subkey = Registry.LocalMachine.OpenSubKey(REG_ROOT, false);
+                if (subkey == null) status = false;
+                else {
+                    _version = subkey.GetValue(REG_PRODUCT_VERSION, REG_VALUE_UNKNOWN) as string;
+                    _install = subkey.GetValue(REG_INSTALL_PATH, REG_VALUE_UNKNOWN) as string;
+                    _lib = subkey.GetValue(REG_LIB_PATH, REG_VALUE_UNKNOWN) as string;
+                    subkey.Close();
+                }
+                if (_version == null) _version = REG_VALUE_UNKNOWN;
+                if (_install == null) _install = REG_VALUE_UNKNOWN;
+                if (_lib == null) _lib = REG_VALUE_UNKNOWN;
+            }
+            catch (Exception /* err */) {
+                status = false;
+            }
+
+            return status;
         }
 
         /* ----------------------------------------------------------------- */
@@ -182,21 +208,8 @@ namespace CubePDF {
             bool status = true;
 
             try {
-                // バージョンの取得
-                RegistryKey subkey = Registry.LocalMachine.OpenSubKey(REG_ROOT, false);
-                if (subkey == null) status = false;
-                else {
-                    _version = subkey.GetValue(REG_PRODUCT_VERSION, REG_VALUE_UNKNOWN) as string;
-                    _install = subkey.GetValue(REG_INSTALL_PATH, REG_VALUE_UNKNOWN) as string;
-                    _lib = subkey.GetValue(REG_LIB_PATH, REG_VALUE_UNKNOWN) as string;
-                    subkey.Close();
-                }
-                if (_version == null) _version = REG_VALUE_UNKNOWN;
-                if (_install == null) _install = REG_VALUE_UNKNOWN;
-                if (_lib == null) _lib = REG_VALUE_UNKNOWN;
-
                 // ユーザ設定を読み込む
-                subkey = Registry.CurrentUser.OpenSubKey(REG_ROOT + '\\' + REG_VERSION, false);
+                RegistryKey subkey = Registry.CurrentUser.OpenSubKey(REG_ROOT + '\\' + REG_VERSION, false);
                 if (subkey == null) return false;
 
                 // パス関連

@@ -52,7 +52,7 @@ namespace CubePDF {
             //  Run
             /* ------------------------------------------------------------- */
             private void Run(string[] sources, string dest) {
-                Utility.SetupLog(Utility.CurrentDirectory + @"\cubepdf.log");
+                //Utility.SetupLog(Utility.CurrentDirectory + @"\cubepdf.log");
                 Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-engine start");
 
                 var root = System.IO.Path.GetDirectoryName(dest);
