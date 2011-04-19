@@ -2,7 +2,7 @@
 /*
  *  GsConverter.cs
  *
- *  Copyright (c) 2009 - 2011 CubeSoft Inc. All rights reserved.
+ *  Copyright (c) 2009 - 2011 CubeSoft, Inc. All rights reserved.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -49,17 +49,20 @@ namespace CubePDF {
             }
 
             /* ------------------------------------------------------------- */
-            //  Convert
+            //  Run
             /* ------------------------------------------------------------- */
-            public void Convert(string[] sources, string dest) {
+            private void Run(string[] sources, string dest) {
                 Utility.SetupLog(Utility.CurrentDirectory + @"\cubepdf.log");
                 Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-engine start");
 
                 var root = System.IO.Path.GetDirectoryName(dest);
                 var filename = System.IO.Path.GetFileNameWithoutExtension(dest);
                 var ext = System.IO.Path.GetExtension(dest);
-                var work = Utility.WorkingDirectory + @"\cubepdf";
-                if (!System.IO.File.Exists(work)) System.IO.Directory.CreateDirectory(work);
+
+                var work = Utility.WorkingDirectory + @"\cubepdf-temporary";
+                if (System.IO.Directory.Exists(work)) System.IO.Directory.Delete(work, true);
+                else if (System.IO.File.Exists(work)) System.IO.File.Delete(work);
+                System.IO.Directory.CreateDirectory(work);
 
                 var inputfiles = new Container.List<string>();
                 var dtmp = (this.device_ == Device.PDF || this.device_ == Device.PDF_Opt || this.device_ == Device.PS) ?
@@ -127,31 +130,34 @@ namespace CubePDF {
                 }
             }
 
-            public void Convert(string src, string dest) {
-                string[] tmp = { src };
-                Convert(tmp, dest);
-            }
-
-            public void Convert() {
-                Convert(this.sources_.ToArray(), this.dest_);
+            /* ------------------------------------------------------------- */
+            //  Run
+            /* ------------------------------------------------------------- */
+            public void Run() {
+                Run(this.sources_.ToArray(), this.dest_);
             }
 
             /* ------------------------------------------------------------- */
-            //  AddSource
+            //  各種設定を行うメソッド
+            /* ------------------------------------------------------------- */
+            #region Configuration
+
+            /* ------------------------------------------------------------- */
+            /// AddSource
             /* ------------------------------------------------------------- */
             public void AddSource(string path) {
                 sources_.Add(path);
             }
 
             /* ------------------------------------------------------------- */
-            //  AddInclude
+            /// AddInclude
             /* ------------------------------------------------------------- */
             public void AddInclude(string dir) {
                 includes_.Add(dir);
             }
 
             /* ------------------------------------------------------------- */
-            //  AddFont
+            /// AddFont
             /* ------------------------------------------------------------- */
             public void AddFont(string dir) {
                 fonts_.Add(dir);
@@ -162,35 +168,35 @@ namespace CubePDF {
             }
 
             /* ------------------------------------------------------------- */
-            //  AddOption
+            /// AddOption
             /* ------------------------------------------------------------- */
             public void AddOption(string key, string value) {
                 options_.Add(key, value);
             }
 
             /* ------------------------------------------------------------- */
-            //  AddOption
+            /// AddOption
             /* ------------------------------------------------------------- */
             public void AddOption(string key, bool value) {
                 options_.Add(key, value.ToString().ToLower());
             }
             
             /* ------------------------------------------------------------- */
-            //  AddOption
+            /// AddOption
             /* ------------------------------------------------------------- */
             public void AddOption<Type>(string key, Type value) {
                 options_.Add(key, value.ToString());
             }
             
             /* ------------------------------------------------------------- */
-            //  DeleteOption
+            /// DeleteOption
             /* ------------------------------------------------------------- */
             public void DeleteOption(string key) {
                 if (options_.ContainsKey(key)) options_.Remove(key);
             }
 
             /* ------------------------------------------------------------- */
-            //  Pages
+            /// Pages
             /* ------------------------------------------------------------- */
             public void Pages(int first, int last) {
                 this.first_ = first;
@@ -198,7 +204,7 @@ namespace CubePDF {
             }
 
             /* ------------------------------------------------------------- */
-            //  Destination
+            /// Destination
             /* ------------------------------------------------------------- */
             public string Destination {
                 get { return this.dest_; }
@@ -206,7 +212,7 @@ namespace CubePDF {
             }
 
             /* ------------------------------------------------------------- */
-            //  Resolution
+            /// Resolution
             /* ------------------------------------------------------------- */
             public int Resolution {
                 get { return this.resolution_; }
@@ -214,7 +220,7 @@ namespace CubePDF {
             }
 
             /* ------------------------------------------------------------- */
-            //  PaperSize
+            /// PaperSize
             /* ------------------------------------------------------------- */
             public Paper PaperSize {
                 get { return this.paper_; }
@@ -222,7 +228,7 @@ namespace CubePDF {
             }
 
             /* ------------------------------------------------------------- */
-            //  FirstPage
+            /// FirstPage
             /* ------------------------------------------------------------- */
             public int FirstPage {
                 get { return this.first_; }
@@ -230,7 +236,7 @@ namespace CubePDF {
             }
 
             /* ------------------------------------------------------------- */
-            //  LastPage
+            /// LastPage
             /* ------------------------------------------------------------- */
             public int LastPage {
                 get { return this.last_; }
@@ -238,13 +244,15 @@ namespace CubePDF {
             }
 
             /* ------------------------------------------------------------- */
-            //  PageRotation
+            /// PageRotation
             /* ------------------------------------------------------------- */
             public bool PageRotation {
                 get { return this.rotate_; }
                 set { this.rotate_ = value; }
             }
-            
+
+            #endregion
+
             /* ------------------------------------------------------------- */
             /*
              *  ExecConvert
@@ -285,25 +293,25 @@ namespace CubePDF {
             private string[] MakeArgs(string[] sources, string dest) {
                 Container.List<string> args = new Container.List<string>();
 
-                // 1. Add device
+                // Add device
                 args.Add("dummy"); // args[0] is ignored.
                 if (this.device_ != Device.Unknown && this.device_ != Device.PDF_Opt) {
                     args.Add(DeviceExt.Argument(this.device_));
                 }
 
-                // 2. Add include paths
+                // Add include paths
                 if (includes_.Count > 0) args.Add("-I" + CombinePath(this.includes_));
 
-                // 3. Add font paths
+                // Add font paths
                 // Note: C:\Windows\Fonts ディレクトリを常に含めるかどうか．
                 var win = System.Environment.GetEnvironmentVariable("windir") + @"\Fonts";
                 if (!fonts_.Contains(win)) fonts_.Add(win);
                 args.Add("-sFONTPATH=" + CombinePath(this.fonts_));
 
-                // 4. Add resolution
+                // Add resolution
                 args.Add("-r" + this.resolution_.ToString());
 
-                // 5. Add page settings
+                // Add page settings
                 if (this.paper_ != CubePDF.Ghostscript.Paper.Unknown) args.Add(PaperExt.Argument(this.paper_));
                 else if (this.device_ == Device.PDF) args.Add("-dPDFFitPage");
                 if (this.first_ > 1 || this.first_ <= this.last_) {
@@ -312,10 +320,10 @@ namespace CubePDF {
                 }
                 if (this.rotate_) args.Add("-dAutoRotatePages=/PageByPage");
 
-                // 6. Add default options
+                // Add default options
                 foreach (string elem in defaults_) args.Add(elem);
 
-                // 7. Add user options
+                // Add user options
                 foreach (var elem in this.options_) {
                     string ext = skeys_.Contains(elem.Key) ? "-s" : "-d";
                     string tmp = (elem.Value == null) ?
@@ -324,12 +332,12 @@ namespace CubePDF {
                     args.Add(tmp);
                 }
 
-                // 8. Add user options (for inherited classes)
+                // Add user options (for inherited classes)
                 this.ExtraArgs(args);
 
                 //args.Add("-sstdout=ghostscript.log");
 
-                // 9. Add input (source filename) and output (destination filename)
+                // Add input (source filename) and output (destination filename)
                 if (this.device_ == Device.PDF_Opt) {
                     args.Add("--");
                     args.Add("pdfopt.ps");
@@ -403,8 +411,10 @@ namespace CubePDF {
             }
 
             /* ------------------------------------------------------------- */
-            //  ghostscript APIs
+            //  Ghostscript APIs
             /* ------------------------------------------------------------- */
+            #region Ghostscript APIs
+
             [Interop.DllImport(GS_DLL, EntryPoint = "gsapi_new_instance")]
             private static extern int gsapi_new_instance(out IntPtr pinstance, IntPtr caller_handle);
 
@@ -416,7 +426,14 @@ namespace CubePDF {
 
             [Interop.DllImport(GS_DLL, EntryPoint = "gsapi_delete_instance")]
             private static extern void gsapi_delete_instance(IntPtr instance);
-            
+
+            #endregion
+
+            /* ------------------------------------------------------------- */
+            //  変数定義
+            /* ------------------------------------------------------------- */
+            #region Variables
+
             private Device device_;
             private int resolution_;
             private Paper paper_;
@@ -428,6 +445,13 @@ namespace CubePDF {
             private Container.Dictionary<string, string> options_;
             private Container.List<string> sources_;
             private string dest_;
+
+            #endregion
+
+            /* ------------------------------------------------------------- */
+            //  定数定義
+            /* ------------------------------------------------------------- */
+            #region Constant variables
 
             private static object gslock_ = new object();
             private static readonly string[] defaults_ = {
@@ -443,8 +467,7 @@ namespace CubePDF {
             /* ------------------------------------------------------------- */
             //  static constructor
             /* ------------------------------------------------------------- */
-            //private static Container.HashSet<string> skeys_; // Options with "-s"
-            private static Container.List<string> skeys_;
+            private static Container.List<string> skeys_; // "-s" で始まるオプション
             static Converter() {
                 skeys_ = new Container.List<string>();
                 skeys_.Add("FONTMAP");
@@ -460,6 +483,8 @@ namespace CubePDF {
                 // skeys_.Add("DEVICE");
                 // skeys_.Add("OutputFile");
             }
+
+            #endregion
         };
     } // namespace Ghostscript
 }

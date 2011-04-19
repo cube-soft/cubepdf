@@ -2,7 +2,7 @@
 /*
  *  Converter.cs
  *
- *  Copyright (c) 2009 - 2011 CubeSoft Inc. All rights reserved.
+ *  Copyright (c) 2009 - 2011 CubeSoft, Inc. All rights reserved.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,8 +20,6 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CubePDF {
     /* --------------------------------------------------------------------- */
@@ -44,24 +42,42 @@ namespace CubePDF {
 
             // Ghostscript に指定するパスに日本語が入るとエラーが発生する
             // 場合があるので，作業ディレクトリを変更する．
-            Utility.WorkingDirectory = _setting.LibPath;
+            this.CreateWorkingDirectory(setting);
 
-            _gs = new CubePDF.Ghostscript.Converter(Parameter.Device((Parameter.FileTypes)_setting.FileType, _setting.Grayscale));
-            _gs.AddInclude(_setting.LibPath);
-            _gs.AddSource(setting.InputPath);
-            _gs.PageRotation = _setting.PageRotation;
-            _gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
-            _gs.Destination = setting.OutputPath;
+            bool status = true;
+            try {
+                _gs = new CubePDF.Ghostscript.Converter(Parameter.Device((Parameter.FileTypes)_setting.FileType, _setting.Grayscale));
+                _gs.AddInclude(_setting.LibPath);
+                _gs.AddSource(setting.InputPath);
+                _gs.PageRotation = _setting.PageRotation;
+                _gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
+                _gs.Destination = setting.OutputPath;
 
-            this.ConfigDownSampling(_setting, _gs);
-            if (Parameter.IsImageType(setting.FileType)) this.ConfigImage(_setting, _gs);
-            else this.ConfigDocument(_setting, _gs);
+                this.ConfigDownSampling(_setting, _gs);
+                if (Parameter.IsImageType(setting.FileType)) this.ConfigImage(_setting, _gs);
+                else this.ConfigDocument(_setting, _gs);
 
-            // NOTE: マージオプションが有効なのは PDF のみ．
-            if (setting.FileType == Parameter.FileTypes.PDF) this.EscapeExistedFile(_setting);
+                // NOTE: マージオプションが有効なのは PDF のみ．
+                if (setting.FileType == Parameter.FileTypes.PDF) this.EscapeExistedFile(_setting);
 
-            _gs.Convert();
-            return true;
+                _gs.Run();
+
+                if (setting.FileType == Parameter.FileTypes.PDF) {
+                    PDFModifier modifier = new PDFModifier(_escaped);
+                    status &= modifier.Run(setting);
+                    if (!status && modifier.ErrorMessage.Length > 0) _message = modifier.ErrorMessage;
+                }
+
+                PostProcess postproc = new PostProcess();
+                status &= postproc.Run(setting);
+                if (!status && postproc.ErrorMessage.Length > 0) _message = postproc.ErrorMessage;
+            }
+            catch (Exception err) {
+                _message = err.Message;
+                status = false;
+            }
+
+            return status;
         }
 
         /* ----------------------------------------------------------------- */
@@ -76,11 +92,26 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public void EscapeExistedFile(UserSetting setting) {
             bool merge = (setting.ExistedFile == Parameter.ExistedFiles.MergeTail || setting.ExistedFile == Parameter.ExistedFiles.MergeHead);
-            if (System.IO.File.Exists(setting.OutputPath) && merge) {
-                // TODO: C:\Windows\CubePDF\<tmppath> に展開するようにする．
-                _escaped = System.IO.Path.GetTempFileName(); // 書き込み権限の無い場所が与えられるかもしれないので、調整が必要らしい
-                System.IO.File.Copy(setting.OutputPath, _escaped, true); // evacuatedFileが消去されるのはマージ後
+            if (File.Exists(setting.OutputPath) && merge) {
+                _escaped = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
+                File.Copy(setting.OutputPath, _escaped, true);
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /* ----------------------------------------------------------------- */
+        public void CreateWorkingDirectory(UserSetting setting) {
+            Utility.WorkingDirectory = _setting.LibPath + '\\' + Path.GetRandomFileName();
+            if (File.Exists(Utility.WorkingDirectory)) File.Delete(Utility.WorkingDirectory);
+            if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
+            Directory.CreateDirectory(Utility.WorkingDirectory);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ErrorMessage
+        /* ----------------------------------------------------------------- */
+        public string ErrorMessage {
+            get { return _message; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -195,6 +226,7 @@ namespace CubePDF {
         Ghostscript.Converter _gs = null;
         UserSetting _setting = null;
         private string _escaped = null; // null 以外ならマージが必要
+        private string _message = "";
         #endregion
     }
 }
