@@ -47,7 +47,7 @@ namespace CubePDF {
             bool status = true;
             try {
                 _gs = new CubePDF.Ghostscript.Converter(Parameter.Device((Parameter.FileTypes)_setting.FileType, _setting.Grayscale));
-                _gs.AddInclude(_setting.LibPath);
+                _gs.AddInclude(_setting.LibPath + @"\lib");
                 _gs.AddSource(setting.InputPath);
                 _gs.PageRotation = _setting.PageRotation;
                 _gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
@@ -58,7 +58,7 @@ namespace CubePDF {
                 else this.ConfigDocument(_setting, _gs);
 
                 // NOTE: マージオプションが有効なのは PDF のみ．
-                if (setting.FileType == Parameter.FileTypes.PDF) this.EscapeExistedFile(_setting);
+                //if (setting.FileType == Parameter.FileTypes.PDF) this.EscapeExistedFile(_setting);
 
                 _gs.Run();
 
@@ -75,6 +75,9 @@ namespace CubePDF {
             catch (Exception err) {
                 _message = err.Message;
                 status = false;
+            }
+            finally {
+                if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
             }
 
             return status;
@@ -99,6 +102,7 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        /// CreateWorkingDirectory
         /* ----------------------------------------------------------------- */
         public void CreateWorkingDirectory(UserSetting setting) {
             Utility.WorkingDirectory = _setting.LibPath + '\\' + Path.GetRandomFileName();
