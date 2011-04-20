@@ -58,7 +58,7 @@ namespace CubePDF {
                 else this.ConfigDocument(_setting, _gs);
 
                 // NOTE: マージオプションが有効なのは PDF のみ．
-                //if (setting.FileType == Parameter.FileTypes.PDF) this.EscapeExistedFile(_setting);
+                if (setting.FileType == Parameter.FileTypes.PDF) this.EscapeExistedFile(_setting);
 
                 _gs.Run();
 
@@ -67,7 +67,7 @@ namespace CubePDF {
                     status &= modifier.Run(setting);
                     if (!status && modifier.ErrorMessage.Length > 0) _message = modifier.ErrorMessage;
                 }
-
+                
                 PostProcess postproc = new PostProcess();
                 status &= postproc.Run(setting);
                 if (!status && postproc.ErrorMessage.Length > 0) _message = postproc.ErrorMessage;

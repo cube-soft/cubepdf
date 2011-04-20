@@ -70,10 +70,10 @@ namespace CubePDF {
         //  変数定義
         /* ----------------------------------------------------------------- */
         #region Variables
-        private string _title;
-        private string _author;
-        private string _subtitle;
-        private string _keyword;
+        private string _title = "";
+        private string _author = "";
+        private string _subtitle = "";
+        private string _keyword = "";
         #endregion
     }
 
