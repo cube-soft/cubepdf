@@ -101,6 +101,7 @@
             this.UpdateCheckBox = new System.Windows.Forms.CheckBox();
             this._PostProcessLiteLabel = new System.Windows.Forms.Label();
             this.PostProcessLiteComboBox = new System.Windows.Forms.ComboBox();
+            this.ConvertBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.HeaderPictureBox)).BeginInit();
             this._MainPanel.SuspendLayout();
             this.MainTabControl.SuspendLayout();
@@ -1015,6 +1016,11 @@
             this.PostProcessLiteComboBox.Size = new System.Drawing.Size(316, 20);
             this.PostProcessLiteComboBox.TabIndex = 9;
             // 
+            // ConvertBackgroundWorker
+            // 
+            this.ConvertBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ConvertBackgroundWorker_DoWork);
+            this.ConvertBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ConvertBackgroundWorker_RunWorkerCompleted);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1136,6 +1142,7 @@
         private System.Windows.Forms.ComboBox FileTypeCombBox;
         private System.Windows.Forms.Label _PostProcessLiteLabel;
         private System.Windows.Forms.ComboBox PostProcessLiteComboBox;
+        private System.ComponentModel.BackgroundWorker ConvertBackgroundWorker;
     }
 }
 
