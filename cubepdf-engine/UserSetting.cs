@@ -321,13 +321,115 @@ namespace CubePDF {
                 }
                 else startup.DeleteValue(UPDATE_PROGRAM, false);
             }
-            catch (Exception err) {
-                System.Console.WriteLine(err.Message);
+            catch (Exception /* err */) {
                 status = false;
             }
 
             return status;
         }
+
+        /* ----------------------------------------------------------------- */
+        //  過去のレジストリからの変換
+        /* ----------------------------------------------------------------- */
+        #region Upgrade from old version
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// UpgradeFromV1
+        ///
+        /// <summary>
+        /// 過去のバージョンのレジストリを読み込み，現行バージョンに対応
+        /// した形に変換する．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool UpgradeFromV1(string root) {
+            bool status = true;
+
+            try {
+                // ユーザ設定を読み込む
+                RegistryKey subkey = Registry.CurrentUser.OpenSubKey(root, false);
+                if (subkey == null) return false;
+
+                // パス関連
+                string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string path = subkey.GetValue(REG_LAST_OUTPUT_ACCESS, desktop) as string;
+                if (path != null && path.Length > 0 && Directory.Exists(path)) _output = path;
+                path = subkey.GetValue(REG_LAST_INPUT_ACCESS, desktop) as string;
+                if (path != null && path.Length > 0 && Directory.Exists(path)) _input = path;
+                path = subkey.GetValue(REG_USER_PROGRAM, "") as string;
+                if (path != null && path.Length > 0 && File.Exists(path)) _program = path;
+
+                // チェックボックスのフラグ関連
+                int flag = (int)subkey.GetValue(REG_PAGE_ROTATION, 1);
+                _rotation = (flag != 0);
+                flag = (int)subkey.GetValue(REG_EMBED_FONT, 1);
+                _embed = (flag != 0);
+                flag = (int)subkey.GetValue(REG_GRAYSCALE, 0);
+                _grayscale = (flag != 0);
+                flag = (int)subkey.GetValue(REG_WEB_OPTIMIZE, 0);
+                _web = (flag != 0);
+                flag = (int)subkey.GetValue(REG_SAVE_SETTING, 0);
+                _save = (flag != 0);
+                flag = (int)subkey.GetValue(REG_CHECK_UPDATE, 1);
+                _update = (flag != 0);
+                flag = (int)subkey.GetValue(REG_ADVANCED_MODE, 0);
+                _advance = (flag != 0);
+                flag = (int)subkey.GetValue(REG_SELECT_INPUT, 0);
+                _selectable = (flag != 0);
+
+                // コンボボックスの変換
+                string type = (string)subkey.GetValue(REG_FILETYPE, "");
+                foreach (Parameter.FileTypes id in Enum.GetValues(typeof(Parameter.FileTypes))) {
+                    if (Parameter.FileTypeValue(id) == type) {
+                        _type = id;
+                        break;
+                    }
+                }
+                
+                string pdfver = (string)subkey.GetValue(REG_PDF_VERSION, "");
+                foreach (Parameter.PDFVersions id in Enum.GetValues(typeof(Parameter.PDFVersions))) {
+                    if (Parameter.PDFVersionValue(id).ToString() == pdfver) {
+                        _pdfver = id;
+                        break;
+                    }
+                }
+                
+                string resolution = (string)subkey.GetValue(REG_RESOLUTION, "");
+                foreach (Parameter.Resolutions id in Enum.GetValues(typeof(Parameter.Resolutions))) {
+                    if (Parameter.ResolutionValue(id).ToString() == resolution) {
+                        _resolution = id;
+                        break;
+                    }
+                }
+                
+                // ExistedFile: v1 は日本語名で直接指定されていた
+                string exist = (string)subkey.GetValue(REG_EXISTED_FILE, "");
+                if (exist == "上書き") _exist = Parameter.ExistedFiles.Overwrite;
+                else if (exist == "先頭に結合") _exist = Parameter.ExistedFiles.MergeHead;
+                else if (exist == "末尾に結合") _exist = Parameter.ExistedFiles.MergeTail;
+                
+                // PostProcess: v1 は日本語名で直接指定されていた
+                string postproc = (string)subkey.GetValue(REG_POST_PROCESS, "");
+                if (postproc == "開く") _postproc = Parameter.PostProcesses.Open;
+                else if (postproc == "何もしない") _postproc = Parameter.PostProcesses.None;
+                else if (postproc == "ユーザープログラム") _postproc = Parameter.PostProcesses.UserProgram;
+                
+                // DownsSampling: v1 は日本語名で直接指定されていた
+                string downsampling = (string)subkey.GetValue(REG_DOWNSAMPLING, "");
+                if (downsampling == "なし") _downsampling = Parameter.DownSamplings.None;
+                else if (downsampling == "平均化") _downsampling = Parameter.DownSamplings.Average;
+                else if (downsampling == "バイキュービック") _downsampling = Parameter.DownSamplings.Bicubic;
+                else if (downsampling == "サブサンプル") _downsampling = Parameter.DownSamplings.Subsample;
+            }
+            catch (Exception /* err */) {
+                status = false;
+            }
+
+            return status;
+        }
+
+        #endregion
 
         /* ----------------------------------------------------------------- */
         //  プロパティの定義
