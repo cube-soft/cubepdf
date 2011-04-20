@@ -40,6 +40,7 @@ namespace CubePDF {
             InitializeComponent();
             InitializeComboAppearance();
             _setting = new UserSetting(true);
+            this.UpgradeSetting(_setting);
             this.LoadSetting(_setting);
         }
         
@@ -192,6 +193,24 @@ namespace CubePDF {
             setting.WebOptimize = this.WebOptimizeCheckBox.Checked;
             setting.SaveSetting = this.SaveSettingCheckBox.Checked;
             setting.CheckUpdate = this.UpdateCheckBox.Checked;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// UpgradeSetting
+        /// 
+        /// <summary>
+        /// 古いバージョンからの以降の場合，レジストリの整合性を取るため
+        /// にアップグレードを行う．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void UpgradeSetting(UserSetting setting) {
+            string v1 = @"Software\CubePDF";
+            if (Microsoft.Win32.Registry.CurrentUser.OpenSubKey(v1, false) != null) {
+                setting.UpgradeFromV1(v1);
+                Microsoft.Win32.Registry.CurrentUser.DeleteSubKey(v1, false);
+            }
         }
 
         #endregion

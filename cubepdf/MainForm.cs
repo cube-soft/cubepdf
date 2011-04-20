@@ -60,8 +60,8 @@ namespace CubePDF {
             InitializeComponent();
             InitializeComboAppearance();
             _setting = new UserSetting(true);
+            this.UpgradeSetting(_setting);
             this.LoadSetting(_setting);
-
 
             // 入力パスの初期化
             if (args != null && args.Length > 0 && File.Exists(args[0])) {
@@ -260,15 +260,13 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// LoadSetting
+        /// SaveSetting
         /// 
         /// <summary>
         /// 各種 GUI コンポーネントの情報を UserSetting に反映する．
         /// 仮想プリンタ経由など tmp パスが入力パスのテキストボックスに
         /// 設定されている場合，save_input を false にして反映しない
         /// ようにする．
-        /// 
-        /// TODO: パーミッションの保存．
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
@@ -307,6 +305,24 @@ namespace CubePDF {
                 setting.Permission.AllowCopy = this.AllowCopyCheckBox.Checked;
                 setting.Permission.AllowFormInput = this.AllowFormInputCheckBox.Checked;
                 setting.Permission.AllowModify = this.AllowModifyCheckBox.Checked;
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// UpgradeSetting
+        /// 
+        /// <summary>
+        /// 古いバージョンからの以降の場合，レジストリの整合性を取るため
+        /// にアップグレードを行う．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void UpgradeSetting(UserSetting setting) {
+            string v1 = @"Software\CubePDF";
+            if (Microsoft.Win32.Registry.CurrentUser.OpenSubKey(v1, false) != null) {
+                setting.UpgradeFromV1(v1);
+                Microsoft.Win32.Registry.CurrentUser.DeleteSubKey(v1, false);
             }
         }
 
@@ -453,10 +469,10 @@ namespace CubePDF {
             ComboBox control = sender as ComboBox;
             if (control == null) return;
 
-            Parameter.FileTypes index = (Parameter.FileTypes)control.SelectedIndex;
-            bool is_pdf = (index == Parameter.FileTypes.PDF);
-            bool is_bitmap = (index == Parameter.FileTypes.BMP || index == Parameter.FileTypes.JPEG || index == Parameter.FileTypes.PNG);
-            bool is_grayscale = !(index == Parameter.FileTypes.PS || index == Parameter.FileTypes.EPS || index == Parameter.FileTypes.SVG);
+            Parameter.FileTypes id = Translator.IndexToFileType(control.SelectedIndex);
+            bool is_pdf = (id == Parameter.FileTypes.PDF);
+            bool is_bitmap = (id == Parameter.FileTypes.BMP || id == Parameter.FileTypes.JPEG || id == Parameter.FileTypes.PNG);
+            bool is_grayscale = !(id == Parameter.FileTypes.PS || id == Parameter.FileTypes.EPS || id == Parameter.FileTypes.SVG);
             
             this.PDFVersionComboBox.Enabled = is_pdf;
             this.ResolutionComboBox.Enabled = is_bitmap;
@@ -469,7 +485,7 @@ namespace CubePDF {
 
             // 出力パスの拡張子を変更後のファイルタイプに合わせる．
             if (this.OutputPathTextBox.Text.Length == 0) return;
-            this.OutputPathTextBox.Text = Path.ChangeExtension(this.OutputPathTextBox.Text, Parameter.Extension(index));
+            this.OutputPathTextBox.Text = Path.ChangeExtension(this.OutputPathTextBox.Text, Parameter.Extension(id));
         }
 
         /* ----------------------------------------------------------------- */
@@ -479,8 +495,8 @@ namespace CubePDF {
             ComboBox control = sender as ComboBox;
             if (control == null) return;
 
-            Parameter.PostProcesses index = (Parameter.PostProcesses)control.SelectedIndex;
-            bool is_user_program = (index == Parameter.PostProcesses.UserProgram);
+            Parameter.PostProcesses id = Translator.IndexToPostProcess(control.SelectedIndex);
+            bool is_user_program = (id == Parameter.PostProcesses.UserProgram);
 
             this.UserProgramTextBox.Enabled = is_user_program;
             this.UserProgramButton.Enabled = is_user_program;
