@@ -378,15 +378,8 @@ namespace CubePDF {
             if (!this.CheckPassword(this.OwnerPasswordCheckBox.Checked, this.OwnerPasswordTextBox.Text, this.ConfirmOwnerPasswordTextBox.Text)) return;
             if (!this.CheckOutput(this.OutputPathTextBox.Text, this.ExistedFileComboBox.SelectedIndex)) return;
 
-            // GUI の設定を UserSetting に保存する
-            this.SaveSetting(_setting, this._InputpathPanel.Enabled);
-            if (_setting.SaveSetting) _setting.Save();
-            _setting.InputPath = this.InputPathTextBox.Text;
-
-            Converter converter = new Converter();
-            converter.Run(_setting);
-
-            this.Close();
+            this.ExecProgressBar.Visible = true;
+            this.ConvertBackgroundWorker.RunWorkerAsync();
         }
 
         /* ----------------------------------------------------------------- */
@@ -402,6 +395,9 @@ namespace CubePDF {
         private void OutputPathButton_Click(object sender, EventArgs e) {
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.AddExtension = true;
+            dialog.FileName = (this.OutputPathTextBox.TextLength > 0) ?
+                Path.GetFileNameWithoutExtension(this.OutputPathTextBox.Text) :
+                Path.GetFileNameWithoutExtension(this.InputPathTextBox.Text);
             dialog.Filter = Appearance.FileFilterString();
             dialog.FilterIndex = this.FileTypeCombBox.SelectedIndex + 1;
             dialog.OverwritePrompt = false;
@@ -642,6 +638,34 @@ namespace CubePDF {
             Control control = sender as Control;
             if (control == null) return;
             control.Tag = null;
+        }
+
+        #endregion
+
+        /* ----------------------------------------------------------------- */
+        //  バックグラウンドワーカーのイベントハンドラ
+        /* ----------------------------------------------------------------- */
+        #region Background worker
+
+        /* ----------------------------------------------------------------- */
+        /// ConvertBackgroundWorker_DoWork
+        /* ----------------------------------------------------------------- */
+        private void ConvertBackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e) {
+            // GUI の設定を UserSetting に保存する
+            this.SaveSetting(_setting, this._InputpathPanel.Enabled);
+            if (_setting.SaveSetting) _setting.Save();
+            _setting.InputPath = this.InputPathTextBox.Text;
+            
+            // 変換の実行
+            Converter converter = new Converter();
+            converter.Run(_setting);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ConvertBackgroundWorker_RunWorkerCompleted
+        /* ----------------------------------------------------------------- */
+        private void ConvertBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e) {
+            this.Close();
         }
 
         #endregion
