@@ -56,36 +56,36 @@ namespace CubePDF {
         private void InitializeComboAppearance() {
             // FileType
             this.FileTypeCombBox.Items.Clear();
-            foreach (Parameter.FileTypes index in Enum.GetValues(typeof(Parameter.FileTypes))) {
-                this.FileTypeCombBox.Items.Add(Appearance.FileTypeString(index));
+            foreach (Parameter.FileTypes id in Enum.GetValues(typeof(Parameter.FileTypes))) {
+                this.FileTypeCombBox.Items.Add(Appearance.FileTypeString(id));
             }
             this.FileTypeCombBox.SelectedIndex = 0;
 
             // PDFVersion
             this.PDFVersionComboBox.Items.Clear();
-            foreach (Parameter.PDFVersions index in Enum.GetValues(typeof(Parameter.PDFVersions))) {
-                this.PDFVersionComboBox.Items.Add(Appearance.PDFVersionString(index));
+            foreach (Parameter.PDFVersions id in Enum.GetValues(typeof(Parameter.PDFVersions))) {
+                this.PDFVersionComboBox.Items.Add(Appearance.PDFVersionString(id));
             }
             this.PDFVersionComboBox.SelectedIndex = 0;
 
             // Resolution
             this.ResolutionComboBox.Items.Clear();
-            foreach (Parameter.Resolutions index in Enum.GetValues(typeof(Parameter.Resolutions))) {
-                this.ResolutionComboBox.Items.Add(Appearance.ResolutionString(index));
+            foreach (Parameter.Resolutions id in Enum.GetValues(typeof(Parameter.Resolutions))) {
+                this.ResolutionComboBox.Items.Add(Appearance.ResolutionString(id));
             }
             this.ResolutionComboBox.SelectedIndex = 0;
 
             // ExistedFile
             this.ExistedFileComboBox.Items.Clear();
-            foreach (Parameter.ExistedFiles index in Enum.GetValues(typeof(Parameter.ExistedFiles))) {
-                this.ExistedFileComboBox.Items.Add(Appearance.ExistedFileString(index));
+            foreach (Parameter.ExistedFiles id in Enum.GetValues(typeof(Parameter.ExistedFiles))) {
+                this.ExistedFileComboBox.Items.Add(Appearance.ExistedFileString(id));
             }
             this.ExistedFileComboBox.SelectedIndex = 0;
 
             // PostProcess
             this.PostProcessComboBox.Items.Clear();
-            foreach (Parameter.PostProcesses index in Enum.GetValues(typeof(Parameter.PostProcesses))) {
-                this.PostProcessComboBox.Items.Add(Appearance.PostProcessString(index));
+            foreach (Parameter.PostProcesses id in Enum.GetValues(typeof(Parameter.PostProcesses))) {
+                this.PostProcessComboBox.Items.Add(Appearance.PostProcessString(id));
             }
             this.PostProcessComboBox.SelectedIndex = 0;
 
@@ -97,8 +97,8 @@ namespace CubePDF {
             
             // DownSampling
             this.DownSamplingComboBox.Items.Clear();
-            foreach (Parameter.DownSamplings index in Enum.GetValues(typeof(Parameter.DownSamplings))) {
-                this.DownSamplingComboBox.Items.Add(Appearance.DownSamplingString(index));
+            foreach (Parameter.DownSamplings id in Enum.GetValues(typeof(Parameter.DownSamplings))) {
+                this.DownSamplingComboBox.Items.Add(Appearance.DownSamplingString(id));
             }
             this.DownSamplingComboBox.SelectedIndex = 0;
         }
