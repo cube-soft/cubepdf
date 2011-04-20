@@ -35,24 +35,6 @@ namespace CubePDF {
     /* --------------------------------------------------------------------- */
     class Appearance {
         /* ----------------------------------------------------------------- */
-        /// FileTypeString
-        /* ----------------------------------------------------------------- */
-        public static string FileTypeString(Parameter.FileTypes index) {
-            switch (index) {
-            case Parameter.FileTypes.PDF:  return "PDF";
-            case Parameter.FileTypes.PS:   return "PS";
-            case Parameter.FileTypes.EPS:  return "EPS";
-            case Parameter.FileTypes.PNG:  return "PNG";
-            case Parameter.FileTypes.JPEG: return "JPEG";
-            case Parameter.FileTypes.BMP:  return "BMP";
-            case Parameter.FileTypes.TIFF: return "TIFF";
-            case Parameter.FileTypes.SVG:  return "SVG";
-            default: break;
-            }
-            return "Unknown";
-        }
-
-        /* ----------------------------------------------------------------- */
         /// FileFilterString
         /* ----------------------------------------------------------------- */
         public static string FileFilterString() {
@@ -76,17 +58,24 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        /// FileTypeString
+        /* ----------------------------------------------------------------- */
+        public static string FileTypeString(Parameter.FileTypes id) {
+            return Parameter.FileTypeValue(id);
+        }
+
+        /* ----------------------------------------------------------------- */
         /// PDFVersionString
         /* ----------------------------------------------------------------- */
-        public static string PDFVersionString(Parameter.PDFVersions index) {
-            return Parameter.PDFVersionValue(index).ToString();
+        public static string PDFVersionString(Parameter.PDFVersions id) {
+            return Parameter.PDFVersionValue(id).ToString();
         }
 
         /* ----------------------------------------------------------------- */
         /// ExistedFileString
         /* ----------------------------------------------------------------- */
-        public static string ExistedFileString(Parameter.ExistedFiles index) {
-            switch (index) {
+        public static string ExistedFileString(Parameter.ExistedFiles id) {
+            switch (id) {
             case Parameter.ExistedFiles.Overwrite: return "上書き";
             case Parameter.ExistedFiles.MergeHead: return "先頭に結合";
             case Parameter.ExistedFiles.MergeTail: return "末尾に結合";
@@ -98,8 +87,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// PostProcessString
         /* ----------------------------------------------------------------- */
-        public static string PostProcessString(Parameter.PostProcesses index) {
-            switch (index) {
+        public static string PostProcessString(Parameter.PostProcesses id) {
+            switch (id) {
             case Parameter.PostProcesses.Open: return "開く";
             case Parameter.PostProcesses.None: return "何もしない";
             case Parameter.PostProcesses.UserProgram: return "ユーザープログラム";
@@ -111,15 +100,15 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// ResolutionString
         /* ----------------------------------------------------------------- */
-        public static string ResolutionString(Parameter.Resolutions index) {
-            return Parameter.ResolutionValue(index).ToString();
+        public static string ResolutionString(Parameter.Resolutions id) {
+            return Parameter.ResolutionValue(id).ToString();
         }
 
         /* ----------------------------------------------------------------- */
         /// DownSamplingString
         /* ----------------------------------------------------------------- */
-        public static string DownSamplingString(Parameter.DownSamplings index) {
-            switch (index) {
+        public static string DownSamplingString(Parameter.DownSamplings id) {
+            switch (id) {
             case Parameter.DownSamplings.None:      return "なし";
             case Parameter.DownSamplings.Average:   return "平均化";
             case Parameter.DownSamplings.Bicubic:   return "バイキュービック";
