@@ -113,7 +113,25 @@ namespace CubePDF {
         //  各種 types から別の何らかの値に変換するメソッド群
         /* ----------------------------------------------------------------- */
         #region Translation methods
-        
+
+        /* ----------------------------------------------------------------- */
+        /// FileTypeValue
+        /* ----------------------------------------------------------------- */
+        public static string FileTypeValue(FileTypes id) {
+            switch (id) {
+            case FileTypes.PDF: return "PDF";
+            case FileTypes.PS: return "PS";
+            case FileTypes.EPS: return "EPS";
+            case FileTypes.PNG: return "PNG";
+            case FileTypes.JPEG: return "JPEG";
+            case FileTypes.BMP: return "BMP";
+            case FileTypes.TIFF: return "TIFF";
+            case FileTypes.SVG: return "SVG";
+            default: break;
+            }
+            return "";
+        }
+
         /* ----------------------------------------------------------------- */
         /// Extension
         /* ----------------------------------------------------------------- */
