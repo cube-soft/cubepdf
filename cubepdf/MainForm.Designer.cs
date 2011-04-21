@@ -102,6 +102,7 @@
             this._PostProcessLiteLabel = new System.Windows.Forms.Label();
             this.PostProcessLiteComboBox = new System.Windows.Forms.ComboBox();
             this.ConvertBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this._patch = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.HeaderPictureBox)).BeginInit();
             this._MainPanel.SuspendLayout();
             this.MainTabControl.SuspendLayout();
@@ -119,6 +120,7 @@
             this.UserPasswordTableLayoutPanel.SuspendLayout();
             this.DetailTabPage.SuspendLayout();
             this.DetailTableLayoutPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._patch)).BeginInit();
             this.SuspendLayout();
             // 
             // HeaderPictureBox
@@ -1021,12 +1023,22 @@
             this.ConvertBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ConvertBackgroundWorker_DoWork);
             this.ConvertBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ConvertBackgroundWorker_RunWorkerCompleted);
             // 
+            // _patch
+            // 
+            this._patch.BackgroundImage = global::CubePDF.Properties.Resources.background;
+            this._patch.Location = new System.Drawing.Point(400, 80);
+            this._patch.Name = "_patch";
+            this._patch.Size = new System.Drawing.Size(83, 18);
+            this._patch.TabIndex = 1;
+            this._patch.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(494, 501);
+            this.Controls.Add(this._patch);
             this.Controls.Add(this._MainPanel);
             this.Controls.Add(this.HeaderPictureBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -1064,6 +1076,7 @@
             this.DetailTabPage.ResumeLayout(false);
             this.DetailTableLayoutPanel.ResumeLayout(false);
             this.DetailTableLayoutPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._patch)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1143,6 +1156,7 @@
         private System.Windows.Forms.Label _PostProcessLiteLabel;
         private System.Windows.Forms.ComboBox PostProcessLiteComboBox;
         private System.ComponentModel.BackgroundWorker ConvertBackgroundWorker;
+        private System.Windows.Forms.PictureBox _patch;
     }
 }
 
