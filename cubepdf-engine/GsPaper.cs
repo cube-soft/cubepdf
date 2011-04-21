@@ -22,7 +22,10 @@ using System;
 
 namespace CubePDF {
     namespace Ghostscript {
-        public enum Paper {
+        /* ------------------------------------------------------------- */
+        /// Papers
+        /* ------------------------------------------------------------- */
+        public enum Papers {
             Unknown,
             A3,
             A4,
@@ -36,26 +39,28 @@ namespace CubePDF {
         };
 
         /* ------------------------------------------------------------- */
-        /*
-         *  DeviceExt
-         *  
-         *  Paper から GhostScript の用紙サイズ名を取得するための
-         *  拡張メソッド用クラス．
-         */
+        ///
+        /// DeviceExt
+        ///
+        /// <summary>
+        /// Paper から GhostScript の用紙サイズ名を取得するための
+        /// 拡張メソッド用クラス．
+        /// </summary>
+        ///
         /* ------------------------------------------------------------- */
         public abstract class PaperExt {
-            public static System.String Argument(Paper e) {
+            public static System.String Argument(Papers e) {
                 switch (e) {
-                    case Paper.Unknown: return "";
-                    case Paper.A3: return "-sPAPERSIZE=a3";
-                    case Paper.A4: return "-sPAPERSIZE=a4";
-                    case Paper.A5: return "-sPAPERSIZE=a5";
-                    case Paper.B3: return "-sPAPERSIZE=b3";
-                    case Paper.B4: return "-sPAPERSIZE=b4";
-                    case Paper.B5: return "-sPAPERSIZE=b5";
-                    case Paper.Ledger: return "-sPAPERSIZE=ledger";
-                    case Paper.Legal: return "-sPAPERSIZE=legal";
-                    case Paper.Letter: return "-sPAPERSIZE=letter";
+                    case Papers.Unknown: return "";
+                    case Papers.A3: return "-sPAPERSIZE=a3";
+                    case Papers.A4: return "-sPAPERSIZE=a4";
+                    case Papers.A5: return "-sPAPERSIZE=a5";
+                    case Papers.B3: return "-sPAPERSIZE=b3";
+                    case Papers.B4: return "-sPAPERSIZE=b4";
+                    case Papers.B5: return "-sPAPERSIZE=b5";
+                    case Papers.Ledger: return "-sPAPERSIZE=ledger";
+                    case Papers.Legal: return "-sPAPERSIZE=legal";
+                    case Papers.Letter: return "-sPAPERSIZE=letter";
                     default: throw new ArgumentOutOfRangeException("e");
                 }
             }

@@ -54,15 +54,6 @@ namespace CubePDF {
         }
 
         /* ------------------------------------------------------------- */
-        /// SetupLog
-        /* ------------------------------------------------------------- */
-        public static void SetupLog(string src) {
-            Trace.Listeners.Remove("Default");
-            Trace.Listeners.Add(new TextWriterTraceListener(src));
-            Trace.AutoFlush = true;
-        }
-
-        /* ------------------------------------------------------------- */
         //  変数定義
         /* ------------------------------------------------------------- */
         #region Variables
