@@ -20,6 +20,8 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
+using System.Diagnostics;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -643,37 +645,6 @@ namespace CubePDF {
         #endregion
 
         /* ----------------------------------------------------------------- */
-        //  バックグラウンドワーカーのイベントハンドラ
-        /* ----------------------------------------------------------------- */
-        #region Background worker
-
-        /* ----------------------------------------------------------------- */
-        /// ConvertBackgroundWorker_DoWork
-        /* ----------------------------------------------------------------- */
-        private void ConvertBackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e) {
-            // GUI の設定を UserSetting に保存する
-            this.SaveSetting(_setting, this._InputpathPanel.Enabled);
-            if (_setting.SaveSetting) {
-                _setting.SaveSetting = false; // 「設定を保存」の項目はレジストリには保存しない．
-                _setting.Save();
-            }
-            _setting.InputPath = this.InputPathTextBox.Text;
-            
-            // 変換の実行
-            Converter converter = new Converter();
-            converter.Run(_setting);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// ConvertBackgroundWorker_RunWorkerCompleted
-        /* ----------------------------------------------------------------- */
-        private void ConvertBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e) {
-            this.Close();
-        }
-
-        #endregion
-
-        /* ----------------------------------------------------------------- */
         //  パスワードの打ち間違えに関する仕掛け
         /* ----------------------------------------------------------------- */
         #region Gimicks for password dialogs
@@ -738,6 +709,75 @@ namespace CubePDF {
                 control.BackColor = Color.FromArgb(255, 102, 102);
             }
             else control.BackColor = SystemColors.Window;
+        }
+
+        #endregion
+        
+        /* ----------------------------------------------------------------- */
+        //  バックグラウンドワーカーのイベントハンドラ
+        /* ----------------------------------------------------------------- */
+        #region Background worker
+
+        /* ----------------------------------------------------------------- */
+        /// ConvertBackgroundWorker_DoWork
+        /* ----------------------------------------------------------------- */
+        private void ConvertBackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e) {
+            // GUI の設定を UserSetting に保存する
+            this.SaveSetting(_setting, this._InputpathPanel.Enabled);
+            if (_setting.SaveSetting) {
+                _setting.SaveSetting = false; // 「設定を保存」の項目はレジストリには保存しない．
+                _setting.Save();
+            }
+            _setting.InputPath = this.InputPathTextBox.Text;
+            
+            // 変換の実行
+            Converter converter = new Converter();
+            if (!converter.Run(_setting) && converter.Messages.Count > 0) e.Result = converter.Messages;
+            else e.Result = null;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ConvertBackgroundWorker_RunWorkerCompleted
+        /* ----------------------------------------------------------------- */
+        private void ConvertBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e) {
+            if (e.Result != null) this.ShowErrorMessage((List<CubePDF.Message>)e.Result);
+            this.Close();
+        }
+
+        #endregion
+
+        /* ----------------------------------------------------------------- */
+        //  その他のメソッド群
+        /* ----------------------------------------------------------------- */
+        #region Other methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ShowErrorMessage
+        ///
+        /// <summary>
+        /// エラーメッセージの表示，およびログファイルへの書き込みを行う．
+        /// エラーメッセージとしてダイアログに表示させるのは，最後の
+        /// Error レベル以上のメッセージである．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void ShowErrorMessage(List<CubePDF.Message> messages) {
+            string src = Utility.CurrentDirectory + @"\cubepdf.log";
+            Trace.Listeners.Remove("Default");
+            Trace.Listeners.Add(new TextWriterTraceListener(src));
+            Trace.AutoFlush = true;
+            
+            string error = "";
+            foreach (CubePDF.Message message in messages) {
+                Trace.WriteLine(message.ToString());
+                if (message.Level == Message.Levels.Error || message.Level == Message.Levels.Fatal) {
+                    error = message.Value;
+                }
+            }
+
+            Trace.Close();
+            if (error.Length > 0) MessageBox.Show(error, "CubePDF エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         #endregion
