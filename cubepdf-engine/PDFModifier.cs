@@ -67,6 +67,7 @@ namespace CubePDF {
                     iTextSharp.text.pdf.PdfCopyFields copy = new iTextSharp.text.pdf.PdfCopyFields(fs);
                     copy.AddDocument(reader_head);
                     copy.AddDocument(reader_tail);
+                    copy.Close();
                 }
                 reader_head.Close();
                 reader_tail.Close();
