@@ -21,8 +21,8 @@
 using System;
 using System.IO;
 using System.Diagnostics;
+using System.Collections.Generic;
 using Interop = System.Runtime.InteropServices;
-using Container = System.Collections.Generic;
 
 namespace CubePDF {
     namespace Ghostscript {
@@ -53,7 +53,7 @@ namespace CubePDF {
             /* ------------------------------------------------------------- */
             /// Messages
             /* ------------------------------------------------------------- */
-            public Container.List<CubePDF.Message> Messages {
+            public List<CubePDF.Message> Messages {
                 get { return _messages; }
             }
 
@@ -203,7 +203,7 @@ namespace CubePDF {
             /// </summary>
             ///
             /* ------------------------------------------------------------- */
-            protected virtual void ExtraArgs(Container.List<string> args) {
+            protected virtual void ExtraArgs(List<string> args) {
                 return;
             }
 
@@ -228,7 +228,7 @@ namespace CubePDF {
                 else if (System.IO.File.Exists(work)) System.IO.File.Delete(work);
                 System.IO.Directory.CreateDirectory(work);
 
-                Container.List<string> copies = this.EscapeSources(sources, work);
+                List<string> copies = this.EscapeSources(sources, work);
                 if (copies.Count == 0) return;
 
                 var tmp = work + '\\' + GetTempFileName(this._device) + ext;
@@ -276,7 +276,7 @@ namespace CubePDF {
             /* ------------------------------------------------------------- */
             //  RunPostProcess (private)
             /* ------------------------------------------------------------- */
-            private void RunPostProcess(Container.List<string> sources, string dest, string work) {
+            private void RunPostProcess(List<string> sources, string dest, string work) {
                 string root = System.IO.Path.GetDirectoryName(dest);
                 string filename = System.IO.Path.GetFileNameWithoutExtension(dest);
                 string ext = System.IO.Path.GetExtension(dest);
@@ -326,7 +326,7 @@ namespace CubePDF {
             ///
             /* ------------------------------------------------------------- */
             private string[] MakeArgs(string[] sources, string dest) {
-                Container.List<string> args = new Container.List<string>();
+                List<string> args = new List<string>();
 
                 // Add device
                 args.Add("dummy"); // args[0] is ignored.
@@ -427,7 +427,7 @@ namespace CubePDF {
             /* ------------------------------------------------------------- */
             /// CombinePath (private)
             /* ------------------------------------------------------------- */
-            private string CombinePath(Container.List<string> paths) {
+            private string CombinePath(List<string> paths) {
                 var dest = new System.Text.StringBuilder();
                 foreach (var s in paths) {
                     dest.Append(s);
@@ -456,8 +456,8 @@ namespace CubePDF {
             /// </summary>
             ///
             /* ------------------------------------------------------------- */
-            private Container.List<string> EscapeSources(string[] sources, string work) {
-                Container.List<string> dest = new Container.List<string>();
+            private List<string> EscapeSources(string[] sources, string work) {
+                List<string> dest = new List<string>();
                 foreach (string src in sources) {
                     var tmp_src = work + '\\' + Path.GetRandomFileName().Replace('.', '_') + Path.GetExtension(src);
                     if (System.IO.File.Exists(src)) {
@@ -501,11 +501,11 @@ namespace CubePDF {
             private int _last = 1;
             private bool _rotate = true;
             private string _dest = "";
-            private Container.List<string> _includes = new Container.List<string>();
-            private Container.List<string> _fonts = new Container.List<string>();
-            private Container.Dictionary<string, string> _options = new Container.Dictionary<string, string>();
-            private Container.List<string> _sources = new Container.List<string>();
-            private Container.List<CubePDF.Message> _messages = new Container.List<CubePDF.Message>();
+            private List<string> _includes = new List<string>();
+            private List<string> _fonts = new List<string>();
+            private Dictionary<string, string> _options = new Dictionary<string, string>();
+            private List<string> _sources = new List<string>();
+            private List<CubePDF.Message> _messages = new List<CubePDF.Message>();
 
             #endregion
 
@@ -528,9 +528,9 @@ namespace CubePDF {
             /* ------------------------------------------------------------- */
             //  static constructor
             /* ------------------------------------------------------------- */
-            private static Container.List<string> skeys_; // "-s" で始まるオプション
+            private static List<string> skeys_; // "-s" で始まるオプション
             static Converter() {
-                skeys_ = new Container.List<string>();
+                skeys_ = new List<string>();
                 skeys_.Add("FONTMAP");
                 skeys_.Add("SUBSTFONT");
                 skeys_.Add("GenericResourceDir");
