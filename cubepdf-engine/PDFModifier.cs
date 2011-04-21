@@ -20,7 +20,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
-using Container = System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace CubePDF {
     /* --------------------------------------------------------------------- */
@@ -73,7 +73,7 @@ namespace CubePDF {
                 reader_tail.Close();
             }
             catch (Exception err) {
-                _message = err.Message;
+                _messages.Add(new Message(Message.Levels.Error, err.Message));
                 status = false;
             }
             finally {
@@ -115,7 +115,7 @@ namespace CubePDF {
                     new FileStream(setting.OutputPath, FileMode.Create), PDFVersionToiText(setting.PDFVersion));
                 
                 // 文書プロパティ
-                Container.Dictionary<string, string> info = new Container.Dictionary<string,string>();
+                Dictionary<string, string> info = new Dictionary<string,string>();
                 info["Title"] = setting.Document.Title;
                 info["Author"] = setting.Document.Author;
                 info["Subject"] = setting.Document.Subtitle;
@@ -134,7 +134,7 @@ namespace CubePDF {
                 writer.Close();
             }
             catch (Exception err) {
-                _message = err.Message;
+                _messages.Add(new Message(Message.Levels.Error, err.Message));
                 status = false;
             }
             finally {
@@ -157,11 +157,11 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private bool WebOptimize(UserSetting setting) {
             string tmp = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
+            Ghostscript.Converter gs = new CubePDF.Ghostscript.Converter(Ghostscript.Devices.PDF_Opt);
             bool status = true;
             try {
                 if (File.Exists(tmp)) File.Delete(tmp);
                 File.Move(setting.OutputPath, tmp);
-                Ghostscript.Converter gs = new CubePDF.Ghostscript.Converter(Ghostscript.Device.PDF_Opt);
                 gs.AddInclude(setting.LibPath + @"\lib");
                 gs.AddSource(tmp);
                 gs.Destination = setting.OutputPath;
@@ -182,8 +182,9 @@ namespace CubePDF {
                 gs.Run();
             }
             catch (Exception err) {
+                if (gs.Messages.Count > 0) _messages.AddRange(gs.Messages);
+                _messages.Add(new Message(Message.Levels.Warn, String.Format("Web optimize error: {0}", err.Message)));
                 status = false;
-                _message = String.Format("{0}\n{1}", "Web 表示用の最適化に失敗しました。通常のPDFファイルを出力します。", err.Message);
             }
             finally {
                 if (!File.Exists(setting.OutputPath)) File.Move(tmp, setting.OutputPath);
@@ -256,10 +257,10 @@ namespace CubePDF {
         #endregion
 
         /* ----------------------------------------------------------------- */
-        /// ErrorMessage
+        /// Messages
         /* ----------------------------------------------------------------- */
-        public string ErrorMessage {
-            get { return _message; }
+        public List<CubePDF.Message> Messages {
+            get { return _messages; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -267,7 +268,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         #region Variables
         string _escaped;
-        string _message = "";
+        List<CubePDF.Message> _messages = new List<CubePDF.Message>();
         #endregion
     }
 }

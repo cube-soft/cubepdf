@@ -131,7 +131,7 @@ namespace CubePDF {
                 }
 
                 Converter converter = new Converter();
-                Assert.IsTrue(converter.Run(setting), "Converter.Run: " + file + ": " + converter.ErrorMessage);
+                Assert.IsTrue(converter.Run(setting), "Converter.Run: " + file);
                 bool status = File.Exists(setting.OutputPath);
                 if (!status) status = File.Exists(output + '\\' + filename + suffix + "-001" + extension);
                 Assert.IsTrue(status, "File.Exists: " + file);

@@ -191,20 +191,20 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Device
         /* ----------------------------------------------------------------- */
-        public static Ghostscript.Device Device(FileTypes id, bool grayscale) {
+        public static Ghostscript.Devices Device(FileTypes id, bool grayscale) {
             switch (id) {
-            case FileTypes.PDF:  return Ghostscript.Device.PDF;
-            case FileTypes.PS:   return Ghostscript.Device.PS;
-            case FileTypes.EPS:  return Ghostscript.Device.EPS;
-            case FileTypes.PNG:  return grayscale ? Ghostscript.Device.PNG_Gray : Ghostscript.Device.PNG;
-            case FileTypes.JPEG: return grayscale ? Ghostscript.Device.JPEG_Gray : Ghostscript.Device.JPEG;
-            case FileTypes.BMP:  return grayscale ? Ghostscript.Device.BMP_Gray : Ghostscript.Device.BMP;
-            case FileTypes.TIFF: return grayscale ? Ghostscript.Device.TIFF_Gray : Ghostscript.Device.TIFF;
-            case FileTypes.SVG:  return Ghostscript.Device.SVG;
+            case FileTypes.PDF:  return Ghostscript.Devices.PDF;
+            case FileTypes.PS:   return Ghostscript.Devices.PS;
+            case FileTypes.EPS:  return Ghostscript.Devices.EPS;
+            case FileTypes.PNG:  return grayscale ? Ghostscript.Devices.PNG_Gray : Ghostscript.Devices.PNG;
+            case FileTypes.JPEG: return grayscale ? Ghostscript.Devices.JPEG_Gray : Ghostscript.Devices.JPEG;
+            case FileTypes.BMP:  return grayscale ? Ghostscript.Devices.BMP_Gray : Ghostscript.Devices.BMP;
+            case FileTypes.TIFF: return grayscale ? Ghostscript.Devices.TIFF_Gray : Ghostscript.Devices.TIFF;
+            case FileTypes.SVG:  return Ghostscript.Devices.SVG;
             default:
                 break;
             }
-            return Ghostscript.Device.PDF;
+            return Ghostscript.Devices.PDF;
         }
 
         #endregion

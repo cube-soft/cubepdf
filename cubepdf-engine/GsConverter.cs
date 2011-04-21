@@ -19,6 +19,7 @@
  */
 /* ------------------------------------------------------------------------- */
 using System;
+using System.IO;
 using System.Diagnostics;
 using Interop = System.Runtime.InteropServices;
 using Container = System.Collections.Generic;
@@ -26,115 +27,34 @@ using Container = System.Collections.Generic;
 namespace CubePDF {
     namespace Ghostscript {
         /* ----------------------------------------------------------------- */
-        /*
-         *  Converter
-         */
+        ///
+        /// Converter
+        ///
+        /// <summary>
+        /// Ghostscript API のラッパークラス．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public class Converter {
             /* ------------------------------------------------------------- */
-            //  Constructor
+            /// constructor
             /* ------------------------------------------------------------- */
-            public Converter(Device device) {
-                this.device_ = device;
-                this.resolution_ = 72;
-                this.paper_ = Paper.Unknown;
-                this.first_ = 1;
-                this.last_ = -1;
-                this.rotate_ = true;
-                this.includes_ = new Container.List<string>();
-                this.fonts_ = new Container.List<string>();
-                this.options_ = new Container.Dictionary<string, string>();
-                this.sources_ = new Container.List<string>();
-                this.dest_ = "";
+            public Converter(Devices device) {
+                this._device = device;
             }
 
             /* ------------------------------------------------------------- */
-            //  Run
-            /* ------------------------------------------------------------- */
-            private void Run(string[] sources, string dest) {
-                //Utility.SetupLog(Utility.CurrentDirectory + @"\cubepdf.log");
-                Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-engine start");
-
-                var root = System.IO.Path.GetDirectoryName(dest);
-                var filename = System.IO.Path.GetFileNameWithoutExtension(dest);
-                var ext = System.IO.Path.GetExtension(dest);
-
-                var work = Utility.WorkingDirectory + @"\cubepdf-temporary";
-                if (System.IO.Directory.Exists(work)) System.IO.Directory.Delete(work, true);
-                else if (System.IO.File.Exists(work)) System.IO.File.Delete(work);
-                System.IO.Directory.CreateDirectory(work);
-
-                var inputfiles = new Container.List<string>();
-                var dtmp = (this.device_ == Device.PDF || this.device_ == Device.PDF_Opt || this.device_ == Device.PS) ?
-                    work + '\\' + System.IO.Path.GetRandomFileName() + ext :
-                    work + '\\' + System.IO.Path.GetRandomFileName().Replace('.', '_') + "-%08d" + ext;
-                Trace.WriteLine(DateTime.Now.ToString() + ": TMP_DEST: " + dtmp);
-
-                foreach (var src in sources) {
-                    var stmp = work + '\\' +
-                    System.IO.Path.GetRandomFileName().Replace('.', '_') +
-                    System.IO.Path.GetExtension(src);
-
-                    if (System.IO.File.Exists(src)) {
-                        System.IO.File.Copy(src, stmp, true); // TODO: このコピーのコスト
-                        inputfiles.Add(stmp);
-                    }
-                    Trace.WriteLine(DateTime.Now.ToString() + ": TMP_SOURCE: " + stmp);
-                }
-
-                if (inputfiles.Count > 0) {
-                    if (!ExecConvert(inputfiles.ToArray(), dtmp)) {
-                        throw new Exception("Ghostscript error");
-                    }
-
-                    try {
-                        foreach (var path in inputfiles) {
-                            if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
-                        }
-
-                        var files = System.IO.Directory.GetFiles(work);
-                        if (files.Length == 1) {
-                            if (System.IO.File.Exists(dest)) System.IO.File.Delete(dest);
-                            System.IO.File.Move(work + '\\' + System.IO.Path.GetFileName(files[0]), dest);
-                            Trace.WriteLine(DateTime.Now.ToString() + ": DEST: " + dest);
-                        }
-                        else if (files.Length > 1) {
-                            int i = 1;
-                            foreach (var path in files) {
-                                if (System.IO.Path.GetExtension(path) == ".ps") continue;
-                                var leaf = System.IO.Path.GetFileName(path);
-                                var target = System.String.Format("{0}\\{1}-{2:D3}{3}", root, filename, i, ext);
-                                if (System.IO.File.Exists(target)) System.IO.File.Delete(target);
-                                System.IO.File.Move(work + '\\' + leaf, target);
-                                i++;
-                                Trace.WriteLine(DateTime.Now.ToString() + ": DEST: " + target);
-                            }
-                        }
-                    }
-                    catch (Exception e) {
-                        Trace.WriteLine(DateTime.Now.ToString() + ": exception occured");
-                        Trace.WriteLine(DateTime.Now.ToString() + ": TYPE: " + e.GetType().ToString());
-                        Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: " + e.Source);
-                        Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + e.Message);
-                        Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + e.StackTrace);
-                        throw new Exception(e.Message);
-                    }
-                    finally {
-                        foreach (var path in inputfiles) {
-                            if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
-                        }
-                        System.IO.Directory.Delete(work, true);
-                        Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-engine end");
-                        Trace.Close();
-                    }
-                }
-            }
-
-            /* ------------------------------------------------------------- */
-            //  Run
+            /// Run
             /* ------------------------------------------------------------- */
             public void Run() {
-                Run(this.sources_.ToArray(), this.dest_);
+                Run(this._sources.ToArray(), this._dest);
+            }
+
+            /* ------------------------------------------------------------- */
+            /// Messages
+            /* ------------------------------------------------------------- */
+            public Container.List<CubePDF.Message> Messages {
+                get { return _messages; }
             }
 
             /* ------------------------------------------------------------- */
@@ -146,185 +66,300 @@ namespace CubePDF {
             /// AddSource
             /* ------------------------------------------------------------- */
             public void AddSource(string path) {
-                sources_.Add(path);
+                _sources.Add(path);
             }
 
             /* ------------------------------------------------------------- */
             /// AddInclude
             /* ------------------------------------------------------------- */
             public void AddInclude(string dir) {
-                includes_.Add(dir);
+                _includes.Add(dir);
             }
 
             /* ------------------------------------------------------------- */
             /// AddFont
             /* ------------------------------------------------------------- */
             public void AddFont(string dir) {
-                fonts_.Add(dir);
+                _fonts.Add(dir);
             }
 
             public void AddOption(string key) {
-                options_.Add(key, null);
+                _options.Add(key, null);
             }
 
             /* ------------------------------------------------------------- */
             /// AddOption
             /* ------------------------------------------------------------- */
             public void AddOption(string key, string value) {
-                options_.Add(key, value);
+                _options.Add(key, value);
             }
 
             /* ------------------------------------------------------------- */
             /// AddOption
             /* ------------------------------------------------------------- */
             public void AddOption(string key, bool value) {
-                options_.Add(key, value.ToString().ToLower());
+                _options.Add(key, value.ToString().ToLower());
             }
             
             /* ------------------------------------------------------------- */
             /// AddOption
             /* ------------------------------------------------------------- */
             public void AddOption<Type>(string key, Type value) {
-                options_.Add(key, value.ToString());
+                _options.Add(key, value.ToString());
             }
             
             /* ------------------------------------------------------------- */
             /// DeleteOption
             /* ------------------------------------------------------------- */
             public void DeleteOption(string key) {
-                if (options_.ContainsKey(key)) options_.Remove(key);
+                if (_options.ContainsKey(key)) _options.Remove(key);
             }
 
             /* ------------------------------------------------------------- */
             /// Pages
             /* ------------------------------------------------------------- */
             public void Pages(int first, int last) {
-                this.first_ = first;
-                this.last_ = last;
+                this._first = first;
+                this._last = last;
             }
 
             /* ------------------------------------------------------------- */
             /// Destination
             /* ------------------------------------------------------------- */
             public string Destination {
-                get { return this.dest_; }
-                set { this.dest_ = value; }
+                get { return this._dest; }
+                set { this._dest = value; }
             }
 
             /* ------------------------------------------------------------- */
             /// Resolution
             /* ------------------------------------------------------------- */
             public int Resolution {
-                get { return this.resolution_; }
-                set { this.resolution_ = value; }
+                get { return this._resolution; }
+                set { this._resolution = value; }
             }
 
             /* ------------------------------------------------------------- */
             /// PaperSize
             /* ------------------------------------------------------------- */
-            public Paper PaperSize {
-                get { return this.paper_; }
-                set { this.paper_ = value; }
+            public Papers PaperSize {
+                get { return this._paper; }
+                set { this._paper = value; }
             }
 
             /* ------------------------------------------------------------- */
             /// FirstPage
             /* ------------------------------------------------------------- */
             public int FirstPage {
-                get { return this.first_; }
-                set { this.first_ = value; }
+                get { return this._first; }
+                set { this._first = value; }
             }
 
             /* ------------------------------------------------------------- */
             /// LastPage
             /* ------------------------------------------------------------- */
             public int LastPage {
-                get { return this.last_; }
-                set { this.last_ = value; }
+                get { return this._last; }
+                set { this._last = value; }
             }
 
             /* ------------------------------------------------------------- */
             /// PageRotation
             /* ------------------------------------------------------------- */
             public bool PageRotation {
-                get { return this.rotate_; }
-                set { this.rotate_ = value; }
+                get { return this._rotate; }
+                set { this._rotate = value; }
             }
 
             #endregion
 
             /* ------------------------------------------------------------- */
-            /*
-             *  ExecConvert
-             *  
-             *  Converter クラスを継承するクラスは，Convert を独自に実装
-             *  する場合，Convert() メンバ関数ではなくこの ExecConvert()
-             *  メンバ関数をオーバーライドする事．
-             *  
-             */
+            //  今後の拡張のために定義してあるメソッド
+            /* ------------------------------------------------------------- */
+            #region for extensions
+
+            /* ------------------------------------------------------------- */
+            ///
+            /// ExecConvert
+            /// 
+            /// <summary>
+            /// Converter クラスを継承するクラスは，Convert を独自に実装
+            /// する場合，Convert() メンバ関数ではなくこの ExecConvert()
+            /// メンバ関数をオーバーライドする事．
+            /// </summary>
+            ///
             /* ------------------------------------------------------------- */
             protected virtual bool ExecConvert(string[] sources, string dest) {
-                return Execute(this.MakeArgs(sources, dest));
+                return RunGhostscript(this.MakeArgs(sources, dest));
             }
             
             /* ------------------------------------------------------------- */
-            /*
-             *  ExtraArgs
-             *
-             *  派生クラスで，Ghostscript に追加する引数が存在する場合は，
-             *  このメソッドをオーバーライドして追加する．
-             */
+            ///
+            /// ExtraArgs
+            ///
+            /// <summary>
+            /// 派生クラスで，Ghostscript に追加する引数が存在する場合は，
+            /// このメソッドをオーバーライドして追加する．
+            /// </summary>
+            ///
             /* ------------------------------------------------------------- */
             protected virtual void ExtraArgs(Container.List<string> args) {
                 return;
             }
+
+            #endregion
+
+            /* ------------------------------------------------------------- */
+            //  実際の変換処理
+            /* ------------------------------------------------------------- */
+            #region Main operations
+
+            /* ------------------------------------------------------------- */
+            ///  Run
+            /* ------------------------------------------------------------- */
+            private void Run(string[] sources, string dest) {
+                string root = System.IO.Path.GetDirectoryName(dest);
+                string filename = System.IO.Path.GetFileNameWithoutExtension(dest);
+                string ext = System.IO.Path.GetExtension(dest);
+
+                // 作業ディレクトリの作成
+                string work = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
+                if (System.IO.Directory.Exists(work)) System.IO.Directory.Delete(work, true);
+                else if (System.IO.File.Exists(work)) System.IO.File.Delete(work);
+                System.IO.Directory.CreateDirectory(work);
+
+                Container.List<string> copies = this.EscapeSources(sources, work);
+                if (copies.Count == 0) return;
+
+                var tmp = work + '\\' + GetTempFileName(this._device) + ext;
+                if (!ExecConvert(copies.ToArray(), tmp)) throw new Exception("Ghostscript error");
+                this.RunPostProcess(copies, dest, work);
+            }
             
             /* ------------------------------------------------------------- */
-            /*
-             *  MakeArgs (private)
-             *
-             *  Note that the arguments are the same as the "C" main
-             *  function: argv[0] is ignored and the user supplied
-             *  arguments are argv[1] to argv[argc-1].
-             *  
-             *  http://pages.cs.wisc.edu/~ghost/doc/AFPL/8.00/API.htm
-             */
+            //  RunGhostscript (private)
+            /* ------------------------------------------------------------- */
+            private bool RunGhostscript(string[] args) {
+                IntPtr instance = IntPtr.Zero;
+                bool status = true;
+
+                Trace.WriteLine(DateTime.Now.ToString() + ": Current Directory: " + Utility.CurrentDirectory);
+                Trace.WriteLine(DateTime.Now.ToString() + ": ARGUMENTS:");
+                foreach (var s in args) Trace.WriteLine('\t' + s);
+
+                lock (gslock_) {
+                    try {
+                        gsapi_new_instance(out instance, IntPtr.Zero);
+                        if (instance == IntPtr.Zero) throw new Interop.ExternalException("gsapi_new_instance() failed.");
+                        
+                        int result = gsapi_init_with_args(instance, args.Length, args);
+                        // TODO: pdfopt がエラーコード -101 を返す．
+                        // 生成されたファイルを見ると正常に生成されているため，
+                        // 暫定的に -101 は OK とする。エラーコードが返る理由を要調査．
+                        if (result < 0 && result != -101) {
+                            throw new Interop.ExternalException(String.Format("gsapi_init_with_args() failed (status code: {0})", result));
+                        }
+                    }
+                    catch (Exception err) {
+                        this.AddErrorMessages(err, args);
+                        status = false;
+                    }
+                    finally {
+                        gsapi_exit(instance);
+                        gsapi_delete_instance(instance);
+                    }
+                }
+
+                return status;
+            }
+
+            /* ------------------------------------------------------------- */
+            //  RunPostProcess (private)
+            /* ------------------------------------------------------------- */
+            private void RunPostProcess(Container.List<string> sources, string dest, string work) {
+                string root = System.IO.Path.GetDirectoryName(dest);
+                string filename = System.IO.Path.GetFileNameWithoutExtension(dest);
+                string ext = System.IO.Path.GetExtension(dest);
+
+                try {
+                    foreach (string path in sources) {
+                        if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
+                    }
+
+                    string[] files = Directory.GetFiles(work);
+                    if (files.Length == 1) {
+                        if (System.IO.File.Exists(dest)) System.IO.File.Delete(dest);
+                        System.IO.File.Move(work + '\\' + System.IO.Path.GetFileName(files[0]), dest);
+                    }
+                    else if (files.Length > 1) {
+                        int i = 1;
+                        foreach (string path in files) {
+                            if (System.IO.Path.GetExtension(path) == ".ps") continue;
+                            string leaf = System.IO.Path.GetFileName(path);
+                            string target = System.String.Format("{0}\\{1}-{2:D3}{3}", root, filename, i, ext);
+                            if (System.IO.File.Exists(target)) System.IO.File.Delete(target);
+                            System.IO.File.Move(work + '\\' + leaf, target);
+                            i++;
+                        }
+                    }
+                }
+                catch (Exception err) {
+                    this.AddErrorMessages(err, null);
+                    throw err;
+                }
+                finally {
+                    System.IO.Directory.Delete(work, true);
+                }
+            }
+
+            /* ------------------------------------------------------------- */
+            ///
+            /// MakeArgs
+            ///
+            /// <summary>
+            /// Note that the arguments are the same as the "C" main
+            /// function: argv[0] is ignored and the user supplied
+            /// arguments are argv[1] to argv[argc-1].
+            /// 
+            /// http://pages.cs.wisc.edu/~ghost/doc/AFPL/8.00/API.htm
+            /// </summary>
+            ///
             /* ------------------------------------------------------------- */
             private string[] MakeArgs(string[] sources, string dest) {
                 Container.List<string> args = new Container.List<string>();
 
                 // Add device
                 args.Add("dummy"); // args[0] is ignored.
-                if (this.device_ != Device.Unknown && this.device_ != Device.PDF_Opt) {
-                    args.Add(DeviceExt.Argument(this.device_));
+                if (this._device != Devices.Unknown && this._device != Devices.PDF_Opt) {
+                    args.Add(DeviceExt.Argument(this._device));
                 }
 
                 // Add include paths
-                if (includes_.Count > 0) args.Add("-I" + CombinePath(this.includes_));
+                if (_includes.Count > 0) args.Add("-I" + CombinePath(this._includes));
 
                 // Add font paths
                 // Note: C:\Windows\Fonts ディレクトリを常に含めるかどうか．
                 var win = System.Environment.GetEnvironmentVariable("windir") + @"\Fonts";
-                if (!fonts_.Contains(win)) fonts_.Add(win);
-                args.Add("-sFONTPATH=" + CombinePath(this.fonts_));
+                if (!_fonts.Contains(win)) _fonts.Add(win);
+                args.Add("-sFONTPATH=" + CombinePath(this._fonts));
 
                 // Add resolution
-                args.Add("-r" + this.resolution_.ToString());
+                args.Add("-r" + this._resolution.ToString());
 
                 // Add page settings
-                if (this.paper_ != CubePDF.Ghostscript.Paper.Unknown) args.Add(PaperExt.Argument(this.paper_));
-                else if (this.device_ == Device.PDF) args.Add("-dPDFFitPage");
-                if (this.first_ > 1 || this.first_ <= this.last_) {
-                    args.Add("-dFirstPage=" + this.first_.ToString());
-                    if (this.first_ <= this.last_) args.Add("-dLastPage=" + this.last_.ToString());
+                if (this._paper != CubePDF.Ghostscript.Papers.Unknown) args.Add(PaperExt.Argument(this._paper));
+                else if (this._device == Devices.PDF) args.Add("-dPDFFitPage");
+                if (this._first > 1 || this._first <= this._last) {
+                    args.Add("-dFirstPage=" + this._first.ToString());
+                    if (this._first <= this._last) args.Add("-dLastPage=" + this._last.ToString());
                 }
-                if (this.rotate_) args.Add("-dAutoRotatePages=/PageByPage");
+                if (this._rotate) args.Add("-dAutoRotatePages=/PageByPage");
 
                 // Add default options
                 foreach (string elem in defaults_) args.Add(elem);
 
                 // Add user options
-                foreach (var elem in this.options_) {
+                foreach (var elem in this._options) {
                     string ext = skeys_.Contains(elem.Key) ? "-s" : "-d";
                     string tmp = (elem.Value == null) ?
                         ext + elem.Key :
@@ -338,7 +373,7 @@ namespace CubePDF {
                 //args.Add("-sstdout=ghostscript.log");
 
                 // Add input (source filename) and output (destination filename)
-                if (this.device_ == Device.PDF_Opt) {
+                if (this._device == Devices.PDF_Opt) {
                     args.Add("--");
                     args.Add("pdfopt.ps");
                     foreach (var src in sources) args.Add(src);
@@ -352,56 +387,47 @@ namespace CubePDF {
                 return args.ToArray();
             }
 
-            /* ------------------------------------------------------------- */
-            //  Execute (private)
-            /* ------------------------------------------------------------- */
-            private static bool Execute(string[] args) {
-                IntPtr instance = IntPtr.Zero;
-                bool status = true;
+            #endregion
 
-                Trace.WriteLine(DateTime.Now.ToString() + ": Current Directory: " + Utility.CurrentDirectory);
-                Trace.WriteLine(DateTime.Now.ToString() + ": ARGUMENTS:");
-                foreach (var s in args) Trace.WriteLine('\t' + s);
+            /* ------------------------------------------------------------- */
+            //  各種補助メソッド
+            /* ------------------------------------------------------------- */
+            #region Utility methods
+            
+            /* ------------------------------------------------------------- */
+            /// AddErrorMessages (private)
+            /* ------------------------------------------------------------- */
+            private void AddErrorMessages(Exception err, string[] args) {
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("TYPE: {0}", err.GetType().ToString())));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("SOURCE: {0}", err.Source)));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("STACKTRACE: {0}", err.StackTrace)));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("EXECDIR: {0}", Utility.CurrentDirectory)));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("WORKINGDIR: {0}", Utility.WorkingDirectory)));
 
-                lock (gslock_) {
-                    gsapi_new_instance(out instance, IntPtr.Zero);
-                    System.Diagnostics.Debug.Assert(instance != IntPtr.Zero);
-                    try {
-                        int result = gsapi_init_with_args(instance, args.Length, args);
-                        // TODO: pdfopt がエラーコード -101 を返す．
-                        // 生成されたファイルを見ると正常に生成されているため，
-                        // 暫定的に -101 は OK とする。エラーコードが返る理由を要調査．
-                        if (result < 0 && result != -101) {
-                            Trace.WriteLine(DateTime.Now.ToString() + ": error occured");
-                            Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: gsapi_init_with_args()");
-                            Trace.WriteLine(DateTime.Now.ToString() + ": Current Directory: " + Utility.CurrentDirectory);
-                            Trace.WriteLine(DateTime.Now.ToString() + ": ARGUMENTS:");
-                            Trace.WriteLine(DateTime.Now.ToString() + ": RESULT: " + result.ToString());
-                            throw new Interop.ExternalException(result.ToString() + ": ghostscript conversion error");
-                        }
-                    }
-                    catch (Exception e) {
-                        Trace.WriteLine(DateTime.Now.ToString() + ": exception occured");
-                        Trace.WriteLine(DateTime.Now.ToString() + ": TYPE: " + e.GetType().ToString());
-                        Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: " + e.Source);
-                        Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + e.Message);
-                        Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + e.StackTrace);
-                        Trace.WriteLine(DateTime.Now.ToString() + ": ARGUMENTS:");
-                        status = false;
-                    }
-                    finally {
-                        gsapi_exit(instance);
-                        gsapi_delete_instance(instance);
-                    }
+                // ライブラリの存在するディレクトリへのパス
+                string msg = "LIBPATH: ";
+                if (_includes.Count > 0) {
+                    msg += _includes[0];
+                    if (!Directory.Exists(_includes[0])) msg += " (NOT FOUND)";
+                }
+                else msg += "UNKNOWN";
+                _messages.Add(new Message(Message.Levels.Debug, msg));
+
+                // 指定された全ての引数
+                if (args != null) {
+                    msg = "ARGUMENTS:";
+                    foreach (string s in args) msg += ("\r\n\t" + s);
+                    _messages.Add(new Message(Message.Levels.Debug, msg));
                 }
 
-                return status;
+                // エラーメッセージ
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("MESSAGE: {0}", err.Message)));
             }
 
             /* ------------------------------------------------------------- */
-            //  CombinePath (private)
+            /// CombinePath (private)
             /* ------------------------------------------------------------- */
-            private static string CombinePath(Container.List<string> paths) {
+            private string CombinePath(Container.List<string> paths) {
                 var dest = new System.Text.StringBuilder();
                 foreach (var s in paths) {
                     dest.Append(s);
@@ -409,6 +435,40 @@ namespace CubePDF {
                 }
                 return dest.ToString();
             }
+
+            /* ------------------------------------------------------------- */
+            /// GetTempFileName (private)
+            /* ------------------------------------------------------------- */
+            private string GetTempFileName(Devices device) {
+                if (device == Devices.PDF || device == Devices.PDF_Opt || device == Devices.PS) {
+                    return Path.GetRandomFileName();
+                }
+                else return Path.GetRandomFileName().Replace('.', '_') + "-%08d";
+            }
+
+            /* ------------------------------------------------------------- */
+            ///
+            /// EscapeSources (private)
+            /// 
+            /// <summary>
+            /// PDF の変換を行う際は，ソースファイルのコピーを作成して，
+            /// そのコピーに対して処理を行う．
+            /// </summary>
+            ///
+            /* ------------------------------------------------------------- */
+            private Container.List<string> EscapeSources(string[] sources, string work) {
+                Container.List<string> dest = new Container.List<string>();
+                foreach (string src in sources) {
+                    var tmp_src = work + '\\' + Path.GetRandomFileName().Replace('.', '_') + Path.GetExtension(src);
+                    if (System.IO.File.Exists(src)) {
+                        System.IO.File.Copy(src, tmp_src, true); // TODO: このコピーのコスト
+                        dest.Add(tmp_src);
+                    }
+                }
+                return dest;
+            }
+
+            #endregion
 
             /* ------------------------------------------------------------- */
             //  Ghostscript APIs
@@ -434,17 +494,18 @@ namespace CubePDF {
             /* ------------------------------------------------------------- */
             #region Variables
 
-            private Device device_;
-            private int resolution_;
-            private Paper paper_;
-            private int first_;
-            private int last_;
-            private bool rotate_;
-            private Container.List<string> includes_;
-            private Container.List<string> fonts_;
-            private Container.Dictionary<string, string> options_;
-            private Container.List<string> sources_;
-            private string dest_;
+            private Devices _device;
+            private int _resolution = 72;
+            private Papers _paper = Papers.Unknown;
+            private int _first = 1;
+            private int _last = 1;
+            private bool _rotate = true;
+            private string _dest = "";
+            private Container.List<string> _includes = new Container.List<string>();
+            private Container.List<string> _fonts = new Container.List<string>();
+            private Container.Dictionary<string, string> _options = new Container.Dictionary<string, string>();
+            private Container.List<string> _sources = new Container.List<string>();
+            private Container.List<CubePDF.Message> _messages = new Container.List<CubePDF.Message>();
 
             #endregion
 

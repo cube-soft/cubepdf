@@ -23,9 +23,9 @@ using System;
 namespace CubePDF {
     namespace Ghostscript {
         /* ------------------------------------------------------------- */
-        //  Device
+        /// Device
         /* ------------------------------------------------------------- */
-        public enum Device {
+        public enum Devices {
             Unknown = 0,
             PS,
             EPS,
@@ -51,38 +51,40 @@ namespace CubePDF {
         };
 
         /* ------------------------------------------------------------- */
-        /*
-         *  DeviceExt
-         *  
-         *  Device から GhostScript のデバイス名を取得するための
-         *  拡張メソッド用クラス．
-         */
+        ///
+        /// DeviceExt
+        ///
+        /// <summary>
+        /// Device から GhostScript のデバイス名を取得するための
+        /// 拡張メソッド用クラス．
+        /// </summary>
+        ///
         /* ------------------------------------------------------------- */
         public abstract class DeviceExt {
-            public static System.String Argument(Device e) {
+            public static System.String Argument(Devices e) {
                 switch (e) {
-                    case Device.Unknown:    return "";
-                    case Device.PS:         return "-sDEVICE=pswrite";
-                    case Device.EPS:        return "-sDEVICE=epswrite";
-                    case Device.PDF:        return "-sDEVICE=pdfwrite";
-                    case Device.PDF_Opt:    return ""; // 特殊デバイス
-                    case Device.SVG:        return "-sDEVICE=svg";
-                    case Device.JPEG:       return "-sDEVICE=jpeg";
-                    case Device.JPEG_Gray:  return "-sDEVICE=jpeggray";
-                    case Device.PNG:        return "-sDEVICE=png16m";
-                    case Device.PNG_16:     return "-sDEVICE=png16";
-                    case Device.PNG_256:    return "-sDEVICE=png256";
-                    case Device.PNG_Gray:   return "-sDEVICE=pnggray";
-                    case Device.PNG_Mono:   return "-sDEVICE=pngmono";
-                    case Device.PNG_Alpha:  return "-sDEVICE=pngalpha";;
-                    case Device.BMP:        return "-sDEVICE=bmp16m";
-                    case Device.BMP_16:     return "-sDEVICE=bmp16";
-                    case Device.BMP_256:    return "-sDEVICE=bmp256";
-                    case Device.BMP_Gray:   return "-sDEVICE=bmpgray";
-                    case Device.BMP_Mono:   return "-sDEVICE=bmpmono";
-                    case Device.TIFF:       return "-sDEVICE=tiff24nc";
-                    case Device.TIFF_Gray:  return "-sDEVICE=tiffgray";
-                    case Device.TIFF_Mono:  return "-sDEVICE=tiffcrle";
+                    case Devices.Unknown:    return "";
+                    case Devices.PS:         return "-sDEVICE=pswrite";
+                    case Devices.EPS:        return "-sDEVICE=epswrite";
+                    case Devices.PDF:        return "-sDEVICE=pdfwrite";
+                    case Devices.PDF_Opt:    return ""; // 特殊デバイス
+                    case Devices.SVG:        return "-sDEVICE=svg";
+                    case Devices.JPEG:       return "-sDEVICE=jpeg";
+                    case Devices.JPEG_Gray:  return "-sDEVICE=jpeggray";
+                    case Devices.PNG:        return "-sDEVICE=png16m";
+                    case Devices.PNG_16:     return "-sDEVICE=png16";
+                    case Devices.PNG_256:    return "-sDEVICE=png256";
+                    case Devices.PNG_Gray:   return "-sDEVICE=pnggray";
+                    case Devices.PNG_Mono:   return "-sDEVICE=pngmono";
+                    case Devices.PNG_Alpha:  return "-sDEVICE=pngalpha";;
+                    case Devices.BMP:        return "-sDEVICE=bmp16m";
+                    case Devices.BMP_16:     return "-sDEVICE=bmp16";
+                    case Devices.BMP_256:    return "-sDEVICE=bmp256";
+                    case Devices.BMP_Gray:   return "-sDEVICE=bmpgray";
+                    case Devices.BMP_Mono:   return "-sDEVICE=bmpmono";
+                    case Devices.TIFF:       return "-sDEVICE=tiff24nc";
+                    case Devices.TIFF_Gray:  return "-sDEVICE=tiffgray";
+                    case Devices.TIFF_Mono:  return "-sDEVICE=tiffcrle";
                     default: throw new ArgumentOutOfRangeException("e");
                 }
             }

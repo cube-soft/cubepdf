@@ -20,6 +20,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace CubePDF {
     /* --------------------------------------------------------------------- */
@@ -57,7 +58,7 @@ namespace CubePDF {
                 proc.Start();
             }
             catch (Exception err) {
-                _message = err.Message;
+                _messages.Add(new Message(Message.Levels.Error, err.Message));
                 return false;
             }
 
@@ -65,17 +66,17 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
-        /// ErrorMessage
+        /// Messages
         /* ----------------------------------------------------------------- */
-        public string ErrorMessage {
-            get { return _message; }
+        public List<CubePDF.Message> Messages {
+            get { return _messages; }
         }
 
         /* ----------------------------------------------------------------- */
         //  変数定義
         /* ----------------------------------------------------------------- */
         #region Variables
-        string _message = "";
+        List<CubePDF.Message> _messages = new List<CubePDF.Message>();
         #endregion
     }
 }

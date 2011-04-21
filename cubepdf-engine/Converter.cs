@@ -20,6 +20,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
+using System.Collections.Generic;
 
 namespace CubePDF {
     /* --------------------------------------------------------------------- */
@@ -38,42 +39,41 @@ namespace CubePDF {
         /// 
         /* ----------------------------------------------------------------- */
         public bool Run(UserSetting setting) {
-            _setting = setting;
-
             // Ghostscript に指定するパスに日本語が入るとエラーが発生する
             // 場合があるので，作業ディレクトリを変更する．
             this.CreateWorkingDirectory(setting);
 
+            Ghostscript.Converter gs = new Ghostscript.Converter(Parameter.Device(setting.FileType, setting.Grayscale));
             bool status = true;
             try {
-                _gs = new CubePDF.Ghostscript.Converter(Parameter.Device((Parameter.FileTypes)_setting.FileType, _setting.Grayscale));
-                _gs.AddInclude(_setting.LibPath + @"\lib");
-                _gs.AddSource(setting.InputPath);
-                _gs.PageRotation = _setting.PageRotation;
-                _gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
-                _gs.Destination = setting.OutputPath;
+                gs.AddInclude(setting.LibPath + @"\lib");
+                gs.AddSource(setting.InputPath);
+                gs.PageRotation = setting.PageRotation;
+                gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
+                gs.Destination = setting.OutputPath;
 
-                this.ConfigDownSampling(_setting, _gs);
-                if (Parameter.IsImageType(setting.FileType)) this.ConfigImage(_setting, _gs);
-                else this.ConfigDocument(_setting, _gs);
+                this.ConfigDownSampling(setting, gs);
+                if (Parameter.IsImageType(setting.FileType)) this.ConfigImage(setting, gs);
+                else this.ConfigDocument(setting, gs);
 
                 // NOTE: マージオプションが有効なのは PDF のみ．
-                if (setting.FileType == Parameter.FileTypes.PDF) this.EscapeExistedFile(_setting);
+                if (setting.FileType == Parameter.FileTypes.PDF) this.EscapeExistedFile(setting);
 
-                _gs.Run();
+                gs.Run();
 
                 if (setting.FileType == Parameter.FileTypes.PDF) {
                     PDFModifier modifier = new PDFModifier(_escaped);
                     status &= modifier.Run(setting);
-                    if (!status && modifier.ErrorMessage.Length > 0) _message = modifier.ErrorMessage;
+                    if (!status && modifier.Messages.Count > 0) _messages.AddRange(modifier.Messages);
                 }
                 
                 PostProcess postproc = new PostProcess();
                 status &= postproc.Run(setting);
-                if (!status && postproc.ErrorMessage.Length > 0) _message = postproc.ErrorMessage;
+                if (!status && postproc.Messages.Count > 0) _messages.AddRange(postproc.Messages);
             }
             catch (Exception err) {
-                _message = err.Message;
+                if (gs.Messages.Count > 0) _messages.AddRange(gs.Messages);
+                _messages.Add(new Message(Message.Levels.Error, err.Message));
                 status = false;
             }
             finally {
@@ -105,17 +105,17 @@ namespace CubePDF {
         /// CreateWorkingDirectory
         /* ----------------------------------------------------------------- */
         public void CreateWorkingDirectory(UserSetting setting) {
-            Utility.WorkingDirectory = _setting.LibPath + '\\' + Path.GetRandomFileName();
+            Utility.WorkingDirectory = setting.LibPath + '\\' + Path.GetRandomFileName();
             if (File.Exists(Utility.WorkingDirectory)) File.Delete(Utility.WorkingDirectory);
             if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
             Directory.CreateDirectory(Utility.WorkingDirectory);
         }
 
         /* ----------------------------------------------------------------- */
-        /// ErrorMessage
+        /// Messages
         /* ----------------------------------------------------------------- */
-        public string ErrorMessage {
-            get { return _message; }
+        public List<CubePDF.Message> Messages {
+            get { return _messages; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -227,10 +227,8 @@ namespace CubePDF {
         //  変数の定義
         /* ----------------------------------------------------------------- */
         #region Variables
-        Ghostscript.Converter _gs = null;
-        UserSetting _setting = null;
         private string _escaped = null; // null 以外ならマージが必要
-        private string _message = "";
+        private List<CubePDF.Message> _messages = new List<Message>();
         #endregion
     }
 }
