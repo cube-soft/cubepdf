@@ -126,7 +126,9 @@ namespace CubePDF {
 
                 setting.InputPath = Path.GetFullPath(file);
                 setting.OutputPath = output + '\\' + filename + suffix + extension;
-                if (File.Exists(setting.OutputPath)) File.Delete(setting.OutputPath);
+                if (File.Exists(setting.OutputPath) && setting.ExistedFile == Parameter.ExistedFiles.Overwrite) {
+                    File.Delete(setting.OutputPath);
+                }
 
                 Converter converter = new Converter();
                 Assert.IsTrue(converter.Run(setting), "Converter.Run: " + file + ": " + converter.ErrorMessage);
@@ -235,6 +237,27 @@ namespace CubePDF {
                 }
             }
         }
+        
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestConverterEmbedFont
+        ///
+        /// <summary>
+        /// フォント埋め込みのテスト．
+        /// NOTE: Ghostscript のフォント埋め込み機能に問題があるため，
+        /// 現在は「埋め込みしない」と言う選択肢は選べないようになって
+        /// いる．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestConvertEmbedFont() {
+            UserSetting setting = new UserSetting();
+            setting.FileType = Parameter.FileTypes.PDF;
+            setting.PostProcess = Parameter.PostProcesses.None;
+            setting.EmbedFont = true;
+            ExecConvert(setting, "-font");
+        }
 
         /* ----------------------------------------------------------------- */
         ///
@@ -339,6 +362,30 @@ namespace CubePDF {
             setting.Permission.AllowModify = true;
             setting.Permission.AllowPrint = true;
             ExecConvert(setting, "-allow");
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestConvertMerge
+        ///
+        /// <summary>
+        /// 「先頭に結合」，「末尾に結合」を設定したテスト．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestConvertMerge() {
+            UserSetting setting = new UserSetting();
+            setting.FileType = Parameter.FileTypes.PDF;
+            setting.PostProcess = Parameter.PostProcesses.None;
+            ExecConvert(setting, "-head");
+            setting.ExistedFile = Parameter.ExistedFiles.MergeHead;
+            ExecConvert(setting, "-head");
+
+            setting.ExistedFile = Parameter.ExistedFiles.Overwrite;
+            ExecConvert(setting, "-tail");
+            setting.ExistedFile = Parameter.ExistedFiles.MergeTail;
+            ExecConvert(setting, "-tail");
         }
     }
 }
