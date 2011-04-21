@@ -18,27 +18,25 @@ namespace CubePDF {
                 return;
             }
 
-            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\CubePDF");
-            var hklm = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\CubePDF", false);
+            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\CubeSoft\CubePDF");
+            var hklm = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\CubeSoft\CubePDF", false);
             try {
+                var updater = new Cube.Updater("www.cube-soft.jp");
+                string version = (string)hklm.GetValue("Version", "1.0.0");
                 if (args.Length > 0 && args[0] == "install") {
-                    Cube.Updater updater = new Cube.Updater("www.cube-soft.jp");
+                    updater.Parse("cubepdf", version, true);
                 }
-                string last = (string)registry.GetValue("LastCheckUpdate");
-                if (last == null || System.DateTime.Now > System.DateTime.Parse(last).AddDays(1)) {
-                    var updater = new Cube.Updater("www.cube-soft.jp");
-                    string version = (string)hklm.GetValue("Version", "1.0.0");
-
-                    int init = (int)registry.GetValue("Initialize", 0);
-                    if (init == 1) registry.DeleteValue("Initialize", false);
-
-                    var response = updater.Parse("cubepdf", version, init == 1);
-                    if (response != null &&
-                        response.ContainsKey("UPDATE") && response["UPDATE"] == "1" &&
-                        response.ContainsKey("MESSAGE") &&
-                        response.ContainsKey("URL")) {
-                        new Form1(response);
-                        Application.Run();
+                else {
+                    string last = (string)registry.GetValue("LastCheckUpdate");
+                    if (last == null || System.DateTime.Now > System.DateTime.Parse(last).AddDays(1)) {
+                        var response = updater.Parse("cubepdf", version, false);
+                        if (response != null &&
+                            response.ContainsKey("UPDATE") && response["UPDATE"] == "1" &&
+                            response.ContainsKey("MESSAGE") &&
+                            response.ContainsKey("URL")) {
+                            new Form1(response);
+                            Application.Run();
+                        }
                     }
                 }
             }
