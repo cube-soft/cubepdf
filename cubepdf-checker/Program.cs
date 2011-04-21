@@ -8,7 +8,7 @@ namespace CubePDF {
         /// アプリケーションのメイン エントリ ポイントです。
         /// </summary>
         [STAThread]
-        static void Main() {
+        static void Main(string[] args) {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
@@ -21,6 +21,9 @@ namespace CubePDF {
             var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\CubePDF");
             var hklm = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\CubePDF", false);
             try {
+                if (args.Length > 0 && args[0] == "install") {
+                    Cube.Updater updater = new Cube.Updater("www.cube-soft.jp");
+                }
                 string last = (string)registry.GetValue("LastCheckUpdate");
                 if (last == null || System.DateTime.Now > System.DateTime.Parse(last).AddDays(1)) {
                     var updater = new Cube.Updater("www.cube-soft.jp");
