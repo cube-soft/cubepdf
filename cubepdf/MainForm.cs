@@ -404,12 +404,15 @@ namespace CubePDF {
             dialog.FilterIndex = this.FileTypeCombBox.SelectedIndex + 1;
             dialog.OverwritePrompt = false;
             if (dialog.ShowDialog() != DialogResult.OK) return;
-
-            // NOTE: ドット付ファイル名を指定された場合にどうするか検討する．
-            this.OutputPathTextBox.Text = dialog.FileName;
+            
             if (dialog.FilterIndex != 0 && dialog.FilterIndex - 1 != this.FileTypeCombBox.SelectedIndex) {
                 this.FileTypeCombBox.SelectedIndex = dialog.FilterIndex - 1;
             }
+
+            // 拡張子が選択されているファイルタイプと異なる場合は，末尾に拡張子を追加する．
+            string ext = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
+            this.OutputPathTextBox.Text = dialog.FileName;
+            if (Path.GetExtension(this.OutputPathTextBox.Text) != ext) this.OutputPathTextBox.Text += ext;
         }
 
         /* ----------------------------------------------------------------- */
