@@ -387,5 +387,27 @@ namespace CubePDF {
             setting.ExistedFile = Parameter.ExistedFiles.MergeTail;
             ExecConvert(setting, "-tail");
         }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestConvertRename
+        /// 
+        /// <summary>
+        /// 「リネーム」を設定したテスト．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestConvertRename() {
+            foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes))) {
+                UserSetting setting = new UserSetting();
+                setting.FileType = type;
+                setting.ExistedFile = Parameter.ExistedFiles.Rename;
+                setting.PostProcess = Parameter.PostProcesses.None;
+                ExecConvert(setting, "-rename");
+                ExecConvert(setting, "-rename");
+                ExecConvert(setting, "-rename");
+            }
+        }
     }
 }

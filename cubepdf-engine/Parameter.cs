@@ -61,7 +61,7 @@ namespace CubePDF {
         /// 
         /* ----------------------------------------------------------------- */
         public enum ExistedFiles : int {
-            Overwrite, MergeHead, MergeTail,
+            Overwrite, MergeHead, MergeTail, Rename,
         };
 
         /* ----------------------------------------------------------------- */
