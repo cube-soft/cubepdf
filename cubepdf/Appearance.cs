@@ -79,6 +79,7 @@ namespace CubePDF {
             case Parameter.ExistedFiles.Overwrite: return "上書き";
             case Parameter.ExistedFiles.MergeHead: return "先頭に結合";
             case Parameter.ExistedFiles.MergeTail: return "末尾に結合";
+            case Parameter.ExistedFiles.Rename: return "リネーム";
             default: break;
             }
             return "Unknown";
