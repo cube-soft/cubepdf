@@ -198,7 +198,7 @@ namespace CubePDF {
         public void ConfigPDF(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("CompatibilityLevel", Parameter.PDFVersionValue(setting.PDFVersion));
             gs.AddOption("UseFlateCompression", "false");
-            
+
             if (setting.Grayscale) {
                 gs.AddOption("ProcessColorModel", "/DeviceGray");
                 gs.AddOption("ColorConversionStrategy", "/Gray");
