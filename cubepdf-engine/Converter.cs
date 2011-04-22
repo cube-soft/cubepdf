@@ -47,18 +47,16 @@ namespace CubePDF {
             bool status = true;
             try {
                 gs.AddInclude(setting.LibPath + @"\lib");
-                gs.AddSource(setting.InputPath);
                 gs.PageRotation = setting.PageRotation;
                 gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
-                gs.Destination = setting.OutputPath;
 
                 this.ConfigDownSampling(setting, gs);
                 if (Parameter.IsImageType(setting.FileType)) this.ConfigImage(setting, gs);
                 else this.ConfigDocument(setting, gs);
+                this.EscapeExistedFile(setting);
 
-                // NOTE: マージオプションが有効なのは PDF のみ．
-                if (setting.FileType == Parameter.FileTypes.PDF) this.EscapeExistedFile(setting);
-
+                gs.AddSource(setting.InputPath);
+                gs.Destination = setting.OutputPath;
                 gs.Run();
 
                 if (setting.FileType == Parameter.FileTypes.PDF) {
@@ -85,19 +83,56 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
+        /// FileExists
+        ///
+        /// <summary>
+        /// ファイルが存在するかどうかをチェックする．いくつかのファイル
+        /// タイプは，example-001.ext と言うファイル名を生成する場合が
+        /// あるのでそれもチェックする．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool FileExists(UserSetting setting) {
+            if (File.Exists(setting.OutputPath)) return true;
+            else if (setting.FileType == Parameter.FileTypes.EPS ||
+                setting.FileType == Parameter.FileTypes.BMP ||
+                setting.FileType == Parameter.FileTypes.JPEG ||
+                setting.FileType == Parameter.FileTypes.PNG ||
+                setting.FileType == Parameter.FileTypes.TIFF) {
+                string dir = Path.GetDirectoryName(setting.OutputPath);
+                string basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
+                string ext = Path.GetExtension(setting.OutputPath);
+                if (File.Exists(dir + '\\' + basename + "-001" + ext)) return true;
+            }
+            return false;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// EscapeExistedFile
         ///
         /// <summary>
         /// マージオプションなどの関係で既に存在する同名ファイルを退避
-        /// させる．
+        /// させる．リネームの場合は，setting.OutputPath の値を変更する．
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         public void EscapeExistedFile(UserSetting setting) {
-            bool merge = (setting.ExistedFile == Parameter.ExistedFiles.MergeTail || setting.ExistedFile == Parameter.ExistedFiles.MergeHead);
-            if (File.Exists(setting.OutputPath) && merge) {
-                _escaped = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
-                File.Copy(setting.OutputPath, _escaped, true);
+            if (this.FileExists(setting)) {
+                bool merge = (setting.ExistedFile == Parameter.ExistedFiles.MergeTail || setting.ExistedFile == Parameter.ExistedFiles.MergeHead);
+                if (setting.ExistedFile == Parameter.ExistedFiles.Rename) {
+                    string dir = Path.GetDirectoryName(setting.OutputPath);
+                    string basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
+                    string ext = Path.GetExtension(setting.OutputPath);
+                    for (int i = 2; i < 10000; ++i) {
+                        setting.OutputPath = dir + '\\' + basename + '(' + i.ToString() + ')' + ext;
+                        if (!this.FileExists(setting)) break;
+                    }
+                }
+                else if (setting.FileType == Parameter.FileTypes.PDF  && merge) {
+                    _escaped = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
+                    File.Copy(setting.OutputPath, _escaped, true);
+                }
             }
         }
 
