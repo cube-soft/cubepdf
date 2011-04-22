@@ -194,7 +194,7 @@ namespace CubePDF {
                 );
                 return false;
             }
-            else if (File.Exists(path)) {
+            else if (File.Exists(path) && Translator.IndexToExistedFile(this.ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename) {
                 // {0} は既に存在します。{1}しますか？
                 string message = String.Format(Properties.Settings.Default.FileExists,
                     path, Appearance.ExistedFileString((Parameter.ExistedFiles)do_existed_file));
