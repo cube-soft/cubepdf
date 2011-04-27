@@ -166,12 +166,6 @@ namespace CubePDF {
             Environment.SetEnvironmentVariable("HOMEPATH", profile);
             Environment.SetEnvironmentVariable("APPDATA", profile + app);
             Environment.SetEnvironmentVariable("LOCALAPPDATA", profile + app_local);
-
-            /*
-             * Note: Ghostscript が日本語を含むパスを認識しないため，
-             * 現状ではシステムの Temp (Windows\Temp) をそのまま使用している
-             * （ユーザ名が日本語の場合を考慮）．
-             */
             Environment.SetEnvironmentVariable("TEMP", profile + temp);
             Environment.SetEnvironmentVariable("TMP", profile + tmp);
 
