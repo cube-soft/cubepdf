@@ -47,7 +47,7 @@ namespace CubePDF {
 
             // デフォルト値のチェック
             UserSetting test2 = new UserSetting();
-            string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             Assert.AreEqual(desktop, test2.OutputPath);
             Assert.AreEqual(desktop, test2.InputPath);
             Assert.IsTrue(test2.UserProgram.Length == 0, "test2.UserProgram.Length == 0");

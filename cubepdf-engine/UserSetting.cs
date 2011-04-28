@@ -213,7 +213,7 @@ namespace CubePDF {
                 if (subkey == null) return false;
 
                 // パス関連
-                string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 string path = subkey.GetValue(REG_LAST_OUTPUT_ACCESS, desktop) as string;
                 if (path != null && path.Length > 0 && Directory.Exists(path)) _output = path;
                 path = subkey.GetValue(REG_LAST_INPUT_ACCESS, desktop) as string;
@@ -352,7 +352,7 @@ namespace CubePDF {
                 if (subkey == null) return false;
 
                 // パス関連
-                string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 string path = subkey.GetValue(REG_LAST_OUTPUT_ACCESS, desktop) as string;
                 if (path != null && path.Length > 0 && Directory.Exists(path)) _output = path;
                 path = subkey.GetValue(REG_LAST_INPUT_ACCESS, desktop) as string;
@@ -623,8 +623,8 @@ namespace CubePDF {
         private string _install = REG_VALUE_UNKNOWN;
         private string _lib = REG_VALUE_UNKNOWN;
         private string _version = REG_VALUE_UNKNOWN;
-        private string _input = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-        private string _output = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        private string _input = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+        private string _output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         private string _program = "";
         private string _password = "";
         private Parameter.FileTypes _type = Parameter.FileTypes.PDF;
