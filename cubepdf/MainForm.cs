@@ -77,7 +77,8 @@ namespace CubePDF {
             if (filename != null) {
                 string ext = Parameter.Extension((Parameter.FileTypes)_setting.FileType);
                 filename = Path.ChangeExtension(filename, ext);
-                string dir = Directory.Exists(_setting.OutputPath) ? _setting.OutputPath : Path.GetDirectoryName(_setting.OutputPath);
+                string dir = (_setting.OutputPath.Length == 0 || Directory.Exists(_setting.OutputPath)) ?
+                    _setting.OutputPath : Path.GetDirectoryName(_setting.OutputPath);
                 this.OutputPathTextBox.Text = dir + '\\' + filename;
             }
         }
