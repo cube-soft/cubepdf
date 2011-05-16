@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cubepdf-checker", "cubepdf-checker.csproj", "{2D244B8E-1ACD-4E41-978F-08F90F72F3A1}"
 EndProject
 Global

@@ -235,7 +235,6 @@ namespace CubePDF {
             this.PDFVersionComboBox.SelectedIndex   = Translator.PDFVersionToIndex(setting.PDFVersion);
             this.ResolutionComboBox.SelectedIndex   = Translator.ResolutionToIndex(setting.Resolution);
             this.ExistedFileComboBox.SelectedIndex  = Translator.ExistedFileToIndex(setting.ExistedFile);
-            this.PostProcessComboBox.SelectedIndex  = Translator.PostProcessToIndex(setting.PostProcess);
             this.DownSamplingComboBox.SelectedIndex = Translator.DownSamplingToIndex(setting.DownSampling);
 
             // チェックボックスのフラグ関連
@@ -248,6 +247,7 @@ namespace CubePDF {
 
             // ポストプロセス関連
             _postproc = setting.AdvancedMode ? this.PostProcessComboBox : this.PostProcessLiteComboBox;
+            _postproc.SelectedIndex = Translator.PostProcessToIndex(setting.PostProcess);
             this._PostProcessPanel.Enabled = setting.AdvancedMode;
             this._PostProcessPanel.Visible = setting.AdvancedMode;
             this._PostProcessLabel.Visible = setting.AdvancedMode;

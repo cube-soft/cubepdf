@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{2D244B8E-1ACD-4E41-978F-08F90F72F3A1}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -124,7 +124,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) $(ProjectDir)..\release\$(PlatformName)\</PostBuildEvent>
+    <PostBuildEvent>copy $(TargetPath) $(ProjectDir)..\release\$(PlatformName)\
+copy $(TargetPath).config $(ProjectDir)..\release\$(PlatformName)\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
