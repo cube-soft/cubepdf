@@ -31,6 +31,14 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
 ■バージョン履歴
+2011/07/01 version 0.9.9.3β
+- インストール時に Microsoft .NetFramework がインストールされていない環境での不都合を修正
+- TIFF 形式の場合に解像度が選択できない不都合を修正
+
+2011/05/17 version 0.9.9.2β
+- ポストプロセスの設定が保存されない不都合を修正
+- Microsoft .NetFramework 2.0 のみがインストールされている環境での不都合を修正
+
 2011/04/29 version 0.9.9.1β
 - デスクトップフォルダがリネームされている場合の不都合を修正
 - Microsoft .NetFramework 4 のみがインストールされている環境での不都合を修正

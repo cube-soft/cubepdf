@@ -473,7 +473,7 @@ namespace CubePDF {
 
             Parameter.FileTypes id = Translator.IndexToFileType(control.SelectedIndex);
             bool is_pdf = (id == Parameter.FileTypes.PDF);
-            bool is_bitmap = (id == Parameter.FileTypes.BMP || id == Parameter.FileTypes.JPEG || id == Parameter.FileTypes.PNG);
+            bool is_bitmap = (id == Parameter.FileTypes.BMP || id == Parameter.FileTypes.JPEG || id == Parameter.FileTypes.PNG || id == Parameter.FileTypes.TIFF);
             bool is_grayscale = !(id == Parameter.FileTypes.PS || id == Parameter.FileTypes.EPS || id == Parameter.FileTypes.SVG);
             
             this.PDFVersionComboBox.Enabled = is_pdf;
