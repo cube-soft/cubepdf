@@ -27,7 +27,6 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Management;
 
-
 namespace CubePDF {
     /* --------------------------------------------------------------------- */
     /// PROCESS_INFORMATION
