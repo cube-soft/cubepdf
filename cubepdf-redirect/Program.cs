@@ -66,8 +66,7 @@ namespace CubePDF {
                 if (redmon != null) ChangeEnvironments(domain, redmon);
                 else Trace.WriteLine(DateTime.Now.ToString() + ": REDMON_USER: parameter not found");
 
-                var filename = Utility.GetFileName(System.Environment.GetEnvironmentVariable("REDMON_DOCNAME"));
-                filename = FileNameModifier.ModifyFileName(filename);
+                var filename = Utility.GetFileName(FileNameModifier.ModifyFileName(Environment.GetEnvironmentVariable("REDMON_DOCNAME")));
                 psfilepath = Utility.GetTempPath() + Path.GetRandomFileName();
                 SavePostscript(Console.OpenStandardInput(), psfilepath);
                 Trace.WriteLine(DateTime.Now.ToString() + ": OUTPUT: " + filename);
