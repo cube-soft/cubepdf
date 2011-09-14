@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -18,9 +19,12 @@ namespace CubePDF {
                 return;
             }
 
-            var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\CubeSoft\CubePDF");
-            var hklm = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\CubeSoft\CubePDF", false);
+            Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+            Thread.GetDomain().UnhandledException += new UnhandledExceptionEventHandler(Application_UnhandledException);
+
             try {
+                var registry = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\CubeSoft\CubePDF");
+                var hklm = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"Software\CubeSoft\CubePDF", false);
                 var updater = new Cube.Updater("www.cube-soft.jp");
                 string version = (string)hklm.GetValue("Version", "1.0.0");
                 if (args.Length > 0 && args[0] == "install") {
@@ -40,7 +44,39 @@ namespace CubePDF {
                     }
                 }
             }
-            catch (System.Exception /*e*/) { }
+            catch (System.Exception /* err */) {
+                //MessageBox.Show("Exception");
+                return;
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Application_ThreadException
+        /// 
+        /// <summary>
+        /// 未処理例外をキャッチするイベント・ハンドラ
+        /// （Windowsアプリケーション用）
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public static void Application_ThreadException(object sender, ThreadExceptionEventArgs e) {
+            //MessageBox.Show("Application_ThreadException");
+            return;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Application_ThreadException
+        ///
+        /// <summary>
+        /// 未処理例外をキャッチするイベント・ハンドラ（主にコンソール・アプリケーション用）
+        /// </summary>
+        ///         
+        /* ----------------------------------------------------------------- */
+        public static void Application_UnhandledException(object sender, UnhandledExceptionEventArgs e) {
+            //MessageBox.Show("Application_UnhandledException");
+            return;
         }
     }
 }
