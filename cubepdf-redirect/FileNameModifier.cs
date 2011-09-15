@@ -36,16 +36,21 @@ namespace CubePDF {
         /// 
         /* ----------------------------------------------------------------- */
         public static string ModifyFileName(string filename) {
-            string dest = filename;
-
             // ファイル名に使えない文字 (\/:*?"<>) を '_' に置き換える(clown, 2010/05/27)．
-            char[] invalids = { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
-            foreach (var c in invalids) {
-                if (dest.IndexOf(c) > -1) dest = dest.Replace(c, '_');
+            StringBuilder buffer = new StringBuilder();
+            char[] invalids = { '/', '*', '?', '"', '<', '>', '|' };
+            for (int i = 0; i < filename.Length; i++) {
+                char current = filename[i];
+                foreach (char c in invalids) {
+                    if (current == c) current = '_';
+                }
+                if (i < filename.Length - 1 && filename[i] == ':' && filename[i + 1] != '\\') current = '_';
+                buffer.Append(current);
             }
 
+            string dest = buffer.ToString();
             if (dest.ToLower() == "pptview") {
-                var s = FindFromRecent(".ppt");
+                string s = FindFromRecent(".ppt");
                 if (s == null) s = FindFromRecent(".pptx");
                 if (s != null) dest = s;
             }
