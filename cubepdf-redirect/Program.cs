@@ -72,8 +72,20 @@ namespace CubePDF {
                 Trace.WriteLine(DateTime.Now.ToString() + ": OUTPUT: " + filename);
                 System.Environment.SetEnvironmentVariable("REDMON_FILENAME", filename);
                 
-                PROCESS_INFORMATION pi;
-                bool result = ProcessAsUser.Run(dir + @"\cubepdf.exe " + psfilepath + " \"" + filename + "\"" , System.Environment.GetEnvironmentVariable("REDMON_USER"), out pi);
+                PROCESS_INFORMATION pi = new PROCESS_INFORMATION();
+                bool result = true;
+                try {
+                    result = ProcessAsUser.Run(dir + @"\cubepdf.exe " + psfilepath + " \"" + filename + "\"", System.Environment.GetEnvironmentVariable("REDMON_USER"), out pi);
+                }
+                catch (Exception e) {
+                    Trace.WriteLine(DateTime.Now.ToString() + ": exception occured");
+                    Trace.WriteLine(DateTime.Now.ToString() + ": TYPE: " + e.GetType().ToString());
+                    Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: " + e.Source);
+                    Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + e.Message);
+                    Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + e.StackTrace);
+                    result = false;
+                }
+
                 if (result) {
                     const UInt32 INFINITE = 0xFFFFFFFF;
                     Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe end");

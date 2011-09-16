@@ -184,13 +184,14 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public void ConfigDocument(UserSetting setting, Ghostscript.Converter gs) {
-            if (setting.EmbedFont) {
-                gs.AddOption("EmbedAllFonts", "true");
-                gs.AddOption("SubsetFonts", "true");
-            }
-            else gs.AddOption("EmbedAllFonts", "false");
-
             if (setting.FileType == Parameter.FileTypes.PDF) this.ConfigPDF(setting, gs);
+            else {
+                if (setting.EmbedFont) {
+                    gs.AddOption("EmbedAllFonts", "true");
+                    gs.AddOption("SubsetFonts", "true");
+                }
+                else gs.AddOption("EmbedAllFonts", "false");
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -203,6 +204,12 @@ namespace CubePDF {
             if (setting.PDFVersion == Parameter.PDFVersions.VerPDFA) this.ConfigPDFA(setting, gs);
             else if (setting.PDFVersion == Parameter.PDFVersions.VerPDFX) this.ConfigPDFX(setting, gs);
             else {
+                if (setting.EmbedFont) {
+                    gs.AddOption("EmbedAllFonts", "true");
+                    gs.AddOption("SubsetFonts", "true");
+                }
+                else gs.AddOption("EmbedAllFonts", "false");
+
                 if (setting.Grayscale) {
                     gs.AddOption("ProcessColorModel", "/DeviceGray");
                     gs.AddOption("ColorConversionStrategy", "/Gray");
@@ -211,22 +218,55 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// ConfigPDFA
+        ///
+        /// <summary>
+        /// PDF/A の主な要求項目は以下の通り:
+        /// - デバイス独立カラーまたは PDF/A-1 OutputIntent 指定でカラーの
+        ///   再現性を保証する
+        /// - 基本 14 フォントを含む全てのフォントの埋め込み
+        /// - PDF/Aリーダは，システムのフォントでなく埋め込みフォントで
+        ///   表示すること
+        /// - XMPメタデータの埋め込み
+        /// - タグ付きPDFとする(PDF/A-1aのみ)
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public void ConfigPDFA(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("PDFA");
-            if (setting.Grayscale) gs.AddOption("ProcessColorModel", "/DeviceGray");
-            else gs.AddOption("ProcessColorModel", "/DeviceCMYK");
+            gs.AddOption("EmbedAllFonts", "true");
+            gs.AddOption("SubsetFonts", "true");
+            if (setting.Grayscale) {
+                gs.AddOption("ProcessColorModel", "/DeviceGray");
+                gs.AddOption("ColorConversionStrategy", "/Gray");
+            }
             gs.AddOption("UseCIEColor");
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// ConfigPDFX
+        /// 
+        /// <summary>
+        /// PDF/X(1-a) の主な要求項目は以下の通り:
+        /// - すべてのイメージのカラーは CMYKか 特色
+        /// - 基本 14 フォントを含む全てのフォントの埋め込み
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         public void ConfigPDFX(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("PDFX");
-            if (setting.Grayscale) gs.AddOption("ProcessColorModel", "/DeviceGray");
-            else gs.AddOption("ProcessColorModel", "/DeviceCMYK");
+            gs.AddOption("EmbedAllFonts", "true");
+            gs.AddOption("SubsetFonts", "true");
+            if (setting.Grayscale) {
+                gs.AddOption("ProcessColorModel", "/DeviceGray");
+                gs.AddOption("ColorConversionStrategy", "/Gray");
+            }
+            else {
+                gs.AddOption("ProcessColorModel", "/DeviceCMYK");
+                gs.AddOption("ColorConversionStrategy", "/CMYK");
+            }
             gs.AddOption("UseCIEColor");
         }
 
