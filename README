@@ -18,7 +18,7 @@ Microsoft .NetFramework 2.0 は、以下の URL からダウンロードして�
 http://www.microsoft.com/downloads/details.aspx?FamilyId=0856eacb-4362-4b0d-8edd-aab15c5e04f5&displaylang=ja
 
 CubePDFは、以下のライブラリを利用しています。それぞれのライブラリについては、記載した URL から取得することができます。
-- GPL Ghostscript 9.02
+- GPL Ghostscript 9.04
   Copyright (c) Artifex Software, Inc. All rights reserved.
   URL: http://pages.cs.wisc.edu/~ghost/
   GNU General Public License ( http://www.gnu.org/licenses/gpl.html )
@@ -31,6 +31,11 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
 ■バージョン履歴
+2011/09/16 version 0.9.9.4β
+- PDF/A, PDF/X フォーマットに対応
+- ファイル名に特定の文字列が含まれる場合に変換に失敗する不都合を修正
+- 特定の条件下でインストール時に発生する不都合を修正
+
 2011/07/01 version 0.9.9.3β
 - インストール時に Microsoft .NetFramework がインストールされていない環境での不都合を修正
 - TIFF 形式の場合に解像度が選択できない不都合を修正

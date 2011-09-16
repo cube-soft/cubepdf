@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cubepdf-engine-test", "cubepdf-engine-test.csproj", "{2779F1A0-5F12-40DF-AFC5-64F98C0B87F6}"
 EndProject
 Global
