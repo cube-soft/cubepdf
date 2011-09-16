@@ -197,12 +197,36 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public void ConfigPDF(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("CompatibilityLevel", Parameter.PDFVersionValue(setting.PDFVersion));
-            gs.AddOption("UseFlateCompression", "false");
+            //gs.AddOption("UseFlateCompression", "false");
 
-            if (setting.Grayscale) {
-                gs.AddOption("ProcessColorModel", "/DeviceGray");
-                gs.AddOption("ColorConversionStrategy", "/Gray");
+            if (setting.PDFVersion == Parameter.PDFVersions.VerPDFA) this.ConfigPDFA(setting, gs);
+            else if (setting.PDFVersion == Parameter.PDFVersions.VerPDFX) this.ConfigPDFX(setting, gs);
+            else {
+                if (setting.Grayscale) {
+                    gs.AddOption("ProcessColorModel", "/DeviceGray");
+                    gs.AddOption("ColorConversionStrategy", "/Gray");
+                }
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ConfigPDFA
+        /* ----------------------------------------------------------------- */
+        public void ConfigPDFA(UserSetting setting, Ghostscript.Converter gs) {
+            gs.AddOption("PDFA");
+            if (setting.Grayscale) gs.AddOption("ProcessColorModel", "/DeviceGray");
+            else gs.AddOption("ProcessColorModel", "/DeviceCMYK");
+            gs.AddOption("UseCIEColor");
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// ConfigPDFX
+        /* ----------------------------------------------------------------- */
+        public void ConfigPDFX(UserSetting setting, Ghostscript.Converter gs) {
+            gs.AddOption("PDFX");
+            if (setting.Grayscale) gs.AddOption("ProcessColorModel", "/DeviceGray");
+            else gs.AddOption("ProcessColorModel", "/DeviceCMYK");
+            gs.AddOption("UseCIEColor");
         }
 
         /* ----------------------------------------------------------------- */

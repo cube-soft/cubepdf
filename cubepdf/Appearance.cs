@@ -68,6 +68,8 @@ namespace CubePDF {
         /// PDFVersionString
         /* ----------------------------------------------------------------- */
         public static string PDFVersionString(Parameter.PDFVersions id) {
+            if (id == Parameter.PDFVersions.VerPDFA) return "PDF/A";
+            else if (id == Parameter.PDFVersions.VerPDFX) return "PDF/X";
             return Parameter.PDFVersionValue(id).ToString();
         }
 

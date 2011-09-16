@@ -47,7 +47,7 @@ namespace CubePDF {
         /// PDFVersions
         /* ----------------------------------------------------------------- */
         public enum PDFVersions : int {
-            Ver1_7, Ver1_6, Ver1_5, Ver1_4, Ver1_3, Ver1_2,
+            Ver1_7, Ver1_6, Ver1_5, Ver1_4, Ver1_3, Ver1_2, VerPDFA, VerPDFX
         };
 
         /* ----------------------------------------------------------------- */
@@ -161,6 +161,8 @@ namespace CubePDF {
             case PDFVersions.Ver1_4: return 1.4;
             case PDFVersions.Ver1_3: return 1.3;
             case PDFVersions.Ver1_2: return 1.2;
+            case PDFVersions.VerPDFA: return 1.3;
+            case PDFVersions.VerPDFX: return 1.3;
             }
             return 1.7;
         }
