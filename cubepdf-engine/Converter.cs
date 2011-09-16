@@ -188,6 +188,7 @@ namespace CubePDF {
                 gs.AddOption("EmbedAllFonts", "true");
                 gs.AddOption("SubsetFonts", "true");
             }
+            else gs.AddOption("EmbedAllFonts", "false");
 
             if (setting.FileType == Parameter.FileTypes.PDF) this.ConfigPDF(setting, gs);
         }
