@@ -31,7 +31,7 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
 ■バージョン履歴
-2011/09/16 version 0.9.9.4β
+2011/09/20 version 0.9.9.4β
 - ファイル名に特定の文字列が含まれる場合に変換に失敗する不都合を修正
 - 特定の条件下でインストール時に発生する不都合を修正
 
