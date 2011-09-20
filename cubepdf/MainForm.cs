@@ -103,7 +103,8 @@ namespace CubePDF {
             // PDFVersion
             this.PDFVersionComboBox.Items.Clear();
             foreach (Parameter.PDFVersions id in Enum.GetValues(typeof(Parameter.PDFVersions))) {
-                this.PDFVersionComboBox.Items.Add(Appearance.PDFVersionString(id));
+                string s = Appearance.PDFVersionString(id);
+                if (s.Length > 0) this.PDFVersionComboBox.Items.Add(s);
             }
             this.PDFVersionComboBox.SelectedIndex = 0;
 
