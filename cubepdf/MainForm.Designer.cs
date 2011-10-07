@@ -132,9 +132,9 @@
             this.HeaderPictureBox.Size = new System.Drawing.Size(494, 80);
             this.HeaderPictureBox.TabIndex = 0;
             this.HeaderPictureBox.TabStop = false;
-            this.HeaderPictureBox.MouseLeave += new System.EventHandler(this.HeaderPictureBox_MouseLeave);
             this.HeaderPictureBox.Click += new System.EventHandler(this.HeaderPictureBox_Click);
             this.HeaderPictureBox.MouseEnter += new System.EventHandler(this.HeaderPictureBox_MouseEnter);
+            this.HeaderPictureBox.MouseLeave += new System.EventHandler(this.HeaderPictureBox_MouseLeave);
             // 
             // _MainPanel
             // 
@@ -198,10 +198,10 @@
             this.GeneralTabPage.BackColor = System.Drawing.Color.White;
             this.GeneralTabPage.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.GeneralTabPage.Controls.Add(this.GeneralTableLayoutPanel);
-            this.GeneralTabPage.Location = new System.Drawing.Point(4, 21);
+            this.GeneralTabPage.Location = new System.Drawing.Point(4, 22);
             this.GeneralTabPage.Name = "GeneralTabPage";
             this.GeneralTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.GeneralTabPage.Size = new System.Drawing.Size(462, 330);
+            this.GeneralTabPage.Size = new System.Drawing.Size(462, 329);
             this.GeneralTabPage.TabIndex = 0;
             this.GeneralTabPage.Text = "一般";
             // 
@@ -463,10 +463,10 @@
             this.DocTabPage.BackColor = System.Drawing.Color.White;
             this.DocTabPage.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.DocTabPage.Controls.Add(this.DocTableLayoutPanel);
-            this.DocTabPage.Location = new System.Drawing.Point(4, 21);
+            this.DocTabPage.Location = new System.Drawing.Point(4, 22);
             this.DocTabPage.Name = "DocTabPage";
             this.DocTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DocTabPage.Size = new System.Drawing.Size(462, 330);
+            this.DocTabPage.Size = new System.Drawing.Size(462, 329);
             this.DocTabPage.TabIndex = 1;
             this.DocTabPage.Text = "文書プロパティ";
             // 
@@ -584,10 +584,10 @@
             this.SecurityTabPage.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.SecurityTabPage.Controls.Add(this.OwnerPasswordGroupBox);
             this.SecurityTabPage.Controls.Add(this.UserPasswordGroupBox);
-            this.SecurityTabPage.Location = new System.Drawing.Point(4, 21);
+            this.SecurityTabPage.Location = new System.Drawing.Point(4, 22);
             this.SecurityTabPage.Name = "SecurityTabPage";
             this.SecurityTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.SecurityTabPage.Size = new System.Drawing.Size(462, 330);
+            this.SecurityTabPage.Size = new System.Drawing.Size(462, 329);
             this.SecurityTabPage.TabIndex = 2;
             this.SecurityTabPage.Text = "セキュリティ";
             // 
@@ -838,10 +838,10 @@
             this.DetailTabPage.BackColor = System.Drawing.Color.White;
             this.DetailTabPage.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.DetailTabPage.Controls.Add(this.DetailTableLayoutPanel);
-            this.DetailTabPage.Location = new System.Drawing.Point(4, 21);
+            this.DetailTabPage.Location = new System.Drawing.Point(4, 22);
             this.DetailTabPage.Name = "DetailTabPage";
             this.DetailTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DetailTabPage.Size = new System.Drawing.Size(462, 330);
+            this.DetailTabPage.Size = new System.Drawing.Size(462, 329);
             this.DetailTabPage.TabIndex = 3;
             this.DetailTabPage.Text = "詳細設定";
             // 
