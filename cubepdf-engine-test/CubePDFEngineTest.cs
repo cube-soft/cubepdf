@@ -42,10 +42,11 @@ namespace CubePDF {
         public void TestUserSetting() {
             UserSetting original = new UserSetting(true);
 
+            // TestCase1: デフォルト値での保存のテスト
             UserSetting test1 = new UserSetting();
             Assert.IsTrue(test1.Save(), "test1.Save()");
 
-            // デフォルト値のチェック
+            // TestCase2: デフォルト値のチェック
             UserSetting test2 = new UserSetting();
             string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             Assert.AreEqual(desktop, test2.OutputPath);
@@ -71,7 +72,7 @@ namespace CubePDF {
                 Assert.IsTrue(subkey.GetValue("cubepdf-checker") != null);
             }
 
-            // 値の変更のテスト
+            // TestCase3: 値の変更のテスト
             string personal = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             test2.OutputPath = personal + @"\test.txt";
             test2.InputPath = personal + @"\test.txt";
@@ -91,7 +92,7 @@ namespace CubePDF {
                 Assert.IsFalse(subkey.GetValue("cubepdf-checker") != null);
             }
 
-            // 存在しないディレクトリを指定したときのテスト
+            // TestCase4: 存在しないディレクトリを指定したときのテスト
             string not_found = @"C:\404_notfound\foo\bar\bas\foo.txt";
             test3.OutputPath = not_found;
             test3.InputPath = not_found;
@@ -101,6 +102,27 @@ namespace CubePDF {
             Assert.IsTrue(test4.Load());
             Assert.AreEqual("C:\\", test4.OutputPath);
             Assert.AreEqual("C:\\", test4.InputPath);
+
+            // TestCase5: レジストリに不正な値が設定されている場合のテスト
+            // 不正な値は読み飛ばして，デフォルト値を使用する．
+            RegistryKey wrongdata = Registry.CurrentUser.CreateSubKey(@"Software\CubeSoft\CubePDF\v2");
+            Assert.IsTrue(wrongdata != null);
+            wrongdata.SetValue("FileType", 256);
+            wrongdata.SetValue("PDFVersion", 1024);
+            wrongdata.SetValue("Resolution", 5012);
+            wrongdata.SetValue("ExistedFile", 8252);
+            wrongdata.SetValue("PostProcess", 2958739);
+            wrongdata.SetValue("DownSampling", 493798);
+            wrongdata.Close();
+
+            UserSetting test5 = new UserSetting();
+            Assert.IsTrue(test5.Load());
+            Assert.AreEqual(Parameter.FileTypes.PDF, test5.FileType);
+            Assert.AreEqual(Parameter.PDFVersions.Ver1_7, test5.PDFVersion);
+            Assert.AreEqual(Parameter.Resolutions.Resolution300, test5.Resolution);
+            Assert.AreEqual(Parameter.ExistedFiles.Overwrite, test5.ExistedFile);
+            Assert.AreEqual(Parameter.PostProcesses.Open, test5.PostProcess);
+            Assert.AreEqual(Parameter.DownSamplings.None, test5.DownSampling);
 
             // 元の値に戻す
             Assert.IsTrue(original.Save());
