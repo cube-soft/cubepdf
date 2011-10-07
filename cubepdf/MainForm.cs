@@ -476,15 +476,17 @@ namespace CubePDF {
             bool is_pdf = (id == Parameter.FileTypes.PDF);
             bool is_bitmap = (id == Parameter.FileTypes.BMP || id == Parameter.FileTypes.JPEG || id == Parameter.FileTypes.PNG || id == Parameter.FileTypes.TIFF);
             bool is_grayscale = !(id == Parameter.FileTypes.PS || id == Parameter.FileTypes.EPS || id == Parameter.FileTypes.SVG);
+            bool is_webopt = this.WebOptimizeCheckBox.Checked;
+            bool is_security = (this.UserPasswordCheckBox.Checked || this.OwnerPasswordCheckBox.Checked);
             
             this.PDFVersionComboBox.Enabled = is_pdf;
             this.ResolutionComboBox.Enabled = is_bitmap;
             this.DocTableLayoutPanel.Enabled = is_pdf;
-            this.UserPasswordGroupBox.Enabled = is_pdf;
-            this.OwnerPasswordGroupBox.Enabled = is_pdf;
+            this.UserPasswordGroupBox.Enabled = is_pdf && !is_webopt;
+            this.OwnerPasswordGroupBox.Enabled = is_pdf && !is_webopt;
             this.EmbedFontCheckBox.Enabled = false; // 本来は !is_bitmap;
             this.GrayscaleCheckBox.Enabled = is_grayscale;
-            this.WebOptimizeCheckBox.Enabled = is_pdf;
+            this.WebOptimizeCheckBox.Enabled = is_pdf && !is_security;
 
             // 出力パスの拡張子を変更後のファイルタイプに合わせる．
             if (this.OutputPathTextBox.Text.Length == 0) return;

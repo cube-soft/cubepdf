@@ -44,7 +44,10 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public static int FileTypeToIndex(Parameter.FileTypes id) {
-            return (int)id;
+            foreach (Parameter.FileTypes x in Enum.GetValues(typeof(Parameter.FileTypes))) {
+                if (x == id) return (int)id;
+            }
+            return (int)Parameter.FileTypes.PDF;
         }
 
         /* ----------------------------------------------------------------- */
@@ -59,7 +62,10 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public static Parameter.FileTypes IndexToFileType(int index) {
-            return (Parameter.FileTypes)index;
+            foreach (int x in Enum.GetValues(typeof(Parameter.FileTypes))) {
+                if (x == index) return (Parameter.FileTypes)index;
+            } 
+            return (Parameter.FileTypes)0;
         }
 
         /* ----------------------------------------------------------------- */
@@ -74,7 +80,10 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public static int PDFVersionToIndex(Parameter.PDFVersions id) {
-            return (int)id;
+            foreach (Parameter.PDFVersions x in Enum.GetValues(typeof(Parameter.PDFVersions))) {
+                if (x == id) return (int)id;
+            }
+            return (int)Parameter.PDFVersions.Ver1_7;
         }
 
         /* ----------------------------------------------------------------- */
@@ -89,7 +98,10 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public static Parameter.PDFVersions IndexToPDFVersion(int index) {
-            return (Parameter.PDFVersions)index;
+            foreach (int x in Enum.GetValues(typeof(Parameter.PDFVersions))) {
+                if (x == index) return (Parameter.PDFVersions)index;
+            }
+            return (Parameter.PDFVersions)0;
         }
 
         /* ----------------------------------------------------------------- */
@@ -104,7 +116,10 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public static int ResolutionToIndex(Parameter.Resolutions id) {
-            return (int)id;
+            foreach (Parameter.Resolutions x in Enum.GetValues(typeof(Parameter.Resolutions))) {
+                if (x == id) return (int)id;
+            }
+            return (int)Parameter.Resolutions.Resolution72;
         }
 
         /* ----------------------------------------------------------------- */
@@ -119,7 +134,10 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public static Parameter.Resolutions IndexToResolution(int index) {
-            return (Parameter.Resolutions)index;
+            foreach (int x in Enum.GetValues(typeof(Parameter.Resolutions))) {
+                if (x == index) return (Parameter.Resolutions)index;
+            }
+            return (Parameter.Resolutions)0;
         }
 
         /* ----------------------------------------------------------------- */
@@ -134,7 +152,10 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public static int ExistedFileToIndex(Parameter.ExistedFiles id) {
-            return (int)id;
+            foreach (Parameter.ExistedFiles x in Enum.GetValues(typeof(Parameter.ExistedFiles))) {
+                if (x == id) return (int)id;
+            }
+            return (int)Parameter.ExistedFiles.Overwrite;
         }
 
         /* ----------------------------------------------------------------- */
@@ -149,7 +170,10 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public static Parameter.ExistedFiles IndexToExistedFile(int index) {
-            return (Parameter.ExistedFiles)index;
+            foreach (int x in Enum.GetValues(typeof(Parameter.ExistedFiles))) {
+                if (x == index) return (Parameter.ExistedFiles)index;
+            }
+            return (Parameter.ExistedFiles)0;
         }
 
         /* ----------------------------------------------------------------- */
@@ -164,7 +188,10 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public static int PostProcessToIndex(Parameter.PostProcesses id) {
-            return (int)id;
+            foreach (Parameter.PostProcesses x in Enum.GetValues(typeof(Parameter.PostProcesses))) {
+                if (x == id) return (int)id;
+            }
+            return (int)Parameter.PostProcesses.Open;
         }
 
         /* ----------------------------------------------------------------- */
@@ -179,7 +206,10 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public static Parameter.PostProcesses IndexToPostProcess(int index) {
-            return (Parameter.PostProcesses)index;
+            foreach (int x in Enum.GetValues(typeof(Parameter.PostProcesses))) {
+                if (x == index) return (Parameter.PostProcesses)index;
+            }
+            return (Parameter.PostProcesses)0;
         }
 
         /* ----------------------------------------------------------------- */
@@ -194,7 +224,10 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public static int DownSamplingToIndex(Parameter.DownSamplings id) {
-            return (int)id;
+            foreach (Parameter.DownSamplings x in Enum.GetValues(typeof(Parameter.DownSamplings))) {
+                if (x == id) return (int)id;
+            }
+            return (int)Parameter.DownSamplings.None;
         }
 
         /* ----------------------------------------------------------------- */
@@ -209,7 +242,10 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public static Parameter.DownSamplings IndexToDownSampling(int index) {
-            return (Parameter.DownSamplings)index;
+            foreach (int x in Enum.GetValues(typeof(Parameter.DownSamplings))) {
+                if (x == index) return (Parameter.DownSamplings)index;
+            }
+            return (Parameter.DownSamplings)0;
         }
     }
 }
