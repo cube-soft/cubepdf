@@ -222,30 +222,53 @@ namespace CubePDF {
                 if (path != null && path.Length > 0 && File.Exists(path)) _program = path;
 
                 // チェックボックスのフラグ関連
-                int flag = (int)subkey.GetValue(REG_PAGE_ROTATION, 1);
-                _rotation = (flag != 0);
-                flag = (int)subkey.GetValue(REG_EMBED_FONT, 1);
-                _embed = (flag != 0);
-                flag = (int)subkey.GetValue(REG_GRAYSCALE, 0);
-                _grayscale = (flag != 0);
-                flag = (int)subkey.GetValue(REG_WEB_OPTIMIZE, 0);
-                _web = (flag != 0);
-                flag = (int)subkey.GetValue(REG_SAVE_SETTING, 0);
-                _save = (flag != 0);
-                flag = (int)subkey.GetValue(REG_CHECK_UPDATE, 1);
-                _update = (flag != 0);
-                flag = (int)subkey.GetValue(REG_ADVANCED_MODE, 0);
-                _advance = (flag != 0);
-                flag = (int)subkey.GetValue(REG_SELECT_INPUT, 0);
-                _selectable = (flag != 0);
+                int value = (int)subkey.GetValue(REG_PAGE_ROTATION, 1);
+                _rotation = (value != 0);
+                value = (int)subkey.GetValue(REG_EMBED_FONT, 1);
+                _embed = (value != 0);
+                value = (int)subkey.GetValue(REG_GRAYSCALE, 0);
+                _grayscale = (value != 0);
+                value = (int)subkey.GetValue(REG_WEB_OPTIMIZE, 0);
+                _web = (value != 0);
+                value = (int)subkey.GetValue(REG_SAVE_SETTING, 0);
+                _save = (value != 0);
+                value = (int)subkey.GetValue(REG_CHECK_UPDATE, 1);
+                _update = (value != 0);
+                value = (int)subkey.GetValue(REG_ADVANCED_MODE, 0);
+                _advance = (value != 0);
+                value = (int)subkey.GetValue(REG_SELECT_INPUT, 0);
+                _selectable = (value != 0);
 
                 // コンボボックスのインデックス関連
-                _type = (Parameter.FileTypes)subkey.GetValue(REG_FILETYPE, 0);
-                _pdfver = (Parameter.PDFVersions)subkey.GetValue(REG_PDF_VERSION, 0);
-                _resolution = (Parameter.Resolutions)subkey.GetValue(REG_RESOLUTION, 0);
-                _exist = (Parameter.ExistedFiles)subkey.GetValue(REG_EXISTED_FILE, 0);
-                _postproc = (Parameter.PostProcesses)subkey.GetValue(REG_POST_PROCESS, 0);
-                _downsampling = (Parameter.DownSamplings)subkey.GetValue(REG_DOWNSAMPLING, 0);
+                value = (int)subkey.GetValue(REG_FILETYPE, 0);
+                foreach (int x in Enum.GetValues(typeof(Parameter.FileTypes))) {
+                    if (x == value) _type = (Parameter.FileTypes)value;
+                }
+
+                value = (int)subkey.GetValue(REG_PDF_VERSION, 0);
+                foreach (int x in Enum.GetValues(typeof(Parameter.PDFVersions))) {
+                    if (x == value) _pdfver = (Parameter.PDFVersions)value;
+                }
+
+                value = (int)subkey.GetValue(REG_RESOLUTION, 0);
+                foreach (int x in Enum.GetValues(typeof(Parameter.Resolutions))) {
+                    if (x == value) _resolution = (Parameter.Resolutions)value;
+                }
+
+                value = (int)subkey.GetValue(REG_EXISTED_FILE, 0);
+                foreach (int x in Enum.GetValues(typeof(Parameter.ExistedFiles))) {
+                    if (x == value) _exist = (Parameter.ExistedFiles)value;
+                }
+
+                value = (int)subkey.GetValue(REG_POST_PROCESS, 0);
+                foreach (int x in Enum.GetValues(typeof(Parameter.PostProcesses))) {
+                    if (x == value) _postproc = (Parameter.PostProcesses)value;
+                }
+
+                value = (int)subkey.GetValue(REG_DOWNSAMPLING, 0);
+                foreach (int x in Enum.GetValues(typeof(Parameter.DownSamplings))) {
+                    if (x == value) _downsampling = (Parameter.DownSamplings)value;
+                }
             }
             catch (Exception /* err */) {
                 status = false;

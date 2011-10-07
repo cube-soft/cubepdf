@@ -119,7 +119,7 @@ namespace CubePDF {
             foreach (Parameter.Resolutions x in Enum.GetValues(typeof(Parameter.Resolutions))) {
                 if (x == id) return (int)id;
             }
-            return (int)Parameter.Resolutions.Resolution72;
+            return (int)Parameter.Resolutions.Resolution300;
         }
 
         /* ----------------------------------------------------------------- */
