@@ -19,6 +19,7 @@
  */
 /* ------------------------------------------------------------------------- */
 using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -32,10 +33,27 @@ namespace CubePDF
         [STAThread]
         static void Main(string[] args)
         {
+            var exec = System.Reflection.Assembly.GetEntryAssembly();
+            var dir = System.IO.Path.GetDirectoryName(exec.Location);
+            SetupLog(dir + @"\cubepdf.log");
+            Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf.exe start");
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             if (args.Length > 0) Application.Run(new MainForm(args));
             else Application.Run(new MainForm());
+
+            Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf.exe end");
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// SetupLog
+        /* ----------------------------------------------------------------- */
+        private static void SetupLog(string src) {
+            if (System.IO.File.Exists(src)) System.IO.File.Delete(src);
+            Trace.Listeners.Remove("Default");
+            Trace.Listeners.Add(new TextWriterTraceListener(src));
+            Trace.AutoFlush = true;
         }
     }
 }
