@@ -124,7 +124,7 @@ namespace CubePDF {
                         if (elem.Value != null) Environment.SetEnvironmentVariable(elem.Key, elem.Value);
                     }
                 }
-                //Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe end");
+                Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe end");
                 if (File.Exists(psfilepath)) {
                     File.Delete(psfilepath);
                 }

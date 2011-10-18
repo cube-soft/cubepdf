@@ -260,6 +260,11 @@ namespace CubePDF {
             this._InputpathPanel.Enabled = setting.SelectInputFile;
             this._InputpathPanel.Visible = setting.SelectInputFile;
             this._InputPathLabel.Visible = setting.SelectInputFile;
+
+            // ログ出力
+            Trace.WriteLine(DateTime.Now.ToString() + ": LoadSetting start");
+            setting.Dump();
+            Trace.WriteLine(DateTime.Now.ToString() + ": LoadSetting end");
         }
 
         /* ----------------------------------------------------------------- */
@@ -310,6 +315,11 @@ namespace CubePDF {
                 setting.Permission.AllowFormInput = this.AllowFormInputCheckBox.Checked;
                 setting.Permission.AllowModify = this.AllowModifyCheckBox.Checked;
             }
+
+            // ログ出力
+            Trace.WriteLine(DateTime.Now.ToString() + ": SaveSetting start");
+            setting.Dump();
+            Trace.WriteLine(DateTime.Now.ToString() + ": SaveSetting end");
         }
 
         /* ----------------------------------------------------------------- */
@@ -593,11 +603,10 @@ namespace CubePDF {
             if (control == null) return;
 
             this.Cursor = Cursors.Hand;
-            ToolTip tips = new ToolTip();
-            tips.InitialDelay = 500;
-            tips.ReshowDelay = 1000;
-            tips.AutoPopDelay = 1000;
-            tips.SetToolTip(control, Properties.Settings.Default.About);
+            _tips.InitialDelay = 500;
+            _tips.ReshowDelay = 1000;
+            _tips.AutoPopDelay = 1000;
+            _tips.SetToolTip(control, Properties.Settings.Default.About);
         }
 
         /* ----------------------------------------------------------------- */
@@ -795,6 +804,7 @@ namespace CubePDF {
         #region Variables
         private UserSetting _setting;
         private ComboBox _postproc;
+        private ToolTip _tips = new ToolTip();
         #endregion
     }
 }

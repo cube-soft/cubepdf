@@ -20,6 +20,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
+using System.Diagnostics;
 using Microsoft.Win32;
 
 namespace CubePDF {
@@ -350,6 +351,30 @@ namespace CubePDF {
 
             return status;
         }
+
+        /* ----------------------------------------------------------------- */
+        //  ログ出力
+        /* ----------------------------------------------------------------- */
+        #region dumplog
+        public void Dump() {
+            Trace.WriteLine(DateTime.Now.ToString() + ": InstallPath = " + _install);
+            Trace.WriteLine(DateTime.Now.ToString() + ": Version = " + _version);
+            Trace.WriteLine(DateTime.Now.ToString() + ": FileType = " + _type.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": PDFVersion = " + _pdfver.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": Resolution = " + _resolution.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": OutputPath = " + _output);
+            Trace.WriteLine(DateTime.Now.ToString() + ": ExistedFile = " + _exist.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": PostProcess = " + _postproc.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": UserProgram = " + _program);
+            Trace.WriteLine(DateTime.Now.ToString() + ": Downsampling = " + _downsampling.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": PageRotation = " + _rotation.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": EmbedFonts = " + _embed.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": Grayscale = " + _grayscale.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": WebOptimize = " + _web.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": SaveOptions = " + _save.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": UpdateCheck = " + _update.ToString());
+        }
+        #endregion
 
         /* ----------------------------------------------------------------- */
         //  過去のレジストリからの変換
