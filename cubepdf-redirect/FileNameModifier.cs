@@ -44,18 +44,19 @@ namespace CubePDF {
         /// 3. ':' は，次の文字が '\' であれば，ドライブを指定していると
         /// 見なして保持する．それ以外の場合は '_' に置換する．
         /// 
+        /// TODO: 2, および 3 の条件は現在除去し，'\', ':' の文字も置換
+        /// している．今後の拡張に備えて，2, および 3 を実装する．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
         public static string ModifyFileName(string filename) {
             StringBuilder buffer = new StringBuilder();
-            char[] invalids = { '/', '*', '?', '"', '<', '>', '|' };
+            char[] invalids = { '/', '*', '?', '"', '<', '>', '|', ':', '\\' };
             for (int i = 0; i < filename.Length; i++) {
                 char current = filename[i];
                 foreach (char c in invalids) {
                     if (current == c) current = '_';
                 }
-                if (i < filename.Length - 1 && filename[i] == ':' && filename[i + 1] != '\\') current = '_';
                 buffer.Append(current);
             }
 
