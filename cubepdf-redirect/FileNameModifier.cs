@@ -21,46 +21,103 @@
  */
 /* ------------------------------------------------------------------------- */
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
 
 namespace CubePDF {
     public abstract class FileNameModifier {
+        /* ----------------------------------------------------------------- */
+        /// NormalizeFilename
+        /* ----------------------------------------------------------------- */
+        public static string NormalizeFilename(string src, char replaced) {
+            char[] invalids = { '/', '*', '"', '<', '>', '|', '?', ':', '\\' };
+
+            var buffer = new System.Text.StringBuilder();
+            for (int i = 0; i < src.Length; ++i) {
+                char current = src[i];
+                foreach (char c in invalids) {
+                    if (current == c) current = replaced;
+                }
+                buffer.Append(current);
+            }
+
+            // 末尾の . 記号や半角スペースは取り除く．
+            int n = 0;
+            for (int i = buffer.Length - 1; i >= 0; --i) {
+                if (buffer[i] == '.' || buffer[i] == ' ') ++n;
+                else break;
+            }
+            if (n > 0) buffer.Remove(buffer.Length - n, n);
+
+            return buffer.ToString();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// NormalizePath
+        /* ----------------------------------------------------------------- */
+        public static string NormalizePath(string src, char replaced) {
+            char[] invalids = { '/', '*', '"', '<', '>', '|' };
+
+            bool inactivated = false;
+            var buffer = new System.Text.StringBuilder();
+            for (int i = 0; i < src.Length; ++i) {
+                char current = src[i];
+                foreach (char c in invalids) {
+                    if (current == c) current = replaced;
+                }
+
+                // ドライブ指定としての : 記号かどうかを判定する．
+                // 拡張機能の不活性化が指定されていない場合は，C:\hoge，指定されている場合は \\?\C:\hoge
+                // の位置でのみ : 記号が出現する事を許す．
+                if (current == ':') {
+                    int first = inactivated ? 5 : 1;
+                    if (i == first && char.IsLetter(src[i - 1]) && i + 1 < src.Length && src[i + 1] == '\\') {
+                        // ドライブ指定なので : 記号を保持．
+                    }
+                    else current = replaced;
+                }
+
+                // 拡張機能の不活性化指定である \\?\ のみ許す．
+                if (current == '?') {
+                    if (i + 1 < src.Length && i == 2 && src[i - 1] == '\\' && src[i - 2] == '\\' && src[i + 1] == '\\') {
+                        inactivated = true;
+                    }
+                    else current = replaced;
+                }
+
+                // ホスト名指定 (最初の \\server\hoge) 以外の \ 記号の重複は取り除く．
+                if (current == '\\') {
+                    if (i > 1 && src[i - 1] == '\\') continue;
+                }
+
+                buffer.Append(current);
+            }
+
+            // 末尾の . 記号や半角スペースは取り除く．
+            // ただし，拡張機能の不活性化が指定されている場合は保持する．
+            if (!inactivated) {
+                int n = 0;
+                for (int i = buffer.Length - 1; i >= 0; --i) {
+                    if (buffer[i] == '.' || buffer[i] == ' ') ++n;
+                    else break;
+                }
+                if (n > 0) buffer.Remove(buffer.Length - n, n);
+            }
+
+            return buffer.ToString();
+        }
+
         /* ----------------------------------------------------------------- */
         ///
         /// ModifyFileName
         /// 
         /// <summary>
         /// ファイル名として不正な文字を '_' (アンダースコア) に置換する．
-        /// 不正な文字かどうかの判定手順は以下の通り:
-        /// 
-        /// 1. ファイル名として不正な文字のうち '/*?"<>|' の 7種類は
-        /// 無条件で置換する．
-        /// 
-        /// 2. '\' は絶対パスを指定する事があるので保持する．指定された
-        /// 文字列に '\' が出現した場合は，ディレクトリの階層構造を現して
-        /// いると解釈する．
-        /// 
-        /// 3. ':' は，次の文字が '\' であれば，ドライブを指定していると
-        /// 見なして保持する．それ以外の場合は '_' に置換する．
-        /// 
-        /// TODO: 2, および 3 の条件は現在除去し，'\', ':' の文字も置換
-        /// している．今後の拡張に備えて，2, および 3 を実装する．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
         public static string ModifyFileName(string filename) {
-            StringBuilder buffer = new StringBuilder();
-            char[] invalids = { '/', '*', '?', '"', '<', '>', '|', ':', '\\' };
-            for (int i = 0; i < filename.Length; i++) {
-                char current = filename[i];
-                foreach (char c in invalids) {
-                    if (current == c) current = '_';
-                }
-                buffer.Append(current);
-            }
+            string dest = NormalizeFilename(filename, '_');
 
-            string dest = buffer.ToString();
             if (dest.ToLower() == "pptview") {
                 string s = FindFromRecent(".ppt");
                 if (s == null) s = FindFromRecent(".pptx");

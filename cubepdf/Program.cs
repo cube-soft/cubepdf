@@ -44,6 +44,7 @@ namespace CubePDF
             else Application.Run(new MainForm());
 
             Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf.exe end");
+            Trace.Close();
         }
 
         /* ----------------------------------------------------------------- */
