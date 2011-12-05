@@ -391,6 +391,8 @@ namespace CubePDF {
             if (!this.CheckPassword(this.UserPasswordCheckBox.Checked, this.UserPasswordTextBox.Text, this.ConfirmUserPasswordTextBox.Text)) return;
             if (!this.CheckPassword(this.OwnerPasswordCheckBox.Checked, this.OwnerPasswordTextBox.Text, this.ConfirmOwnerPasswordTextBox.Text)) return;
             if (!this.CheckOutput(this.OutputPathTextBox.Text, this.ExistedFileComboBox.SelectedIndex)) return;
+            if (!Directory.Exists(_setting.LibPath)) Trace.WriteLine(DateTime.Now.ToString() + ": " + _setting.LibPath + ": not found");
+            if (!Directory.Exists(_setting.LibPath + @"\lib")) Trace.WriteLine(DateTime.Now.ToString() + ": " + _setting.LibPath + "\\lib: not found");
 
             this.ExecProgressBar.Visible = true;
             this.ConvertBackgroundWorker.RunWorkerAsync();
@@ -779,20 +781,14 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         private void ShowErrorMessage(List<CubePDF.Message> messages) {
-            string src = Utility.CurrentDirectory + @"\cubepdf.log";
-            Trace.Listeners.Remove("Default");
-            Trace.Listeners.Add(new TextWriterTraceListener(src));
-            Trace.AutoFlush = true;
-            
             string error = "";
             foreach (CubePDF.Message message in messages) {
-                Trace.WriteLine(message.ToString());
+                Trace.WriteLine(DateTime.Now.ToString() + ": " + message.ToString());
                 if (message.Level == Message.Levels.Error || message.Level == Message.Levels.Fatal) {
                     error = message.Value;
                 }
             }
-
-            Trace.Close();
+            
             if (error.Length > 0) MessageBox.Show(error, "CubePDF エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 

@@ -153,7 +153,16 @@ namespace CubePDF {
     /* --------------------------------------------------------------------- */
     public class UserSetting {
         /* ----------------------------------------------------------------- */
+        ///
         /// Constructor
+        ///
+        /// <summary>
+        /// CubePDF.UserSetting クラスを初期化します．引数なしの場合は，
+        /// CubePDF のバージョン情報やインストールパス等，ユーザによらず
+        /// 一定 (HKEY_LOCAL_MACHINE¥Software¥CubeSoft¥CubePDF 下で定義
+        /// されているもの) である情報のみロードされます．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public UserSetting() {
             this.MustLoad();
@@ -164,8 +173,11 @@ namespace CubePDF {
         /// Constructor
         /// 
         /// <summary>
-        /// true を指定すると，オブジェクトの生成と同時にレジストリに保存
-        /// されているユーザ設定情報を取得する．
+        /// CubePDF.UserSetting クラスを初期化します．true を引数に指定した
+        /// 場合，引数なしでのコンストラクタの処理に加えて，ユーザ毎の
+        /// 設定情報 (HKEY_CURRENT_USER¥Software¥CubeSoft¥CubePDF¥v2) も
+        /// 同時にロードされます．これは，引数なしで初期化した後に Load()
+        /// メソッドを実行する事と同じです．
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
@@ -174,6 +186,17 @@ namespace CubePDF {
             if (load) this.Load();
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// MustLoad
+        ///
+        /// <summary>
+        /// CubePDF のバージョン情報やインストールパス等，ユーザによらず
+        /// 一定 (HKEY_LOCAL_MACHINE¥Software¥CubeSoft¥CubePDF 下で定義
+        /// されているもの) である情報のみロードします．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
         private bool MustLoad() {
             bool status = true;
 
@@ -202,7 +225,8 @@ namespace CubePDF {
         /// Load
         /// 
         /// <summary>
-        /// レジストリからユーザ設定を取得する．
+        /// ユーザ毎の設定情報をロードします．引数なしでLoad() メソッドを
+        /// 実行した場合，レジストリに保存されてある情報をロードします．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -228,7 +252,8 @@ namespace CubePDF {
         /// Load
         /// 
         /// <summary>
-        /// 引数に指定された XML ファイルからユーザ設定を取得する．
+        /// ユーザ毎の設定情報をロードします．引数には，設定情報が保存されて
+        /// あるXML ファイルへのパスを指定します．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -252,7 +277,7 @@ namespace CubePDF {
         /// Save
         /// 
         /// <summary>
-        /// レジストリにユーザ設定を保存する．
+        /// CubePDF.UserSetting クラスの現在の設定をレジストリに保存します．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -279,7 +304,8 @@ namespace CubePDF {
         /// Save
         /// 
         /// <summary>
-        /// 指定された XML ファイルにユーザ設定を保存する．
+        /// CubePDF.UserSetting クラスの現在の設定を指定されたパスにXML
+        /// 形式で保存します．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -319,6 +345,7 @@ namespace CubePDF {
             Trace.WriteLine(DateTime.Now.ToString() + ": WebOptimize = " + _web.ToString());
             Trace.WriteLine(DateTime.Now.ToString() + ": SaveOptions = " + _save.ToString());
             Trace.WriteLine(DateTime.Now.ToString() + ": UpdateCheck = " + _update.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": Visible = " + _visible.ToString());
         }
         #endregion
 
@@ -431,21 +458,55 @@ namespace CubePDF {
         #region Properties
 
         /* ----------------------------------------------------------------- */
+        ///
+        /// Extension
+        ///
+        /// <summary>
+        /// 設定をXML ファイルとして保存する場合の拡張子を取得します．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public string Extension {
+            get { return SETTING_EXTENSION; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// Version
+        ///
+        /// <summary>
+        /// 現在インストールされているCubePDF のバージョン情報を取得します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public string Version {
             get { return _version; }
         }
 
         /* ----------------------------------------------------------------- */
-        /// InstallDirectory
+        ///
+        /// InstallPath
+        ///
+        /// <summary>
+        /// 現在インストールされているCubePDF のインストールフォルダへの
+        /// パスを取得します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public string InstallPath {
             get { return _install; }
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// LibPath
+        /// 
+        /// <summary>
+        /// 現在インストールされているCubePDF が利用しているライブラリへの
+        /// パスを取得します．LibPath プロパティで取得されるパスには，
+        /// 主に，Ghostscript が使用する各種ライブラリが保存されています．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         public string LibPath {
             get { return _lib; }
@@ -460,7 +521,13 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// OutputPath
+        /// 
+        /// <summary>
+        /// 出力パスを取得，または設定します．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         public string OutputPath {
             get { return _output; }
@@ -468,7 +535,16 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// UserProgram
+        /// 
+        /// <summary>
+        /// CubePDF 実行終了後に実行されるプログラムへのパスを取得，または
+        /// 設定します．尚，PostProcess プロパティに指定されている値が
+        /// CubePDF.Parameter.PostProcess.UserProgram 以外の場合，この設定は
+        /// 無視されます．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         public string UserProgram {
             get { return _program; }
@@ -476,7 +552,35 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
+        /// UserArguments
+        /// 
+        /// <summary>
+        /// CubePDF 実行終了後に実行されるプログラムへ指定する引数を取得，
+        /// または設定します．尚，この設定の有無に関わらず，第 1 引数には
+        /// CubePDF によって生成（変換）されたファイルへのパスが指定されます．
+        /// そのため，UserArguments で指定された引数は第2 引数以降に指定され
+        /// ます．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public string UserArguments {
+            get { return _argument; }
+            set { _argument = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// FileType
+        ///
+        /// <summary>
+        /// 変換するファイルの種類を取得、または設定します．
+        /// 設定可能な値は以下の通りです:
+        /// PDF, PS, EPS, SVG, PNG, JPEG, BMP, TIFF
+        /// これらの値は，例えば，CubePDF.Parameter.FileTypes.PDF のように
+        /// 設定します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public Parameter.FileTypes FileType {
             get { return _type; }
@@ -484,7 +588,17 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// PDFVersion
+        ///
+        /// <summary>
+        /// PDF 形式で変換する場合の PDF バージョンを取得，または設定します．
+        /// 設定可能な値は以下の通りです:
+        /// Ver1_7, Ver1_6, Ver1_5, Ver1_4, Ver1_3, Ver1_2
+        /// これらの値は，例えば，CubePDF.Parameter.PDFVersions.Ver1_7
+        /// のように設定します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public Parameter.PDFVersions PDFVersion {
             get { return _pdfver; }
@@ -492,7 +606,18 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Resolution
+        ///
+        /// <summary>
+        /// ビットマップ形式で保存する場合の解像度を取得，または設定します．
+        /// 設定可能な値は以下の通りです:
+        /// Resolution72, Resolution150, Resolution300, Resolution450,
+        /// Resolution600
+        /// これらの値は，例えば，CubePDF.Parameter.Resolutions.Resolution72
+        /// のように設定しま．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public Parameter.Resolutions Resolution {
             get { return _resolution; }
@@ -500,7 +625,20 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// ExistedFile
+        ///
+        /// <summary>
+        /// OutputPath プロパティで指定されたファイルが既に存在する場合の
+        /// 処理を取得，または設定します．設定可能な値は以下の通りです:
+        /// Overwrite : 上書き
+        /// MergeHead : 既に存在するファイルの先頭に結合
+        /// MergeTail : 既に存在するファイルの末尾に結合
+        /// Rename    : Sample (2).pdf のようにリネーム
+        /// これらの値は，例えば，CubePDF.Parameter.ExistedFiles.Overwrite
+        /// のように設定します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public Parameter.ExistedFiles ExistedFile {
             get { return _exist; }
@@ -508,7 +646,19 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// PostProcess
+        ///
+        /// <summary>
+        /// CubePDF 実行終了後の処理を取得，または設定します．
+        /// 設定可能な値は以下の通りです:
+        /// Open : 関連付けられているアプリケーションでファイルを開く
+        /// None : 何もしない
+        /// UserProgram : UserProgram で設定されたプログラムを実行する
+        /// これらの値は，例えば，CubePDF.Parameter.PostProcesses.Open
+        /// のように設定します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public Parameter.PostProcesses PostProcess {
             get { return _postproc; }
@@ -516,7 +666,17 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// DownSampling
+        ///
+        /// <summary>
+        /// 画像のダウンサンプリング方法を取得，または設定します．
+        /// 設定可能な値は以下の通りです:
+        /// None, Average, Bicubic, Subsample
+        /// これらの値は，例えば，CubePDF.Parameter.DownSamplings.None
+        /// のように設定します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public Parameter.DownSamplings DownSampling {
             get { return _downsampling; }
@@ -524,7 +684,13 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// PageRotation
+        ///
+        /// <summary>
+        /// ページの自動回転を行うかどうかを取得，または設定します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public bool PageRotation {
             get { return _rotation; }
@@ -532,7 +698,13 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// EmbedFont
+        ///
+        /// <summary>
+        /// フォントを埋め込むかどうかを取得，または設定します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public bool EmbedFont {
             get { return _embed; }
@@ -540,7 +712,13 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Grayscale
+        /// 
+        /// <summary>
+        /// 画像をグレースケースにするかどうかを取得，または設定します．
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         public bool Grayscale {
             get { return _grayscale; }
@@ -548,7 +726,14 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// WebOptimize
+        ///
+        /// <summary>
+        /// PDF ファイルの場合に，Web 表示用に最適化するかどうかを取得，
+        /// または設定します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public bool WebOptimize {
             get { return _web; }
@@ -556,7 +741,14 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// SaveSetting
+        ///
+        /// <summary>
+        /// 現在の設定をレジストリに保存するかどうかを取得，または設定
+        /// します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public bool SaveSetting {
             get { return _save; }
@@ -564,7 +756,14 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// CheckUpdate
+        ///
+        /// <summary>
+        /// PC 起動時にアップデートチェックプログラムを実行するかどうかを
+        /// 取得，または設定します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public bool CheckUpdate {
             get { return _update; }
@@ -572,7 +771,15 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// AdvancedMode
+        ///
+        /// <summary>
+        /// CubePDF をアドバンスモードで起動するかどうかを取得，または設定
+        /// します．CubePDF をアドバンスモードで起動するとユーザプログラム
+        /// を使用できるようになります．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public bool AdvancedMode {
             get { return _advance; }
@@ -580,7 +787,14 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// SelectInputFile
+        ///
+        /// <summary>
+        /// 入力ファイルを指定するダイアログを表示するかどうかを取得，
+        /// または設定します．
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public bool SelectInputFile {
             get { return _selectable; }
@@ -603,6 +817,9 @@ namespace CubePDF {
             set { _permission = value; }
         }
 
+        /* ----------------------------------------------------------------- */
+        /// Password
+        /* ----------------------------------------------------------------- */
         public string Password {
             get { return _password; }
             set { _password = value; }
@@ -630,12 +847,14 @@ namespace CubePDF {
 
             // パス関連
             string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string path = v.ContainsKey(REG_LAST_OUTPUT_ACCESS) ? (string)v[REG_LAST_OUTPUT_ACCESS].Value : desktop;
-            if (path != null && path.Length > 0 && Directory.Exists(path)) _output = path;
-            path = v.ContainsKey(REG_LAST_INPUT_ACCESS) ? (string)v[REG_LAST_INPUT_ACCESS].Value : desktop;
-            if (path != null && path.Length > 0 && Directory.Exists(path)) _input = path;
-            path = v.ContainsKey(REG_USER_PROGRAM) ? (string)v[REG_USER_PROGRAM].Value : "";
-            if (path != null && path.Length > 0 && File.Exists(path)) _program = path;
+            string s = v.ContainsKey(REG_LAST_OUTPUT_ACCESS) ? (string)v[REG_LAST_OUTPUT_ACCESS].Value : desktop;
+            if (s != null && s.Length > 0) _output = s;
+            s = v.ContainsKey(REG_LAST_INPUT_ACCESS) ? (string)v[REG_LAST_INPUT_ACCESS].Value : desktop;
+            if (s != null && s.Length > 0) _input = s;
+            s = v.ContainsKey(REG_USER_PROGRAM) ? (string)v[REG_USER_PROGRAM].Value : "";
+            if (s != null && s.Length > 0) _program = s;
+            s = v.ContainsKey(REG_USER_ARGUMENTS) ? (string)v[REG_USER_ARGUMENTS].Value : "";
+            if (s != null && s.Length > 0) _argument = s;
 
             // チェックボックスのフラグ関連
             int value = v.ContainsKey(REG_PAGE_ROTATION) ? (int)v[REG_PAGE_ROTATION].Value : 1;
@@ -652,6 +871,8 @@ namespace CubePDF {
             _update = (value != 0);
             value = v.ContainsKey(REG_ADVANCED_MODE) ? (int)v[REG_ADVANCED_MODE].Value : 0;
             _advance = (value != 0);
+            value = v.ContainsKey(REG_VISIBLE) ? (int)v[REG_VISIBLE].Value : 1;
+            _visible = (value != 0);
             value = v.ContainsKey(REG_SELECT_INPUT) ? (int)v[REG_SELECT_INPUT].Value : 0;
             _selectable = (value != 0);
 
@@ -702,19 +923,10 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void Save(ParameterList config) {
             // パス関連
-            if (_output.Length > 0) {
-                string dir = _output;
-                while (!Directory.Exists(dir)) dir = Path.GetDirectoryName(dir);
-                if (dir.Length > 0) config.Parameters.Add(REG_LAST_OUTPUT_ACCESS, new ParameterValue(ParameterType.String, dir));
-            }
-
-            if (_input.Length > 0) {
-                string dir = _input;
-                while (!Directory.Exists(dir)) dir = Path.GetDirectoryName(dir);
-                if (dir.Length > 0) config.Parameters.Add(REG_LAST_INPUT_ACCESS, new ParameterValue(ParameterType.String, dir));
-            }
-
+            if (_output.Length > 0) config.Parameters.Add(REG_LAST_OUTPUT_ACCESS, new ParameterValue(ParameterType.String, _output));
+            if (_input.Length > 0) config.Parameters.Add(REG_LAST_INPUT_ACCESS, new ParameterValue(ParameterType.String, _input));
             if (_program.Length > 0) config.Parameters.Add(REG_USER_PROGRAM, new ParameterValue(ParameterType.String, _program));
+            if (_argument.Length > 0) config.Parameters.Add(REG_USER_ARGUMENTS, new ParameterValue(ParameterType.String, _argument));
 
             // チェックボックスのフラグ関連
             int flag = _rotation ? 1 : 0;
@@ -731,6 +943,8 @@ namespace CubePDF {
             config.Parameters.Add(REG_CHECK_UPDATE, new ParameterValue(ParameterType.Integer, flag));
             flag = _advance ? 1 : 0;
             config.Parameters.Add(REG_ADVANCED_MODE, new ParameterValue(ParameterType.Integer, flag));
+            flag = _visible ? 1 : 0;
+            config.Parameters.Add(REG_VISIBLE, new ParameterValue(ParameterType.Integer, flag));
             flag = _selectable ? 1 : 0;
             config.Parameters.Add(REG_SELECT_INPUT, new ParameterValue(ParameterType.Integer, flag));
 
@@ -766,6 +980,7 @@ namespace CubePDF {
         private string _input = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         private string _output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         private string _program = "";
+        private string _argument = "";
         private string _password = "";
         private Parameter.FileTypes _type = Parameter.FileTypes.PDF;
         private Parameter.PDFVersions _pdfver = Parameter.PDFVersions.Ver1_7;
@@ -779,6 +994,7 @@ namespace CubePDF {
         private bool _web = false;
         private bool _save = false;
         private bool _update = true;
+        private bool _visible = true;
         private bool _advance = false;
         private bool _selectable = false;
         private DocumentProperty _doc = new DocumentProperty();
@@ -796,6 +1012,7 @@ namespace CubePDF {
         const string REG_PRODUCT_VERSION    = "Version";
         const string REG_ADVANCED_MODE      = "AdvancedMode";
         const string REG_CHECK_UPDATE       = "CheckUpdate";
+        const string REG_VISIBLE            = "Visible";
         const string REG_DOWNSAMPLING       = "DownSampling";
         const string REG_EMBED_FONT         = "EmbedFont";
         const string REG_EXISTED_FILE       = "ExistedFile";
@@ -809,10 +1026,12 @@ namespace CubePDF {
         const string REG_RESOLUTION         = "Resolution";
         const string REG_SELECT_INPUT       = "SelectInputFile";
         const string REG_USER_PROGRAM       = "UserProgram";
+        const string REG_USER_ARGUMENTS      = "UserArguments";
         const string REG_WEB_OPTIMIZE       = "WebOptimize";
         const string REG_SAVE_SETTING       = "SaveSetting";
         const string REG_VALUE_UNKNOWN      = "Unknown";
         const string UPDATE_PROGRAM         = "cubepdf-checker";
+        const string SETTING_EXTENSION     = ".cubepdfconf";
         #endregion
     }
 }

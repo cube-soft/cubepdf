@@ -212,7 +212,7 @@ namespace CubePDF {
             var root = doc.CreateElement("Parameters");
             doc.AppendChild(decl);
             doc.AppendChild(root);
-            this.Save(doc, root, this.data_);            
+            this.Save(doc, root, this.data_);
         }
 
         /* ----------------------------------------------------------------- */
