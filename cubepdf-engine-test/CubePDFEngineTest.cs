@@ -82,8 +82,8 @@ namespace CubePDF {
 
             UserSetting test3 = new UserSetting();
             Assert.IsTrue(test3.Load());
-            Assert.AreEqual(personal, test3.OutputPath);
-            Assert.AreEqual(personal, test3.InputPath);
+            Assert.AreEqual(personal + @"\test.txt", test3.OutputPath);
+            Assert.AreEqual(personal + @"\test.txt", test3.InputPath);
             Assert.AreEqual(Parameter.FileTypes.PNG, test3.FileType);
             Assert.IsFalse(test3.CheckUpdate);
 
@@ -100,8 +100,8 @@ namespace CubePDF {
 
             UserSetting test4 = new UserSetting();
             Assert.IsTrue(test4.Load());
-            Assert.AreEqual("C:\\", test4.OutputPath);
-            Assert.AreEqual("C:\\", test4.InputPath);
+            Assert.AreEqual(not_found, test4.OutputPath);
+            Assert.AreEqual(not_found, test4.InputPath);
 
             // TestCase5: レジストリに不正な値が設定されている場合のテスト
             // 不正な値は読み飛ばして，デフォルト値を使用する．

@@ -22,7 +22,7 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
-using Container = System.Collections.Generic.Dictionary<string, CubePDF.ParameterValue>;
+using Cubic;
 
 namespace CubePDF {
     /* --------------------------------------------------------------------- */
@@ -235,7 +235,7 @@ namespace CubePDF {
 
             try {
                 using (RegistryKey root = Registry.CurrentUser.OpenSubKey(REG_ROOT + '\\' + REG_VERSION, false)) {
-                    var param = new ParameterList();
+                    var param = new ParameterManager();
                     param.Load(root);
                     this.Load(param);
                 }
@@ -261,7 +261,7 @@ namespace CubePDF {
             bool status = true;
 
             try {
-                var param = new ParameterList();
+                var param = new ParameterManager();
                 param.Load(path, ParameterFileType.XML);
                 this.Load(param);
             }
@@ -285,7 +285,7 @@ namespace CubePDF {
             bool status = true;
 
             try {
-                var param = new ParameterList();
+                var param = new ParameterManager();
                 this.Save(param);
 
                 using (var root = Registry.CurrentUser.CreateSubKey(REG_ROOT + '\\' + REG_VERSION)) {
@@ -313,7 +313,7 @@ namespace CubePDF {
             bool status = true;
 
             try {
-                var param = new ParameterList();
+                var param = new ParameterManager();
                 this.Save(param);
                 param.Save(path, ParameterFileType.XML);
             }
@@ -842,68 +842,68 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void Load(ParameterList param) {
+        private void Load(ParameterManager param) {
             var v = param.Parameters;
 
             // パス関連
             string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string s = v.ContainsKey(REG_LAST_OUTPUT_ACCESS) ? (string)v[REG_LAST_OUTPUT_ACCESS].Value : desktop;
+            string s = v.Contains(REG_LAST_OUTPUT_ACCESS) ? (string)v.Find(REG_LAST_OUTPUT_ACCESS).Value : desktop;
             if (s != null && s.Length > 0) _output = s;
-            s = v.ContainsKey(REG_LAST_INPUT_ACCESS) ? (string)v[REG_LAST_INPUT_ACCESS].Value : desktop;
+            s = v.Contains(REG_LAST_INPUT_ACCESS) ? (string)v.Find(REG_LAST_INPUT_ACCESS).Value : desktop;
             if (s != null && s.Length > 0) _input = s;
-            s = v.ContainsKey(REG_USER_PROGRAM) ? (string)v[REG_USER_PROGRAM].Value : "";
+            s = v.Contains(REG_USER_PROGRAM) ? (string)v.Find(REG_USER_PROGRAM).Value : "";
             if (s != null && s.Length > 0) _program = s;
-            s = v.ContainsKey(REG_USER_ARGUMENTS) ? (string)v[REG_USER_ARGUMENTS].Value : "";
+            s = v.Contains(REG_USER_ARGUMENTS) ? (string)v.Find(REG_USER_ARGUMENTS).Value : "";
             if (s != null && s.Length > 0) _argument = s;
 
             // チェックボックスのフラグ関連
-            int value = v.ContainsKey(REG_PAGE_ROTATION) ? (int)v[REG_PAGE_ROTATION].Value : 1;
+            int value = v.Contains(REG_PAGE_ROTATION) ? (int)v.Find(REG_PAGE_ROTATION).Value : 1;
             _rotation = (value != 0);
-            value = v.ContainsKey(REG_EMBED_FONT) ? (int)v[REG_EMBED_FONT].Value : 1;
+            value = v.Contains(REG_EMBED_FONT) ? (int)v.Find(REG_EMBED_FONT).Value : 1;
             _embed = (value != 0);
-            value = v.ContainsKey(REG_GRAYSCALE) ? (int)v[REG_GRAYSCALE].Value : 0;
+            value = v.Contains(REG_GRAYSCALE) ? (int)v.Find(REG_GRAYSCALE).Value : 0;
             _grayscale = (value != 0);
-            value = v.ContainsKey(REG_WEB_OPTIMIZE) ? (int)v[REG_WEB_OPTIMIZE].Value : 0;
+            value = v.Contains(REG_WEB_OPTIMIZE) ? (int)v.Find(REG_WEB_OPTIMIZE).Value : 0;
             _web = (value != 0);
-            value = v.ContainsKey(REG_SAVE_SETTING) ? (int)v[REG_SAVE_SETTING].Value : 0;
+            value = v.Contains(REG_SAVE_SETTING) ? (int)v.Find(REG_SAVE_SETTING).Value : 0;
             _save = (value != 0);
-            value = v.ContainsKey(REG_CHECK_UPDATE) ? (int)v[REG_CHECK_UPDATE].Value : 1;
+            value = v.Contains(REG_CHECK_UPDATE) ? (int)v.Find(REG_CHECK_UPDATE).Value : 1;
             _update = (value != 0);
-            value = v.ContainsKey(REG_ADVANCED_MODE) ? (int)v[REG_ADVANCED_MODE].Value : 0;
+            value = v.Contains(REG_ADVANCED_MODE) ? (int)v.Find(REG_ADVANCED_MODE).Value : 0;
             _advance = (value != 0);
-            value = v.ContainsKey(REG_VISIBLE) ? (int)v[REG_VISIBLE].Value : 1;
+            value = v.Contains(REG_VISIBLE) ? (int)v.Find(REG_VISIBLE).Value : 1;
             _visible = (value != 0);
-            value = v.ContainsKey(REG_SELECT_INPUT) ? (int)v[REG_SELECT_INPUT].Value : 0;
+            value = v.Contains(REG_SELECT_INPUT) ? (int)v.Find(REG_SELECT_INPUT).Value : 0;
             _selectable = (value != 0);
 
 
             // コンボボックスのインデックス関連
-            value = v.ContainsKey(REG_FILETYPE) ? (int)v[REG_FILETYPE].Value : 0;
+            value = v.Contains(REG_FILETYPE) ? (int)v.Find(REG_FILETYPE).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.FileTypes))) {
                 if (x == value) _type = (Parameter.FileTypes)value;
             }
 
-            value = v.ContainsKey(REG_PDF_VERSION) ? (int)v[REG_PDF_VERSION].Value : 0;
+            value = v.Contains(REG_PDF_VERSION) ? (int)v.Find(REG_PDF_VERSION).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.PDFVersions))) {
                 if (x == value) _pdfver = (Parameter.PDFVersions)value;
             }
 
-            value = v.ContainsKey(REG_RESOLUTION) ? (int)v[REG_RESOLUTION].Value : 0;
+            value = v.Contains(REG_RESOLUTION) ? (int)v.Find(REG_RESOLUTION).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.Resolutions))) {
                 if (x == value) _resolution = (Parameter.Resolutions)value;
             }
 
-            value = v.ContainsKey(REG_EXISTED_FILE) ? (int)v[REG_EXISTED_FILE].Value : 0;
+            value = v.Contains(REG_EXISTED_FILE) ? (int)v.Find(REG_EXISTED_FILE).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.ExistedFiles))) {
                 if (x == value) _exist = (Parameter.ExistedFiles)value;
             }
 
-            value = v.ContainsKey(REG_POST_PROCESS) ? (int)v[REG_POST_PROCESS].Value : 0;
+            value = v.Contains(REG_POST_PROCESS) ? (int)v.Find(REG_POST_PROCESS).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.PostProcesses))) {
                 if (x == value) _postproc = (Parameter.PostProcesses)value;
             }
 
-            value = v.ContainsKey(REG_DOWNSAMPLING) ? (int)v[REG_DOWNSAMPLING].Value : 0;
+            value = v.Contains(REG_DOWNSAMPLING) ? (int)v.Find(REG_DOWNSAMPLING).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.DownSamplings))) {
                 if (x == value) _downsampling = (Parameter.DownSamplings)value;
             }
@@ -921,40 +921,40 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void Save(ParameterList config) {
+        private void Save(ParameterManager config) {
             // パス関連
-            if (_output.Length > 0) config.Parameters.Add(REG_LAST_OUTPUT_ACCESS, new ParameterValue(ParameterType.String, _output));
-            if (_input.Length > 0) config.Parameters.Add(REG_LAST_INPUT_ACCESS, new ParameterValue(ParameterType.String, _input));
-            if (_program.Length > 0) config.Parameters.Add(REG_USER_PROGRAM, new ParameterValue(ParameterType.String, _program));
-            if (_argument.Length > 0) config.Parameters.Add(REG_USER_ARGUMENTS, new ParameterValue(ParameterType.String, _argument));
+            if (_output.Length > 0) config.Parameters.Add(new ParameterElement(REG_LAST_OUTPUT_ACCESS, ParameterType.String, _output));
+            if (_input.Length > 0) config.Parameters.Add(new ParameterElement(REG_LAST_INPUT_ACCESS, ParameterType.String, _input));
+            if (_program.Length > 0) config.Parameters.Add(new ParameterElement(REG_USER_PROGRAM, ParameterType.String, _program));
+            if (_argument.Length > 0) config.Parameters.Add(new ParameterElement(REG_USER_ARGUMENTS, ParameterType.String, _argument));
 
             // チェックボックスのフラグ関連
             int flag = _rotation ? 1 : 0;
-            config.Parameters.Add(REG_PAGE_ROTATION, new ParameterValue(ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(REG_PAGE_ROTATION, ParameterType.Integer, flag));
             flag = _embed ? 1 : 0;
-            config.Parameters.Add(REG_EMBED_FONT, new ParameterValue(ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(REG_EMBED_FONT, ParameterType.Integer, flag));
             flag = _grayscale ? 1 : 0;
-            config.Parameters.Add(REG_GRAYSCALE, new ParameterValue(ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(REG_GRAYSCALE, ParameterType.Integer, flag));
             flag = _web ? 1 : 0;
-            config.Parameters.Add(REG_WEB_OPTIMIZE, new ParameterValue(ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(REG_WEB_OPTIMIZE, ParameterType.Integer, flag));
             flag = _save ? 1 : 0;
-            config.Parameters.Add(REG_SAVE_SETTING, new ParameterValue(ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(REG_SAVE_SETTING, ParameterType.Integer, flag));
             flag = _update ? 1 : 0;
-            config.Parameters.Add(REG_CHECK_UPDATE, new ParameterValue(ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(REG_CHECK_UPDATE, ParameterType.Integer, flag));
             flag = _advance ? 1 : 0;
-            config.Parameters.Add(REG_ADVANCED_MODE, new ParameterValue(ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(REG_ADVANCED_MODE, ParameterType.Integer, flag));
             flag = _visible ? 1 : 0;
-            config.Parameters.Add(REG_VISIBLE, new ParameterValue(ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(REG_VISIBLE, ParameterType.Integer, flag));
             flag = _selectable ? 1 : 0;
-            config.Parameters.Add(REG_SELECT_INPUT, new ParameterValue(ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(REG_SELECT_INPUT, ParameterType.Integer, flag));
 
             // コンボボックスのインデックス関連
-            config.Parameters.Add(REG_FILETYPE, new ParameterValue(ParameterType.Integer, (int)_type));
-            config.Parameters.Add(REG_PDF_VERSION, new ParameterValue(ParameterType.Integer, (int)_pdfver));
-            config.Parameters.Add(REG_RESOLUTION, new ParameterValue(ParameterType.Integer, (int)_resolution));
-            config.Parameters.Add(REG_EXISTED_FILE, new ParameterValue(ParameterType.Integer, (int)_exist));
-            config.Parameters.Add(REG_POST_PROCESS, new ParameterValue(ParameterType.Integer, (int)_postproc));
-            config.Parameters.Add(REG_DOWNSAMPLING, new ParameterValue(ParameterType.Integer, (int)_downsampling));
+            config.Parameters.Add(new ParameterElement(REG_FILETYPE, ParameterType.Integer, (int)_type));
+            config.Parameters.Add(new ParameterElement(REG_PDF_VERSION, ParameterType.Integer, (int)_pdfver));
+            config.Parameters.Add(new ParameterElement(REG_RESOLUTION, ParameterType.Integer, (int)_resolution));
+            config.Parameters.Add(new ParameterElement(REG_EXISTED_FILE, ParameterType.Integer, (int)_exist));
+            config.Parameters.Add(new ParameterElement(REG_POST_PROCESS, ParameterType.Integer, (int)_postproc));
+            config.Parameters.Add(new ParameterElement(REG_DOWNSAMPLING, ParameterType.Integer, (int)_downsampling));
 
             // アップデートプログラムの登録および削除
             using (var startup = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run")) {
