@@ -103,7 +103,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Message.cs" />
-    <Compile Include="ParameterList.cs" />
+    <Compile Include="ParameterCollection.cs" />
+    <Compile Include="ParameterElement.cs" />
+    <Compile Include="ParameterManager.cs" />
+    <Compile Include="ParameterType.cs" />
     <Compile Include="PDFModifier.cs" />
     <Compile Include="PostProcess.cs" />
     <Compile Include="Parameter.cs" />

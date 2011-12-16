@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 /*
- *  ParameterList.cs
+ *  ParameterManager.cs
  *
  *  Copyright (c) 2011, clown. All rights reserved.
  *
@@ -33,111 +33,16 @@
 using System;
 using System.Xml;
 using Microsoft.Win32;
-using Container = System.Collections.Generic.Dictionary<string, CubePDF.ParameterValue>;
 
-namespace CubePDF {
+namespace Cubic {
     /* --------------------------------------------------------------------- */
-    ///
-    /// ParameterType
-    ///
-    /// <summary>
-    /// ParameterList でサポートしているデータの種類．現在のところ，
-    /// 文字列 (String)，数値 (Integer)，配列 (List) の 3 種類に対応
-    /// している．配列 (List) は，階層構造を持つデータの為に使用する．
-    /// 
-    /// TODO: Boolean のサポートを検討する．レジストリの場合，Boolean
-    /// に相当する種類が存在しないので，データの種類が失われないように
-    /// する方法を検討する．
-    /// </summary>
-    ///
+    /// ParameterManager
     /* --------------------------------------------------------------------- */
-    public enum ParameterType {
-        Unknown,
-        String,
-        Integer,
-        //Boolean,
-        List,
-    }
-
-    /* --------------------------------------------------------------------- */
-    /// ParameterFileType
-    /* --------------------------------------------------------------------- */
-    public enum ParameterFileType {
-        Unknown,
-        XML,
-        //JSON,
-    }
-
-    /* --------------------------------------------------------------------- */
-    ///
-    /// ParameterValue
-    ///
-    /// <summary>
-    /// 実際のデータを格納するための薄いラッパクラス．実際のデータは，
-    /// 文字列，数値，およびそれらの配列が混在したものとなっているため
-    /// データ自体は object 型の変数に格納する事とする．その場合，
-    /// 元のデータの種類が何か分からなくなるため種類を記憶する変数を
-    /// 別に用意する．
-    /// </summary>
-    ///
-    /* --------------------------------------------------------------------- */
-    public class ParameterValue {
+    public class ParameterManager {
         /* ----------------------------------------------------------------- */
         /// Constructor
         /* ----------------------------------------------------------------- */
-        public ParameterValue() {
-            this.type_  = ParameterType.Unknown;
-            this.value_ = null;
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// Constructor
-        /* ----------------------------------------------------------------- */
-        public ParameterValue(ParameterType type, object value) {
-            this.type_  = type;
-            this.value_ = value;
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// プロパティ定義
-        /* ----------------------------------------------------------------- */
-        #region Properties
-
-        /* ----------------------------------------------------------------- */
-        /// Type
-        /* ----------------------------------------------------------------- */
-        public ParameterType Type {
-            get { return type_; }
-            set { type_ = value; }
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// Value
-        /* ----------------------------------------------------------------- */
-        public object Value {
-            get { return value_; }
-            set { value_ = value; }
-        }
-
-        #endregion
-
-        /* ----------------------------------------------------------------- */
-        /// 変数定義
-        /* ----------------------------------------------------------------- */
-        #region Member variables
-        private ParameterType type_;
-        private object value_;
-        #endregion
-    }
-
-    /* --------------------------------------------------------------------- */
-    /// ParameterList
-    /* --------------------------------------------------------------------- */
-    public class ParameterList {
-        /* ----------------------------------------------------------------- */
-        /// Constructor
-        /* ----------------------------------------------------------------- */
-        public ParameterList() { }
+        public ParameterManager() { }
 
         /* ----------------------------------------------------------------- */
         ///
@@ -193,9 +98,9 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public void Load(XmlDocument doc) {
-            this.data_.Clear();
+            this._data.Clear();
             var node = doc.DocumentElement;
-            this.Load(node, this.data_);
+            this.Load(node, this._data);
         }
 
         /* ----------------------------------------------------------------- */
@@ -212,7 +117,7 @@ namespace CubePDF {
             var root = doc.CreateElement("Parameters");
             doc.AppendChild(decl);
             doc.AppendChild(root);
-            this.Save(doc, root, this.data_);
+            this.Save(doc, root, this._data);            
         }
 
         /* ----------------------------------------------------------------- */
@@ -225,8 +130,8 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public void Load(RegistryKey root) {
-            this.data_.Clear();
-            this.Load(root, this.data_);
+            this._data.Clear();
+            this.Load(root, this._data);
         }
 
         /* ----------------------------------------------------------------- */
@@ -239,7 +144,7 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         public void Save(RegistryKey root) {
-            this.Save(root, this.data_);
+            this.Save(root, this._data);
         }
 
         /* ----------------------------------------------------------------- */
@@ -250,9 +155,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Value
         /* ----------------------------------------------------------------- */
-        public Container Parameters {
-            get { return data_; }
-            set { data_ = value; }
+        public ParameterCollection Parameters {
+            get { return _data; }
         }
 
         #endregion
@@ -271,13 +175,13 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void Load(XmlElement root, Container dest) {
+        private void Load(XmlElement root, ParameterCollection dest) {
             foreach (XmlElement elem in root) {
                 var attr = elem.GetAttribute("type");
-                if (attr == ParameterType.List.ToString()) {
-                    var value = new Container();
+                if (attr == ParameterType.Collection.ToString()) {
+                    var value = new ParameterCollection();
                     this.Load(elem, value);
-                    dest.Add(elem.Name, new ParameterValue(ParameterType.List, value));
+                    dest.Add(new ParameterElement(elem.Name, ParameterType.Collection, value));
                 }
                 else this.LoadValue(elem, dest);
             }
@@ -286,8 +190,10 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// LoadValue
         /* ----------------------------------------------------------------- */
-        private void LoadValue(XmlElement root, Container dest) {
-            var item = new ParameterValue();
+        private void LoadValue(XmlElement root, ParameterCollection dest) {
+            var item = new ParameterElement();
+            item.Key = root.Name;
+
             var attr = root.GetAttribute("type");
             if (attr == ParameterType.String.ToString()) item.Type = ParameterType.String;
             else if (attr == ParameterType.Integer.ToString()) item.Type = ParameterType.Integer;
@@ -297,7 +203,7 @@ namespace CubePDF {
             if (item.Type == ParameterType.String) item.Value = root.InnerText;
             else if (item.Type == ParameterType.Integer) item.Value = Int32.Parse(root.InnerText);
 
-            dest.Add(root.Name, item);
+            dest.Add(item);
         }
 
         /* ----------------------------------------------------------------- */
@@ -309,16 +215,16 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void Save(XmlDocument doc, XmlElement root, Container src) {
+        private void Save(XmlDocument doc, XmlElement root, ParameterCollection src) {
             foreach (var item in src) {
                 var elem = doc.CreateElement(item.Key);
-                elem.SetAttribute("type", item.Value.Type.ToString());
-                if (item.Value.Type == ParameterType.List) {
-                    var container = item.Value.Value as Container;
+                elem.SetAttribute("type", item.Type.ToString());
+                if (item.Type == ParameterType.Collection) {
+                    var container = item.Value as ParameterCollection;
                     if (container == null) continue;
                     this.Save(doc, elem, container);
                 }
-                else elem.InnerText = item.Value.Value.ToString();
+                else elem.InnerText = item.Value.ToString();
                 root.AppendChild(elem);
             }
         }
@@ -339,13 +245,13 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void Load(RegistryKey root, Container dest) {
+        private void Load(RegistryKey root, ParameterCollection dest) {
             foreach (string name in root.GetSubKeyNames()) {
-                var value = new Container();
+                var value = new ParameterCollection();
                 using (RegistryKey subkey = root.OpenSubKey(name, false)) {
                     this.Load(subkey, value);
                 }
-                dest.Add(name, new ParameterValue(ParameterType.List, value));
+                dest.Add(new ParameterElement(name, ParameterType.Collection, value));
             }
             this.LoadValues(root, dest);
         }
@@ -361,11 +267,13 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void LoadValues(RegistryKey root, Container dest) {
+        private void LoadValues(RegistryKey root, ParameterCollection dest) {
             foreach (string name in root.GetValueNames()) {
-                if (dest.ContainsKey(name)) continue;
+                if (dest.Contains(name)) continue;
 
-                var item = new ParameterValue();
+                var item = new ParameterElement();
+                item.Key = name;
+
                 var kind = root.GetValueKind(name);
                 if (kind == Microsoft.Win32.RegistryValueKind.String) {
                     item.Type = ParameterType.String;
@@ -379,7 +287,7 @@ namespace CubePDF {
                     throw new NotSupportedException(kind.ToString());
                 }
 
-                dest.Add(name, item);
+                dest.Add(item);
             }
         }
 
@@ -392,14 +300,14 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void Save(RegistryKey root, Container src) {
+        private void Save(RegistryKey root, ParameterCollection src) {
             foreach (var item in src) {
-                if (item.Value.Type == ParameterType.List) {
+                if (item.Type == ParameterType.Collection) {
                     using (RegistryKey subkey = root.CreateSubKey(item.Key)) {
-                        this.Save(subkey, (Container)item.Value.Value);
+                        this.Save(subkey, (ParameterCollection)item.Value);
                     }
                 }
-                else root.SetValue(item.Key, item.Value.Value);
+                else root.SetValue(item.Key, item.Value);
             }
         }
 
@@ -409,7 +317,7 @@ namespace CubePDF {
         /// 変数定義
         /* ----------------------------------------------------------------- */
         #region Member variables
-        private Container data_ = new Container();
+        private ParameterCollection _data = new ParameterCollection();
         #endregion
     }
 }
