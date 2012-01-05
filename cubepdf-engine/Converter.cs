@@ -274,15 +274,18 @@ namespace CubePDF {
         /// ConfigDownSampling
         /* ----------------------------------------------------------------- */
         public void ConfigDownSampling(UserSetting setting, Ghostscript.Converter gs) {
-            gs.AddOption("ColorImageResolution", Parameter.ResolutionValue(setting.Resolution));
-            gs.AddOption("GrayImageResolution", Parameter.ResolutionValue(setting.Resolution));
-            gs.AddOption("MonoImageResolution", 300);
+            var resolution = Parameter.ResolutionValue(setting.Resolution);
+            gs.AddOption("ColorImageResolution", resolution);
+            gs.AddOption("GrayImageResolution", resolution);
+            gs.AddOption("MonoImageResolution", (resolution < 300) ? 300 : 1200);
 
             if (setting.DownSampling == Parameter.DownSamplings.None) {
                 gs.AddOption("DownsampleColorImages", false);
                 gs.AddOption("AutoFilterColorImages", false);
+                gs.AddOption("ColorImageFilter", "/FlateEncode");
                 gs.AddOption("DownsampleGrayImages", false);
                 gs.AddOption("AutoFilterGrayImages", false);
+                gs.AddOption("GrayImageFilter", "/FlateEncode");
                 gs.AddOption("DownsampleMonoImages", false);
                 gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
             }
