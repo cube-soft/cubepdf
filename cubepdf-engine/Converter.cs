@@ -287,7 +287,8 @@ namespace CubePDF {
                 gs.AddOption("AutoFilterGrayImages", false);
                 gs.AddOption("GrayImageFilter", "/FlateEncode");
                 gs.AddOption("DownsampleMonoImages", false);
-                gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
+                gs.AddOption("AutoFilterMonoImages", false);
+                gs.AddOption("MonoImageFilter", "/FlateEncode");
             }
             else if (setting.DownSampling == Parameter.DownSamplings.Average) {
                 gs.AddOption("DownsampleColorImages", true);
