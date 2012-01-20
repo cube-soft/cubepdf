@@ -96,6 +96,7 @@
             this.PageLotationCheckBox = new System.Windows.Forms.CheckBox();
             this.EmbedFontCheckBox = new System.Windows.Forms.CheckBox();
             this.GrayscaleCheckBox = new System.Windows.Forms.CheckBox();
+            this.ImageFilterCheckBox = new System.Windows.Forms.CheckBox();
             this.WebOptimizeCheckBox = new System.Windows.Forms.CheckBox();
             this.SaveSettingCheckBox = new System.Windows.Forms.CheckBox();
             this.UpdateCheckBox = new System.Windows.Forms.CheckBox();
@@ -852,20 +853,21 @@
             this.DetailTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.DetailTableLayoutPanel.Controls.Add(this._DownSamplingLabel, 0, 0);
             this.DetailTableLayoutPanel.Controls.Add(this._OptionLabel, 0, 1);
-            this.DetailTableLayoutPanel.Controls.Add(this._OthersLabel, 0, 5);
+            this.DetailTableLayoutPanel.Controls.Add(this._OthersLabel, 0, 6);
             this.DetailTableLayoutPanel.Controls.Add(this.DownSamplingComboBox, 1, 0);
             this.DetailTableLayoutPanel.Controls.Add(this.PageLotationCheckBox, 1, 1);
             this.DetailTableLayoutPanel.Controls.Add(this.EmbedFontCheckBox, 1, 2);
             this.DetailTableLayoutPanel.Controls.Add(this.GrayscaleCheckBox, 1, 3);
-            this.DetailTableLayoutPanel.Controls.Add(this.WebOptimizeCheckBox, 1, 4);
-            this.DetailTableLayoutPanel.Controls.Add(this.SaveSettingCheckBox, 1, 5);
-            this.DetailTableLayoutPanel.Controls.Add(this.UpdateCheckBox, 1, 6);
-            this.DetailTableLayoutPanel.Controls.Add(this._PostProcessLiteLabel, 0, 7);
-            this.DetailTableLayoutPanel.Controls.Add(this.PostProcessLiteComboBox, 1, 7);
+            this.DetailTableLayoutPanel.Controls.Add(this.ImageFilterCheckBox, 1, 4);
+            this.DetailTableLayoutPanel.Controls.Add(this.WebOptimizeCheckBox, 1, 5);
+            this.DetailTableLayoutPanel.Controls.Add(this.SaveSettingCheckBox, 1, 6);
+            this.DetailTableLayoutPanel.Controls.Add(this.UpdateCheckBox, 1, 7);
+            this.DetailTableLayoutPanel.Controls.Add(this._PostProcessLiteLabel, 0, 8);
+            this.DetailTableLayoutPanel.Controls.Add(this.PostProcessLiteComboBox, 1, 8);
             this.DetailTableLayoutPanel.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
             this.DetailTableLayoutPanel.Location = new System.Drawing.Point(20, 20);
             this.DetailTableLayoutPanel.Name = "DetailTableLayoutPanel";
-            this.DetailTableLayoutPanel.RowCount = 8;
+            this.DetailTableLayoutPanel.RowCount = 9;
             this.DetailTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.DetailTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.DetailTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
@@ -874,7 +876,8 @@
             this.DetailTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.DetailTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
             this.DetailTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
-            this.DetailTableLayoutPanel.Size = new System.Drawing.Size(422, 208);
+            this.DetailTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 26F));
+            this.DetailTableLayoutPanel.Size = new System.Drawing.Size(422, 234);
             this.DetailTableLayoutPanel.TabIndex = 0;
             // 
             // _DownSamplingLabel
@@ -905,7 +908,7 @@
             // 
             this._OthersLabel.AutoSize = true;
             this._OthersLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this._OthersLabel.Location = new System.Drawing.Point(3, 133);
+            this._OthersLabel.Location = new System.Drawing.Point(3, 159);
             this._OthersLabel.Margin = new System.Windows.Forms.Padding(3);
             this._OthersLabel.Name = "_OthersLabel";
             this._OthersLabel.Size = new System.Drawing.Size(42, 20);
@@ -959,15 +962,26 @@
             this.GrayscaleCheckBox.Text = "グレースケール";
             this.GrayscaleCheckBox.UseVisualStyleBackColor = true;
             // 
+            // ImageFilterCheckBox
+            // 
+            this.ImageFilterCheckBox.AutoSize = true;
+            this.ImageFilterCheckBox.Dock = System.Windows.Forms.DockStyle.Left;
+            this.ImageFilterCheckBox.Location = new System.Drawing.Point(103, 107);
+            this.ImageFilterCheckBox.Name = "ImageFilterCheckBox";
+            this.ImageFilterCheckBox.Size = new System.Drawing.Size(106, 20);
+            this.ImageFilterCheckBox.TabIndex = 5;
+            this.ImageFilterCheckBox.Text = "画像をJpeg圧縮";
+            this.ImageFilterCheckBox.UseVisualStyleBackColor = true;
+            // 
             // WebOptimizeCheckBox
             // 
             this.WebOptimizeCheckBox.AutoSize = true;
             this.WebOptimizeCheckBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.WebOptimizeCheckBox.Location = new System.Drawing.Point(103, 109);
+            this.WebOptimizeCheckBox.Location = new System.Drawing.Point(103, 135);
             this.WebOptimizeCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.WebOptimizeCheckBox.Name = "WebOptimizeCheckBox";
             this.WebOptimizeCheckBox.Size = new System.Drawing.Size(126, 16);
-            this.WebOptimizeCheckBox.TabIndex = 5;
+            this.WebOptimizeCheckBox.TabIndex = 6;
             this.WebOptimizeCheckBox.Text = "Web表示用に最適化";
             this.WebOptimizeCheckBox.UseVisualStyleBackColor = true;
             this.WebOptimizeCheckBox.CheckedChanged += new System.EventHandler(this.WebOptimizeCheckBox_CheckedChanged);
@@ -976,11 +990,11 @@
             // 
             this.SaveSettingCheckBox.AutoSize = true;
             this.SaveSettingCheckBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.SaveSettingCheckBox.Location = new System.Drawing.Point(103, 135);
+            this.SaveSettingCheckBox.Location = new System.Drawing.Point(103, 161);
             this.SaveSettingCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.SaveSettingCheckBox.Name = "SaveSettingCheckBox";
             this.SaveSettingCheckBox.Size = new System.Drawing.Size(100, 16);
-            this.SaveSettingCheckBox.TabIndex = 6;
+            this.SaveSettingCheckBox.TabIndex = 7;
             this.SaveSettingCheckBox.Text = "設定を保存する";
             this.SaveSettingCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -988,11 +1002,11 @@
             // 
             this.UpdateCheckBox.AutoSize = true;
             this.UpdateCheckBox.Dock = System.Windows.Forms.DockStyle.Left;
-            this.UpdateCheckBox.Location = new System.Drawing.Point(103, 161);
+            this.UpdateCheckBox.Location = new System.Drawing.Point(103, 187);
             this.UpdateCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.UpdateCheckBox.Name = "UpdateCheckBox";
             this.UpdateCheckBox.Size = new System.Drawing.Size(174, 16);
-            this.UpdateCheckBox.TabIndex = 7;
+            this.UpdateCheckBox.TabIndex = 8;
             this.UpdateCheckBox.Text = "起動時にアップデートを確認する";
             this.UpdateCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -1000,11 +1014,11 @@
             // 
             this._PostProcessLiteLabel.AutoSize = true;
             this._PostProcessLiteLabel.Dock = System.Windows.Forms.DockStyle.Left;
-            this._PostProcessLiteLabel.Location = new System.Drawing.Point(3, 185);
+            this._PostProcessLiteLabel.Location = new System.Drawing.Point(3, 211);
             this._PostProcessLiteLabel.Margin = new System.Windows.Forms.Padding(3);
             this._PostProcessLiteLabel.Name = "_PostProcessLiteLabel";
             this._PostProcessLiteLabel.Size = new System.Drawing.Size(75, 20);
-            this._PostProcessLiteLabel.TabIndex = 8;
+            this._PostProcessLiteLabel.TabIndex = 9;
             this._PostProcessLiteLabel.Text = "ポストプロセス：";
             this._PostProcessLiteLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -1013,10 +1027,10 @@
             this.PostProcessLiteComboBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PostProcessLiteComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PostProcessLiteComboBox.FormattingEnabled = true;
-            this.PostProcessLiteComboBox.Location = new System.Drawing.Point(103, 185);
+            this.PostProcessLiteComboBox.Location = new System.Drawing.Point(103, 211);
             this.PostProcessLiteComboBox.Name = "PostProcessLiteComboBox";
             this.PostProcessLiteComboBox.Size = new System.Drawing.Size(316, 20);
-            this.PostProcessLiteComboBox.TabIndex = 9;
+            this.PostProcessLiteComboBox.TabIndex = 10;
             // 
             // ConvertBackgroundWorker
             // 
@@ -1157,6 +1171,7 @@
         private System.Windows.Forms.ComboBox PostProcessLiteComboBox;
         private System.ComponentModel.BackgroundWorker ConvertBackgroundWorker;
         private System.Windows.Forms.PictureBox _patch;
+        private System.Windows.Forms.CheckBox ImageFilterCheckBox;
     }
 }
 
