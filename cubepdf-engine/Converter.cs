@@ -50,7 +50,7 @@ namespace CubePDF {
                 gs.PageRotation = setting.PageRotation;
                 gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
 
-                this.ConfigDownSampling(setting, gs);
+                this.ConfigImageOperations(setting, gs);
                 if (Parameter.IsImageType(setting.FileType)) this.ConfigImage(setting, gs);
                 else this.ConfigDocument(setting, gs);
                 this.EscapeExistedFile(setting);
@@ -271,57 +271,36 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
-        /// ConfigDownSampling
+        /// ConfigImageOperations
         /* ----------------------------------------------------------------- */
-        public void ConfigDownSampling(UserSetting setting, Ghostscript.Converter gs) {
+        public void ConfigImageOperations(UserSetting setting, Ghostscript.Converter gs) {
+            // 解像度
             var resolution = Parameter.ResolutionValue(setting.Resolution);
             gs.AddOption("ColorImageResolution", resolution);
             gs.AddOption("GrayImageResolution", resolution);
             gs.AddOption("MonoImageResolution", (resolution < 300) ? 300 : 1200);
 
+            // 画像圧縮
+            gs.AddOption("AutoFilterColorImages", false);
+            gs.AddOption("AutoFilterGrayImages",  false);
+            gs.AddOption("AutoFilterMonoImages",  false);
+            gs.AddOption("ColorImageFilter", "/" + setting.ImageFilter.ToString());
+            gs.AddOption("GrayImageFilter",  "/" + setting.ImageFilter.ToString());
+            gs.AddOption("MonoImageFilter",  "/" + setting.ImageFilter.ToString());
+
+            // ダウンサンプリング
             if (setting.DownSampling == Parameter.DownSamplings.None) {
                 gs.AddOption("DownsampleColorImages", false);
-                gs.AddOption("AutoFilterColorImages", false);
-                gs.AddOption("ColorImageFilter", "/FlateEncode");
-                gs.AddOption("DownsampleGrayImages", false);
-                gs.AddOption("AutoFilterGrayImages", false);
-                gs.AddOption("GrayImageFilter", "/FlateEncode");
-                gs.AddOption("DownsampleMonoImages", false);
-                gs.AddOption("AutoFilterMonoImages", false);
-                gs.AddOption("MonoImageFilter", "/FlateEncode");
+                gs.AddOption("DownsampleGrayImages",  false);
+                gs.AddOption("DownsampleMonoImages",  false);
             }
-            else if (setting.DownSampling == Parameter.DownSamplings.Average) {
+            else {
                 gs.AddOption("DownsampleColorImages", true);
-                gs.AddOption("ColorImageDownsampleType", "/Average");
-                gs.AddOption("AutoFilterColorImages", true);
-                gs.AddOption("DownsampleGrayImages", true);
-                gs.AddOption("GrayImageDownsampleType", "/Average");
-                gs.AddOption("AutoFilterGrayImages", true);
-                gs.AddOption("DownsampleMonoImages", true);
-                gs.AddOption("MonoImageDownsampleType", "/Average");
-                gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
-            }
-            else if (setting.DownSampling == Parameter.DownSamplings.Bicubic) {
-                gs.AddOption("DownsampleColorImages", true);
-                gs.AddOption("ColorImageDownsampleType", "/Bicubic");
-                gs.AddOption("AutoFilterColorImages", true);
-                gs.AddOption("DownsampleGrayImages", true);
-                gs.AddOption("GrayImageDownsampleType", "/Bicubic");
-                gs.AddOption("AutoFilterGrayImages", true);
-                gs.AddOption("DownsampleMonoImages", true);
-                gs.AddOption("MonoImageDownsampleType", "/Bicubic");
-                gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
-            }
-            else if (setting.DownSampling == Parameter.DownSamplings.Subsample) {
-                gs.AddOption("DownsampleColorImages", true);
-                gs.AddOption("ColorImageDownsampleType", "/Subsample");
-                gs.AddOption("AutoFilterColorImages", true);
-                gs.AddOption("DownsampleGrayImages", true);
-                gs.AddOption("GrayImageDownsampleType", "/Subsample");
-                gs.AddOption("AutoFilterGrayImages", true);
-                gs.AddOption("DownsampleMonoImages", true);
-                gs.AddOption("MonoImageDownsampleType", "/Subsample");
-                gs.AddOption("MonoImageFilter", "/CCITTFaxEncode");
+                gs.AddOption("DownsampleGrayImages",  true);
+                gs.AddOption("DownsampleMonoImages",  true);
+                gs.AddOption("ColorImageDownsampleType", "/" + setting.DownSampling.ToString());
+                gs.AddOption("GrayImageDownsampleType",  "/" + setting.DownSampling.ToString());
+                gs.AddOption("MonoImageDownsampleType", "/" + setting.DownSampling.ToString());
             }
         }
 
