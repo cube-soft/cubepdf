@@ -41,10 +41,8 @@ namespace CubePDF {
             var dir = System.IO.Path.GetDirectoryName(exec.Location);
             SetupLog(dir + @"\cubepdf.log");
             Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf-redirect.exe start");
-            
-            var os = System.Environment.OSVersion;
-            var edition = (IntPtr.Size == 4) ? "x86" : "x64";
-            Trace.WriteLine(String.Format("{0}: {1} ({2})", DateTime.Now.ToString(), os.VersionString, edition));
+            Trace.WriteLine(DateTime.Now.ToString() + ": Arguments:");
+            foreach (var s in args) Trace.WriteLine("\t" + s);
 
             var arguments = ParseArguments(args);
             var input = arguments["InputFile"];
@@ -56,7 +54,7 @@ namespace CubePDF {
                 if (username != null) ChangeEnvironments(domain, username);
 
                 var filename = Utility.GetFileName(FileNameModifier.ModifyFileName(arguments["DocumentName"]));
-                Trace.WriteLine(DateTime.Now.ToString() + ": OUTPUT: " + filename);
+                Trace.WriteLine(DateTime.Now.ToString() + ": OutputPath: " + filename);
                 System.Environment.SetEnvironmentVariable("REDMON_FILENAME", filename);
                 
                 PROCESS_INFORMATION pi = new PROCESS_INFORMATION();
@@ -67,10 +65,10 @@ namespace CubePDF {
                 }
                 catch (Exception e) {
                     Trace.WriteLine(DateTime.Now.ToString() + ": exception occured");
-                    Trace.WriteLine(DateTime.Now.ToString() + ": TYPE: " + e.GetType().ToString());
-                    Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: " + e.Source);
-                    Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + e.Message);
-                    Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + e.StackTrace);
+                    Trace.WriteLine(DateTime.Now.ToString() + ": Type: " + e.GetType().ToString());
+                    Trace.WriteLine(DateTime.Now.ToString() + ": Source: " + e.Source);
+                    Trace.WriteLine(DateTime.Now.ToString() + ": Message: " + e.Message);
+                    Trace.WriteLine(DateTime.Now.ToString() + ": StackTrace: " + e.StackTrace);
                     result = false;
                 }
 
@@ -100,10 +98,10 @@ namespace CubePDF {
             }
             catch (Exception e) {
                 Trace.WriteLine(DateTime.Now.ToString() + ": exception occured");
-                Trace.WriteLine(DateTime.Now.ToString() + ": TYPE: " + e.GetType().ToString());
-                Trace.WriteLine(DateTime.Now.ToString() + ": SOURCE: " + e.Source);
-                Trace.WriteLine(DateTime.Now.ToString() + ": MESSAGE: " + e.Message);
-                Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + e.StackTrace);
+                Trace.WriteLine(DateTime.Now.ToString() + ": Type: " + e.GetType().ToString());
+                Trace.WriteLine(DateTime.Now.ToString() + ": Source: " + e.Source);
+                Trace.WriteLine(DateTime.Now.ToString() + ": Message: " + e.Message);
+                Trace.WriteLine(DateTime.Now.ToString() + ": StackTrace: " + e.StackTrace);
             }
             finally {
                 if (File.Exists(input)) {
@@ -148,10 +146,10 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private static void ChangeEnvironments(string domain, string username) {
             Environment.SetEnvironmentVariable("USERNAME", username);
-            
+
             var os = System.Environment.OSVersion;
             if (os.Version.Major <= 4) return; // Windows 95/98/ME/NT は対象外．
-            
+
             string profile = "";
             var login = domain.Length > 0 ? domain + '\\' + username : username;
             var registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(
@@ -159,8 +157,8 @@ namespace CubePDF {
             if (registry != null) profile = (string)registry.GetValue("ProfileImagePath", "");
             if (profile.Length == 0) {
                 Trace.WriteLine(DateTime.Now.ToString() + ": ProfileImagePath: registry not found");
-                Trace.WriteLine(DateTime.Now.ToString() + ": LOGIN: " + login);
-                Trace.WriteLine(DateTime.Now.ToString() + ": SID: " + Utility.GetSID(login));
+                Trace.WriteLine("\tLogIn = " + login);
+                Trace.WriteLine("\tSID   = " + Utility.GetSID(login));
                 profile = (os.Version.Major == 5) ?
                     Environment.GetEnvironmentVariable("SystemDrive") + @"\Documents and Settings\" + username :
                     Environment.GetEnvironmentVariable("SystemDrive") + @"\Users\" + username;
@@ -178,9 +176,12 @@ namespace CubePDF {
             Environment.SetEnvironmentVariable("TEMP", profile + temp);
             Environment.SetEnvironmentVariable("TMP", profile + tmp);
 
-            Trace.WriteLine(DateTime.Now.ToString() + ": DOMAIN: " + domain);
-            Trace.WriteLine(DateTime.Now.ToString() + ": USERNAME: " + username);
-            Trace.WriteLine(DateTime.Now.ToString() + ": USERPROFILE: " + profile);
+            Trace.WriteLine(DateTime.Now.ToString() + ": Environments:");
+            Trace.WriteLine(String.Format("\tOS          = {1} ({2})", DateTime.Now.ToString(), os.VersionString, (IntPtr.Size == 4) ? "x86" : "x64"));
+            Trace.WriteLine("\tDomain      = " + domain);
+            Trace.WriteLine("\tUserName    = " + username);
+            Trace.WriteLine("\tUserProfile = " + profile);
+            Trace.WriteLine("\tOS          = " + profile);
         }
 
         /* ----------------------------------------------------------------- */

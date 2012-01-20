@@ -244,7 +244,7 @@ namespace CubePDF {
                 bool status = true;
 
                 Trace.WriteLine(DateTime.Now.ToString() + ": Current Directory: " + Utility.CurrentDirectory);
-                Trace.WriteLine(DateTime.Now.ToString() + ": ARGUMENTS:");
+                Trace.WriteLine(DateTime.Now.ToString() + ": Arguments:");
                 foreach (var s in args) Trace.WriteLine('\t' + s);
 
                 lock (gslock_) {
@@ -398,30 +398,30 @@ namespace CubePDF {
             /// AddErrorMessages (private)
             /* ------------------------------------------------------------- */
             private void AddErrorMessages(Exception err, string[] args) {
-                _messages.Add(new Message(Message.Levels.Debug, String.Format("TYPE: {0}", err.GetType().ToString())));
-                _messages.Add(new Message(Message.Levels.Debug, String.Format("SOURCE: {0}", err.Source)));
-                _messages.Add(new Message(Message.Levels.Debug, String.Format("STACKTRACE: {0}", err.StackTrace)));
-                _messages.Add(new Message(Message.Levels.Debug, String.Format("EXECDIR: {0}", Utility.CurrentDirectory)));
-                _messages.Add(new Message(Message.Levels.Debug, String.Format("WORKINGDIR: {0}", Utility.WorkingDirectory)));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("Type: {0}", err.GetType().ToString())));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("Source: {0}", err.Source)));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("StackTrace: {0}", err.StackTrace)));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("ExecDir: {0}", Utility.CurrentDirectory)));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("WorkingDir: {0}", Utility.WorkingDirectory)));
 
                 // ライブラリの存在するディレクトリへのパス
                 string msg = "LIBPATH: ";
                 if (_includes.Count > 0) {
                     msg += _includes[0];
-                    if (!Directory.Exists(_includes[0])) msg += " (NOT FOUND)";
+                    if (!Directory.Exists(_includes[0])) msg += " (NotFound)";
                 }
                 else msg += "UNKNOWN";
                 _messages.Add(new Message(Message.Levels.Debug, msg));
 
                 // 指定された全ての引数
                 if (args != null) {
-                    msg = "ARGUMENTS:";
+                    msg = "Arguments:";
                     foreach (string s in args) msg += ("\r\n\t" + s);
                     _messages.Add(new Message(Message.Levels.Debug, msg));
                 }
 
                 // エラーメッセージ
-                _messages.Add(new Message(Message.Levels.Debug, String.Format("MESSAGE: {0}", err.Message)));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("Message: {0}", err.Message)));
             }
 
             /* ------------------------------------------------------------- */
