@@ -85,6 +85,13 @@ namespace CubePDF {
             None, Average, Bicubic, Subsample,
         };
 
+        /* ----------------------------------------------------------------- */
+        /// ImageFilters
+        /* ----------------------------------------------------------------- */
+        public enum ImageFilters : int {
+            FlateEncode, DCTEncode, CCITTFaxEncode,
+        }
+
         #endregion
 
         /* ----------------------------------------------------------------- */

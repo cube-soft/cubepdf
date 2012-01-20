@@ -46,36 +46,24 @@ namespace CubePDF {
             var edition = (IntPtr.Size == 4) ? "x86" : "x64";
             Trace.WriteLine(String.Format("{0}: {1} ({2})", DateTime.Now.ToString(), os.VersionString, edition));
 
-            var redmon = Environment.GetEnvironmentVariable("REDMON_USER");
-            var domain = Environment.GetEnvironmentVariable("REDMON_MACHINE");
+            var arguments = ParseArguments(args);
+            var input = arguments["InputFile"];
+            var username = arguments["UserName"];
+            var domain = arguments["MachineName"];
             domain = domain.TrimStart('\\');
-            string psfilepath = "";
-            
-            /*
-             * ユーザに依存する環境変数．記憶しておいて，終了直前に元に戻す．
-             * RedMon は，ユーザプロセスとして実行された場合でも
-             * 環境変数の内容はシステムのもののままであるため，プログラム内で
-             * REDMON_USER で取得できるユーザ名に対応する環境変数に変更する．
-             */
-            var environments = new Container.Dictionary<string, string>();
-            SaveEnvironments(environments);
-            System.Diagnostics.Debug.Assert(environments["USERNAME"] != null);
-            System.Diagnostics.Debug.Assert(environments["USERPROFILE"] != null);
 
             try {
-                if (redmon != null) ChangeEnvironments(domain, redmon);
-                else Trace.WriteLine(DateTime.Now.ToString() + ": REDMON_USER: parameter not found");
+                if (username != null) ChangeEnvironments(domain, username);
 
-                var filename = Utility.GetFileName(FileNameModifier.ModifyFileName(Environment.GetEnvironmentVariable("REDMON_DOCNAME")));
-                psfilepath = Utility.GetTempPath() + Path.GetRandomFileName();
-                SavePostscript(Console.OpenStandardInput(), psfilepath);
+                var filename = Utility.GetFileName(FileNameModifier.ModifyFileName(arguments["DocumentName"]));
                 Trace.WriteLine(DateTime.Now.ToString() + ": OUTPUT: " + filename);
                 System.Environment.SetEnvironmentVariable("REDMON_FILENAME", filename);
                 
                 PROCESS_INFORMATION pi = new PROCESS_INFORMATION();
                 bool result = true;
                 try {
-                    result = ProcessAsUser.Run(dir + @"\cubepdf.exe " + psfilepath + " \"" + filename + "\"", System.Environment.GetEnvironmentVariable("REDMON_USER"), out pi);
+                    var cmdline = dir + @"\cubepdf.exe " + input + " \"" + filename + "\"";
+                    result = ProcessAsUser.Run(cmdline, username, out pi);
                 }
                 catch (Exception e) {
                     Trace.WriteLine(DateTime.Now.ToString() + ": exception occured");
@@ -95,7 +83,7 @@ namespace CubePDF {
                 } else {
                     var proc = new System.Diagnostics.Process();
                     proc.StartInfo.FileName = dir + @"\cubepdf.exe";
-                    proc.StartInfo.Arguments = @psfilepath;
+                    proc.StartInfo.Arguments = input;
                     proc.StartInfo.CreateNoWindow = false;
                     proc.StartInfo.UseShellExecute = false;
                     proc.StartInfo.LoadUserProfile = true;
@@ -118,19 +106,30 @@ namespace CubePDF {
                 Trace.WriteLine(DateTime.Now.ToString() + ": STACKTRACE: " + e.StackTrace);
             }
             finally {
-                // 環境変数の復元．
-                if (redmon != null) {
-                    foreach (var elem in environments) {
-                        if (elem.Value != null) Environment.SetEnvironmentVariable(elem.Key, elem.Value);
-                    }
-                }
-                
-                if (File.Exists(psfilepath)) {
-                    File.Delete(psfilepath);
+                if (File.Exists(input)) {
+                    File.Delete(input);
                 }
             }
         }
-        
+
+        /* ----------------------------------------------------------------- */
+        /// ParseArguments
+        /* ----------------------------------------------------------------- */
+        private static Container.Dictionary<string, string> ParseArguments(string[] args) {
+            var dest = new Container.Dictionary<string, string>();
+
+            string key = "";
+            for (int i = 0; i < args.Length; ++i) {
+                if (args[i].Length > 0 && args[i][0] == '/') key = args[i].Substring(1);
+                else if (args.Length > 0) {
+                    dest.Add(key, args[i]);
+                    key = "";
+                }
+            }
+
+            return dest;
+        }
+
         /* ----------------------------------------------------------------- */
         /// SaveEnvironments
         /* ----------------------------------------------------------------- */
@@ -182,21 +181,6 @@ namespace CubePDF {
             Trace.WriteLine(DateTime.Now.ToString() + ": DOMAIN: " + domain);
             Trace.WriteLine(DateTime.Now.ToString() + ": USERNAME: " + username);
             Trace.WriteLine(DateTime.Now.ToString() + ": USERPROFILE: " + profile);
-        }
-        
-        /* ----------------------------------------------------------------- */
-        /// SavePostscript
-        /* ----------------------------------------------------------------- */
-        private static void SavePostscript(System.IO.Stream src, string dest) {
-            byte[] buf = new byte[32768];
-            using (var output = new System.IO.FileStream(dest, System.IO.FileMode.Create, System.IO.FileAccess.Write)) {
-                while (true) {
-                    int read = src.Read(buf, 0, buf.Length);
-                    if (read > 0) output.Write(buf, 0, read);
-                    else break;
-                }
-                output.Close();
-            }
         }
 
         /* ----------------------------------------------------------------- */

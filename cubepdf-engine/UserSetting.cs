@@ -329,23 +329,26 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         #region dumplog
         public void Dump() {
-            Trace.WriteLine(DateTime.Now.ToString() + ": InstallPath = " + _install);
-            Trace.WriteLine(DateTime.Now.ToString() + ": Version = " + _version);
-            Trace.WriteLine(DateTime.Now.ToString() + ": FileType = " + _type.ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": PDFVersion = " + _pdfver.ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": Resolution = " + _resolution.ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": OutputPath = " + _output);
-            Trace.WriteLine(DateTime.Now.ToString() + ": ExistedFile = " + _exist.ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": PostProcess = " + _postproc.ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": UserProgram = " + _program);
-            Trace.WriteLine(DateTime.Now.ToString() + ": Downsampling = " + _downsampling.ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": PageRotation = " + _rotation.ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": EmbedFonts = " + _embed.ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": Grayscale = " + _grayscale.ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": WebOptimize = " + _web.ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": SaveOptions = " + _save.ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": UpdateCheck = " + _update.ToString());
-            Trace.WriteLine(DateTime.Now.ToString() + ": Visible = " + _visible.ToString());
+            Trace.WriteLine(DateTime.Now.ToString() + ": UserSetting:");
+            Trace.WriteLine("\tVersion      = " + _version);
+            Trace.WriteLine("\tInstallPath  = " + _install);
+            Trace.WriteLine("\tLibPath      = " + _lib);
+            Trace.WriteLine("\tFileType     = " + _type.ToString());
+            Trace.WriteLine("\tPDFVersion   = " + _pdfver.ToString());
+            Trace.WriteLine("\tResolution   = " + _resolution.ToString());
+            Trace.WriteLine("\tOutputPath   = " + _output);
+            Trace.WriteLine("\tExistedFile  = " + _exist.ToString());
+            Trace.WriteLine("\tPostProcess  = " + _postproc.ToString());
+            Trace.WriteLine("\tUserProgram  = " + _program);
+            Trace.WriteLine("\tDownsampling = " + _downsampling.ToString());
+            Trace.WriteLine("\tImageFilter  = " + _filter.ToString());
+            Trace.WriteLine("\tPageRotation = " + _rotation.ToString());
+            Trace.WriteLine("\tEmbedFonts   = " + _embed.ToString());
+            Trace.WriteLine("\tGrayscale    = " + _grayscale.ToString());
+            Trace.WriteLine("\tWebOptimize  = " + _web.ToString());
+            Trace.WriteLine("\tSaveOptions  = " + _save.ToString());
+            Trace.WriteLine("\tUpdateCheck  = " + _update.ToString());
+            Trace.WriteLine("\tVisible      = " + _visible.ToString());
         }
         #endregion
 
@@ -685,6 +688,24 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
+        /// ImageFilter
+        /// 
+        /// <summary>
+        /// 画像の圧縮方法を取得，または設定します．
+        /// 設定可能な値は以下の通りです:
+        /// FlateEncode, DCTEncode, CCITTFaxEncode
+        /// これらの値は，例えば，CubePDF.Parameter.ImageFilter.FlateEncode
+        /// のように設定します．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public Parameter.ImageFilters ImageFilter {
+            get { return _filter; }
+            set { _filter = value; }
+        }
+        
+        /* ----------------------------------------------------------------- */
+        ///
         /// PageRotation
         ///
         /// <summary>
@@ -907,6 +928,11 @@ namespace CubePDF {
             foreach (int x in Enum.GetValues(typeof(Parameter.DownSamplings))) {
                 if (x == value) _downsampling = (Parameter.DownSamplings)value;
             }
+
+            value = v.Contains(REG_IMAGEFILTER) ? (int)v.Find(REG_IMAGEFILTER).Value : 0;
+            foreach (int x in Enum.GetValues(typeof(Parameter.ImageFilters))) {
+                if (x == value) _filter = (Parameter.ImageFilters)value;
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -955,6 +981,7 @@ namespace CubePDF {
             config.Parameters.Add(new ParameterElement(REG_EXISTED_FILE, ParameterType.Integer, (int)_exist));
             config.Parameters.Add(new ParameterElement(REG_POST_PROCESS, ParameterType.Integer, (int)_postproc));
             config.Parameters.Add(new ParameterElement(REG_DOWNSAMPLING, ParameterType.Integer, (int)_downsampling));
+            config.Parameters.Add(new ParameterElement(REG_IMAGEFILTER, ParameterType.Integer, (int)_filter));
 
             // アップデートプログラムの登録および削除
             using (var startup = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run")) {
@@ -988,6 +1015,7 @@ namespace CubePDF {
         private Parameter.ExistedFiles _exist = Parameter.ExistedFiles.Overwrite;
         private Parameter.PostProcesses _postproc = Parameter.PostProcesses.Open;
         private Parameter.DownSamplings _downsampling = Parameter.DownSamplings.None;
+        private Parameter.ImageFilters _filter = Parameter.ImageFilters.FlateEncode;
         private bool _rotation = true;
         private bool _embed = true;
         private bool _grayscale = false;
@@ -1014,6 +1042,7 @@ namespace CubePDF {
         const string REG_CHECK_UPDATE       = "CheckUpdate";
         const string REG_VISIBLE            = "Visible";
         const string REG_DOWNSAMPLING       = "DownSampling";
+        const string REG_IMAGEFILTER        = "ImageFilter";
         const string REG_EMBED_FONT         = "EmbedFont";
         const string REG_EXISTED_FILE       = "ExistedFile";
         const string REG_FILETYPE           = "FileType";
