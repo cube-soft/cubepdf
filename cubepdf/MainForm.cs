@@ -242,6 +242,7 @@ namespace CubePDF {
             this.PageLotationCheckBox.Checked = setting.PageRotation;
             this.EmbedFontCheckBox.Checked = setting.EmbedFont;
             this.GrayscaleCheckBox.Checked = setting.Grayscale;
+            this.ImageFilterCheckBox.Checked = (setting.ImageFilter == Parameter.ImageFilters.DCTEncode) ? true : false;
             this.WebOptimizeCheckBox.Checked = setting.WebOptimize;
             this.SaveSettingCheckBox.Checked = setting.SaveSetting;
             this.UpdateCheckBox.Checked = setting.CheckUpdate;
@@ -296,6 +297,7 @@ namespace CubePDF {
             setting.PageRotation = this.PageLotationCheckBox.Checked;
             setting.EmbedFont = this.EmbedFontCheckBox.Checked;
             setting.Grayscale = this.GrayscaleCheckBox.Checked;
+            setting.ImageFilter = this.ImageFilterCheckBox.Checked ? Parameter.ImageFilters.DCTEncode : Parameter.ImageFilters.FlateEncode;
             setting.WebOptimize = this.WebOptimizeCheckBox.Checked;
             setting.SaveSetting = this.SaveSettingCheckBox.Checked;
             setting.CheckUpdate = this.UpdateCheckBox.Checked;
@@ -498,6 +500,7 @@ namespace CubePDF {
             this.OwnerPasswordGroupBox.Enabled = is_pdf && !is_webopt;
             this.EmbedFontCheckBox.Enabled = false; // 本来は !is_bitmap;
             this.GrayscaleCheckBox.Enabled = is_grayscale;
+            this.ImageFilterCheckBox.Enabled = !is_bitmap;
             this.WebOptimizeCheckBox.Enabled = is_pdf && !is_security;
 
             // 出力パスの拡張子を変更後のファイルタイプに合わせる．
