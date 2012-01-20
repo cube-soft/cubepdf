@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
   CubePDF
-  Copyright (c) 2010 - 2011 CubeSoft, Inc. All rights reserved.
+  Copyright (c) 2010 - 2012 CubeSoft, Inc. All rights reserved.
 
   開発・配布：株式会社キューブ・ソフト
   Mailto: support@cube-soft.jp
@@ -22,15 +22,16 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   Copyright (c) Artifex Software, Inc. All rights reserved.
   URL: http://pages.cs.wisc.edu/~ghost/
   GNU General Public License ( http://www.gnu.org/licenses/gpl.html )
-- RedMon
-  Copyright (C) 1997-2000, Ghostgum Software Pty Ltd.  All rights reserved.
-  URL: http://pages.cs.wisc.edu/~ghost/redmon/
-  Aladdin Free Public License ( http://www.artifex.com/downloads/doc/Public.htm )
 - iTextSharp
   URL: http://sourceforge.net/projects/itextsharp/
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
 ■バージョン履歴
+2012/01/31 version 1.0.0
+- プリンタポートモニタを修正
+- PDFに埋め込まれている画像をJpeg圧縮するかどうかを選択できるように修正
+- 出力ファイル欄にファイル名として使用できない文字が設定される不都合を修正
+
 2011/10/18 version 0.9.9.5β
 - レジストリに定義外の値が指定された場合にエラーが発生する不都合を修正
 - 特定の条件下で「セキュリティ」の項目と「Web 表示用に最適化」の項目を両方とも設定可能になる不都合を修正
