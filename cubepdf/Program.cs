@@ -37,6 +37,8 @@ namespace CubePDF
             var dir = System.IO.Path.GetDirectoryName(exec.Location);
             SetupLog(dir + @"\cubepdf.log");
             Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf.exe start");
+            Trace.WriteLine(DateTime.Now.ToString() + ": Arguments:");
+            foreach (var s in args) Trace.WriteLine("\t" + s);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -51,7 +53,6 @@ namespace CubePDF
         /// SetupLog
         /* ----------------------------------------------------------------- */
         private static void SetupLog(string src) {
-            if (System.IO.File.Exists(src)) System.IO.File.Delete(src);
             Trace.Listeners.Remove("Default");
             Trace.Listeners.Add(new TextWriterTraceListener(src));
             Trace.AutoFlush = true;
