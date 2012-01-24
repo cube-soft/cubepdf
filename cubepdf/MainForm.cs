@@ -81,6 +81,9 @@ namespace CubePDF {
                     _setting.OutputPath : Path.GetDirectoryName(_setting.OutputPath);
                 this.OutputPathTextBox.Text = dir + '\\' + filename;
             }
+
+            var edition = (IntPtr.Size == 4) ? "x86" : "x64";
+            this.Text = String.Format("CubePDF {0} ({1})", _setting.Version, edition);
         }
         
         /* ----------------------------------------------------------------- */
