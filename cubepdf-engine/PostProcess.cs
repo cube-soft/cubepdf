@@ -47,8 +47,10 @@ namespace CubePDF {
                 }
                 else {
                     psi.FileName = setting.UserProgram;
-                    psi.Arguments = "\"" + path + "\"";
-                    if (setting.UserArguments.Length > 0) psi.Arguments += ' ' + setting.UserArguments;
+                    if (setting.UserArguments.Length > 0) {
+                        string replaced = "\"" + path + "\"";
+                        psi.Arguments = setting.UserArguments.Replace("%%FILE%%", replaced);
+                    }
                 }
                 psi.CreateNoWindow = false;
                 psi.UseShellExecute = true;
