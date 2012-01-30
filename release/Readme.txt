@@ -27,7 +27,7 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
 ■バージョン履歴
-2012/01/31 version 1.0.0
+2012/01/30 version 1.0.0RC1
 - プリンタポートモニタを修正
 - PDFに埋め込まれている画像をJpeg圧縮するかどうかを選択できるように修正
 - 出力ファイル欄にファイル名として使用できない文字が設定される不都合を修正
