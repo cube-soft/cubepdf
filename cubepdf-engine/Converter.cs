@@ -199,7 +199,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public void ConfigPDF(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("CompatibilityLevel", Parameter.PDFVersionValue(setting.PDFVersion));
-            //gs.AddOption("UseFlateCompression", "false");
+            gs.AddOption("UseFlateCompression", "false");
 
             if (setting.PDFVersion == Parameter.PDFVersions.VerPDFA) this.ConfigPDFA(setting, gs);
             else if (setting.PDFVersion == Parameter.PDFVersions.VerPDFX) this.ConfigPDFX(setting, gs);

@@ -96,6 +96,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandLine.cs" />
+    <Compile Include="FileNameModifier.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

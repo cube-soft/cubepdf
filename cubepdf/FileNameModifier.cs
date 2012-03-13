@@ -26,9 +26,47 @@ using System.IO;
 namespace CubePDF {
     public abstract class FileNameModifier {
         /* ----------------------------------------------------------------- */
+        ///
+        /// GetFileName
+        ///
+        /// <summary>
+        /// DocumentName からファイル名を取得する．
+        /// DocumentName は，以下のパターンに分かれる．
+        ///  1. ファイル名のみ
+        ///  2. アプリケーション名 - ファイル名
+        ///  3. ファイル名 - アプリケーション名
+        /// どこに拡張子が存在するかでファイル名部分を判別する．
+        /// どこにも存在しない場合は，DocumentName 自身を返す．
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public static string GetFileName(string src)
+        {
+            if (src == null || src.Length == 0) return "CubePDF";
+            string docname = ModifyFileName(src);
+            if (docname == null || docname.Length == 0) return "CubePDF";
+
+            string search = " - ";
+            int pos = docname.LastIndexOf(search);
+            if (pos == -1) return docname;
+            else if (System.IO.Path.HasExtension(docname.Substring(0, pos)))
+            {
+                return docname.Substring(0, pos);
+            }
+            else if (System.IO.Path.HasExtension(docname.Substring(pos, docname.Length - pos)))
+            {
+                pos = docname.IndexOf(search);
+                System.Diagnostics.Debug.Assert(pos != -1);
+                pos += search.Length;
+                return docname.Substring(pos, docname.Length - pos);
+            }
+            else return docname;
+        }
+
+        /* ----------------------------------------------------------------- */
         /// NormalizeFilename
         /* ----------------------------------------------------------------- */
-        public static string NormalizeFilename(string src, char replaced) {
+        private static string NormalizeFilename(string src, char replaced) {
             char[] invalids = { '/', '*', '"', '<', '>', '|', '?', ':', '\\' };
 
             var buffer = new System.Text.StringBuilder();
@@ -54,7 +92,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// NormalizePath
         /* ----------------------------------------------------------------- */
-        public static string NormalizePath(string src, char replaced) {
+        private static string NormalizePath(string src, char replaced) {
             char[] invalids = { '/', '*', '"', '<', '>', '|' };
 
             bool inactivated = false;
@@ -115,7 +153,7 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public static string ModifyFileName(string filename) {
+        private static string ModifyFileName(string filename) {
             string dest = NormalizeFilename(filename, '_');
 
             if (dest.ToLower() == "pptview") {
@@ -137,7 +175,7 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static string FindFromRecent(string ext) {
+        private static string FindFromRecent(string ext) {
             var dir = System.Environment.GetFolderPath(Environment.SpecialFolder.Recent);
             var info = new System.IO.DirectoryInfo(dir);
             string dest = null;
