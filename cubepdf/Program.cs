@@ -27,26 +27,50 @@ namespace CubePDF
 {
     static class Program
     {
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Main
+        /// 
         /// <summary>
         /// アプリケーションのメイン エントリ ポイントです。
         /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
         [STAThread]
         static void Main(string[] args)
         {
             var exec = System.Reflection.Assembly.GetEntryAssembly();
             var dir = System.IO.Path.GetDirectoryName(exec.Location);
             SetupLog(dir + @"\cubepdf.log");
-            Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf.exe start");
             Trace.WriteLine(DateTime.Now.ToString() + ": Arguments:");
             foreach (var s in args) Trace.WriteLine("\t" + s);
 
+            var setting = new UserSetting(true);
+            SetupUserSetting(setting, args);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            if (args.Length > 0) Application.Run(new MainForm(args));
-            else Application.Run(new MainForm());
+            Application.Run(new MainForm(setting));
 
-            Trace.WriteLine(DateTime.Now.ToString() + ": cubepdf.exe end");
             Trace.Close();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// SetupUserSetting
+        /* ----------------------------------------------------------------- */
+        private static void SetupUserSetting(UserSetting setting, string[] args)
+        {
+            var cmdline = new CommandLine(args);
+            var filename = FileNameModifier.GetFileName(cmdline.Arguments.ContainsKey("DocumentName") ? cmdline.Arguments["DocumentName"] : "");
+            if (filename != null) {
+                string ext = Parameter.Extension((Parameter.FileTypes)setting.FileType);
+                filename = System.IO.Path.ChangeExtension(filename, ext);
+                string dir = (setting.OutputPath.Length == 0 || System.IO.Directory.Exists(setting.OutputPath)) ?
+                    setting.OutputPath : System.IO.Path.GetDirectoryName(setting.OutputPath);
+                setting.OutputPath = dir + '\\' + filename;
+            }
+
+            setting.InputPath = cmdline.Arguments.ContainsKey("InputFile") ? cmdline.Arguments["InputFile"] : "";
         }
 
         /* ----------------------------------------------------------------- */

@@ -38,50 +38,20 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         ///  Constructor
         /* ----------------------------------------------------------------- */
-        public MainForm() {
-            this.Initialize(null);
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        ///  Constructor
-        ///  
-        /// <summary>
-        /// 仮想プリンタ経由で実行された場合のコンストラクタ．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        public MainForm(string[] args) {
-            this.Initialize(args);
+        public MainForm(UserSetting setting) {
+            this._setting = setting;
+            this.Initialize();
         }
 
         /* ----------------------------------------------------------------- */
         /// Initialize
         /* ----------------------------------------------------------------- */
-        private void Initialize(string[] args) {
+        private void Initialize() {
             InitializeComponent();
             InitializeComboAppearance();
-            _setting = new UserSetting(true);
             this.UpgradeSetting(_setting);
             this.LoadSetting(_setting);
-
-            // 入力パスの初期化
-            if (args != null && args.Length > 0 && File.Exists(args[0])) {
-                this.InputPathTextBox.Text = args[0];
-                this._InputpathPanel.Enabled = false;
-            }
-
-            // 出力パスの初期化
-            string filename = Environment.GetEnvironmentVariable("REDMON_FILENAME");
-            if (filename == null && args != null && args.Length > 1) filename = args[1];
-            if (filename != null) {
-                string ext = Parameter.Extension((Parameter.FileTypes)_setting.FileType);
-                filename = Path.ChangeExtension(filename, ext);
-                string dir = (_setting.OutputPath.Length == 0 || Directory.Exists(_setting.OutputPath)) ?
-                    _setting.OutputPath : Path.GetDirectoryName(_setting.OutputPath);
-                this.OutputPathTextBox.Text = dir + '\\' + filename;
-            }
-
+            
             var edition = (IntPtr.Size == 4) ? "x86" : "x64";
             this.Text = String.Format("CubePDF {0} ({1})", _setting.Version, edition);
         }
@@ -232,7 +202,9 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         private void LoadSetting(UserSetting setting) {
+            this.InputPathTextBox.Text = setting.InputPath;
             this.UserProgramTextBox.Text = setting.UserProgram;
+            this.OutputPathTextBox.Text = setting.OutputPath;
 
             // コンボボックスのインデックス関連
             this.FileTypeCombBox.SelectedIndex      = Translator.FileTypeToIndex(setting.FileType);
@@ -253,17 +225,17 @@ namespace CubePDF {
             // ポストプロセス関連
             _postproc = setting.AdvancedMode ? this.PostProcessComboBox : this.PostProcessLiteComboBox;
             _postproc.SelectedIndex = Translator.PostProcessToIndex(setting.PostProcess);
-            this._PostProcessPanel.Enabled = setting.AdvancedMode;
-            this._PostProcessPanel.Visible = setting.AdvancedMode;
-            this._PostProcessLabel.Visible = setting.AdvancedMode;
+            this.PostProcessPanel.Enabled = setting.AdvancedMode;
+            this.PostProcessPanel.Visible = setting.AdvancedMode;
+            this.PostProcessLabel.Visible = setting.AdvancedMode;
             this.PostProcessLiteComboBox.Enabled = !setting.AdvancedMode;
             this.PostProcessLiteComboBox.Visible = !setting.AdvancedMode;
-            this._PostProcessLiteLabel.Visible = !setting.AdvancedMode;
+            this.PostProcessLiteLabel.Visible = !setting.AdvancedMode;
 
             // 入力パスを選択可能にするかどうか
-            this._InputpathPanel.Enabled = setting.SelectInputFile;
-            this._InputpathPanel.Visible = setting.SelectInputFile;
-            this._InputPathLabel.Visible = setting.SelectInputFile;
+            this.InputPathPanel.Enabled = setting.SelectInputFile;
+            this.InputPathPanel.Visible = setting.SelectInputFile;
+            this.InputPathLabel.Visible = setting.SelectInputFile;
 
             // ログ出力
             Trace.WriteLine(DateTime.Now.ToString() + ": LoadSetting start");
@@ -312,13 +284,17 @@ namespace CubePDF {
             setting.Document.Keyword = this.DocKeywordTextBox.Text;
 
             // パスワード
-            if (this.UserPasswordCheckBox.Checked) setting.Password = this.UserPasswordTextBox.Text;
             if (this.OwnerPasswordCheckBox.Checked) {
                 setting.Permission.Password = this.OwnerPasswordTextBox.Text;
                 setting.Permission.AllowPrint = this.AllowPrintCheckBox.Checked;
                 setting.Permission.AllowCopy = this.AllowCopyCheckBox.Checked;
                 setting.Permission.AllowFormInput = this.AllowFormInputCheckBox.Checked;
                 setting.Permission.AllowModify = this.AllowModifyCheckBox.Checked;
+
+                if (this.RequiredUserPasswordCheckBox.Checked)
+                {
+                    setting.Password = this.UserPasswordCheckBox.Checked ? this.UserPasswordTextBox.Text : this.OwnerPasswordTextBox.Text;
+                }
             }
 
             // ログ出力
@@ -393,8 +369,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void ConvertButton_Click(object sender, EventArgs e) {
             // 各種チェック
-            if (!this.CheckPassword(this.UserPasswordCheckBox.Checked, this.UserPasswordTextBox.Text, this.ConfirmUserPasswordTextBox.Text)) return;
             if (!this.CheckPassword(this.OwnerPasswordCheckBox.Checked, this.OwnerPasswordTextBox.Text, this.ConfirmOwnerPasswordTextBox.Text)) return;
+            if (!this.CheckPassword(this.OwnerPasswordCheckBox.Checked & this.UserPasswordCheckBox.Checked, this.UserPasswordTextBox.Text, this.ConfirmUserPasswordTextBox.Text)) return;
             if (!this.CheckOutput(this.OutputPathTextBox.Text, this.ExistedFileComboBox.SelectedIndex)) return;
             if (!Directory.Exists(_setting.LibPath)) Trace.WriteLine(DateTime.Now.ToString() + ": " + _setting.LibPath + ": not found");
             if (!Directory.Exists(_setting.LibPath + @"\lib")) Trace.WriteLine(DateTime.Now.ToString() + ": " + _setting.LibPath + "\\lib: not found");
@@ -494,14 +470,13 @@ namespace CubePDF {
             bool is_bitmap = (id == Parameter.FileTypes.BMP || id == Parameter.FileTypes.JPEG || id == Parameter.FileTypes.PNG || id == Parameter.FileTypes.TIFF);
             bool is_grayscale = !(id == Parameter.FileTypes.PS || id == Parameter.FileTypes.EPS || id == Parameter.FileTypes.SVG);
             bool is_webopt = this.WebOptimizeCheckBox.Checked;
-            bool is_security = (this.UserPasswordCheckBox.Checked || this.OwnerPasswordCheckBox.Checked);
+            bool is_security = (this.RequiredUserPasswordCheckBox.Checked || this.OwnerPasswordCheckBox.Checked);
             
             this.PDFVersionComboBox.Enabled = is_pdf;
             this.ResolutionComboBox.Enabled = is_bitmap;
-            this.DocTableLayoutPanel.Enabled = is_pdf;
-            this.UserPasswordGroupBox.Enabled = is_pdf && !is_webopt;
-            this.OwnerPasswordGroupBox.Enabled = is_pdf && !is_webopt;
-            this.EmbedFontCheckBox.Enabled = false; // 本来は !is_bitmap;
+            this.DocPanel.Enabled = is_pdf;
+            this.SecurityGroupBox.Enabled = is_pdf && !is_webopt;
+            this.EmbedFontCheckBox.Enabled = !is_bitmap;
             this.GrayscaleCheckBox.Enabled = is_grayscale;
             this.ImageFilterCheckBox.Enabled = !is_bitmap;
             this.WebOptimizeCheckBox.Enabled = is_pdf && !is_security;
@@ -546,27 +521,7 @@ namespace CubePDF {
             CheckBox control = sender as CheckBox;
             if (control == null) return;
             
-            this.UserPasswordGroupBox.Enabled = !control.Checked;
-            this.OwnerPasswordGroupBox.Enabled = !control.Checked;
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        ///  UserPasswordCheckBox_CheckedChanged
-        /// 
-        /// <summary>
-        /// Web 表示用に最適化オプションとパスワード関連のオプションは
-        /// 同時に設定できない．
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void UserPasswordCheckBox_CheckedChanged(object sender, EventArgs e) {
-            CheckBox control = sender as CheckBox;
-            if (control == null) return;
-
-            this.ConfirmUserPasswordTextBox.BackColor = control.Checked ? SystemColors.Window : SystemColors.Control;
-            this.UserPasswordTableLayoutPanel.Enabled = control.Checked;
-            this.WebOptimizeCheckBox.Enabled = (!control.Checked && !this.OwnerPasswordCheckBox.Checked);
+            this.SecurityGroupBox.Enabled = !control.Checked;
         }
 
         /* ----------------------------------------------------------------- */
@@ -579,13 +534,37 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        private void OwnerPasswordCheckBox_CheckedChanged(object sender, EventArgs e) {
+        private void OwnerPasswordCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
             CheckBox control = sender as CheckBox;
             if (control == null) return;
 
             this.ConfirmOwnerPasswordTextBox.BackColor = control.Checked ? SystemColors.Window : SystemColors.Control;
-            this.OwnerPasswordTableLayoutPanel.Enabled = control.Checked;
-            this.WebOptimizeCheckBox.Enabled = (!control.Checked && !this.UserPasswordCheckBox.Checked);
+            this.SecurityPanel.Enabled = control.Checked;
+            this.WebOptimizeCheckBox.Enabled = !control.Checked;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// RequiredUserPasswordCheckBox_CheckedChanged
+        /* ----------------------------------------------------------------- */
+        private void RequiredUserPasswordCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            var control = sender as CheckBox;
+            if (control == null) return;
+
+            this.UserPasswordCheckBox.Enabled = control.Checked;
+            this.UserPasswordPanel.Enabled = (control.Checked & this.UserPasswordCheckBox.Checked);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///  UserPasswordCheckBox_CheckedChanged
+        /* ----------------------------------------------------------------- */
+        private void UserPasswordCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox control = sender as CheckBox;
+            if (control == null) return;
+
+            this.UserPasswordPanel.Enabled = control.Checked;
         }
 
         #endregion
@@ -747,7 +726,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void ConvertBackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e) {
             // GUI の設定を UserSetting に保存する
-            this.SaveSetting(_setting, this._InputpathPanel.Enabled);
+            this.SaveSetting(_setting, this.InputPathPanel.Enabled);
             if (_setting.SaveSetting) {
                 _setting.SaveSetting = false; // 「設定を保存」の項目はレジストリには保存しない．
                 _setting.Save();
@@ -808,5 +787,6 @@ namespace CubePDF {
         private ComboBox _postproc;
         private ToolTip _tips = new ToolTip();
         #endregion
+
     }
 }
