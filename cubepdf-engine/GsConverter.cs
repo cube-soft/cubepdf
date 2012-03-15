@@ -232,7 +232,10 @@ namespace CubePDF {
                 if (copies.Count == 0) return;
 
                 var tmp = work + '\\' + GetTempFileName(this._device) + ext;
-                if (!ExecConvert(copies.ToArray(), tmp)) throw new Exception("Ghostscript error");
+                if (!ExecConvert(copies.ToArray(), tmp))
+                {
+                    throw new Exception("入力ファイルの解析に失敗しました。このエラーは、入力ファイルの内容を変更すると発生しなくなる可能性があります。 (Ghostscript error)");
+                }
                 this.RunPostProcess(copies, dest, work);
             }
             
