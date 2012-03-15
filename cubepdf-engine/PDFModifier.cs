@@ -41,7 +41,7 @@ namespace CubePDF {
             bool status = true;
 
             if (_escaped != null) status &= this.Merge(setting, _escaped);
-            if (status) status = this.AddInformation(setting);
+            if (status) status &= this.AddInformation(setting);
             if (status && setting.WebOptimize) this.WebOptimize(setting); // Web 最適化のエラーは容認する
 
             return status;
@@ -122,8 +122,8 @@ namespace CubePDF {
                 info["Author"] = setting.Document.Author;
                 info["Subject"] = setting.Document.Subtitle;
                 info["Keywords"] = setting.Document.Keyword;
-                info["Creator"] = "CubePDF";
-                info["Producer"] = "CubePDF";
+                info["Creator"] = PRODUCER_NAME;
+                info["Producer"] = PRODUCER_NAME;
                 writer.MoreInfo = info;
 
                 // パスワード and/or パーミッション
@@ -352,6 +352,13 @@ namespace CubePDF {
         #region Variables
         string _escaped;
         List<CubePDF.Message> _messages = new List<CubePDF.Message>();
+        #endregion
+
+        /* ----------------------------------------------------------------- */
+        //  定数定義
+        /* ----------------------------------------------------------------- */
+        #region Constant variables
+        private const string PRODUCER_NAME = "CubePDF";
         #endregion
     }
 }
