@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace CubePDF {
     /* --------------------------------------------------------------------- */
@@ -40,8 +41,8 @@ namespace CubePDF {
             bool status = true;
 
             if (_escaped != null) status &= this.Merge(setting, _escaped);
-            status &= this.AddInformation(setting);
-            if (setting.WebOptimize) this.WebOptimize(setting); // Web 最適化のエラーは容認する
+            if (status) status = this.AddInformation(setting);
+            if (status && setting.WebOptimize) this.WebOptimize(setting); // Web 最適化のエラーは容認する
 
             return status;
         }
@@ -61,8 +62,9 @@ namespace CubePDF {
 
             bool status = true;
             try {
-                iTextSharp.text.pdf.PdfReader reader_head = new iTextSharp.text.pdf.PdfReader(head);
-                iTextSharp.text.pdf.PdfReader reader_tail = new iTextSharp.text.pdf.PdfReader(tail);
+                iTextSharp.text.pdf.PdfReader reader_head = Open(head, setting.Permission.Password);
+                iTextSharp.text.pdf.PdfReader reader_tail = Open(tail, setting.Permission.Password);
+
                 using (FileStream fs = new FileStream(tmp, FileMode.Create)) {
                     iTextSharp.text.pdf.PdfCopyFields copy = new iTextSharp.text.pdf.PdfCopyFields(fs);
                     copy.AddDocument(reader_head);
@@ -250,6 +252,87 @@ namespace CubePDF {
                 dest &= ~iTextSharp.text.pdf.PdfWriter.AllowModifyContents;
                 dest &= ~iTextSharp.text.pdf.PdfWriter.AllowScreenReaders;
             }
+
+            return dest;
+        }
+
+        #endregion
+
+        /* ----------------------------------------------------------------- */
+        //  静的な補助関数
+        /* ----------------------------------------------------------------- */
+        #region Static functions
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// IsProtected
+        /// 
+        /// <summary>
+        /// 指定した PDF ファイルがパスワードによるセキュリティが設定され
+        /// ているかどうか判定する．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private static bool IsProtected(string path)
+        {
+            bool status = false;
+            try
+            {
+                var test = new iTextSharp.text.pdf.PdfReader(path);
+                status = !test.IsOpenedWithFullPermissions;
+                test.Close();
+            }
+            catch (iTextSharp.text.pdf.BadPasswordException /* err */)
+            {
+                status = true;
+            }
+            return status;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// IsValidPassword
+        /// 
+        /// <summary>
+        /// 指定したパスワードが有効であるかどうかを判定する．
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private static bool IsValidPassword(string path, string password)
+        {
+            var status = true;
+            try
+            {
+                var test = new iTextSharp.text.pdf.PdfReader(path, System.Text.Encoding.UTF8.GetBytes(password));
+                if (!test.IsOpenedWithFullPermissions) status = false;
+                test.Close();
+            }
+            catch (Exception /* err */)
+            {
+                status = false;
+            }
+            return status;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Open
+        /// 
+        /// <summary>
+        /// PDF ファイルを開く。パスワードが必要な場合は、第 2 引数で指定
+        /// されたパスワードで試行する。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private static iTextSharp.text.pdf.PdfReader Open(string path, string password)
+        {
+            iTextSharp.text.pdf.PdfReader dest = null;
+            if (!IsProtected(path)) dest = new iTextSharp.text.pdf.PdfReader(path);
+            else if (IsValidPassword(path, password))
+            {
+                dest = new iTextSharp.text.pdf.PdfReader(path, System.Text.Encoding.UTF8.GetBytes(password));
+            }
+            else throw new Exception(String.Format("パスワードで保護されているPDFファイルに結合する事はできません。", path));
 
             return dest;
         }

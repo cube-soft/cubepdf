@@ -59,15 +59,19 @@ namespace CubePDF {
                 gs.Destination = setting.OutputPath;
                 gs.Run();
 
-                if (setting.FileType == Parameter.FileTypes.PDF) {
+                if (setting.FileType == Parameter.FileTypes.PDF)
+                {
                     PDFModifier modifier = new PDFModifier(_escaped);
                     status &= modifier.Run(setting);
                     if (!status && modifier.Messages.Count > 0) _messages.AddRange(modifier.Messages);
                 }
-                
-                PostProcess postproc = new PostProcess();
-                status &= postproc.Run(setting);
-                if (!status && postproc.Messages.Count > 0) _messages.AddRange(postproc.Messages);
+
+                if (status)
+                {
+                    PostProcess postproc = new PostProcess();
+                    status &= postproc.Run(setting);
+                    if (!status && postproc.Messages.Count > 0) _messages.AddRange(postproc.Messages);
+                }
             }
             catch (Exception err) {
                 if (gs.Messages.Count > 0) _messages.AddRange(gs.Messages);
