@@ -16,15 +16,18 @@
  *
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see < http://www.gnu.org/licenses/ >.
- *
- *  Last-modified: Sat 18 Jul 2010 00:21:00 JST
  */
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
 
-namespace CubePDF {
-    public abstract class FileNameModifier {
+namespace CubePDF
+{
+    /* --------------------------------------------------------------------- */
+    /// FileNameModifier
+    /* --------------------------------------------------------------------- */
+    public abstract class FileNameModifier
+    {
         /* ----------------------------------------------------------------- */
         ///
         /// GetFileName
