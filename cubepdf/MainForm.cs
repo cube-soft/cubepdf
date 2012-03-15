@@ -159,8 +159,9 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private bool CheckOutput(string path, int do_existed_file) {
-            if (path.Length == 0) {
+        private bool CheckOutput(int do_existed_file) {
+            if (this.OutputPathTextBox.Text.Length == 0)
+            {
                 MessageBox.Show(
                     Properties.Settings.Default.FileNotSpecified,
                     Properties.Settings.Default.Error,
@@ -169,16 +170,28 @@ namespace CubePDF {
                 );
                 return false;
             }
-            else if (File.Exists(path) && Translator.IndexToExistedFile(this.ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename) {
-                // {0} は既に存在します。{1}しますか？
-                string message = String.Format(Properties.Settings.Default.FileExists,
-                    path, Appearance.ExistedFileString((Parameter.ExistedFiles)do_existed_file));
-                if (MessageBox.Show(
-                        message,
-                        Properties.Settings.Default.OverwritePrompt,
-                        MessageBoxButtons.OKCancel,
-                        MessageBoxIcon.Warning) == DialogResult.Cancel) {
-                    return false;
+            else
+            {
+                string ext = Path.GetExtension(this.OutputPathTextBox.Text);
+                string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
+                if (ext != compared && !_extlist.Extensions.Contains(ext))
+                {
+                    this.OutputPathTextBox.Text += compared;
+                }
+
+                if (File.Exists(this.OutputPathTextBox.Text) && Translator.IndexToExistedFile(this.ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
+                {
+                    // {0} は既に存在します。{1}しますか？
+                    string message = String.Format(Properties.Settings.Default.FileExists,
+                        this.OutputPathTextBox.Text, Appearance.ExistedFileString((Parameter.ExistedFiles)do_existed_file));
+                    if (MessageBox.Show(
+                            message,
+                            Properties.Settings.Default.OverwritePrompt,
+                            MessageBoxButtons.OKCancel,
+                            MessageBoxIcon.Warning) == DialogResult.Cancel)
+                    {
+                        return false;
+                    }
                 }
             }
             return true;
@@ -371,7 +384,9 @@ namespace CubePDF {
             // 各種チェック
             if (!this.CheckPassword(this.OwnerPasswordCheckBox.Checked, this.OwnerPasswordTextBox.Text, this.ConfirmOwnerPasswordTextBox.Text)) return;
             if (!this.CheckPassword(this.OwnerPasswordCheckBox.Checked & this.UserPasswordCheckBox.Checked, this.UserPasswordTextBox.Text, this.ConfirmUserPasswordTextBox.Text)) return;
-            if (!this.CheckOutput(this.OutputPathTextBox.Text, this.ExistedFileComboBox.SelectedIndex)) return;
+            if (!this.CheckOutput(this.ExistedFileComboBox.SelectedIndex)) return;
+
+            // ライブラリが存在してるかどうかをログに記録。
             if (!Directory.Exists(_setting.LibPath)) Trace.WriteLine(DateTime.Now.ToString() + ": " + _setting.LibPath + ": not found");
             if (!Directory.Exists(_setting.LibPath + @"\lib")) Trace.WriteLine(DateTime.Now.ToString() + ": " + _setting.LibPath + "\\lib: not found");
 
@@ -404,10 +419,15 @@ namespace CubePDF {
                 this.FileTypeCombBox.SelectedIndex = dialog.FilterIndex - 1;
             }
 
-            // 拡張子が選択されているファイルタイプと異なる場合は，末尾に拡張子を追加する．
-            string ext = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
+            // 拡張子が選択されているファイルタイプと異なる場合は、末尾に拡張子を追加する。
+            // ただし、入力された拡張子がユーザのコンピュータに登録されている場合は、それを優先する。
+            string ext = Path.GetExtension(this.OutputPathTextBox.Text);
+            string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
             this.OutputPathTextBox.Text = dialog.FileName;
-            if (Path.GetExtension(this.OutputPathTextBox.Text) != ext) this.OutputPathTextBox.Text += ext;
+            if (ext != compared && !_extlist.Extensions.Contains(ext))
+            {
+                this.OutputPathTextBox.Text += compared;
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -786,6 +806,7 @@ namespace CubePDF {
         private UserSetting _setting;
         private ComboBox _postproc;
         private ToolTip _tips = new ToolTip();
+        private ExtensionList _extlist = new ExtensionList();
         #endregion
 
     }
