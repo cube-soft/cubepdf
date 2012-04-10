@@ -496,7 +496,7 @@ namespace CubePDF {
             this.ResolutionComboBox.Enabled = is_bitmap;
             this.DocPanel.Enabled = is_pdf;
             this.SecurityGroupBox.Enabled = is_pdf && !is_webopt;
-            this.EmbedFontCheckBox.Enabled = !is_bitmap;
+            this.EmbedFontCheckBox.Enabled = false; //!is_bitmap;
             this.GrayscaleCheckBox.Enabled = is_grayscale;
             this.ImageFilterCheckBox.Enabled = !is_bitmap;
             this.WebOptimizeCheckBox.Enabled = is_pdf && !is_security;
@@ -677,6 +677,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void UserPasswordTextBox_TextChanged(object sender, EventArgs e) {
             this.ConfirmUserPasswordTextBox.BackColor = SystemColors.Window;
+            if (this.ConfirmUserPasswordTextBox.Text.Length > 0) this.ConfirmUserPasswordTextBox.Text = "";
         }
 
         /* ----------------------------------------------------------------- */
@@ -708,6 +709,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void OwnerPasswordTextBox_TextChanged(object sender, EventArgs e) {
             this.ConfirmOwnerPasswordTextBox.BackColor = SystemColors.Window;
+            if (this.ConfirmOwnerPasswordTextBox.Text.Length > 0) this.ConfirmOwnerPasswordTextBox.Text = "";
         }
 
         /* ----------------------------------------------------------------- */
