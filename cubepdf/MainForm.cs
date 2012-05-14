@@ -390,6 +390,7 @@ namespace CubePDF {
             if (!Directory.Exists(_setting.LibPath)) Trace.WriteLine(DateTime.Now.ToString() + ": " + _setting.LibPath + ": not found");
             if (!Directory.Exists(_setting.LibPath + @"\lib")) Trace.WriteLine(DateTime.Now.ToString() + ": " + _setting.LibPath + "\\lib: not found");
 
+            this.ConvertButton.Enabled = false;
             this.ExecProgressBar.Visible = true;
             this.ConvertBackgroundWorker.RunWorkerAsync();
         }
