@@ -399,6 +399,7 @@ namespace CubePDF {
         ///  ExitButton_Click
         /* ----------------------------------------------------------------- */
         private void ExitButton_Click(object sender, EventArgs e) {
+            if (_setting.DeleteOnClose && File.Exists(_setting.InputPath)) File.Delete(_setting.InputPath);
             this.Close();
         }
 
@@ -767,6 +768,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void ConvertBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e) {
             if (e.Result != null) this.ShowErrorMessage((List<CubePDF.Message>)e.Result);
+            if (_setting.DeleteOnClose && File.Exists(_setting.InputPath)) File.Delete(_setting.InputPath);
             this.Close();
         }
 

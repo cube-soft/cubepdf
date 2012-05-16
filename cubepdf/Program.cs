@@ -71,6 +71,7 @@ namespace CubePDF
             }
 
             setting.InputPath = cmdline.Arguments.ContainsKey("InputFile") ? cmdline.Arguments["InputFile"] : "";
+            setting.DeleteOnClose = cmdline.Arguments.ContainsKey("DeleteOnClose");
         }
 
         /* ----------------------------------------------------------------- */

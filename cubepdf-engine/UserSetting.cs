@@ -330,25 +330,26 @@ namespace CubePDF {
         #region dumplog
         public void Dump() {
             Trace.WriteLine(DateTime.Now.ToString() + ": UserSetting:");
-            Trace.WriteLine("\tVersion      = " + _version);
-            Trace.WriteLine("\tInstallPath  = " + _install);
-            Trace.WriteLine("\tLibPath      = " + _lib);
-            Trace.WriteLine("\tFileType     = " + _type.ToString());
-            Trace.WriteLine("\tPDFVersion   = " + _pdfver.ToString());
-            Trace.WriteLine("\tResolution   = " + _resolution.ToString());
-            Trace.WriteLine("\tOutputPath   = " + _output);
-            Trace.WriteLine("\tExistedFile  = " + _exist.ToString());
-            Trace.WriteLine("\tPostProcess  = " + _postproc.ToString());
-            Trace.WriteLine("\tUserProgram  = " + _program);
-            Trace.WriteLine("\tDownsampling = " + _downsampling.ToString());
-            Trace.WriteLine("\tImageFilter  = " + _filter.ToString());
-            Trace.WriteLine("\tPageRotation = " + _rotation.ToString());
-            Trace.WriteLine("\tEmbedFonts   = " + _embed.ToString());
-            Trace.WriteLine("\tGrayscale    = " + _grayscale.ToString());
-            Trace.WriteLine("\tWebOptimize  = " + _web.ToString());
-            Trace.WriteLine("\tSaveOptions  = " + _save.ToString());
-            Trace.WriteLine("\tUpdateCheck  = " + _update.ToString());
-            Trace.WriteLine("\tVisible      = " + _visible.ToString());
+            Trace.WriteLine("\tVersion       = " + _version);
+            Trace.WriteLine("\tInstallPath   = " + _install);
+            Trace.WriteLine("\tLibPath       = " + _lib);
+            Trace.WriteLine("\tFileType      = " + _type.ToString());
+            Trace.WriteLine("\tPDFVersion    = " + _pdfver.ToString());
+            Trace.WriteLine("\tResolution    = " + _resolution.ToString());
+            Trace.WriteLine("\tOutputPath    = " + _output);
+            Trace.WriteLine("\tExistedFile   = " + _exist.ToString());
+            Trace.WriteLine("\tPostProcess   = " + _postproc.ToString());
+            Trace.WriteLine("\tUserProgram   = " + _program);
+            Trace.WriteLine("\tDownsampling  = " + _downsampling.ToString());
+            Trace.WriteLine("\tImageFilter   = " + _filter.ToString());
+            Trace.WriteLine("\tPageRotation  = " + _rotation.ToString());
+            Trace.WriteLine("\tEmbedFonts    = " + _embed.ToString());
+            Trace.WriteLine("\tGrayscale     = " + _grayscale.ToString());
+            Trace.WriteLine("\tWebOptimize   = " + _web.ToString());
+            Trace.WriteLine("\tSaveOptions   = " + _save.ToString());
+            Trace.WriteLine("\tUpdateCheck   = " + _update.ToString());
+            Trace.WriteLine("\tVisible       = " + _visible.ToString());
+            Trace.WriteLine("\tDeleteOnClose = " + _delete_input.ToString());
         }
         #endregion
 
@@ -823,6 +824,22 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
+        /// DeleteOnClose
+        ///
+        /// <summary>
+        /// 変換終了時に入力ファイルを削除するかどうかを取得、または設定
+        /// します。このプロパティは、レジストリに保存されません。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool DeleteOnClose
+        {
+            get { return _delete_input; }
+            set { _delete_input = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
         /// Document
         /* ----------------------------------------------------------------- */
         public DocumentProperty Document {
@@ -1025,6 +1042,7 @@ namespace CubePDF {
         private bool _visible = true;
         private bool _advance = false;
         private bool _selectable = false;
+        private bool _delete_input = false;
         private DocumentProperty _doc = new DocumentProperty();
         private PermissionProperty _permission = new PermissionProperty();
         #endregion

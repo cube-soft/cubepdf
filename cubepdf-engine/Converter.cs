@@ -80,6 +80,7 @@ namespace CubePDF {
             }
             finally {
                 if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
+                if (setting.DeleteOnClose && File.Exists(setting.InputPath)) File.Delete(setting.InputPath);
             }
 
             return status;
