@@ -55,7 +55,11 @@ namespace CubePDF
             string key = "";
             for (int i = 0; i < args.Length; ++i)
             {
-                if (args[i].Length > 0 && args[i][0] == '/') key = args[i].Substring(1);
+                if (args[i].Length > 0 && args[i][0] == '/')
+                {
+                    if (key.Length > 0) _args.Add(key, "");
+                    key = args[i].Substring(1);
+                }
                 else if (args.Length > 0)
                 {
                     _args.Add(key, args[i]);
