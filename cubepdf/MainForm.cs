@@ -215,9 +215,9 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         private void LoadSetting(UserSetting setting) {
-            this.InputPathTextBox.Text = setting.InputPath;
             this.UserProgramTextBox.Text = setting.UserProgram;
             this.OutputPathTextBox.Text = setting.OutputPath;
+            this.InputPathTextBox.Text = setting.InputPath;
 
             // コンボボックスのインデックス関連
             this.FileTypeCombBox.SelectedIndex      = Translator.FileTypeToIndex(setting.FileType);
@@ -246,9 +246,9 @@ namespace CubePDF {
             this.PostProcessLiteLabel.Visible = !setting.AdvancedMode;
 
             // 入力パスを選択可能にするかどうか
-            this.InputPathPanel.Enabled = setting.SelectInputFile;
-            this.InputPathPanel.Visible = setting.SelectInputFile;
             this.InputPathLabel.Visible = setting.SelectInputFile;
+            this.InputPathPanel.Visible = setting.SelectInputFile;
+            this.InputPathPanel.Enabled = setting.SelectInputFile && setting.InputPath.Length == 0;
 
             // ログ出力
             Trace.WriteLine(DateTime.Now.ToString() + ": LoadSetting start");
@@ -793,7 +793,7 @@ namespace CubePDF {
         private void ShowErrorMessage(List<CubePDF.Message> messages) {
             string error = "";
             foreach (CubePDF.Message message in messages) {
-                Trace.WriteLine(DateTime.Now.ToString() + ": " + message.ToString());
+                Trace.WriteLine(message.ToString());
                 if (message.Level == Message.Levels.Error || message.Level == Message.Levels.Fatal) {
                     error = message.Value;
                 }

@@ -76,6 +76,9 @@ namespace CubePDF {
             catch (Exception err) {
                 if (gs.Messages.Count > 0) _messages.AddRange(gs.Messages);
                 _messages.Add(new Message(Message.Levels.Error, err.Message));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("Type: {0}", err.GetType().ToString())));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("Source: {0}", err.Source)));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("StackTrace: {0}", err.StackTrace)));
                 status = false;
             }
             finally {

@@ -69,6 +69,24 @@
             this.DocKeywordTextBox = new System.Windows.Forms.TextBox();
             this.SecurityTabPage = new System.Windows.Forms.TabPage();
             this.SecurityGroupBox = new System.Windows.Forms.GroupBox();
+            this.SecurityPanel = new System.Windows.Forms.Panel();
+            this.UserPasswordPanel = new System.Windows.Forms.Panel();
+            this.UserPasswordLabel = new System.Windows.Forms.Label();
+            this.ConfirmUserPasswordLabel = new System.Windows.Forms.Label();
+            this.UserPasswordTextBox = new System.Windows.Forms.TextBox();
+            this.ConfirmUserPasswordTextBox = new System.Windows.Forms.TextBox();
+            this.UserPasswordCheckBox = new System.Windows.Forms.CheckBox();
+            this.OwnerPasswordTextBox = new System.Windows.Forms.TextBox();
+            this.ConfirmOwnerPasswordTextBox = new System.Windows.Forms.TextBox();
+            this.AllowPrintCheckBox = new System.Windows.Forms.CheckBox();
+            this.AllowCopyCheckBox = new System.Windows.Forms.CheckBox();
+            this.OwnerPasswordLabel = new System.Windows.Forms.Label();
+            this.ConfirmOwnerPasswordLabel = new System.Windows.Forms.Label();
+            this.PermissionLabel = new System.Windows.Forms.Label();
+            this.AllowFormInputCheckBox = new System.Windows.Forms.CheckBox();
+            this.AllowModifyCheckBox = new System.Windows.Forms.CheckBox();
+            this.RequiredUserPasswordCheckBox = new System.Windows.Forms.CheckBox();
+            this.OwnerPasswordCheckBox = new System.Windows.Forms.CheckBox();
             this.DetailTabPage = new System.Windows.Forms.TabPage();
             this.DetailPanel = new System.Windows.Forms.Panel();
             this.DownSamplingLabel = new System.Windows.Forms.Label();
@@ -86,24 +104,6 @@
             this.PostProcessLiteComboBox = new System.Windows.Forms.ComboBox();
             this.ConvertBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this._patch = new System.Windows.Forms.PictureBox();
-            this.OwnerPasswordCheckBox = new System.Windows.Forms.CheckBox();
-            this.SecurityPanel = new System.Windows.Forms.Panel();
-            this.UserPasswordCheckBox = new System.Windows.Forms.CheckBox();
-            this.OwnerPasswordTextBox = new System.Windows.Forms.TextBox();
-            this.ConfirmOwnerPasswordTextBox = new System.Windows.Forms.TextBox();
-            this.AllowPrintCheckBox = new System.Windows.Forms.CheckBox();
-            this.AllowCopyCheckBox = new System.Windows.Forms.CheckBox();
-            this._OwnerPasswordLabel = new System.Windows.Forms.Label();
-            this._ConfirmOwnerPasswordLabel = new System.Windows.Forms.Label();
-            this._PermissionLabel = new System.Windows.Forms.Label();
-            this.AllowFormInputCheckBox = new System.Windows.Forms.CheckBox();
-            this.AllowModifyCheckBox = new System.Windows.Forms.CheckBox();
-            this.RequiredUserPasswordCheckBox = new System.Windows.Forms.CheckBox();
-            this.UserPasswordPanel = new System.Windows.Forms.Panel();
-            this._UserPasswordLabel = new System.Windows.Forms.Label();
-            this._ConfirmUserPasswordLabel = new System.Windows.Forms.Label();
-            this.UserPasswordTextBox = new System.Windows.Forms.TextBox();
-            this.ConfirmUserPasswordTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.HeaderPictureBox)).BeginInit();
             this.MainPanel.SuspendLayout();
             this.MainTabControl.SuspendLayout();
@@ -116,11 +116,11 @@
             this.DocPanel.SuspendLayout();
             this.SecurityTabPage.SuspendLayout();
             this.SecurityGroupBox.SuspendLayout();
+            this.SecurityPanel.SuspendLayout();
+            this.UserPasswordPanel.SuspendLayout();
             this.DetailTabPage.SuspendLayout();
             this.DetailPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this._patch)).BeginInit();
-            this.SecurityPanel.SuspendLayout();
-            this.UserPasswordPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // HeaderPictureBox
@@ -334,7 +334,7 @@
             this.PostProcessComboBox.Name = "PostProcessComboBox";
             this.PostProcessComboBox.Size = new System.Drawing.Size(95, 20);
             this.PostProcessComboBox.TabIndex = 20;
-            this.PostProcessComboBox.Click += new System.EventHandler(this.PostProcessComboBox_SelectedIndexChanged);
+            this.PostProcessComboBox.SelectedIndexChanged += new System.EventHandler(this.PostProcessComboBox_SelectedIndexChanged);
             // 
             // ResolutionComboBox
             // 
@@ -557,6 +557,212 @@
             this.SecurityGroupBox.TabStop = false;
             this.SecurityGroupBox.Text = "セキュリティ";
             // 
+            // SecurityPanel
+            // 
+            this.SecurityPanel.Controls.Add(this.UserPasswordPanel);
+            this.SecurityPanel.Controls.Add(this.UserPasswordCheckBox);
+            this.SecurityPanel.Controls.Add(this.OwnerPasswordTextBox);
+            this.SecurityPanel.Controls.Add(this.ConfirmOwnerPasswordTextBox);
+            this.SecurityPanel.Controls.Add(this.AllowPrintCheckBox);
+            this.SecurityPanel.Controls.Add(this.AllowCopyCheckBox);
+            this.SecurityPanel.Controls.Add(this.OwnerPasswordLabel);
+            this.SecurityPanel.Controls.Add(this.ConfirmOwnerPasswordLabel);
+            this.SecurityPanel.Controls.Add(this.PermissionLabel);
+            this.SecurityPanel.Controls.Add(this.AllowFormInputCheckBox);
+            this.SecurityPanel.Controls.Add(this.AllowModifyCheckBox);
+            this.SecurityPanel.Controls.Add(this.RequiredUserPasswordCheckBox);
+            this.SecurityPanel.Enabled = false;
+            this.SecurityPanel.Location = new System.Drawing.Point(1, 42);
+            this.SecurityPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.SecurityPanel.Name = "SecurityPanel";
+            this.SecurityPanel.Size = new System.Drawing.Size(420, 270);
+            this.SecurityPanel.TabIndex = 11;
+            // 
+            // UserPasswordPanel
+            // 
+            this.UserPasswordPanel.Controls.Add(this.UserPasswordLabel);
+            this.UserPasswordPanel.Controls.Add(this.ConfirmUserPasswordLabel);
+            this.UserPasswordPanel.Controls.Add(this.UserPasswordTextBox);
+            this.UserPasswordPanel.Controls.Add(this.ConfirmUserPasswordTextBox);
+            this.UserPasswordPanel.Enabled = false;
+            this.UserPasswordPanel.Location = new System.Drawing.Point(117, 100);
+            this.UserPasswordPanel.Name = "UserPasswordPanel";
+            this.UserPasswordPanel.Size = new System.Drawing.Size(290, 50);
+            this.UserPasswordPanel.TabIndex = 37;
+            // 
+            // UserPasswordLabel
+            // 
+            this.UserPasswordLabel.AutoSize = true;
+            this.UserPasswordLabel.Location = new System.Drawing.Point(3, 7);
+            this.UserPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.UserPasswordLabel.Name = "UserPasswordLabel";
+            this.UserPasswordLabel.Size = new System.Drawing.Size(58, 12);
+            this.UserPasswordLabel.TabIndex = 37;
+            this.UserPasswordLabel.Text = "パスワード：";
+            this.UserPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ConfirmUserPasswordLabel
+            // 
+            this.ConfirmUserPasswordLabel.AutoSize = true;
+            this.ConfirmUserPasswordLabel.Location = new System.Drawing.Point(3, 31);
+            this.ConfirmUserPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.ConfirmUserPasswordLabel.Name = "ConfirmUserPasswordLabel";
+            this.ConfirmUserPasswordLabel.Size = new System.Drawing.Size(92, 12);
+            this.ConfirmUserPasswordLabel.TabIndex = 36;
+            this.ConfirmUserPasswordLabel.Text = "パスワードの確認：";
+            this.ConfirmUserPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // UserPasswordTextBox
+            // 
+            this.UserPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.UserPasswordTextBox.Location = new System.Drawing.Point(103, 4);
+            this.UserPasswordTextBox.Name = "UserPasswordTextBox";
+            this.UserPasswordTextBox.PasswordChar = '*';
+            this.UserPasswordTextBox.Size = new System.Drawing.Size(180, 19);
+            this.UserPasswordTextBox.TabIndex = 38;
+            this.UserPasswordTextBox.TextChanged += new System.EventHandler(this.UserPasswordTextBox_TextChanged);
+            // 
+            // ConfirmUserPasswordTextBox
+            // 
+            this.ConfirmUserPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.ConfirmUserPasswordTextBox.Location = new System.Drawing.Point(103, 28);
+            this.ConfirmUserPasswordTextBox.Name = "ConfirmUserPasswordTextBox";
+            this.ConfirmUserPasswordTextBox.PasswordChar = '*';
+            this.ConfirmUserPasswordTextBox.Size = new System.Drawing.Size(180, 19);
+            this.ConfirmUserPasswordTextBox.TabIndex = 39;
+            this.ConfirmUserPasswordTextBox.TextChanged += new System.EventHandler(this.ConfirmUserPasswordTextBox_TextChanged);
+            // 
+            // UserPasswordCheckBox
+            // 
+            this.UserPasswordCheckBox.AutoSize = true;
+            this.UserPasswordCheckBox.Enabled = false;
+            this.UserPasswordCheckBox.Location = new System.Drawing.Point(120, 80);
+            this.UserPasswordCheckBox.Name = "UserPasswordCheckBox";
+            this.UserPasswordCheckBox.Size = new System.Drawing.Size(181, 16);
+            this.UserPasswordCheckBox.TabIndex = 36;
+            this.UserPasswordCheckBox.Text = "閲覧専用のパスワードを設定する";
+            this.UserPasswordCheckBox.UseVisualStyleBackColor = true;
+            this.UserPasswordCheckBox.CheckedChanged += new System.EventHandler(this.UserPasswordCheckBox_CheckedChanged);
+            // 
+            // OwnerPasswordTextBox
+            // 
+            this.OwnerPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.OwnerPasswordTextBox.Location = new System.Drawing.Point(120, 8);
+            this.OwnerPasswordTextBox.Name = "OwnerPasswordTextBox";
+            this.OwnerPasswordTextBox.PasswordChar = '*';
+            this.OwnerPasswordTextBox.Size = new System.Drawing.Size(280, 19);
+            this.OwnerPasswordTextBox.TabIndex = 26;
+            this.OwnerPasswordTextBox.TextChanged += new System.EventHandler(this.OwnerPasswordTextBox_TextChanged);
+            // 
+            // ConfirmOwnerPasswordTextBox
+            // 
+            this.ConfirmOwnerPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.ConfirmOwnerPasswordTextBox.Location = new System.Drawing.Point(120, 33);
+            this.ConfirmOwnerPasswordTextBox.Name = "ConfirmOwnerPasswordTextBox";
+            this.ConfirmOwnerPasswordTextBox.PasswordChar = '*';
+            this.ConfirmOwnerPasswordTextBox.Size = new System.Drawing.Size(280, 19);
+            this.ConfirmOwnerPasswordTextBox.TabIndex = 27;
+            this.ConfirmOwnerPasswordTextBox.TextChanged += new System.EventHandler(this.ConfirmOwnerPasswordTextBox_TextChanged);
+            // 
+            // AllowPrintCheckBox
+            // 
+            this.AllowPrintCheckBox.AutoSize = true;
+            this.AllowPrintCheckBox.Location = new System.Drawing.Point(122, 154);
+            this.AllowPrintCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.AllowPrintCheckBox.Name = "AllowPrintCheckBox";
+            this.AllowPrintCheckBox.Size = new System.Drawing.Size(100, 16);
+            this.AllowPrintCheckBox.TabIndex = 28;
+            this.AllowPrintCheckBox.Text = "印刷を許可する";
+            this.AllowPrintCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // AllowCopyCheckBox
+            // 
+            this.AllowCopyCheckBox.AutoSize = true;
+            this.AllowCopyCheckBox.Location = new System.Drawing.Point(122, 180);
+            this.AllowCopyCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.AllowCopyCheckBox.Name = "AllowCopyCheckBox";
+            this.AllowCopyCheckBox.Size = new System.Drawing.Size(183, 16);
+            this.AllowCopyCheckBox.TabIndex = 29;
+            this.AllowCopyCheckBox.Text = "テキストや画像のコピーを許可する";
+            this.AllowCopyCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // OwnerPasswordLabel
+            // 
+            this.OwnerPasswordLabel.AutoSize = true;
+            this.OwnerPasswordLabel.Location = new System.Drawing.Point(17, 11);
+            this.OwnerPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.OwnerPasswordLabel.Name = "OwnerPasswordLabel";
+            this.OwnerPasswordLabel.Size = new System.Drawing.Size(58, 12);
+            this.OwnerPasswordLabel.TabIndex = 23;
+            this.OwnerPasswordLabel.Text = "パスワード：";
+            this.OwnerPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // ConfirmOwnerPasswordLabel
+            // 
+            this.ConfirmOwnerPasswordLabel.AutoSize = true;
+            this.ConfirmOwnerPasswordLabel.Location = new System.Drawing.Point(17, 36);
+            this.ConfirmOwnerPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.ConfirmOwnerPasswordLabel.Name = "ConfirmOwnerPasswordLabel";
+            this.ConfirmOwnerPasswordLabel.Size = new System.Drawing.Size(92, 12);
+            this.ConfirmOwnerPasswordLabel.TabIndex = 24;
+            this.ConfirmOwnerPasswordLabel.Text = "パスワードの確認：";
+            this.ConfirmOwnerPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // PermissionLabel
+            // 
+            this.PermissionLabel.AutoSize = true;
+            this.PermissionLabel.Location = new System.Drawing.Point(17, 59);
+            this.PermissionLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.PermissionLabel.Name = "PermissionLabel";
+            this.PermissionLabel.Size = new System.Drawing.Size(35, 12);
+            this.PermissionLabel.TabIndex = 25;
+            this.PermissionLabel.Text = "操作：";
+            this.PermissionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // AllowFormInputCheckBox
+            // 
+            this.AllowFormInputCheckBox.AutoSize = true;
+            this.AllowFormInputCheckBox.Location = new System.Drawing.Point(122, 206);
+            this.AllowFormInputCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.AllowFormInputCheckBox.Name = "AllowFormInputCheckBox";
+            this.AllowFormInputCheckBox.Size = new System.Drawing.Size(200, 16);
+            this.AllowFormInputCheckBox.TabIndex = 30;
+            this.AllowFormInputCheckBox.Text = "フォームフィールドへの入力を許可する";
+            this.AllowFormInputCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // AllowModifyCheckBox
+            // 
+            this.AllowModifyCheckBox.AutoSize = true;
+            this.AllowModifyCheckBox.Location = new System.Drawing.Point(122, 232);
+            this.AllowModifyCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+            this.AllowModifyCheckBox.Name = "AllowModifyCheckBox";
+            this.AllowModifyCheckBox.Size = new System.Drawing.Size(233, 16);
+            this.AllowModifyCheckBox.TabIndex = 31;
+            this.AllowModifyCheckBox.Text = "ページの挿入、回転、および削除を許可する";
+            this.AllowModifyCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // RequiredUserPasswordCheckBox
+            // 
+            this.RequiredUserPasswordCheckBox.AutoSize = true;
+            this.RequiredUserPasswordCheckBox.Location = new System.Drawing.Point(120, 58);
+            this.RequiredUserPasswordCheckBox.Name = "RequiredUserPasswordCheckBox";
+            this.RequiredUserPasswordCheckBox.Size = new System.Drawing.Size(227, 16);
+            this.RequiredUserPasswordCheckBox.TabIndex = 22;
+            this.RequiredUserPasswordCheckBox.Text = "PDFファイルを開く際にパスワードを要求する";
+            this.RequiredUserPasswordCheckBox.UseVisualStyleBackColor = true;
+            this.RequiredUserPasswordCheckBox.CheckedChanged += new System.EventHandler(this.RequiredUserPasswordCheckBox_CheckedChanged);
+            // 
+            // OwnerPasswordCheckBox
+            // 
+            this.OwnerPasswordCheckBox.AutoSize = true;
+            this.OwnerPasswordCheckBox.Location = new System.Drawing.Point(20, 24);
+            this.OwnerPasswordCheckBox.Name = "OwnerPasswordCheckBox";
+            this.OwnerPasswordCheckBox.Size = new System.Drawing.Size(201, 16);
+            this.OwnerPasswordCheckBox.TabIndex = 10;
+            this.OwnerPasswordCheckBox.Text = "パスワードによるセキュリティを設定する";
+            this.OwnerPasswordCheckBox.UseVisualStyleBackColor = true;
+            this.OwnerPasswordCheckBox.CheckedChanged += new System.EventHandler(this.OwnerPasswordCheckBox_CheckedChanged);
+            // 
             // DetailTabPage
             // 
             this.DetailTabPage.BackColor = System.Drawing.Color.White;
@@ -743,212 +949,6 @@
             this._patch.TabIndex = 1;
             this._patch.TabStop = false;
             // 
-            // OwnerPasswordCheckBox
-            // 
-            this.OwnerPasswordCheckBox.AutoSize = true;
-            this.OwnerPasswordCheckBox.Location = new System.Drawing.Point(20, 24);
-            this.OwnerPasswordCheckBox.Name = "OwnerPasswordCheckBox";
-            this.OwnerPasswordCheckBox.Size = new System.Drawing.Size(201, 16);
-            this.OwnerPasswordCheckBox.TabIndex = 10;
-            this.OwnerPasswordCheckBox.Text = "パスワードによるセキュリティを設定する";
-            this.OwnerPasswordCheckBox.UseVisualStyleBackColor = true;
-            this.OwnerPasswordCheckBox.CheckedChanged += new System.EventHandler(this.OwnerPasswordCheckBox_CheckedChanged);
-            // 
-            // SecurityPanel
-            // 
-            this.SecurityPanel.Controls.Add(this.UserPasswordPanel);
-            this.SecurityPanel.Controls.Add(this.UserPasswordCheckBox);
-            this.SecurityPanel.Controls.Add(this.OwnerPasswordTextBox);
-            this.SecurityPanel.Controls.Add(this.ConfirmOwnerPasswordTextBox);
-            this.SecurityPanel.Controls.Add(this.AllowPrintCheckBox);
-            this.SecurityPanel.Controls.Add(this.AllowCopyCheckBox);
-            this.SecurityPanel.Controls.Add(this._OwnerPasswordLabel);
-            this.SecurityPanel.Controls.Add(this._ConfirmOwnerPasswordLabel);
-            this.SecurityPanel.Controls.Add(this._PermissionLabel);
-            this.SecurityPanel.Controls.Add(this.AllowFormInputCheckBox);
-            this.SecurityPanel.Controls.Add(this.AllowModifyCheckBox);
-            this.SecurityPanel.Controls.Add(this.RequiredUserPasswordCheckBox);
-            this.SecurityPanel.Enabled = false;
-            this.SecurityPanel.Location = new System.Drawing.Point(1, 42);
-            this.SecurityPanel.Margin = new System.Windows.Forms.Padding(0);
-            this.SecurityPanel.Name = "SecurityPanel";
-            this.SecurityPanel.Size = new System.Drawing.Size(420, 270);
-            this.SecurityPanel.TabIndex = 11;
-            // 
-            // UserPasswordCheckBox
-            // 
-            this.UserPasswordCheckBox.AutoSize = true;
-            this.UserPasswordCheckBox.Enabled = false;
-            this.UserPasswordCheckBox.Location = new System.Drawing.Point(120, 80);
-            this.UserPasswordCheckBox.Name = "UserPasswordCheckBox";
-            this.UserPasswordCheckBox.Size = new System.Drawing.Size(181, 16);
-            this.UserPasswordCheckBox.TabIndex = 36;
-            this.UserPasswordCheckBox.Text = "閲覧専用のパスワードを設定する";
-            this.UserPasswordCheckBox.UseVisualStyleBackColor = true;
-            this.UserPasswordCheckBox.CheckedChanged += new System.EventHandler(this.UserPasswordCheckBox_CheckedChanged);
-            // 
-            // OwnerPasswordTextBox
-            // 
-            this.OwnerPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.OwnerPasswordTextBox.Location = new System.Drawing.Point(120, 8);
-            this.OwnerPasswordTextBox.Name = "OwnerPasswordTextBox";
-            this.OwnerPasswordTextBox.PasswordChar = '*';
-            this.OwnerPasswordTextBox.Size = new System.Drawing.Size(280, 19);
-            this.OwnerPasswordTextBox.TabIndex = 26;
-            this.OwnerPasswordTextBox.TextChanged += new System.EventHandler(this.OwnerPasswordTextBox_TextChanged);
-            // 
-            // ConfirmOwnerPasswordTextBox
-            // 
-            this.ConfirmOwnerPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.ConfirmOwnerPasswordTextBox.Location = new System.Drawing.Point(120, 33);
-            this.ConfirmOwnerPasswordTextBox.Name = "ConfirmOwnerPasswordTextBox";
-            this.ConfirmOwnerPasswordTextBox.PasswordChar = '*';
-            this.ConfirmOwnerPasswordTextBox.Size = new System.Drawing.Size(280, 19);
-            this.ConfirmOwnerPasswordTextBox.TabIndex = 27;
-            this.ConfirmOwnerPasswordTextBox.TextChanged += new System.EventHandler(this.ConfirmOwnerPasswordTextBox_TextChanged);
-            // 
-            // AllowPrintCheckBox
-            // 
-            this.AllowPrintCheckBox.AutoSize = true;
-            this.AllowPrintCheckBox.Location = new System.Drawing.Point(122, 154);
-            this.AllowPrintCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.AllowPrintCheckBox.Name = "AllowPrintCheckBox";
-            this.AllowPrintCheckBox.Size = new System.Drawing.Size(100, 16);
-            this.AllowPrintCheckBox.TabIndex = 28;
-            this.AllowPrintCheckBox.Text = "印刷を許可する";
-            this.AllowPrintCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // AllowCopyCheckBox
-            // 
-            this.AllowCopyCheckBox.AutoSize = true;
-            this.AllowCopyCheckBox.Location = new System.Drawing.Point(122, 180);
-            this.AllowCopyCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.AllowCopyCheckBox.Name = "AllowCopyCheckBox";
-            this.AllowCopyCheckBox.Size = new System.Drawing.Size(183, 16);
-            this.AllowCopyCheckBox.TabIndex = 29;
-            this.AllowCopyCheckBox.Text = "テキストや画像のコピーを許可する";
-            this.AllowCopyCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // _OwnerPasswordLabel
-            // 
-            this._OwnerPasswordLabel.AutoSize = true;
-            this._OwnerPasswordLabel.Location = new System.Drawing.Point(17, 11);
-            this._OwnerPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
-            this._OwnerPasswordLabel.Name = "_OwnerPasswordLabel";
-            this._OwnerPasswordLabel.Size = new System.Drawing.Size(58, 12);
-            this._OwnerPasswordLabel.TabIndex = 23;
-            this._OwnerPasswordLabel.Text = "パスワード：";
-            this._OwnerPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _ConfirmOwnerPasswordLabel
-            // 
-            this._ConfirmOwnerPasswordLabel.AutoSize = true;
-            this._ConfirmOwnerPasswordLabel.Location = new System.Drawing.Point(17, 36);
-            this._ConfirmOwnerPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
-            this._ConfirmOwnerPasswordLabel.Name = "_ConfirmOwnerPasswordLabel";
-            this._ConfirmOwnerPasswordLabel.Size = new System.Drawing.Size(92, 12);
-            this._ConfirmOwnerPasswordLabel.TabIndex = 24;
-            this._ConfirmOwnerPasswordLabel.Text = "パスワードの確認：";
-            this._ConfirmOwnerPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _PermissionLabel
-            // 
-            this._PermissionLabel.AutoSize = true;
-            this._PermissionLabel.Location = new System.Drawing.Point(17, 59);
-            this._PermissionLabel.Margin = new System.Windows.Forms.Padding(3);
-            this._PermissionLabel.Name = "_PermissionLabel";
-            this._PermissionLabel.Size = new System.Drawing.Size(35, 12);
-            this._PermissionLabel.TabIndex = 25;
-            this._PermissionLabel.Text = "操作：";
-            this._PermissionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // AllowFormInputCheckBox
-            // 
-            this.AllowFormInputCheckBox.AutoSize = true;
-            this.AllowFormInputCheckBox.Location = new System.Drawing.Point(122, 206);
-            this.AllowFormInputCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.AllowFormInputCheckBox.Name = "AllowFormInputCheckBox";
-            this.AllowFormInputCheckBox.Size = new System.Drawing.Size(200, 16);
-            this.AllowFormInputCheckBox.TabIndex = 30;
-            this.AllowFormInputCheckBox.Text = "フォームフィールドへの入力を許可する";
-            this.AllowFormInputCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // AllowModifyCheckBox
-            // 
-            this.AllowModifyCheckBox.AutoSize = true;
-            this.AllowModifyCheckBox.Location = new System.Drawing.Point(122, 232);
-            this.AllowModifyCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.AllowModifyCheckBox.Name = "AllowModifyCheckBox";
-            this.AllowModifyCheckBox.Size = new System.Drawing.Size(233, 16);
-            this.AllowModifyCheckBox.TabIndex = 31;
-            this.AllowModifyCheckBox.Text = "ページの挿入、回転、および削除を許可する";
-            this.AllowModifyCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // RequiredUserPasswordCheckBox
-            // 
-            this.RequiredUserPasswordCheckBox.AutoSize = true;
-            this.RequiredUserPasswordCheckBox.Location = new System.Drawing.Point(120, 58);
-            this.RequiredUserPasswordCheckBox.Name = "RequiredUserPasswordCheckBox";
-            this.RequiredUserPasswordCheckBox.Size = new System.Drawing.Size(227, 16);
-            this.RequiredUserPasswordCheckBox.TabIndex = 22;
-            this.RequiredUserPasswordCheckBox.Text = "PDFファイルを開く際にパスワードを要求する";
-            this.RequiredUserPasswordCheckBox.UseVisualStyleBackColor = true;
-            this.RequiredUserPasswordCheckBox.CheckedChanged += new System.EventHandler(this.RequiredUserPasswordCheckBox_CheckedChanged);
-            // 
-            // UserPasswordPanel
-            // 
-            this.UserPasswordPanel.Controls.Add(this._UserPasswordLabel);
-            this.UserPasswordPanel.Controls.Add(this._ConfirmUserPasswordLabel);
-            this.UserPasswordPanel.Controls.Add(this.UserPasswordTextBox);
-            this.UserPasswordPanel.Controls.Add(this.ConfirmUserPasswordTextBox);
-            this.UserPasswordPanel.Enabled = false;
-            this.UserPasswordPanel.Location = new System.Drawing.Point(117, 100);
-            this.UserPasswordPanel.Name = "UserPasswordPanel";
-            this.UserPasswordPanel.Size = new System.Drawing.Size(290, 50);
-            this.UserPasswordPanel.TabIndex = 37;
-            // 
-            // _UserPasswordLabel
-            // 
-            this._UserPasswordLabel.AutoSize = true;
-            this._UserPasswordLabel.Location = new System.Drawing.Point(3, 7);
-            this._UserPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
-            this._UserPasswordLabel.Name = "_UserPasswordLabel";
-            this._UserPasswordLabel.Size = new System.Drawing.Size(58, 12);
-            this._UserPasswordLabel.TabIndex = 37;
-            this._UserPasswordLabel.Text = "パスワード：";
-            this._UserPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // _ConfirmUserPasswordLabel
-            // 
-            this._ConfirmUserPasswordLabel.AutoSize = true;
-            this._ConfirmUserPasswordLabel.Location = new System.Drawing.Point(3, 31);
-            this._ConfirmUserPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
-            this._ConfirmUserPasswordLabel.Name = "_ConfirmUserPasswordLabel";
-            this._ConfirmUserPasswordLabel.Size = new System.Drawing.Size(92, 12);
-            this._ConfirmUserPasswordLabel.TabIndex = 36;
-            this._ConfirmUserPasswordLabel.Text = "パスワードの確認：";
-            this._ConfirmUserPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // UserPasswordTextBox
-            // 
-            this.UserPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.UserPasswordTextBox.Location = new System.Drawing.Point(103, 4);
-            this.UserPasswordTextBox.Name = "UserPasswordTextBox";
-            this.UserPasswordTextBox.PasswordChar = '*';
-            this.UserPasswordTextBox.Size = new System.Drawing.Size(180, 19);
-            this.UserPasswordTextBox.TabIndex = 38;
-            this.UserPasswordTextBox.TextChanged += new System.EventHandler(this.UserPasswordTextBox_TextChanged);
-            // 
-            // ConfirmUserPasswordTextBox
-            // 
-            this.ConfirmUserPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.ConfirmUserPasswordTextBox.Location = new System.Drawing.Point(103, 28);
-            this.ConfirmUserPasswordTextBox.Name = "ConfirmUserPasswordTextBox";
-            this.ConfirmUserPasswordTextBox.PasswordChar = '*';
-            this.ConfirmUserPasswordTextBox.Size = new System.Drawing.Size(180, 19);
-            this.ConfirmUserPasswordTextBox.TabIndex = 39;
-            this.ConfirmUserPasswordTextBox.TextChanged += new System.EventHandler(this.ConfirmUserPasswordTextBox_TextChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -984,14 +984,14 @@
             this.SecurityTabPage.ResumeLayout(false);
             this.SecurityGroupBox.ResumeLayout(false);
             this.SecurityGroupBox.PerformLayout();
-            this.DetailTabPage.ResumeLayout(false);
-            this.DetailPanel.ResumeLayout(false);
-            this.DetailPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._patch)).EndInit();
             this.SecurityPanel.ResumeLayout(false);
             this.SecurityPanel.PerformLayout();
             this.UserPasswordPanel.ResumeLayout(false);
             this.UserPasswordPanel.PerformLayout();
+            this.DetailTabPage.ResumeLayout(false);
+            this.DetailPanel.ResumeLayout(false);
+            this.DetailPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this._patch)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1062,15 +1062,15 @@
         private System.Windows.Forms.TextBox ConfirmOwnerPasswordTextBox;
         private System.Windows.Forms.CheckBox AllowPrintCheckBox;
         private System.Windows.Forms.CheckBox AllowCopyCheckBox;
-        private System.Windows.Forms.Label _OwnerPasswordLabel;
-        private System.Windows.Forms.Label _ConfirmOwnerPasswordLabel;
-        private System.Windows.Forms.Label _PermissionLabel;
+        private System.Windows.Forms.Label OwnerPasswordLabel;
+        private System.Windows.Forms.Label ConfirmOwnerPasswordLabel;
+        private System.Windows.Forms.Label PermissionLabel;
         private System.Windows.Forms.CheckBox AllowFormInputCheckBox;
         private System.Windows.Forms.CheckBox AllowModifyCheckBox;
         private System.Windows.Forms.CheckBox RequiredUserPasswordCheckBox;
         private System.Windows.Forms.Panel UserPasswordPanel;
-        private System.Windows.Forms.Label _UserPasswordLabel;
-        private System.Windows.Forms.Label _ConfirmUserPasswordLabel;
+        private System.Windows.Forms.Label UserPasswordLabel;
+        private System.Windows.Forms.Label ConfirmUserPasswordLabel;
         private System.Windows.Forms.TextBox UserPasswordTextBox;
         private System.Windows.Forms.TextBox ConfirmUserPasswordTextBox;
     }
