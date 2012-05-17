@@ -103,7 +103,6 @@
             this.PostProcessLiteLabel = new System.Windows.Forms.Label();
             this.PostProcessLiteComboBox = new System.Windows.Forms.ComboBox();
             this.ConvertBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-            this._patch = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.HeaderPictureBox)).BeginInit();
             this.MainPanel.SuspendLayout();
             this.MainTabControl.SuspendLayout();
@@ -120,7 +119,6 @@
             this.UserPasswordPanel.SuspendLayout();
             this.DetailTabPage.SuspendLayout();
             this.DetailPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._patch)).BeginInit();
             this.SuspendLayout();
             // 
             // HeaderPictureBox
@@ -128,8 +126,10 @@
             this.HeaderPictureBox.Dock = System.Windows.Forms.DockStyle.Top;
             this.HeaderPictureBox.Image = global::CubePDF.Properties.Resources.header;
             this.HeaderPictureBox.Location = new System.Drawing.Point(0, 0);
+            this.HeaderPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.HeaderPictureBox.Name = "HeaderPictureBox";
-            this.HeaderPictureBox.Size = new System.Drawing.Size(494, 80);
+            this.HeaderPictureBox.Size = new System.Drawing.Size(500, 80);
+            this.HeaderPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.HeaderPictureBox.TabIndex = 0;
             this.HeaderPictureBox.TabStop = false;
             this.HeaderPictureBox.Click += new System.EventHandler(this.HeaderPictureBox_Click);
@@ -139,6 +139,7 @@
             // MainPanel
             // 
             this.MainPanel.BackgroundImage = global::CubePDF.Properties.Resources.background;
+            this.MainPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.MainPanel.Controls.Add(this.ExecProgressBar);
             this.MainPanel.Controls.Add(this.ExitButton);
             this.MainPanel.Controls.Add(this.ConvertButton);
@@ -146,7 +147,7 @@
             this.MainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainPanel.Location = new System.Drawing.Point(0, 80);
             this.MainPanel.Name = "MainPanel";
-            this.MainPanel.Size = new System.Drawing.Size(494, 421);
+            this.MainPanel.Size = new System.Drawing.Size(500, 421);
             this.MainPanel.TabIndex = 1;
             // 
             // ExecProgressBar
@@ -161,9 +162,10 @@
             // ExitButton
             // 
             this.ExitButton.BackgroundImage = global::CubePDF.Properties.Resources.buttion_cancel;
-            this.ExitButton.Location = new System.Drawing.Point(365, 362);
+            this.ExitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ExitButton.Location = new System.Drawing.Point(369, 362);
             this.ExitButton.Name = "ExitButton";
-            this.ExitButton.Size = new System.Drawing.Size(117, 49);
+            this.ExitButton.Size = new System.Drawing.Size(119, 50);
             this.ExitButton.TabIndex = 2;
             this.ExitButton.UseVisualStyleBackColor = true;
             this.ExitButton.Click += new System.EventHandler(this.ExitButton_Click);
@@ -171,10 +173,11 @@
             // ConvertButton
             // 
             this.ConvertButton.BackgroundImage = global::CubePDF.Properties.Resources.buttion_convert;
-            this.ConvertButton.Location = new System.Drawing.Point(222, 362);
+            this.ConvertButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.ConvertButton.Location = new System.Drawing.Point(227, 362);
             this.ConvertButton.Margin = new System.Windows.Forms.Padding(0);
             this.ConvertButton.Name = "ConvertButton";
-            this.ConvertButton.Size = new System.Drawing.Size(137, 49);
+            this.ConvertButton.Size = new System.Drawing.Size(139, 50);
             this.ConvertButton.TabIndex = 1;
             this.ConvertButton.UseVisualStyleBackColor = true;
             this.ConvertButton.Click += new System.EventHandler(this.ConvertButton_Click);
@@ -189,7 +192,7 @@
             this.MainTabControl.Location = new System.Drawing.Point(12, 0);
             this.MainTabControl.Name = "MainTabControl";
             this.MainTabControl.SelectedIndex = 0;
-            this.MainTabControl.Size = new System.Drawing.Size(470, 355);
+            this.MainTabControl.Size = new System.Drawing.Size(476, 355);
             this.MainTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.MainTabControl.TabIndex = 3;
             // 
@@ -201,7 +204,7 @@
             this.GeneralTabPage.Location = new System.Drawing.Point(4, 22);
             this.GeneralTabPage.Name = "GeneralTabPage";
             this.GeneralTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.GeneralTabPage.Size = new System.Drawing.Size(462, 329);
+            this.GeneralTabPage.Size = new System.Drawing.Size(468, 329);
             this.GeneralTabPage.TabIndex = 0;
             this.GeneralTabPage.Text = "一般";
             // 
@@ -222,7 +225,7 @@
             this.GeneralPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GeneralPanel.Location = new System.Drawing.Point(3, 3);
             this.GeneralPanel.Name = "GeneralPanel";
-            this.GeneralPanel.Size = new System.Drawing.Size(456, 323);
+            this.GeneralPanel.Size = new System.Drawing.Size(462, 323);
             this.GeneralPanel.TabIndex = 1;
             // 
             // InputPathPanel
@@ -438,7 +441,7 @@
             this.DocTabPage.Location = new System.Drawing.Point(4, 22);
             this.DocTabPage.Name = "DocTabPage";
             this.DocTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DocTabPage.Size = new System.Drawing.Size(462, 329);
+            this.DocTabPage.Size = new System.Drawing.Size(468, 329);
             this.DocTabPage.TabIndex = 1;
             this.DocTabPage.Text = "文書プロパティ";
             // 
@@ -455,7 +458,7 @@
             this.DocPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DocPanel.Location = new System.Drawing.Point(3, 3);
             this.DocPanel.Name = "DocPanel";
-            this.DocPanel.Size = new System.Drawing.Size(456, 323);
+            this.DocPanel.Size = new System.Drawing.Size(462, 323);
             this.DocPanel.TabIndex = 1;
             // 
             // DocTitleLabel
@@ -542,7 +545,7 @@
             this.SecurityTabPage.Location = new System.Drawing.Point(4, 22);
             this.SecurityTabPage.Name = "SecurityTabPage";
             this.SecurityTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.SecurityTabPage.Size = new System.Drawing.Size(462, 329);
+            this.SecurityTabPage.Size = new System.Drawing.Size(468, 329);
             this.SecurityTabPage.TabIndex = 2;
             this.SecurityTabPage.Text = "セキュリティ";
             // 
@@ -771,7 +774,7 @@
             this.DetailTabPage.Location = new System.Drawing.Point(4, 22);
             this.DetailTabPage.Name = "DetailTabPage";
             this.DetailTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DetailTabPage.Size = new System.Drawing.Size(462, 329);
+            this.DetailTabPage.Size = new System.Drawing.Size(468, 329);
             this.DetailTabPage.TabIndex = 3;
             this.DetailTabPage.Text = "詳細設定";
             // 
@@ -793,7 +796,7 @@
             this.DetailPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DetailPanel.Location = new System.Drawing.Point(3, 3);
             this.DetailPanel.Name = "DetailPanel";
-            this.DetailPanel.Size = new System.Drawing.Size(456, 323);
+            this.DetailPanel.Size = new System.Drawing.Size(462, 323);
             this.DetailPanel.TabIndex = 0;
             // 
             // DownSamplingLabel
@@ -876,9 +879,9 @@
             this.ImageFilterCheckBox.AutoSize = true;
             this.ImageFilterCheckBox.Location = new System.Drawing.Point(120, 125);
             this.ImageFilterCheckBox.Name = "ImageFilterCheckBox";
-            this.ImageFilterCheckBox.Size = new System.Drawing.Size(106, 16);
+            this.ImageFilterCheckBox.Size = new System.Drawing.Size(143, 16);
             this.ImageFilterCheckBox.TabIndex = 18;
-            this.ImageFilterCheckBox.Text = "画像をJpeg圧縮";
+            this.ImageFilterCheckBox.Text = "画像をJPEG形式に圧縮";
             this.ImageFilterCheckBox.UseVisualStyleBackColor = true;
             // 
             // WebOptimizeCheckBox
@@ -940,22 +943,12 @@
             this.ConvertBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ConvertBackgroundWorker_DoWork);
             this.ConvertBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ConvertBackgroundWorker_RunWorkerCompleted);
             // 
-            // _patch
-            // 
-            this._patch.BackgroundImage = global::CubePDF.Properties.Resources.background;
-            this._patch.Location = new System.Drawing.Point(400, 80);
-            this._patch.Name = "_patch";
-            this._patch.Size = new System.Drawing.Size(83, 18);
-            this._patch.TabIndex = 1;
-            this._patch.TabStop = false;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(494, 501);
-            this.Controls.Add(this._patch);
+            this.ClientSize = new System.Drawing.Size(500, 501);
             this.Controls.Add(this.MainPanel);
             this.Controls.Add(this.HeaderPictureBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -991,7 +984,6 @@
             this.DetailTabPage.ResumeLayout(false);
             this.DetailPanel.ResumeLayout(false);
             this.DetailPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this._patch)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1010,7 +1002,6 @@
         private System.Windows.Forms.ProgressBar ExecProgressBar;
         private System.Windows.Forms.GroupBox SecurityGroupBox;
         private System.ComponentModel.BackgroundWorker ConvertBackgroundWorker;
-        private System.Windows.Forms.PictureBox _patch;
         private System.Windows.Forms.Panel GeneralPanel;
         private System.Windows.Forms.Panel InputPathPanel;
         private System.Windows.Forms.Button InputPathButton;
