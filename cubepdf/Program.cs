@@ -78,7 +78,14 @@ namespace CubePDF
         /// SetupLog
         /* ----------------------------------------------------------------- */
         private static void SetupLog(string src) {
-            if (System.IO.File.Exists(src)) System.IO.File.Delete(src);
+            if (System.IO.File.Exists(src))
+            {
+                using (System.IO.StreamWriter stream = new System.IO.StreamWriter(src, false))
+                {
+                    // 空の内容で上書きする
+                }
+            }
+
             Trace.Listeners.Remove("Default");
             Trace.Listeners.Add(new TextWriterTraceListener(src));
             Trace.AutoFlush = true;
