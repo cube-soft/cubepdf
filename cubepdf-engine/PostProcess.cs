@@ -104,10 +104,8 @@ namespace CubePDF {
         {
             if (setting.PostProcess == Parameter.PostProcesses.Open)
             {
-                uint size = 0;
                 string ext = Parameter.Extension(setting.FileType);
-                AssocQueryString(0x40 /* ASSOCF_VERIFY */, 2 /* ASSOCSTR_EXECUTABLE */, ext, null, null, ref size);
-                if (size == 0)
+                if (!CubePDF.Utility.IsAssociate(ext))
                 {
                     // NOTE: 関連付けされていない場合は、単純にスキップする（エラーメッセージを表示しない）。
                     // _messages.Add(new Message(Message.Levels.Error, String.Format("{0}: ファイルが関連付けられていません", ext)));
@@ -126,28 +124,6 @@ namespace CubePDF {
 
             return true;
         }
-
-        /* ----------------------------------------------------------------- */
-        //  Win32 APIs
-        /* ----------------------------------------------------------------- */
-        #region Win32APIs
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// AssocQueryString
-        ///
-        /// <summary>
-        /// NOTE: 本来、引数の flags は ASSOCF、str は ASSOCSTR と言う
-        /// enum 型で定義される。
-        /// 
-        /// http://msdn.microsoft.com/en-us/library/windows/desktop/bb773471.aspx
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [DllImport("Shlwapi.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern uint AssocQueryString(uint flags, uint str, string pszAssoc, string pszExtra, System.Text.StringBuilder pszOut, ref uint pcchOut);
-
-        #endregion
 
         /* ----------------------------------------------------------------- */
         //  変数定義
