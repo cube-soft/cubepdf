@@ -174,7 +174,7 @@ namespace CubePDF {
             {
                 string ext = Path.GetExtension(this.OutputPathTextBox.Text);
                 string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
-                if (ext != compared && !_extlist.Extensions.Contains(ext))
+                if (ext != compared && !CubePDF.Utility.IsAssociate(ext))
                 {
                     this.OutputPathTextBox.Text += compared;
                 }
@@ -426,7 +426,7 @@ namespace CubePDF {
             string ext = Path.GetExtension(this.OutputPathTextBox.Text);
             string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
             this.OutputPathTextBox.Text = dialog.FileName;
-            if (ext != compared && !_extlist.Extensions.Contains(ext))
+            if (ext != compared && !CubePDF.Utility.IsAssociate(ext))
             {
                 this.OutputPathTextBox.Text += compared;
             }
@@ -811,7 +811,6 @@ namespace CubePDF {
         private UserSetting _setting;
         private ComboBox _postproc;
         private ToolTip _tips = new ToolTip();
-        private ExtensionList _extlist = new ExtensionList();
         #endregion
 
     }
