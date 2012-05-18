@@ -22,6 +22,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Container = System.Collections.Generic;
 
 namespace CubePDF {
@@ -53,6 +54,44 @@ namespace CubePDF {
             }
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// IsAssociate
+        ///
+        /// <summary>
+        /// 引数に指定された拡張子が関連付けされているかどうかチェックする。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public static bool IsAssociate(string ext)
+        {
+            uint size = 0;
+            AssocQueryString(0x40 /* ASSOCF_VERIFY */, 2 /* ASSOCSTR_EXECUTABLE */, ext, null, null, ref size);
+            return size > 0;
+        }
+
+        /* ----------------------------------------------------------------- */
+        //  Win32 APIs
+        /* ----------------------------------------------------------------- */
+        #region Win32APIs
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AssocQueryString
+        ///
+        /// <summary>
+        /// NOTE: 本来、引数の flags は ASSOCF、str は ASSOCSTR と言う
+        /// enum 型で定義される。
+        /// 
+        /// http://msdn.microsoft.com/en-us/library/windows/desktop/bb773471.aspx
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [DllImport("Shlwapi.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        private static extern uint AssocQueryString(uint flags, uint str, string pszAssoc, string pszExtra, System.Text.StringBuilder pszOut, ref uint pcchOut);
+
+        #endregion
+        
         /* ------------------------------------------------------------- */
         //  変数定義
         /* ------------------------------------------------------------- */
