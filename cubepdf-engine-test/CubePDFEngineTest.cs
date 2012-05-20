@@ -25,7 +25,14 @@ using Microsoft.Win32;
 
 namespace CubePDF {
     /* --------------------------------------------------------------------- */
-    /// CubePDFEngineTest
+    ///
+    /// UserSettingTest
+    ///
+    /// <summary>
+    /// ユーザ設定のロード/セーブをテストするためのクラス。
+    /// 現バージョンでは、ユーザ設定は全てレジストリに保存されている。
+    /// </summary>
+    ///
     /* --------------------------------------------------------------------- */
     [TestFixture]
     public class CubePDFEngineTest {

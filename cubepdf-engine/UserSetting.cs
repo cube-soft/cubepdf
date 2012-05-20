@@ -966,10 +966,10 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void Save(ParameterManager config) {
             // パス関連
-            if (_output.Length > 0) config.Parameters.Add(new ParameterElement(REG_LAST_OUTPUT_ACCESS, ParameterType.String, _output));
-            if (_input.Length > 0) config.Parameters.Add(new ParameterElement(REG_LAST_INPUT_ACCESS, ParameterType.String, _input));
-            if (_program.Length > 0) config.Parameters.Add(new ParameterElement(REG_USER_PROGRAM, ParameterType.String, _program));
-            if (_argument.Length > 0) config.Parameters.Add(new ParameterElement(REG_USER_ARGUMENTS, ParameterType.String, _argument));
+            config.Parameters.Add(new ParameterElement(REG_LAST_OUTPUT_ACCESS, ParameterType.String, _output));
+            config.Parameters.Add(new ParameterElement(REG_LAST_INPUT_ACCESS, ParameterType.String, _input));
+            config.Parameters.Add(new ParameterElement(REG_USER_PROGRAM, ParameterType.String, _program));
+            config.Parameters.Add(new ParameterElement(REG_USER_ARGUMENTS, ParameterType.String, _argument));
 
             // チェックボックスのフラグ関連
             int flag = _rotation ? 1 : 0;
