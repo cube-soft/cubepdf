@@ -21,9 +21,9 @@
 using System;
 using System.IO;
 using NUnit.Framework;
-using Microsoft.Win32;
 
-namespace CubePDF {
+namespace CubePDF
+{
     /* --------------------------------------------------------------------- */
     ///
     /// ConverterTest
@@ -39,7 +39,8 @@ namespace CubePDF {
     ///
     /* --------------------------------------------------------------------- */
     [TestFixture]
-    public class ConverterTest {
+    public class ConverterTest
+    {
         /* ----------------------------------------------------------------- */
         ///
         /// ExecConvert
@@ -50,17 +51,20 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void ExecConvert(UserSetting setting, string suffix) {
+        private void ExecConvert(UserSetting setting, string suffix)
+        {
             string output = System.Environment.CurrentDirectory + "\\results";
             if (!System.IO.Directory.Exists(output)) System.IO.Directory.CreateDirectory(output);
-            
-            foreach (string file in Directory.GetFiles("examples", "*.ps")) {
+
+            foreach (string file in Directory.GetFiles("examples", "*.ps"))
+            {
                 string filename = Path.GetFileNameWithoutExtension(file);
                 string extension = Parameter.Extension((Parameter.FileTypes)setting.FileType);
 
                 setting.InputPath = Path.GetFullPath(file);
                 setting.OutputPath = output + '\\' + filename + suffix + extension;
-                if (File.Exists(setting.OutputPath) && setting.ExistedFile == Parameter.ExistedFiles.Overwrite) {
+                if (File.Exists(setting.OutputPath) && setting.ExistedFile == Parameter.ExistedFiles.Overwrite)
+                {
                     File.Delete(setting.OutputPath);
                 }
 
@@ -91,7 +95,8 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestDefaultSetting() {
+        public void TestDefaultSetting()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
             setting.PostProcess = Parameter.PostProcesses.None;
@@ -108,11 +113,13 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestFileType() {
+        public void TestFileType()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
-            foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes))) {
+            foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes)))
+            {
                 setting.FileType = type;
                 setting.PostProcess = Parameter.PostProcesses.None;
                 ExecConvert(setting, "-type");
@@ -129,11 +136,13 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestPDFVersion() {
+        public void TestPDFVersion()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
-            foreach (Parameter.PDFVersions version in Enum.GetValues(typeof(Parameter.PDFVersions))) {
+            foreach (Parameter.PDFVersions version in Enum.GetValues(typeof(Parameter.PDFVersions)))
+            {
                 setting.FileType = Parameter.FileTypes.PDF;
                 setting.PDFVersion = version;
                 setting.PostProcess = Parameter.PostProcesses.None;
@@ -154,11 +163,13 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestResolution() {
+        public void TestResolution()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
-            foreach (Parameter.Resolutions resolution in Enum.GetValues(typeof(Parameter.Resolutions))) {
+            foreach (Parameter.Resolutions resolution in Enum.GetValues(typeof(Parameter.Resolutions)))
+            {
                 setting.FileType = Parameter.FileTypes.PNG;
                 setting.Resolution = resolution;
                 setting.PostProcess = Parameter.PostProcesses.None;
@@ -176,12 +187,15 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestDownSampling() {
+        public void TestDownSampling()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
-            foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes))) {
-                foreach (Parameter.DownSamplings sampling in Enum.GetValues(typeof(Parameter.DownSamplings))) {
+            foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes)))
+            {
+                foreach (Parameter.DownSamplings sampling in Enum.GetValues(typeof(Parameter.DownSamplings)))
+                {
                     setting.FileType = type;
                     setting.DownSampling = sampling;
                     setting.PostProcess = Parameter.PostProcesses.None;
@@ -189,7 +203,7 @@ namespace CubePDF {
                 }
             }
         }
-        
+
         /* ----------------------------------------------------------------- */
         ///
         /// TestEmbedFont
@@ -203,7 +217,8 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestEmbedFont() {
+        public void TestEmbedFont()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
@@ -223,11 +238,13 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestGrayscale() {
+        public void TestGrayscale()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
-            foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes))) {
+            foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes)))
+            {
                 setting.FileType = type;
                 setting.Grayscale = true;
                 setting.PostProcess = Parameter.PostProcesses.None;
@@ -245,7 +262,8 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestWebOptimize() {
+        public void TestWebOptimize()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
@@ -265,7 +283,8 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestDocument() {
+        public void TestDocument()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
@@ -288,7 +307,8 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestPassword() {
+        public void TestPassword()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
@@ -297,7 +317,7 @@ namespace CubePDF {
             setting.Password = "test";
             ExecConvert(setting, "-password");
         }
-        
+
         /* ----------------------------------------------------------------- */
         ///
         /// TestPermission
@@ -308,7 +328,8 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestPermission() {
+        public void TestPermission()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
@@ -338,7 +359,8 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestMerge() {
+        public void TestMerge()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
@@ -364,11 +386,13 @@ namespace CubePDF {
         /// 
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestRename() {
+        public void TestRename()
+        {
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
-            foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes))) {
+            foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes)))
+            {
                 setting.FileType = type;
                 setting.ExistedFile = Parameter.ExistedFiles.Rename;
                 setting.PostProcess = Parameter.PostProcesses.None;
