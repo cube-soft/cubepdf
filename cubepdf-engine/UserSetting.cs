@@ -885,14 +885,14 @@ namespace CubePDF {
 
             // パス関連
             string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string s = v.Contains(REG_LAST_OUTPUT_ACCESS) ? (string)v.Find(REG_LAST_OUTPUT_ACCESS).Value : desktop;
-            if (s != null && s.Length > 0) _output = s;
-            s = v.Contains(REG_LAST_INPUT_ACCESS) ? (string)v.Find(REG_LAST_INPUT_ACCESS).Value : desktop;
-            if (s != null && s.Length > 0) _input = s;
+            string s = v.Contains(REG_LAST_OUTPUT_ACCESS) ? (string)v.Find(REG_LAST_OUTPUT_ACCESS).Value : "";
+            _output = (s.Length > 0) ? s : desktop;
+            s = v.Contains(REG_LAST_INPUT_ACCESS) ? (string)v.Find(REG_LAST_INPUT_ACCESS).Value : "";
+            _input = (s.Length > 0) ? s : desktop;
             s = v.Contains(REG_USER_PROGRAM) ? (string)v.Find(REG_USER_PROGRAM).Value : "";
-            if (s != null && s.Length > 0) _program = s;
-            s = v.Contains(REG_USER_ARGUMENTS) ? (string)v.Find(REG_USER_ARGUMENTS).Value : "";
-            if (s != null && s.Length > 0) _argument = s;
+            _program = s;
+            s = v.Contains(REG_USER_ARGUMENTS) ? (string)v.Find(REG_USER_ARGUMENTS).Value : "%%FILE%%";
+            _argument = s;
 
             // チェックボックスのフラグ関連
             int value = v.Contains(REG_PAGE_ROTATION) ? (int)v.Find(REG_PAGE_ROTATION).Value : 1;
@@ -1024,7 +1024,7 @@ namespace CubePDF {
         private string _input = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         private string _output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         private string _program = "";
-        private string _argument = "";
+        private string _argument = "%%FILE%%";
         private string _password = "";
         private Parameter.FileTypes _type = Parameter.FileTypes.PDF;
         private Parameter.PDFVersions _pdfver = Parameter.PDFVersions.Ver1_7;
