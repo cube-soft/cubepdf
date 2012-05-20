@@ -374,6 +374,7 @@ namespace CubePDF
             Trace.WriteLine("\tExistedFile   = " + _exist.ToString());
             Trace.WriteLine("\tPostProcess   = " + _postproc.ToString());
             Trace.WriteLine("\tUserProgram   = " + _program);
+            Trace.WriteLine("\tUserArguments = " + _argument);
             Trace.WriteLine("\tDownsampling  = " + _downsampling.ToString());
             Trace.WriteLine("\tImageFilter   = " + _filter.ToString());
             Trace.WriteLine("\tPageRotation  = " + _rotation.ToString());
