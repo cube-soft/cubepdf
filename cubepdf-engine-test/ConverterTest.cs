@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 /*
- *  CubePDFEngineTest.cs
+ *  ConverterTest.cs
  *
  *  Copyright (c) 2009 - 2011 CubeSoft, Inc. All rights reserved.
  *
@@ -26,23 +26,27 @@ using Microsoft.Win32;
 namespace CubePDF {
     /* --------------------------------------------------------------------- */
     ///
-    /// UserSettingTest
+    /// ConverterTest
     ///
     /// <summary>
-    /// ユーザ設定のロード/セーブをテストするためのクラス。
-    /// 現バージョンでは、ユーザ設定は全てレジストリに保存されている。
+    /// いくつかの *.ps ファイルで変換テストを行うためのクラス。
+    /// 成功したかどうかは、Run() メソッドの戻り値、および出力ファイルが
+    /// 存在しているかのみで判断している。
+    /// 
+    /// NOTE: このテストクラスは時間がかかるので、普段はテストケースから
+    /// 外しておく事。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
     [TestFixture]
-    public class CubePDFEngineTest {
+    public class ConverterTest {
         /* ----------------------------------------------------------------- */
         ///
         /// ExecConvert
         ///
         /// <summary>
         /// examples に存在する *.ps ファイルに対して Converter.Run
-        /// を実行し，生成されたファイルを results ディレクトリに保存する．
+        /// を実行し，生成されたファイルを results ディレクトリに保存する。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
@@ -60,44 +64,55 @@ namespace CubePDF {
                     File.Delete(setting.OutputPath);
                 }
 
-                Converter converter = new Converter();
-                Assert.IsTrue(converter.Run(setting), "Converter.Run: " + file);
+                var converter = new Converter();
+                Assert.IsTrue(converter.Run(setting), String.Format("Converter.Run() failed. source file: {0}", file));
                 bool status = File.Exists(setting.OutputPath);
-                if (!status) status = File.Exists(output + '\\' + filename + suffix + "-001" + extension);
-                Assert.IsTrue(status, "File.Exists: " + file);
-                // Assert.IsTrue(converter.Message.Length == 0, converter.Message);
+                if (!status)
+                {
+                    string tmp = String.Format("{0}\\{1}-001{2}",
+                        System.IO.Path.GetDirectoryName(setting.OutputPath),
+                        System.IO.Path.GetFileNameWithoutExtension(setting.OutputPath),
+                        System.IO.Path.GetExtension(setting.OutputPath)
+                    );
+
+                    status = File.Exists(tmp);
+                    Assert.IsTrue(status, String.Format("{0}: file not found", setting.OutputPath));
+                }
             }
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConverterDefault
+        /// TestDefaultSetting
         ///
         /// <summary>
-        /// デフォルト設定での変換テスト．
+        /// デフォルト設定での変換テスト。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConverterDefault() {
-            UserSetting setting = new UserSetting();
+        public void TestDefaultSetting() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
             setting.PostProcess = Parameter.PostProcesses.None;
             ExecConvert(setting, "");
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConverterFileType
+        /// TestFileType
         ///
         /// <summary>
-        /// 各種ファイルタイプでのテスト．
+        /// 各種ファイルタイプでのテスト。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConvertFileType() {
+        public void TestFileType() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
             foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes))) {
-                UserSetting setting = new UserSetting();
                 setting.FileType = type;
                 setting.PostProcess = Parameter.PostProcesses.None;
                 ExecConvert(setting, "-type");
@@ -106,17 +121,19 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConverterPDFVersion
+        /// TestPDFVersion
         ///
         /// <summary>
-        /// 各種 PDF バージョンでのテスト．
+        /// 各種 PDF バージョンでのテスト。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConvertPDFVersion() {
+        public void TestPDFVersion() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
             foreach (Parameter.PDFVersions version in Enum.GetValues(typeof(Parameter.PDFVersions))) {
-                UserSetting setting = new UserSetting();
                 setting.FileType = Parameter.FileTypes.PDF;
                 setting.PDFVersion = version;
                 setting.PostProcess = Parameter.PostProcesses.None;
@@ -126,19 +143,22 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConverterResolution
+        /// TestResolution
         ///
         /// <summary>
-        /// 解像度を変更したときのテスト．
-        /// NOTE: 簡易テストとして PNG で試す．
-        /// より詳細なテストを行う場合は，PNG, JPEG, BMP, TIFF も試す．
+        /// 解像度を変更したときのテスト。
+        /// 
+        /// NOTE: 簡易テストとして PNG で試す。
+        /// より詳細なテストを行う場合は，PNG, JPEG, BMP, TIFF も試す。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConverterResolution() {
+        public void TestResolution() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
             foreach (Parameter.Resolutions resolution in Enum.GetValues(typeof(Parameter.Resolutions))) {
-                UserSetting setting = new UserSetting();
                 setting.FileType = Parameter.FileTypes.PNG;
                 setting.Resolution = resolution;
                 setting.PostProcess = Parameter.PostProcesses.None;
@@ -148,18 +168,20 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConverterDownSampling
+        /// TestDownSampling
         ///
         /// <summary>
-        /// 各種ダウンサンプリングでのテスト．
+        /// 各種ダウンサンプリングでのテスト。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConvertDownSampling() {
+        public void TestDownSampling() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
             foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes))) {
                 foreach (Parameter.DownSamplings sampling in Enum.GetValues(typeof(Parameter.DownSamplings))) {
-                    UserSetting setting = new UserSetting();
                     setting.FileType = type;
                     setting.DownSampling = sampling;
                     setting.PostProcess = Parameter.PostProcesses.None;
@@ -170,19 +192,21 @@ namespace CubePDF {
         
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConverterEmbedFont
+        /// TestEmbedFont
         ///
         /// <summary>
-        /// フォント埋め込みのテスト．
-        /// NOTE: Ghostscript のフォント埋め込み機能に問題があるため，
-        /// 現在は「埋め込みしない」と言う選択肢は選べないようになって
-        /// いる．
+        /// フォント埋め込みのテスト。
+        /// 
+        /// NOTE: Ghostscript のフォント埋め込み機能に問題があるため、
+        /// 現在は「埋め込みしない」と言う選択肢は選べないようになっている。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConvertEmbedFont() {
-            UserSetting setting = new UserSetting();
+        public void TestEmbedFont() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
             setting.FileType = Parameter.FileTypes.PDF;
             setting.PostProcess = Parameter.PostProcesses.None;
             setting.EmbedFont = true;
@@ -191,17 +215,19 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConverterGrayscale
+        /// TestGrayscale
         ///
         /// <summary>
-        /// グレイスケールのテスト．
+        /// グレースケールのテスト。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConvertGrayscale() {
+        public void TestGrayscale() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
             foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes))) {
-                UserSetting setting = new UserSetting();
                 setting.FileType = type;
                 setting.Grayscale = true;
                 setting.PostProcess = Parameter.PostProcesses.None;
@@ -211,16 +237,18 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConvertWebOptimize
+        /// TestWebOptimize
         ///
         /// <summary>
-        /// PDF の Web 最適化オプションを有効にしたテスト．
+        /// PDF の Web 最適化オプションを有効にしたテスト。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConvertWebOptimize() {
-            UserSetting setting = new UserSetting();
+        public void TestWebOptimize() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
             setting.FileType = Parameter.FileTypes.PDF;
             setting.PostProcess = Parameter.PostProcesses.None;
             setting.WebOptimize = true;
@@ -229,16 +257,18 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConvertDocument
+        /// TestDocument
         ///
         /// <summary>
-        /// PDF の 文書プロパティを設定したテスト．
+        /// PDF の 文書プロパティを設定したテスト。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConvertDocument() {
-            UserSetting setting = new UserSetting();
+        public void TestDocument() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
             setting.FileType = Parameter.FileTypes.PDF;
             setting.PostProcess = Parameter.PostProcesses.None;
             setting.Document.Title = "テスト";
@@ -250,16 +280,18 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConvertPassword
+        /// TestPassword
         ///
         /// <summary>
-        /// PDF の パスワードを設定したテスト．
+        /// PDF の パスワードを設定したテスト。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConvertPassword() {
-            UserSetting setting = new UserSetting();
+        public void TestPassword() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
             setting.FileType = Parameter.FileTypes.PDF;
             setting.PostProcess = Parameter.PostProcesses.None;
             setting.Password = "test";
@@ -268,16 +300,18 @@ namespace CubePDF {
         
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConvertPermission
+        /// TestPermission
         ///
         /// <summary>
-        /// PDF の パーミッションを設定したテスト．
+        /// PDF の パーミッションを設定したテスト。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConvertPermission() {
-            UserSetting setting = new UserSetting();
+        public void TestPermission() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
             setting.FileType = Parameter.FileTypes.PDF;
             setting.PostProcess = Parameter.PostProcesses.None;
             setting.Permission.Password = "test";
@@ -296,16 +330,18 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConvertMerge
+        /// TestMerge
         ///
         /// <summary>
-        /// 「先頭に結合」，「末尾に結合」を設定したテスト．
+        /// 「先頭に結合」、「末尾に結合」を設定したテスト。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConvertMerge() {
-            UserSetting setting = new UserSetting();
+        public void TestMerge() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
             setting.FileType = Parameter.FileTypes.PDF;
             setting.PostProcess = Parameter.PostProcesses.None;
             ExecConvert(setting, "-head");
@@ -320,17 +356,19 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestConvertRename
+        /// TestRename
         /// 
         /// <summary>
-        /// 「リネーム」を設定したテスト．
+        /// 「リネーム」を設定したテスト。
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestConvertRename() {
+        public void TestRename() {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
             foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes))) {
-                UserSetting setting = new UserSetting();
                 setting.FileType = type;
                 setting.ExistedFile = Parameter.ExistedFiles.Rename;
                 setting.PostProcess = Parameter.PostProcesses.None;

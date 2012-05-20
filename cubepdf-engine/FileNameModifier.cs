@@ -33,21 +33,25 @@ namespace CubePDF
         /// GetFileName
         ///
         /// <summary>
-        /// DocumentName からファイル名を取得する．
-        /// DocumentName は，以下のパターンに分かれる．
-        ///  1. ファイル名のみ
-        ///  2. アプリケーション名 - ファイル名
-        ///  3. ファイル名 - アプリケーション名
-        /// どこに拡張子が存在するかでファイル名部分を判別する．
-        /// どこにも存在しない場合は，DocumentName 自身を返す．
+        /// DocumentName からファイル名を取得する。
+        /// DocumentName は、以下のパターンに分かれる。
+        /// 
+        /// 1. ファイル名のみ
+        /// 2. アプリケーション名 - ファイル名
+        /// 3. ファイル名 - アプリケーション名
+        /// 
+        /// 拡張子と思われる文字列を基にして、ファイル名部分を判別する。
+        /// どこにも存在しない場合は、DocumentName 自身を返す。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         public static string GetFileName(string src)
         {
-            if (src == null || src.Length == 0) return "CubePDF";
+            string default_value = "CubePDF";
+
+            if (src == null || src.Length == 0) return default_value;
             string docname = ModifyFileName(src);
-            if (docname == null || docname.Length == 0) return "CubePDF";
+            if (docname == null || docname.Length == 0) return default_value;
 
             string search = " - ";
             int pos = docname.LastIndexOf(search);
