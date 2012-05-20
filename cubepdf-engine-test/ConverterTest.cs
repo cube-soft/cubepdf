@@ -2,7 +2,7 @@
 /*
  *  ConverterTest.cs
  *
- *  Copyright (c) 2009 - 2011 CubeSoft, Inc. All rights reserved.
+ *  Copyright (c) 2009 CubeSoft, Inc.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         private void ExecConvert(UserSetting setting, string suffix) {
-            string output = System.Environment.CurrentDirectory + @"\\results";
+            string output = System.Environment.CurrentDirectory + "\\results";
             if (!System.IO.Directory.Exists(output)) System.IO.Directory.CreateDirectory(output);
             
             foreach (string file in Directory.GetFiles("examples", "*.ps")) {
@@ -70,9 +70,9 @@ namespace CubePDF {
                 if (!status)
                 {
                     string tmp = String.Format("{0}\\{1}-001{2}",
-                        System.IO.Path.GetDirectoryName(setting.OutputPath),
-                        System.IO.Path.GetFileNameWithoutExtension(setting.OutputPath),
-                        System.IO.Path.GetExtension(setting.OutputPath)
+                        Path.GetDirectoryName(setting.OutputPath),
+                        Path.GetFileNameWithoutExtension(setting.OutputPath),
+                        Path.GetExtension(setting.OutputPath)
                     );
 
                     status = File.Exists(tmp);
