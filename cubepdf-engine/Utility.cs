@@ -21,9 +21,7 @@
  */
 /* ------------------------------------------------------------------------- */
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Container = System.Collections.Generic;
 
 namespace CubePDF {
     public abstract class Utility {
