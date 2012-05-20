@@ -254,6 +254,30 @@ namespace CubePDF
 
         /* ----------------------------------------------------------------- */
         ///
+        /// TestImageFilter
+        /// 
+        /// <summary>
+        /// 画像を JPEG 形式に変換するテスト
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestImageFilter()
+        {
+            var setting = new UserSetting(false);
+            Assert.IsTrue(setting.Load(), "Load from registry");
+
+            foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes)))
+            {
+                setting.FileType = type;
+                setting.ImageFilter = Parameter.ImageFilters.DCTEncode;
+                setting.PostProcess = Parameter.PostProcesses.None;
+                ExecConvert(setting, "-filter");
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// TestWebOptimize
         ///
         /// <summary>
