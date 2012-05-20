@@ -65,9 +65,9 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public static bool IsAssociate(string ext)
         {
-            uint size = 0;
-            AssocQueryString(0x40 /* ASSOCF_VERIFY */, 2 /* ASSOCSTR_EXECUTABLE */, ext, null, null, ref size);
-            return size > 0;
+            IntPtr key = IntPtr.Zero;
+            var status = AssocQueryKey(0x40 /* ASSOCF_VERIFY */, 1 /* ASSOCKEY_SHELLEXECCLASS */, ext, "open", out key);
+            return status == 0;
         }
 
         /* ----------------------------------------------------------------- */
@@ -77,18 +77,18 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// AssocQueryString
+        /// AssocQueryKey
         ///
         /// <summary>
-        /// NOTE: 本来、引数の flags は ASSOCF、str は ASSOCSTR と言う
+        /// NOTE: 本来、引数の flags は ASSOCF、key は ASSOCKEY と言う
         /// enum 型で定義される。
         /// 
-        /// http://msdn.microsoft.com/en-us/library/windows/desktop/bb773471.aspx
+        /// http://msdn.microsoft.com/en-us/library/windows/desktop/bb773468.aspx
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [DllImport("Shlwapi.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern uint AssocQueryString(uint flags, uint str, string pszAssoc, string pszExtra, System.Text.StringBuilder pszOut, ref uint pcchOut);
+        private static extern uint AssocQueryKey(uint flags, uint key, string pszAssoc, string pszExtra, out IntPtr phkeyOut);
 
         #endregion
         
