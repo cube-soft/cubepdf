@@ -23,12 +23,15 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace CubePDF {
-    public abstract class Utility {
+namespace CubePDF
+{
+    public abstract class Utility
+    {
         /* ------------------------------------------------------------- */
         /// WorkingDirectory
         /* ------------------------------------------------------------- */
-        public static string WorkingDirectory {
+        public static string WorkingDirectory
+        {
             get { return _work; }
             set { _work = value; }
         }
@@ -44,8 +47,10 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static string CurrentDirectory {
-            get {
+        public static string CurrentDirectory
+        {
+            get
+            {
                 var exec = System.Reflection.Assembly.GetEntryAssembly();
                 if (exec != null) return System.IO.Path.GetDirectoryName(exec.Location);
                 else return System.Environment.CurrentDirectory;
@@ -89,7 +94,7 @@ namespace CubePDF {
         private static extern uint AssocQueryKey(uint flags, uint key, string pszAssoc, string pszExtra, out IntPtr phkeyOut);
 
         #endregion
-        
+
         /* ------------------------------------------------------------- */
         //  変数定義
         /* ------------------------------------------------------------- */
