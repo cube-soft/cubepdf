@@ -2,7 +2,7 @@
 /*
  *  UserSetting.cs
  *
- *  Copyright (c) 2009 - 2011 CubeSoft, Inc. All rights reserved.
+ *  Copyright (c) 2009 CubeSoft, Inc.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,11 +24,13 @@ using System.Diagnostics;
 using Microsoft.Win32;
 using Cubic;
 
-namespace CubePDF {
+namespace CubePDF
+{
     /* --------------------------------------------------------------------- */
     /// DocumentProperty
     /* --------------------------------------------------------------------- */
-    public class DocumentProperty {
+    public class DocumentProperty
+    {
         /* ----------------------------------------------------------------- */
         //  プロパティの定義
         /* ----------------------------------------------------------------- */
@@ -37,7 +39,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Title
         /* ----------------------------------------------------------------- */
-        public string Title {
+        public string Title
+        {
             get { return _title; }
             set { _title = value; }
         }
@@ -45,7 +48,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Author
         /* ----------------------------------------------------------------- */
-        public string Author {
+        public string Author
+        {
             get { return _author; }
             set { _author = value; }
         }
@@ -53,7 +57,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Subtitle
         /* ----------------------------------------------------------------- */
-        public string Subtitle {
+        public string Subtitle
+        {
             get { return _subtitle; }
             set { _subtitle = value; }
         }
@@ -61,7 +66,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Keyword
         /* ----------------------------------------------------------------- */
-        public string Keyword {
+        public string Keyword
+        {
             get { return _keyword; }
             set { _keyword = value; }
         }
@@ -82,7 +88,8 @@ namespace CubePDF {
     /* --------------------------------------------------------------------- */
     /// PermissionProperty
     /* --------------------------------------------------------------------- */
-    public class PermissionProperty {
+    public class PermissionProperty
+    {
         /* ----------------------------------------------------------------- */
         //  プロパティの定義
         /* ----------------------------------------------------------------- */
@@ -91,7 +98,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Password
         /* ----------------------------------------------------------------- */
-        public string Password {
+        public string Password
+        {
             get { return _password; }
             set { _password = value; }
         }
@@ -99,7 +107,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// AllowPrint
         /* ----------------------------------------------------------------- */
-        public bool AllowPrint {
+        public bool AllowPrint
+        {
             get { return _print; }
             set { _print = value; }
         }
@@ -107,7 +116,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// AllowCopy
         /* ----------------------------------------------------------------- */
-        public bool AllowCopy {
+        public bool AllowCopy
+        {
             get { return _copy; }
             set { _copy = value; }
         }
@@ -115,7 +125,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// AllowFormInput
         /* ----------------------------------------------------------------- */
-        public bool AllowFormInput {
+        public bool AllowFormInput
+        {
             get { return _form; }
             set { _form = value; }
         }
@@ -123,7 +134,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// AllowModify
         /* ----------------------------------------------------------------- */
-        public bool AllowModify {
+        public bool AllowModify
+        {
             get { return _modify; }
             set { _modify = value; }
         }
@@ -151,7 +163,8 @@ namespace CubePDF {
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
-    public class UserSetting {
+    public class UserSetting
+    {
         /* ----------------------------------------------------------------- */
         ///
         /// Constructor
@@ -164,7 +177,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public UserSetting() {
+        public UserSetting()
+        {
             this.MustLoad();
         }
 
@@ -181,7 +195,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public UserSetting(bool load) {
+        public UserSetting(bool load)
+        {
             this.MustLoad();
             if (load) this.Load();
         }
@@ -197,13 +212,16 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private bool MustLoad() {
+        private bool MustLoad()
+        {
             bool status = true;
 
-            try {
+            try
+            {
                 RegistryKey subkey = Registry.LocalMachine.OpenSubKey(REG_ROOT, false);
                 if (subkey == null) status = false;
-                else {
+                else
+                {
                     _version = subkey.GetValue(REG_PRODUCT_VERSION, REG_VALUE_UNKNOWN) as string;
                     _install = subkey.GetValue(REG_INSTALL_PATH, REG_VALUE_UNKNOWN) as string;
                     _lib = subkey.GetValue(REG_LIB_PATH, REG_VALUE_UNKNOWN) as string;
@@ -213,7 +231,8 @@ namespace CubePDF {
                 if (_install == null) _install = REG_VALUE_UNKNOWN;
                 if (_lib == null) _lib = REG_VALUE_UNKNOWN;
             }
-            catch (Exception /* err */) {
+            catch (Exception /* err */)
+            {
                 status = false;
             }
 
@@ -230,17 +249,21 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public bool Load() {
+        public bool Load()
+        {
             bool status = true;
 
-            try {
-                using (RegistryKey root = Registry.CurrentUser.OpenSubKey(REG_ROOT + '\\' + REG_VERSION, false)) {
+            try
+            {
+                using (RegistryKey root = Registry.CurrentUser.OpenSubKey(REG_ROOT + '\\' + REG_VERSION, false))
+                {
                     var param = new ParameterManager();
                     param.Load(root);
                     this.Load(param);
                 }
             }
-            catch (Exception /* err */) {
+            catch (Exception /* err */)
+            {
                 status = false;
             }
 
@@ -257,15 +280,18 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public bool Load(string path) {
+        public bool Load(string path)
+        {
             bool status = true;
 
-            try {
+            try
+            {
                 var param = new ParameterManager();
                 param.Load(path, ParameterFileType.XML);
                 this.Load(param);
             }
-            catch (Exception /* err */) {
+            catch (Exception /* err */)
+            {
                 status = false;
             }
 
@@ -281,18 +307,22 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public bool Save() {
+        public bool Save()
+        {
             bool status = true;
 
-            try {
+            try
+            {
                 var param = new ParameterManager();
                 this.Save(param);
 
-                using (var root = Registry.CurrentUser.CreateSubKey(REG_ROOT + '\\' + REG_VERSION)) {
+                using (var root = Registry.CurrentUser.CreateSubKey(REG_ROOT + '\\' + REG_VERSION))
+                {
                     param.Save(root);
                 }
             }
-            catch (Exception /* err */) {
+            catch (Exception /* err */)
+            {
                 status = false;
             }
 
@@ -309,15 +339,18 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public bool Save(string path) {
+        public bool Save(string path)
+        {
             bool status = true;
 
-            try {
+            try
+            {
                 var param = new ParameterManager();
                 this.Save(param);
                 param.Save(path, ParameterFileType.XML);
             }
-            catch (Exception /* err */) {
+            catch (Exception /* err */)
+            {
                 status = false;
             }
 
@@ -328,7 +361,8 @@ namespace CubePDF {
         //  ログ出力
         /* ----------------------------------------------------------------- */
         #region dumplog
-        public void Dump() {
+        public void Dump()
+        {
             Trace.WriteLine(DateTime.Now.ToString() + ": UserSetting:");
             Trace.WriteLine("\tVersion       = " + _version);
             Trace.WriteLine("\tInstallPath   = " + _install);
@@ -368,10 +402,12 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public bool UpgradeFromV1(string root) {
+        public bool UpgradeFromV1(string root)
+        {
             bool status = true;
 
-            try {
+            try
+            {
                 // ユーザ設定を読み込む
                 RegistryKey subkey = Registry.CurrentUser.OpenSubKey(root, false);
                 if (subkey == null) return false;
@@ -405,41 +441,47 @@ namespace CubePDF {
 
                 // コンボボックスの変換
                 string type = (string)subkey.GetValue(REG_FILETYPE, "");
-                foreach (Parameter.FileTypes id in Enum.GetValues(typeof(Parameter.FileTypes))) {
-                    if (Parameter.FileTypeValue(id) == type) {
+                foreach (Parameter.FileTypes id in Enum.GetValues(typeof(Parameter.FileTypes)))
+                {
+                    if (Parameter.FileTypeValue(id) == type)
+                    {
                         _type = id;
                         break;
                     }
                 }
-                
+
                 string pdfver = (string)subkey.GetValue(REG_PDF_VERSION, "");
-                foreach (Parameter.PDFVersions id in Enum.GetValues(typeof(Parameter.PDFVersions))) {
-                    if (Parameter.PDFVersionValue(id).ToString() == pdfver) {
+                foreach (Parameter.PDFVersions id in Enum.GetValues(typeof(Parameter.PDFVersions)))
+                {
+                    if (Parameter.PDFVersionValue(id).ToString() == pdfver)
+                    {
                         _pdfver = id;
                         break;
                     }
                 }
-                
+
                 string resolution = (string)subkey.GetValue(REG_RESOLUTION, "");
-                foreach (Parameter.Resolutions id in Enum.GetValues(typeof(Parameter.Resolutions))) {
-                    if (Parameter.ResolutionValue(id).ToString() == resolution) {
+                foreach (Parameter.Resolutions id in Enum.GetValues(typeof(Parameter.Resolutions)))
+                {
+                    if (Parameter.ResolutionValue(id).ToString() == resolution)
+                    {
                         _resolution = id;
                         break;
                     }
                 }
-                
+
                 // ExistedFile: v1 は日本語名で直接指定されていた
                 string exist = (string)subkey.GetValue(REG_EXISTED_FILE, "");
                 if (exist == "上書き") _exist = Parameter.ExistedFiles.Overwrite;
                 else if (exist == "先頭に結合") _exist = Parameter.ExistedFiles.MergeHead;
                 else if (exist == "末尾に結合") _exist = Parameter.ExistedFiles.MergeTail;
-                
+
                 // PostProcess: v1 は日本語名で直接指定されていた
                 string postproc = (string)subkey.GetValue(REG_POST_PROCESS, "");
                 if (postproc == "開く") _postproc = Parameter.PostProcesses.Open;
                 else if (postproc == "何もしない") _postproc = Parameter.PostProcesses.None;
                 else if (postproc == "ユーザープログラム") _postproc = Parameter.PostProcesses.UserProgram;
-                
+
                 // DownsSampling: v1 は日本語名で直接指定されていた
                 string downsampling = (string)subkey.GetValue(REG_DOWNSAMPLING, "");
                 if (downsampling == "なし") _downsampling = Parameter.DownSamplings.None;
@@ -447,7 +489,8 @@ namespace CubePDF {
                 else if (downsampling == "バイキュービック") _downsampling = Parameter.DownSamplings.Bicubic;
                 else if (downsampling == "サブサンプル") _downsampling = Parameter.DownSamplings.Subsample;
             }
-            catch (Exception /* err */) {
+            catch (Exception /* err */)
+            {
                 status = false;
             }
 
@@ -470,7 +513,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public string Extension {
+        public string Extension
+        {
             get { return SETTING_EXTENSION; }
         }
 
@@ -483,7 +527,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public string Version {
+        public string Version
+        {
             get { return _version; }
         }
 
@@ -497,7 +542,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public string InstallPath {
+        public string InstallPath
+        {
             get { return _install; }
         }
 
@@ -512,14 +558,16 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public string LibPath {
+        public string LibPath
+        {
             get { return _lib; }
         }
 
         /* ----------------------------------------------------------------- */
         /// InputPath
         /* ----------------------------------------------------------------- */
-        public string InputPath {
+        public string InputPath
+        {
             get { return _input; }
             set { _input = value; }
         }
@@ -533,7 +581,8 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public string OutputPath {
+        public string OutputPath
+        {
             get { return _output; }
             set { _output = value; }
         }
@@ -550,7 +599,8 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public string UserProgram {
+        public string UserProgram
+        {
             get { return _program; }
             set { _program = value; }
         }
@@ -568,7 +618,8 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public string UserArguments {
+        public string UserArguments
+        {
             get { return _argument; }
             set { _argument = value; }
         }
@@ -586,7 +637,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public Parameter.FileTypes FileType {
+        public Parameter.FileTypes FileType
+        {
             get { return _type; }
             set { _type = value; }
         }
@@ -604,7 +656,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public Parameter.PDFVersions PDFVersion {
+        public Parameter.PDFVersions PDFVersion
+        {
             get { return _pdfver; }
             set { _pdfver = value; }
         }
@@ -623,7 +676,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public Parameter.Resolutions Resolution {
+        public Parameter.Resolutions Resolution
+        {
             get { return _resolution; }
             set { _resolution = value; }
         }
@@ -644,7 +698,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public Parameter.ExistedFiles ExistedFile {
+        public Parameter.ExistedFiles ExistedFile
+        {
             get { return _exist; }
             set { _exist = value; }
         }
@@ -664,7 +719,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public Parameter.PostProcesses PostProcess {
+        public Parameter.PostProcesses PostProcess
+        {
             get { return _postproc; }
             set { _postproc = value; }
         }
@@ -682,7 +738,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public Parameter.DownSamplings DownSampling {
+        public Parameter.DownSamplings DownSampling
+        {
             get { return _downsampling; }
             set { _downsampling = value; }
         }
@@ -700,11 +757,12 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public Parameter.ImageFilters ImageFilter {
+        public Parameter.ImageFilters ImageFilter
+        {
             get { return _filter; }
             set { _filter = value; }
         }
-        
+
         /* ----------------------------------------------------------------- */
         ///
         /// PageRotation
@@ -714,7 +772,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public bool PageRotation {
+        public bool PageRotation
+        {
             get { return _rotation; }
             set { _rotation = value; }
         }
@@ -728,7 +787,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public bool EmbedFont {
+        public bool EmbedFont
+        {
             get { return _embed; }
             set { _embed = value; }
         }
@@ -742,7 +802,8 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public bool Grayscale {
+        public bool Grayscale
+        {
             get { return _grayscale; }
             set { _grayscale = value; }
         }
@@ -757,7 +818,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public bool WebOptimize {
+        public bool WebOptimize
+        {
             get { return _web; }
             set { _web = value; }
         }
@@ -772,7 +834,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public bool SaveSetting {
+        public bool SaveSetting
+        {
             get { return _save; }
             set { _save = value; }
         }
@@ -787,7 +850,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public bool CheckUpdate {
+        public bool CheckUpdate
+        {
             get { return _update; }
             set { _update = value; }
         }
@@ -803,7 +867,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public bool AdvancedMode {
+        public bool AdvancedMode
+        {
             get { return _advance; }
             set { _advance = value; }
         }
@@ -818,7 +883,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public bool SelectInputFile {
+        public bool SelectInputFile
+        {
             get { return _selectable; }
             set { _selectable = value; }
         }
@@ -842,7 +908,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Document
         /* ----------------------------------------------------------------- */
-        public DocumentProperty Document {
+        public DocumentProperty Document
+        {
             get { return _doc; }
             set { _doc = value; }
         }
@@ -850,7 +917,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Permission
         /* ----------------------------------------------------------------- */
-        public PermissionProperty Permission {
+        public PermissionProperty Permission
+        {
             get { return _permission; }
             set { _permission = value; }
         }
@@ -858,7 +926,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Password
         /* ----------------------------------------------------------------- */
-        public string Password {
+        public string Password
+        {
             get { return _password; }
             set { _password = value; }
         }
@@ -880,7 +949,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void Load(ParameterManager param) {
+        private void Load(ParameterManager param)
+        {
             var v = param.Parameters;
 
             // パス関連
@@ -917,37 +987,44 @@ namespace CubePDF {
 
             // コンボボックスのインデックス関連
             value = v.Contains(REG_FILETYPE) ? (int)v.Find(REG_FILETYPE).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.FileTypes))) {
+            foreach (int x in Enum.GetValues(typeof(Parameter.FileTypes)))
+            {
                 if (x == value) _type = (Parameter.FileTypes)value;
             }
 
             value = v.Contains(REG_PDF_VERSION) ? (int)v.Find(REG_PDF_VERSION).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.PDFVersions))) {
+            foreach (int x in Enum.GetValues(typeof(Parameter.PDFVersions)))
+            {
                 if (x == value) _pdfver = (Parameter.PDFVersions)value;
             }
 
             value = v.Contains(REG_RESOLUTION) ? (int)v.Find(REG_RESOLUTION).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.Resolutions))) {
+            foreach (int x in Enum.GetValues(typeof(Parameter.Resolutions)))
+            {
                 if (x == value) _resolution = (Parameter.Resolutions)value;
             }
 
             value = v.Contains(REG_EXISTED_FILE) ? (int)v.Find(REG_EXISTED_FILE).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.ExistedFiles))) {
+            foreach (int x in Enum.GetValues(typeof(Parameter.ExistedFiles)))
+            {
                 if (x == value) _exist = (Parameter.ExistedFiles)value;
             }
 
             value = v.Contains(REG_POST_PROCESS) ? (int)v.Find(REG_POST_PROCESS).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.PostProcesses))) {
+            foreach (int x in Enum.GetValues(typeof(Parameter.PostProcesses)))
+            {
                 if (x == value) _postproc = (Parameter.PostProcesses)value;
             }
 
             value = v.Contains(REG_DOWNSAMPLING) ? (int)v.Find(REG_DOWNSAMPLING).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.DownSamplings))) {
+            foreach (int x in Enum.GetValues(typeof(Parameter.DownSamplings)))
+            {
                 if (x == value) _downsampling = (Parameter.DownSamplings)value;
             }
 
             value = v.Contains(REG_IMAGEFILTER) ? (int)v.Find(REG_IMAGEFILTER).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.ImageFilters))) {
+            foreach (int x in Enum.GetValues(typeof(Parameter.ImageFilters)))
+            {
                 if (x == value) _filter = (Parameter.ImageFilters)value;
             }
         }
@@ -964,7 +1041,8 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void Save(ParameterManager config) {
+        private void Save(ParameterManager config)
+        {
             // パス関連
             config.Parameters.Add(new ParameterElement(REG_LAST_OUTPUT_ACCESS, ParameterType.String, _output));
             config.Parameters.Add(new ParameterElement(REG_LAST_INPUT_ACCESS, ParameterType.String, _input));
@@ -1001,10 +1079,13 @@ namespace CubePDF {
             config.Parameters.Add(new ParameterElement(REG_IMAGEFILTER, ParameterType.Integer, (int)_filter));
 
             // アップデートプログラムの登録および削除
-            using (var startup = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run")) {
-                if (_update) {
+            using (var startup = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run"))
+            {
+                if (_update)
+                {
                     string value = startup.GetValue(UPDATE_PROGRAM) as string;
-                    if (startup.GetValue(UPDATE_PROGRAM) == null && _install.Length > 0) {
+                    if (startup.GetValue(UPDATE_PROGRAM) == null && _install.Length > 0)
+                    {
                         startup.SetValue(UPDATE_PROGRAM, '"' + _install + '\\' + UPDATE_PROGRAM + ".exe\"");
                     }
                 }
@@ -1051,34 +1132,34 @@ namespace CubePDF {
         //  定数定義
         /* ----------------------------------------------------------------- */
         #region Constant variables
-        const string REG_ROOT               = @"Software\CubeSoft\CubePDF";
-        const string REG_VERSION            = "v2";
-        const string REG_INSTALL_PATH       = "InstallPath";
-        const string REG_LIB_PATH           = "LibPath";
-        const string REG_PRODUCT_VERSION    = "Version";
-        const string REG_ADVANCED_MODE      = "AdvancedMode";
-        const string REG_CHECK_UPDATE       = "CheckUpdate";
-        const string REG_VISIBLE            = "Visible";
-        const string REG_DOWNSAMPLING       = "DownSampling";
-        const string REG_IMAGEFILTER        = "ImageFilter";
-        const string REG_EMBED_FONT         = "EmbedFont";
-        const string REG_EXISTED_FILE       = "ExistedFile";
-        const string REG_FILETYPE           = "FileType";
-        const string REG_GRAYSCALE          = "Grayscale";
+        const string REG_ROOT = @"Software\CubeSoft\CubePDF";
+        const string REG_VERSION = "v2";
+        const string REG_INSTALL_PATH = "InstallPath";
+        const string REG_LIB_PATH = "LibPath";
+        const string REG_PRODUCT_VERSION = "Version";
+        const string REG_ADVANCED_MODE = "AdvancedMode";
+        const string REG_CHECK_UPDATE = "CheckUpdate";
+        const string REG_VISIBLE = "Visible";
+        const string REG_DOWNSAMPLING = "DownSampling";
+        const string REG_IMAGEFILTER = "ImageFilter";
+        const string REG_EMBED_FONT = "EmbedFont";
+        const string REG_EXISTED_FILE = "ExistedFile";
+        const string REG_FILETYPE = "FileType";
+        const string REG_GRAYSCALE = "Grayscale";
         const string REG_LAST_OUTPUT_ACCESS = "LastAccess";
-        const string REG_LAST_INPUT_ACCESS  = "LastInputAccess";
-        const string REG_PAGE_ROTATION      = "PageRotation";
-        const string REG_PDF_VERSION        = "PDFVersion";
-        const string REG_POST_PROCESS       = "PostProcess";
-        const string REG_RESOLUTION         = "Resolution";
-        const string REG_SELECT_INPUT       = "SelectInputFile";
-        const string REG_USER_PROGRAM       = "UserProgram";
-        const string REG_USER_ARGUMENTS      = "UserArguments";
-        const string REG_WEB_OPTIMIZE       = "WebOptimize";
-        const string REG_SAVE_SETTING       = "SaveSetting";
-        const string REG_VALUE_UNKNOWN      = "Unknown";
-        const string UPDATE_PROGRAM         = "cubepdf-checker";
-        const string SETTING_EXTENSION     = ".cubepdfconf";
+        const string REG_LAST_INPUT_ACCESS = "LastInputAccess";
+        const string REG_PAGE_ROTATION = "PageRotation";
+        const string REG_PDF_VERSION = "PDFVersion";
+        const string REG_POST_PROCESS = "PostProcess";
+        const string REG_RESOLUTION = "Resolution";
+        const string REG_SELECT_INPUT = "SelectInputFile";
+        const string REG_USER_PROGRAM = "UserProgram";
+        const string REG_USER_ARGUMENTS = "UserArguments";
+        const string REG_WEB_OPTIMIZE = "WebOptimize";
+        const string REG_SAVE_SETTING = "SaveSetting";
+        const string REG_VALUE_UNKNOWN = "Unknown";
+        const string UPDATE_PROGRAM = "cubepdf-checker";
+        const string SETTING_EXTENSION = ".cubepdfconf";
         #endregion
     }
 }
