@@ -1,8 +1,8 @@
 ﻿/* ------------------------------------------------------------------------- */
 /*
- *  PdfUtility.cs
+ *  Utility.cs
  *
- *  Copyright (c) 2009 - 2010, CubeSoft, Inc. All rights reserved.
+ *  Copyright (c) 2009, CubeSoft, Inc.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -38,9 +38,9 @@ namespace CubePDF {
         /// CurrentDirectory
         ///
         /// <summary>
-        /// 現在の実行ディレクトリへのパスを返す．GetEntryAssembly
-        /// メソッドが失敗した場合には，CurrentDirectory 環境変数の値を
-        /// 返す．
+        /// 現在の実行ディレクトリへのパスを返す。GetEntryAssembly
+        /// メソッドが失敗した場合には、CurrentDirectory 環境変数の値を
+        /// 返す。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
