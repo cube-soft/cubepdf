@@ -352,9 +352,9 @@ namespace CubePDF {
                 // Add page settings
                 if (this._paper != CubePDF.Ghostscript.Papers.Unknown) args.Add(PaperExt.Argument(this._paper));
                 else if (this._device == Devices.PDF) args.Add("-dPDFFitPage");
-                if (this._first > 1 || this._first <= this._last) {
+                if (this._first > 1 || this._first < this._last) {
                     args.Add("-dFirstPage=" + this._first.ToString());
-                    if (this._first <= this._last) args.Add("-dLastPage=" + this._last.ToString());
+                    if (this._first < this._last) args.Add("-dLastPage=" + this._last.ToString());
                 }
                 if (this._rotate) args.Add("-dAutoRotatePages=/PageByPage");
 
