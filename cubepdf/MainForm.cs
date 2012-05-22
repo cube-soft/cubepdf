@@ -251,9 +251,8 @@ namespace CubePDF {
             this.InputPathPanel.Enabled = setting.SelectInputFile && setting.InputPath.Length == 0;
 
             // ログ出力
-            Trace.WriteLine(DateTime.Now.ToString() + ": LoadSetting start");
-            setting.Dump();
-            Trace.WriteLine(DateTime.Now.ToString() + ": LoadSetting end");
+            _messages.Add(new Message(Message.Levels.Debug, "CubePDF.MainForm.LoadSetting"));
+            _messages.Add(new Message(Message.Levels.Debug, setting.ToString()));
         }
 
         /* ----------------------------------------------------------------- */
@@ -311,9 +310,8 @@ namespace CubePDF {
             }
 
             // ログ出力
-            Trace.WriteLine(DateTime.Now.ToString() + ": SaveSetting start");
-            setting.Dump();
-            Trace.WriteLine(DateTime.Now.ToString() + ": SaveSetting end");
+            _messages.Add(new Message(Message.Levels.Debug, "CubePDF.MainForm.SaveSetting"));
+            _messages.Add(new Message(Message.Levels.Debug, setting.ToString()));
         }
 
         /* ----------------------------------------------------------------- */
@@ -387,8 +385,8 @@ namespace CubePDF {
             if (!this.CheckOutput(this.ExistedFileComboBox.SelectedIndex)) return;
 
             // ライブラリが存在してるかどうかをログに記録。
-            if (!Directory.Exists(_setting.LibPath)) Trace.WriteLine(DateTime.Now.ToString() + ": " + _setting.LibPath + ": not found");
-            if (!Directory.Exists(_setting.LibPath + @"\lib")) Trace.WriteLine(DateTime.Now.ToString() + ": " + _setting.LibPath + "\\lib: not found");
+            if (!Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}: file not found", _setting.LibPath)));
+            if (!Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}\\lib: file not found", _setting.LibPath)));
 
             this.ConvertButton.Enabled = false;
             this.ExecProgressBar.Visible = true;
@@ -400,6 +398,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void ExitButton_Click(object sender, EventArgs e) {
             if (_setting.DeleteOnClose && File.Exists(_setting.InputPath)) File.Delete(_setting.InputPath);
+            _messages.Add(new Message(Message.Levels.Debug, "CubePDF.MainForm.ExitButton_Click"));
+            this.WriteMessage();
             this.Close();
         }
 
@@ -630,7 +630,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         //  テキストボックス上での出力パスの変更を容易にするための仕掛け
         /* ----------------------------------------------------------------- */
-        #region Gimmicks for helping to input output-path
+        #region Gimmicks for helping to input output path
 
         /* ----------------------------------------------------------------- */
         ///
@@ -759,15 +759,17 @@ namespace CubePDF {
             
             // 変換の実行
             Converter converter = new Converter();
-            if (!converter.Run(_setting) && converter.Messages.Count > 0) e.Result = converter.Messages;
-            else e.Result = null;
+            bool status = converter.Run(_setting);
+            converter.Messages.Add(new Message(Message.Levels.Info, String.Format("CubePDF.Converter.Run: {0}", status.ToString())));
+            e.Result = converter.Messages;
         }
 
         /* ----------------------------------------------------------------- */
         /// ConvertBackgroundWorker_RunWorkerCompleted
         /* ----------------------------------------------------------------- */
         private void ConvertBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e) {
-            if (e.Result != null) this.ShowErrorMessage((List<CubePDF.Message>)e.Result);
+            if (e.Result != null) _messages.AddRange((List<CubePDF.Message>)e.Result);
+            this.WriteMessage();
             if (_setting.DeleteOnClose && File.Exists(_setting.InputPath)) File.Delete(_setting.InputPath);
             this.Close();
         }
@@ -781,7 +783,7 @@ namespace CubePDF {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ShowErrorMessage
+        /// WriteMessage
         ///
         /// <summary>
         /// エラーメッセージの表示，およびログファイルへの書き込みを行う．
@@ -790,9 +792,9 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void ShowErrorMessage(List<CubePDF.Message> messages) {
+        private void WriteMessage() {
             string error = "";
-            foreach (CubePDF.Message message in messages) {
+            foreach (CubePDF.Message message in _messages) {
                 Trace.WriteLine(message.ToString());
                 if (message.Level == Message.Levels.Error || message.Level == Message.Levels.Fatal) {
                     error = message.Value;
@@ -811,6 +813,7 @@ namespace CubePDF {
         private UserSetting _setting;
         private ComboBox _postproc;
         private ToolTip _tips = new ToolTip();
+        private List<CubePDF.Message> _messages = new List<Message>();
         #endregion
 
     }
