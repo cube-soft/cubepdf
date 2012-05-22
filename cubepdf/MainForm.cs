@@ -815,6 +815,5 @@ namespace CubePDF {
         private ToolTip _tips = new ToolTip();
         private List<CubePDF.Message> _messages = new List<Message>();
         #endregion
-
     }
 }
