@@ -75,7 +75,8 @@ namespace CubePDF {
                 reader_tail.Close();
             }
             catch (Exception err) {
-                _messages.Add(new Message(Message.Levels.Error, err.Message));
+                _messages.Add(new Message(Message.Levels.Error, err));
+                _messages.Add(new Message(Message.Levels.Debug, err));
                 status = false;
             }
             finally {
@@ -136,7 +137,8 @@ namespace CubePDF {
                 writer.Close();
             }
             catch (Exception err) {
-                _messages.Add(new Message(Message.Levels.Error, err.Message));
+                _messages.Add(new Message(Message.Levels.Error, err));
+                _messages.Add(new Message(Message.Levels.Debug, err));
                 status = false;
             }
             finally {
@@ -185,7 +187,8 @@ namespace CubePDF {
             }
             catch (Exception err) {
                 if (gs.Messages.Count > 0) _messages.AddRange(gs.Messages);
-                _messages.Add(new Message(Message.Levels.Warn, String.Format("Web optimize error: {0}", err.Message)));
+                _messages.Add(new Message(Message.Levels.Warn, "CubePDF.PDFModifier.WebOptimize: False"));
+                _messages.Add(new Message(Message.Levels.Debug, err));
                 status = false;
             }
             finally {
