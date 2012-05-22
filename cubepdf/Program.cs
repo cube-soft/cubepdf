@@ -41,11 +41,14 @@ namespace CubePDF
         {
             var exec = System.Reflection.Assembly.GetEntryAssembly();
             var dir = System.IO.Path.GetDirectoryName(exec.Location);
+            var setting = new UserSetting(false);
+
             SetupLog(dir + @"\cubepdf.log");
-            Trace.WriteLine(DateTime.Now.ToString() + ": Arguments:");
+            Trace.WriteLine(String.Format("{0} [INFO] CubePDF version {1} ({2})", DateTime.Now.ToString(), setting.Version, ((IntPtr.Size == 4) ? "x86" : "x64")));
+            Trace.WriteLine(String.Format("{0} [INFO] Arguments", DateTime.Now.ToString()));
             foreach (var s in args) Trace.WriteLine("\t" + s);
 
-            var setting = new UserSetting(true);
+            setting.Load();
             SetupUserSetting(setting, args);
 
             Application.EnableVisualStyles();

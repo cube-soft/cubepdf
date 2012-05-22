@@ -358,35 +358,38 @@ namespace CubePDF
         }
 
         /* ----------------------------------------------------------------- */
-        //  ログ出力
+        /// ToString
         /* ----------------------------------------------------------------- */
-        #region dumplog
-        public void Dump()
+        public override string ToString()
         {
-            Trace.WriteLine(DateTime.Now.ToString() + ": UserSetting:");
-            Trace.WriteLine("\tVersion       = " + _version);
-            Trace.WriteLine("\tInstallPath   = " + _install);
-            Trace.WriteLine("\tLibPath       = " + _lib);
-            Trace.WriteLine("\tFileType      = " + _type.ToString());
-            Trace.WriteLine("\tPDFVersion    = " + _pdfver.ToString());
-            Trace.WriteLine("\tResolution    = " + _resolution.ToString());
-            Trace.WriteLine("\tOutputPath    = " + _output);
-            Trace.WriteLine("\tExistedFile   = " + _exist.ToString());
-            Trace.WriteLine("\tPostProcess   = " + _postproc.ToString());
-            Trace.WriteLine("\tUserProgram   = " + _program);
-            Trace.WriteLine("\tUserArguments = " + _argument);
-            Trace.WriteLine("\tDownsampling  = " + _downsampling.ToString());
-            Trace.WriteLine("\tImageFilter   = " + _filter.ToString());
-            Trace.WriteLine("\tPageRotation  = " + _rotation.ToString());
-            Trace.WriteLine("\tEmbedFonts    = " + _embed.ToString());
-            Trace.WriteLine("\tGrayscale     = " + _grayscale.ToString());
-            Trace.WriteLine("\tWebOptimize   = " + _web.ToString());
-            Trace.WriteLine("\tSaveOptions   = " + _save.ToString());
-            Trace.WriteLine("\tUpdateCheck   = " + _update.ToString());
-            Trace.WriteLine("\tVisible       = " + _visible.ToString());
-            Trace.WriteLine("\tDeleteOnClose = " + _delete_input.ToString());
+            var dest = new System.Text.StringBuilder();
+
+            dest.AppendLine("UserSetting");
+            dest.AppendLine("\tVersion         = " + _version);
+            dest.AppendLine("\tInstallPath     = " + _install);
+            dest.AppendLine("\tLibPath         = " + _lib);
+            dest.AppendLine("\tFileType        = " + _type.ToString());
+            dest.AppendLine("\tPDFVersion      = " + _pdfver.ToString());
+            dest.AppendLine("\tResolution      = " + _resolution.ToString());
+            dest.AppendLine("\tLastAccess      = " + _output);
+            dest.AppendLine("\tLastInputAccess = " + _input);
+            dest.AppendLine("\tExistedFile     = " + _exist.ToString());
+            dest.AppendLine("\tPostProcess     = " + _postproc.ToString());
+            dest.AppendLine("\tUserProgram     = " + _program);
+            dest.AppendLine("\tUserArguments   = " + _argument);
+            dest.AppendLine("\tDownsampling    = " + _downsampling.ToString());
+            dest.AppendLine("\tImageFilter     = " + _filter.ToString());
+            dest.AppendLine("\tPageRotation    = " + _rotation.ToString());
+            dest.AppendLine("\tEmbedFonts      = " + _embed.ToString());
+            dest.AppendLine("\tGrayscale       = " + _grayscale.ToString());
+            dest.AppendLine("\tWebOptimize     = " + _web.ToString());
+            dest.AppendLine("\tSaveSetting     = " + _save.ToString());
+            dest.AppendLine("\tUpdateCheck     = " + _update.ToString());
+            dest.AppendLine("\tVisible         = " + _visible.ToString());
+            dest.Append(    "\tDeleteOnClose   = " + _delete_input.ToString());
+
+            return dest.ToString();
         }
-        #endregion
 
         /* ----------------------------------------------------------------- */
         //  過去のレジストリからの変換

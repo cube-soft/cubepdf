@@ -42,6 +42,25 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
+        /// constructor
+        ///
+        /// Exception、およびその派生クラス（例外クラス）が引数に指定された
+        /// 場合、Message の内容は指定されたメッセージレベルによって異なる。
+        /// Info, Warn, Error, Fatal の場合は、指定された例外クラスの
+        /// Message のみとなる。Trace, Debug の場合は、それに加えて
+        /// 例外クラスの型名、およびスタックトレースも含まれる。
+        ///
+        /* ----------------------------------------------------------------- */
+        public Message(Levels level, Exception e)
+        {
+            _level = level;
+            _time = System.DateTime.Now;
+            if (level == Levels.Trace || level == Levels.Debug) _message = e.ToString();
+            else _message = e.Message;
+        }
+
+        /* ----------------------------------------------------------------- */
         /// Level
         /* ----------------------------------------------------------------- */
         public Levels Level {

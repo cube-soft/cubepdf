@@ -234,7 +234,7 @@ namespace CubePDF {
                 var tmp = work + '\\' + GetTempFileName(this._device) + ext;
                 if (!ExecConvert(copies.ToArray(), tmp))
                 {
-                    throw new Exception("入力ファイルの解析に失敗しました。このエラーは、入力ファイルの内容を変更すると発生しなくなる可能性があります。 (Ghostscript error)");
+                    throw new Exception("入力ファイルの解析に失敗しました。このエラーは、入力ファイルの内容を変更する事で回避できる場合があります。");
                 }
                 this.RunPostProcess(copies, dest, work);
             }
@@ -246,10 +246,7 @@ namespace CubePDF {
                 IntPtr instance = IntPtr.Zero;
                 bool status = true;
 
-                Trace.WriteLine(DateTime.Now.ToString() + ": Current Directory: " + Utility.CurrentDirectory);
-                Trace.WriteLine(DateTime.Now.ToString() + ": Arguments:");
-                foreach (var s in args) Trace.WriteLine('\t' + s);
-
+                this.AddMessages(args);
                 lock (gslock_) {
                     try {
                         gsapi_new_instance(out instance, IntPtr.Zero);
@@ -264,7 +261,7 @@ namespace CubePDF {
                         }
                     }
                     catch (Exception err) {
-                        this.AddErrorMessages(err, args);
+                        _messages.Add(new Message(Message.Levels.Debug, err));
                         status = false;
                     }
                     finally {
@@ -307,7 +304,7 @@ namespace CubePDF {
                     }
                 }
                 catch (Exception err) {
-                    this.AddErrorMessages(err, null);
+                    _messages.Add(new Message(Message.Levels.Debug, err));
                     throw err;
                 }
                 finally {
@@ -398,33 +395,27 @@ namespace CubePDF {
             #region Utility methods
             
             /* ------------------------------------------------------------- */
-            /// AddErrorMessages (private)
+            /// AddMessages (private)
             /* ------------------------------------------------------------- */
-            private void AddErrorMessages(Exception err, string[] args) {
-                _messages.Add(new Message(Message.Levels.Debug, String.Format("Type: {0}", err.GetType().ToString())));
-                _messages.Add(new Message(Message.Levels.Debug, String.Format("Source: {0}", err.Source)));
-                _messages.Add(new Message(Message.Levels.Debug, String.Format("StackTrace: {0}", err.StackTrace)));
-                _messages.Add(new Message(Message.Levels.Debug, String.Format("ExecDir: {0}", Utility.CurrentDirectory)));
-                _messages.Add(new Message(Message.Levels.Debug, String.Format("WorkingDir: {0}", Utility.WorkingDirectory)));
+            private void AddMessages(string[] args) {
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("CurrentDirectory: {0}", Utility.CurrentDirectory)));
+                _messages.Add(new Message(Message.Levels.Debug, String.Format("WorkingDirectory: {0}", Utility.WorkingDirectory)));
 
                 // ライブラリの存在するディレクトリへのパス
-                string msg = "LIBPATH: ";
+                string msg = "LibPath: ";
                 if (_includes.Count > 0) {
                     msg += _includes[0];
                     if (!Directory.Exists(_includes[0])) msg += " (NotFound)";
                 }
-                else msg += "UNKNOWN";
+                else msg += "unknown";
                 _messages.Add(new Message(Message.Levels.Debug, msg));
 
                 // 指定された全ての引数
                 if (args != null) {
-                    msg = "Arguments:";
+                    msg = "Ghostscript Arguments";
                     foreach (string s in args) msg += ("\r\n\t" + s);
                     _messages.Add(new Message(Message.Levels.Debug, msg));
                 }
-
-                // エラーメッセージ
-                _messages.Add(new Message(Message.Levels.Debug, String.Format("Message: {0}", err.Message)));
             }
 
             /* ------------------------------------------------------------- */
