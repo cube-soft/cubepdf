@@ -55,6 +55,7 @@ namespace CubePDF {
             /* ------------------------------------------------------------- */
             public List<CubePDF.Message> Messages {
                 get { return _messages; }
+                set { _messages = value; }
             }
 
             /* ------------------------------------------------------------- */

@@ -44,6 +44,7 @@ namespace CubePDF {
             this.CreateWorkingDirectory(setting);
 
             Ghostscript.Converter gs = new Ghostscript.Converter(Parameter.Device(setting.FileType, setting.Grayscale));
+            gs.Messages = _messages;
             bool status = true;
             try {
                 gs.AddInclude(setting.LibPath + @"\lib");
@@ -58,35 +59,35 @@ namespace CubePDF {
                 gs.AddSource(setting.InputPath);
                 gs.Destination = setting.OutputPath;
                 gs.Run();
-                if (gs.Messages.Count > 0)
-                {
-                    _messages.AddRange(gs.Messages);
-                    gs.Messages.Clear();
-                }
 
                 if (setting.FileType == Parameter.FileTypes.PDF)
                 {
                     PDFModifier modifier = new PDFModifier(_escaped);
-                    status &= modifier.Run(setting);
-                    if (!status && modifier.Messages.Count > 0) _messages.AddRange(modifier.Messages);
+                    modifier.Messages = _messages;
+                    status = modifier.Run(setting);
+                    _messages.Add(new Message(Message.Levels.Info, String.Format("CubePDF.PDFModifier.Run: {0}", status.ToString())));
                 }
 
                 if (status)
                 {
                     PostProcess postproc = new PostProcess();
-                    status &= postproc.Run(setting);
-                    if (!status && postproc.Messages.Count > 0) _messages.AddRange(postproc.Messages);
+                    postproc.Messages = _messages;
+                    status = postproc.Run(setting);
+                    _messages.Add(new Message(Message.Levels.Info, String.Format("CubePDF.PostProcess.Run: {0}", status.ToString())));
                 }
             }
             catch (Exception err) {
-                if (gs.Messages.Count > 0) _messages.AddRange(gs.Messages);
                 _messages.Add(new Message(Message.Levels.Error, err));
                 _messages.Add(new Message(Message.Levels.Debug, err));
                 status = false;
             }
             finally {
                 if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
-                if (setting.DeleteOnClose && File.Exists(setting.InputPath)) File.Delete(setting.InputPath);
+                if (setting.DeleteOnClose && File.Exists(setting.InputPath))
+                {
+                    _messages.Add(new Message(Message.Levels.Debug, String.Format("{0}: delete on close", setting.InputPath)));
+                    File.Delete(setting.InputPath);
+                }
             }
 
             return status;
@@ -162,6 +163,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public List<CubePDF.Message> Messages {
             get { return _messages; }
+            set { _messages = value; }
         }
 
         /* ----------------------------------------------------------------- */
