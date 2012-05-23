@@ -22,7 +22,7 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   Copyright (c) Artifex Software, Inc. All rights reserved.
   URL: http://www.ghostscript.com/
   GNU General Public License ( http://www.gnu.org/licenses/gpl.html )
-- iTextSharp
+- iTextSharp 5.2.1
   URL: http://sourceforge.net/projects/itextsharp/
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
