@@ -2,7 +2,7 @@
 /*
  *  Converter.cs
  *
- *  Copyright (c) 2009 - 2011 CubeSoft, Inc. All rights reserved.
+ *  Copyright (c) 2009 CubeSoft, Inc.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -58,6 +58,11 @@ namespace CubePDF {
                 gs.AddSource(setting.InputPath);
                 gs.Destination = setting.OutputPath;
                 gs.Run();
+                if (gs.Messages.Count > 0)
+                {
+                    _messages.AddRange(gs.Messages);
+                    gs.Messages.Clear();
+                }
 
                 if (setting.FileType == Parameter.FileTypes.PDF)
                 {
@@ -74,12 +79,12 @@ namespace CubePDF {
                 }
             }
             catch (Exception err) {
+                if (gs.Messages.Count > 0) _messages.AddRange(gs.Messages);
                 _messages.Add(new Message(Message.Levels.Error, err));
                 _messages.Add(new Message(Message.Levels.Debug, err));
                 status = false;
             }
             finally {
-                if (gs.Messages.Count > 0) _messages.AddRange(gs.Messages);
                 if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
                 if (setting.DeleteOnClose && File.Exists(setting.InputPath)) File.Delete(setting.InputPath);
             }
