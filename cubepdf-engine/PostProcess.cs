@@ -23,15 +23,34 @@ using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace CubePDF {
+namespace CubePDF
+{
     /* --------------------------------------------------------------------- */
     /// PostProcess
     /* --------------------------------------------------------------------- */
-    class PostProcess {
+    class PostProcess
+    {
+        /* ----------------------------------------------------------------- */
+        /// Constructor
+        /* ----------------------------------------------------------------- */
+        public PostProcess()
+        {
+            _messages = new List<CubePDF.Message>();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Constructor
+        /* ----------------------------------------------------------------- */
+        public PostProcess(List<CubePDF.Message> messages)
+        {
+            _messages = messages;
+        }
+
         /* ----------------------------------------------------------------- */
         /// Run
         /* ----------------------------------------------------------------- */
-        public bool Run(UserSetting setting) {
+        public bool Run(UserSetting setting)
+        {
             if (setting.PostProcess == Parameter.PostProcesses.None) return true;
 
             try
@@ -82,9 +101,9 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Messages
         /* ----------------------------------------------------------------- */
-        public List<CubePDF.Message> Messages {
+        public List<CubePDF.Message> Messages
+        {
             get { return _messages; }
-            set { _messages = value; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -128,7 +147,7 @@ namespace CubePDF {
         //  変数定義
         /* ----------------------------------------------------------------- */
         #region Variables
-        List<CubePDF.Message> _messages = new List<CubePDF.Message>();
+        List<CubePDF.Message> _messages = null;
         #endregion
     }
 }

@@ -26,7 +26,24 @@ namespace CubePDF {
     /* --------------------------------------------------------------------- */
     /// Converter
     /* --------------------------------------------------------------------- */
-    public class Converter {
+    public class Converter
+    {
+        /* ----------------------------------------------------------------- */
+        /// Constructor
+        /* ----------------------------------------------------------------- */
+        public Converter()
+        {
+            _messages = new List<CubePDF.Message>();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Constructor
+        /* ----------------------------------------------------------------- */
+        public Converter(List<CubePDF.Message> messages)
+        {
+            _messages = messages;
+        }
+
         /* ----------------------------------------------------------------- */
         ///
         /// Run
@@ -43,8 +60,8 @@ namespace CubePDF {
             // 場合があるので，作業ディレクトリを変更する．
             this.CreateWorkingDirectory(setting);
 
-            Ghostscript.Converter gs = new Ghostscript.Converter(Parameter.Device(setting.FileType, setting.Grayscale));
-            gs.Messages = _messages;
+            Ghostscript.Converter gs = new Ghostscript.Converter(_messages);
+            gs.Device = Parameter.Device(setting.FileType, setting.Grayscale);
             bool status = true;
             try {
                 gs.AddInclude(setting.LibPath + @"\lib");
@@ -59,19 +76,17 @@ namespace CubePDF {
                 gs.AddSource(setting.InputPath);
                 gs.Destination = setting.OutputPath;
                 gs.Run();
-
+                
                 if (setting.FileType == Parameter.FileTypes.PDF)
                 {
-                    PDFModifier modifier = new PDFModifier(_escaped);
-                    modifier.Messages = _messages;
+                    PDFModifier modifier = new PDFModifier(_escaped, _messages);
                     status = modifier.Run(setting);
                     _messages.Add(new Message(Message.Levels.Info, String.Format("CubePDF.PDFModifier.Run: {0}", status.ToString())));
                 }
 
                 if (status)
                 {
-                    PostProcess postproc = new PostProcess();
-                    postproc.Messages = _messages;
+                    PostProcess postproc = new PostProcess(_messages);
                     status = postproc.Run(setting);
                     _messages.Add(new Message(Message.Levels.Info, String.Format("CubePDF.PostProcess.Run: {0}", status.ToString())));
                 }
@@ -163,7 +178,6 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public List<CubePDF.Message> Messages {
             get { return _messages; }
-            set { _messages = value; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -212,7 +226,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public void ConfigPDF(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("CompatibilityLevel", Parameter.PDFVersionValue(setting.PDFVersion));
-            gs.AddOption("UseFlateCompression", "false");
+            gs.AddOption("UseFlateCompression", true);
 
             if (setting.PDFVersion == Parameter.PDFVersions.VerPDFA) this.ConfigPDFA(setting, gs);
             else if (setting.PDFVersion == Parameter.PDFVersions.VerPDFX) this.ConfigPDFX(setting, gs);
@@ -324,7 +338,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         #region Variables
         private string _escaped = null; // null 以外ならマージが必要
-        private List<CubePDF.Message> _messages = new List<Message>();
+        private List<CubePDF.Message> _messages = null;
         #endregion
     }
 }
