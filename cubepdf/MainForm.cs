@@ -297,7 +297,7 @@ namespace CubePDF {
 
             // パスワード
             if (this.OwnerPasswordCheckBox.Checked) {
-                setting.Permission.Password = this.OwnerPasswordTextBox.Text;
+                setting.Permission.Password = String.Copy(this.OwnerPasswordTextBox.Text);
                 setting.Permission.AllowPrint = this.AllowPrintCheckBox.Checked;
                 setting.Permission.AllowCopy = this.AllowCopyCheckBox.Checked;
                 setting.Permission.AllowFormInput = this.AllowFormInputCheckBox.Checked;
@@ -305,7 +305,7 @@ namespace CubePDF {
 
                 if (this.RequiredUserPasswordCheckBox.Checked)
                 {
-                    setting.Password = this.UserPasswordCheckBox.Checked ? this.UserPasswordTextBox.Text : this.OwnerPasswordTextBox.Text;
+                    setting.Password = String.Copy(this.UserPasswordCheckBox.Checked ? this.UserPasswordTextBox.Text : this.OwnerPasswordTextBox.Text);
                 }
             }
 
