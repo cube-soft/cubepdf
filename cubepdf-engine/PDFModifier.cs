@@ -212,8 +212,8 @@ namespace CubePDF
                 if (File.Exists(tmp)) File.Delete(tmp);
                 File.Move(setting.OutputPath, tmp);
                 gs.AddInclude(setting.LibPath + @"\lib");
-                gs.AddSource(tmp);
-                gs.Destination = setting.OutputPath;
+                gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
+                gs.PageRotation = setting.PageRotation;
 
                 gs.AddOption("CompatibilityLevel", Parameter.PDFVersionValue(setting.PDFVersion));
                 gs.AddOption("UseFlateCompression", true);
@@ -223,6 +223,7 @@ namespace CubePDF
                     gs.AddOption("EmbedAllFonts", true);
                     gs.AddOption("SubsetFonts", true);
                 }
+                else gs.AddOption("EmbedAllFonts", false);
 
                 if (setting.Grayscale)
                 {
@@ -230,6 +231,8 @@ namespace CubePDF
                     gs.AddOption("ColorConversionStrategy", "/Gray");
                 }
 
+                gs.AddSource(tmp);
+                gs.Destination = setting.OutputPath;
                 gs.Run();
             }
             catch (Exception err)
