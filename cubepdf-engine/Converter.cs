@@ -214,10 +214,10 @@ namespace CubePDF {
             if (setting.FileType == Parameter.FileTypes.PDF) this.ConfigPDF(setting, gs);
             else {
                 if (setting.EmbedFont) {
-                    gs.AddOption("EmbedAllFonts", "true");
-                    gs.AddOption("SubsetFonts", "true");
+                    gs.AddOption("EmbedAllFonts", true);
+                    gs.AddOption("SubsetFonts", true);
                 }
-                else gs.AddOption("EmbedAllFonts", "false");
+                else gs.AddOption("EmbedAllFonts", false);
             }
         }
 
@@ -232,10 +232,10 @@ namespace CubePDF {
             else if (setting.PDFVersion == Parameter.PDFVersions.VerPDFX) this.ConfigPDFX(setting, gs);
             else {
                 if (setting.EmbedFont) {
-                    gs.AddOption("EmbedAllFonts", "true");
-                    gs.AddOption("SubsetFonts", "true");
+                    gs.AddOption("EmbedAllFonts", true);
+                    gs.AddOption("SubsetFonts", true);
                 }
-                else gs.AddOption("EmbedAllFonts", "false");
+                else gs.AddOption("EmbedAllFonts", false);
 
                 if (setting.Grayscale) {
                     gs.AddOption("ProcessColorModel", "/DeviceGray");
@@ -262,8 +262,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public void ConfigPDFA(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("PDFA");
-            gs.AddOption("EmbedAllFonts", "true");
-            gs.AddOption("SubsetFonts", "true");
+            gs.AddOption("EmbedAllFonts", true);
+            gs.AddOption("SubsetFonts", true);
             if (setting.Grayscale) {
                 gs.AddOption("ProcessColorModel", "/DeviceGray");
                 gs.AddOption("ColorConversionStrategy", "/Gray");
@@ -284,8 +284,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public void ConfigPDFX(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("PDFX");
-            gs.AddOption("EmbedAllFonts", "true");
-            gs.AddOption("SubsetFonts", "true");
+            gs.AddOption("EmbedAllFonts", true);
+            gs.AddOption("SubsetFonts", true);
             if (setting.Grayscale) {
                 gs.AddOption("ProcessColorModel", "/DeviceGray");
                 gs.AddOption("ColorConversionStrategy", "/Gray");
