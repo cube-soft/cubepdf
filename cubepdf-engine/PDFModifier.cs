@@ -23,21 +23,52 @@ using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace CubePDF {
+namespace CubePDF
+{
     /* --------------------------------------------------------------------- */
     /// PDFModifier
     /* --------------------------------------------------------------------- */
-    class PDFModifier {
-        public PDFModifier() { }
+    class PDFModifier
+    {
+        /* ----------------------------------------------------------------- */
+        /// Constructor
+        /* ----------------------------------------------------------------- */
+        public PDFModifier()
+        {
+            _messages = new List<CubePDF.Message>();
+        }
 
-        public PDFModifier(string escaped) {
+        /* ----------------------------------------------------------------- */
+        /// Constructor
+        /* ----------------------------------------------------------------- */
+        public PDFModifier(string escaped)
+        {
             _escaped = escaped;
+            _messages = new List<CubePDF.Message>();
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Constructor
+        /* ----------------------------------------------------------------- */
+        public PDFModifier(string escaped, List<CubePDF.Message> messages)
+        {
+            _escaped = escaped;
+            _messages = messages;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// Messages
+        /* ----------------------------------------------------------------- */
+        public List<CubePDF.Message> Messages
+        {
+            get { return _messages; }
         }
 
         /* ----------------------------------------------------------------- */
         /// Run 
         /* ----------------------------------------------------------------- */
-        public bool Run(UserSetting setting) {
+        public bool Run(UserSetting setting)
+        {
             bool status = true;
 
             if (_escaped != null) status &= this.Merge(setting, _escaped);
@@ -50,7 +81,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Merge
         /* ----------------------------------------------------------------- */
-        private bool Merge(UserSetting setting, string escaped) {
+        private bool Merge(UserSetting setting, string escaped)
+        {
             // Nothing to do.
             if (escaped == null ||
                 (setting.ExistedFile != Parameter.ExistedFiles.MergeHead &&
@@ -61,11 +93,13 @@ namespace CubePDF {
             string tail = (setting.ExistedFile == Parameter.ExistedFiles.MergeTail) ? setting.OutputPath : escaped;
 
             bool status = true;
-            try {
+            try
+            {
                 iTextSharp.text.pdf.PdfReader reader_head = Open(head, setting.Permission.Password);
                 iTextSharp.text.pdf.PdfReader reader_tail = Open(tail, setting.Permission.Password);
 
-                using (FileStream fs = new FileStream(tmp, FileMode.Create)) {
+                using (FileStream fs = new FileStream(tmp, FileMode.Create))
+                {
                     iTextSharp.text.pdf.PdfCopyFields copy = new iTextSharp.text.pdf.PdfCopyFields(fs);
                     copy.AddDocument(reader_head);
                     copy.AddDocument(reader_tail);
@@ -74,12 +108,14 @@ namespace CubePDF {
                 reader_head.Close();
                 reader_tail.Close();
             }
-            catch (Exception err) {
+            catch (Exception err)
+            {
                 _messages.Add(new Message(Message.Levels.Error, err));
                 _messages.Add(new Message(Message.Levels.Debug, err));
                 status = false;
             }
-            finally {
+            finally
+            {
                 if (File.Exists(setting.OutputPath)) File.Delete(setting.OutputPath);
                 if (!status || !File.Exists(tmp)) File.Move(escaped, setting.OutputPath);
                 else File.Move(tmp, setting.OutputPath);
@@ -104,21 +140,23 @@ namespace CubePDF {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private bool AddInformation(UserSetting setting) {
+        private bool AddInformation(UserSetting setting)
+        {
             if (!File.Exists(setting.OutputPath)) return false;
 
             string tmp = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
-            
+
             iTextSharp.text.pdf.PdfReader reader = null;
             bool status = true;
-            try {
+            try
+            {
                 File.Move(setting.OutputPath, tmp);
                 reader = new iTextSharp.text.pdf.PdfReader(tmp);
                 iTextSharp.text.pdf.PdfStamper writer = new iTextSharp.text.pdf.PdfStamper(reader,
                     new FileStream(setting.OutputPath, FileMode.Create), PDFVersionToiText(setting.PDFVersion));
-                
+
                 // 文書プロパティ
-                Dictionary<string, string> info = new Dictionary<string,string>();
+                Dictionary<string, string> info = new Dictionary<string, string>();
                 info["Title"] = setting.Document.Title;
                 info["Author"] = setting.Document.Author;
                 info["Subject"] = setting.Document.Subtitle;
@@ -133,19 +171,23 @@ namespace CubePDF {
                 if (owner == null && user != null) owner = user;
                 int permission = this.PermissionToiText(setting.Permission);
                 if (user != null || owner != null) writer.SetEncryption(iTextSharp.text.pdf.PdfWriter.STANDARD_ENCRYPTION_128, user, owner, permission);
-                
+
                 writer.Close();
             }
-            catch (Exception err) {
+            catch (Exception err)
+            {
                 _messages.Add(new Message(Message.Levels.Error, err));
                 _messages.Add(new Message(Message.Levels.Debug, err));
                 status = false;
             }
-            finally {
+            finally
+            {
                 if (reader != null) reader.Close();
-                if (File.Exists(tmp)) {
+                if (File.Exists(tmp))
+                {
                     if (!File.Exists(setting.OutputPath)) File.Move(tmp, setting.OutputPath);
-                    else {
+                    else
+                    {
                         FileInfo fi = new FileInfo(setting.OutputPath);
                         if (fi.Length == 0) File.Move(tmp, setting.OutputPath);
                         else File.Delete(tmp);
@@ -159,11 +201,14 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// WebOptimize
         /* ----------------------------------------------------------------- */
-        private bool WebOptimize(UserSetting setting) {
+        private bool WebOptimize(UserSetting setting)
+        {
             string tmp = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
-            Ghostscript.Converter gs = new CubePDF.Ghostscript.Converter(Ghostscript.Devices.PDF_Opt);
+            Ghostscript.Converter gs = new CubePDF.Ghostscript.Converter(_messages);
+            gs.Device = Ghostscript.Devices.PDF_Opt;
             bool status = true;
-            try {
+            try
+            {
                 if (File.Exists(tmp)) File.Delete(tmp);
                 File.Move(setting.OutputPath, tmp);
                 gs.AddInclude(setting.LibPath + @"\lib");
@@ -171,29 +216,33 @@ namespace CubePDF {
                 gs.Destination = setting.OutputPath;
 
                 gs.AddOption("CompatibilityLevel", Parameter.PDFVersionValue(setting.PDFVersion));
-                gs.AddOption("UseFlateCompression", false);
+                gs.AddOption("UseFlateCompression", true);
 
-                if (setting.EmbedFont) {
+                if (setting.EmbedFont)
+                {
                     gs.AddOption("EmbedAllFonts", true);
                     gs.AddOption("SubsetFonts", true);
                 }
 
-                if (setting.Grayscale) {
+                if (setting.Grayscale)
+                {
                     gs.AddOption("ProcessColorModel", "/DeviceGray");
                     gs.AddOption("ColorConversionStrategy", "/Gray");
                 }
 
                 gs.Run();
             }
-            catch (Exception err) {
-                if (gs.Messages.Count > 0) _messages.AddRange(gs.Messages);
+            catch (Exception err)
+            {
                 _messages.Add(new Message(Message.Levels.Warn, "CubePDF.PDFModifier.WebOptimize: False"));
                 _messages.Add(new Message(Message.Levels.Debug, err));
                 status = false;
             }
-            finally {
+            finally
+            {
                 if (!File.Exists(setting.OutputPath)) File.Move(tmp, setting.OutputPath);
-                else {
+                else
+                {
                     FileInfo fi = new FileInfo(setting.OutputPath);
                     if (fi.Length == 0) File.Move(tmp, setting.OutputPath);
                     else File.Delete(tmp);
@@ -211,15 +260,17 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// PDFVersionToiText
         /* ----------------------------------------------------------------- */
-        private char PDFVersionToiText(Parameter.PDFVersions id) {
-            switch (id) {
-            case Parameter.PDFVersions.Ver1_7: return iTextSharp.text.pdf.PdfWriter.VERSION_1_7;
-            case Parameter.PDFVersions.Ver1_6: return iTextSharp.text.pdf.PdfWriter.VERSION_1_6;
-            case Parameter.PDFVersions.Ver1_5: return iTextSharp.text.pdf.PdfWriter.VERSION_1_5;
-            case Parameter.PDFVersions.Ver1_4: return iTextSharp.text.pdf.PdfWriter.VERSION_1_4;
-            case Parameter.PDFVersions.Ver1_3: return iTextSharp.text.pdf.PdfWriter.VERSION_1_3;
-            case Parameter.PDFVersions.Ver1_2: return iTextSharp.text.pdf.PdfWriter.VERSION_1_2;
-            default: break;
+        private char PDFVersionToiText(Parameter.PDFVersions id)
+        {
+            switch (id)
+            {
+                case Parameter.PDFVersions.Ver1_7: return iTextSharp.text.pdf.PdfWriter.VERSION_1_7;
+                case Parameter.PDFVersions.Ver1_6: return iTextSharp.text.pdf.PdfWriter.VERSION_1_6;
+                case Parameter.PDFVersions.Ver1_5: return iTextSharp.text.pdf.PdfWriter.VERSION_1_5;
+                case Parameter.PDFVersions.Ver1_4: return iTextSharp.text.pdf.PdfWriter.VERSION_1_4;
+                case Parameter.PDFVersions.Ver1_3: return iTextSharp.text.pdf.PdfWriter.VERSION_1_3;
+                case Parameter.PDFVersions.Ver1_2: return iTextSharp.text.pdf.PdfWriter.VERSION_1_2;
+                default: break;
             }
 
             return iTextSharp.text.pdf.PdfWriter.VERSION_1_7;
@@ -228,7 +279,8 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// PermissionToiText
         /* ----------------------------------------------------------------- */
-        private int PermissionToiText(PermissionProperty permission) {
+        private int PermissionToiText(PermissionProperty permission)
+        {
             int dest =
                 iTextSharp.text.pdf.PdfWriter.AllowAssembly |
                 iTextSharp.text.pdf.PdfWriter.AllowCopy |
@@ -238,20 +290,24 @@ namespace CubePDF {
                 iTextSharp.text.pdf.PdfWriter.AllowPrinting |
                 iTextSharp.text.pdf.PdfWriter.AllowScreenReaders;
 
-            if (permission.Password.Length > 0 && !permission.AllowPrint) {
+            if (permission.Password.Length > 0 && !permission.AllowPrint)
+            {
                 dest &= ~iTextSharp.text.pdf.PdfWriter.AllowPrinting;
             }
 
-            if (permission.Password.Length > 0 && !permission.AllowCopy) {
+            if (permission.Password.Length > 0 && !permission.AllowCopy)
+            {
                 dest &= ~iTextSharp.text.pdf.PdfWriter.AllowCopy;
             }
 
-            if (permission.Password.Length > 0 && !permission.AllowFormInput) {
+            if (permission.Password.Length > 0 && !permission.AllowFormInput)
+            {
                 dest &= ~iTextSharp.text.pdf.PdfWriter.AllowFillIn;
                 dest &= ~iTextSharp.text.pdf.PdfWriter.AllowModifyAnnotations;
             }
 
-            if (permission.Password.Length > 0 && !permission.AllowModify) {
+            if (permission.Password.Length > 0 && !permission.AllowModify)
+            {
                 dest &= ~iTextSharp.text.pdf.PdfWriter.AllowModifyContents;
                 dest &= ~iTextSharp.text.pdf.PdfWriter.AllowScreenReaders;
             }
@@ -343,19 +399,11 @@ namespace CubePDF {
         #endregion
 
         /* ----------------------------------------------------------------- */
-        /// Messages
-        /* ----------------------------------------------------------------- */
-        public List<CubePDF.Message> Messages {
-            get { return _messages; }
-            set { _messages = value; }
-        }
-
-        /* ----------------------------------------------------------------- */
         //  変数定義
         /* ----------------------------------------------------------------- */
         #region Variables
         string _escaped;
-        List<CubePDF.Message> _messages = new List<CubePDF.Message>();
+        List<CubePDF.Message> _messages = null;
         #endregion
 
         /* ----------------------------------------------------------------- */
