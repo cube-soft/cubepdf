@@ -165,6 +165,15 @@ namespace CubePDF
                 info["Producer"] = PRODUCER_NAME;
                 writer.MoreInfo = info;
 
+                // デバッグログ
+                var message = new System.Text.StringBuilder();
+                message.AppendLine("iTextSharp.text.pdf.PdfStamper.MoreInfo");
+                message.AppendLine(String.Format("\tTitle    = {0}", info["Title"]));
+                message.AppendLine(String.Format("\tAuthor   = {0}", info["Author"]));
+                message.AppendLine(String.Format("\tSubject  = {0}", info["Subject"]));
+                message.Append(    String.Format("\tKeywords = {0}", info["Keywords"]));
+                _messages.Add(new Message(Message.Levels.Debug, message.ToString()));
+
                 // パスワード and/or パーミッション
                 string user = (setting.Password.Length > 0) ? setting.Password : null;
                 string owner = (setting.Permission.Password.Length > 0) ? setting.Permission.Password : null;

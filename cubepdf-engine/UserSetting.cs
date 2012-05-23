@@ -386,7 +386,11 @@ namespace CubePDF
             dest.AppendLine("\tSaveSetting     = " + _save.ToString());
             dest.AppendLine("\tUpdateCheck     = " + _update.ToString());
             dest.AppendLine("\tVisible         = " + _visible.ToString());
-            dest.Append(    "\tDeleteOnClose   = " + _delete_input.ToString());
+            dest.AppendLine("\tDeleteOnClose   = " + _delete_input.ToString());
+            dest.AppendLine("\tTitle           = " + _doc.Title);
+            dest.AppendLine("\tAuthor          = " + _doc.Author);
+            dest.AppendLine("\tSubtitle        = " + _doc.Subtitle);
+            dest.Append(    "\tKeywords        = " + _doc.Keyword);
 
             return dest.ToString();
         }
