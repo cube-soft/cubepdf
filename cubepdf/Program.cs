@@ -19,6 +19,7 @@
  */
 /* ------------------------------------------------------------------------- */
 using System;
+using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -47,8 +48,7 @@ namespace CubePDF
             Trace.WriteLine(String.Format("{0} [INFO] CubePDF version {1} ({2})", DateTime.Now.ToString(), setting.Version, ((IntPtr.Size == 4) ? "x86" : "x64")));
             Trace.WriteLine(String.Format("{0} [INFO] Arguments", DateTime.Now.ToString()));
             foreach (var s in args) Trace.WriteLine("\t" + s);
-
-            setting.Load();
+            
             SetupUserSetting(setting, args);
 
             Application.EnableVisualStyles();
@@ -64,13 +64,33 @@ namespace CubePDF
         private static void SetupUserSetting(UserSetting setting, string[] args)
         {
             var cmdline = new CommandLine(args);
-            var filename = FileNameModifier.GetFileName(cmdline.Arguments.ContainsKey("DocumentName") ? cmdline.Arguments["DocumentName"] : "");
-            if (filename != null) {
-                string ext = Parameter.Extension((Parameter.FileTypes)setting.FileType);
-                filename = System.IO.Path.ChangeExtension(filename, ext);
-                string dir = (setting.OutputPath.Length == 0 || System.IO.Directory.Exists(setting.OutputPath)) ?
-                    setting.OutputPath : System.IO.Path.GetDirectoryName(setting.OutputPath);
-                setting.OutputPath = dir + '\\' + filename;
+
+            var docname = cmdline.Arguments.ContainsKey("DocumentName") ? cmdline.Arguments["DocumentName"] : "";
+            bool is_config = false;
+            try
+            {
+                if (docname.Length > 0 && Path.GetExtension(docname) == setting.Extension && File.Exists(docname)) is_config = true;
+            }
+            catch (Exception /* err */)
+            {
+                // docname に Windows のファイル名に使用できない記号が含まれる
+                // 場合に例外が送出されるので、その対策。
+                is_config = false;
+            }
+
+            if (is_config) setting.Load(docname);
+            else
+            {
+                setting.Load();
+                var filename = FileNameModifier.GetFileName(docname);
+                if (filename != null)
+                {
+                    string ext = Parameter.Extension((Parameter.FileTypes)setting.FileType);
+                    filename = Path.ChangeExtension(filename, ext);
+                    string dir = (setting.OutputPath.Length == 0 || Directory.Exists(setting.OutputPath)) ?
+                        setting.OutputPath : Path.GetDirectoryName(setting.OutputPath);
+                    setting.OutputPath = dir + '\\' + filename;
+                }
             }
 
             setting.InputPath = cmdline.Arguments.ContainsKey("InputFile") ? cmdline.Arguments["InputFile"] : "";
