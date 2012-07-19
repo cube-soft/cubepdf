@@ -101,17 +101,21 @@ namespace CubePDF
         /// SetupLog
         /* ----------------------------------------------------------------- */
         private static void SetupLog(string src) {
-            if (System.IO.File.Exists(src))
+            try
             {
-                using (System.IO.StreamWriter stream = new System.IO.StreamWriter(src, false))
+                if (System.IO.File.Exists(src))
                 {
-                    // 空の内容で上書きする
+                    using (System.IO.StreamWriter stream = new System.IO.StreamWriter(src, false))
+                    {
+                        // 空の内容で上書きする
+                    }
                 }
-            }
 
-            Trace.Listeners.Remove("Default");
-            Trace.Listeners.Add(new TextWriterTraceListener(src));
-            Trace.AutoFlush = true;
+                Trace.Listeners.Remove("Default");
+                Trace.Listeners.Add(new TextWriterTraceListener(src));
+                Trace.AutoFlush = true;
+            }
+            catch (Exception /* err */) { }
         }
     }
 }
