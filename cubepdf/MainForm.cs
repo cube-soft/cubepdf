@@ -237,7 +237,7 @@ namespace CubePDF {
 
             // ポストプロセス関連
             _postproc = setting.AdvancedMode ? this.PostProcessComboBox : this.PostProcessLiteComboBox;
-            _postproc.SelectedIndex = Translator.PostProcessToIndex(setting.PostProcess);
+            _postproc.SelectedIndex = Math.Min(Translator.PostProcessToIndex(setting.PostProcess), Math.Max(_postproc.Items.Count - 1, 0));
             this.PostProcessPanel.Enabled = setting.AdvancedMode;
             this.PostProcessPanel.Visible = setting.AdvancedMode;
             this.PostProcessLabel.Visible = setting.AdvancedMode;
@@ -268,8 +268,13 @@ namespace CubePDF {
         ///
         /* ----------------------------------------------------------------- */
         private void SaveSetting(UserSetting setting, bool save_input) {
-            setting.OutputPath = this.OutputPathTextBox.Text;
-            if (save_input) setting.InputPath = this.InputPathTextBox.Text;
+            string path = this.OutputPathTextBox.Text;
+            setting.OutputPath = (path.Length == 0 || Directory.Exists(path)) ? path : Path.GetDirectoryName(path);
+            if (save_input)
+            {
+                path = this.InputPathTextBox.Text;
+                setting.InputPath = (path.Length == 0 || Directory.Exists(path)) ? path : Path.GetDirectoryName(path);
+            }
             setting.UserProgram = this.UserProgramTextBox.Text;
 
             // コンボボックスのインデックス関連
@@ -756,6 +761,7 @@ namespace CubePDF {
                 _setting.Save();
             }
             _setting.InputPath = this.InputPathTextBox.Text;
+            _setting.OutputPath = this.OutputPathTextBox.Text;
             
             // 変換の実行
             Converter converter = new Converter();
