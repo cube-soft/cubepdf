@@ -135,11 +135,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.ico" />
+    <None Include="Resources\button_setting_disable.png" />
+    <None Include="Resources\button_setting.png" />
     <None Include="Resources\title.png" />
     <None Include="Resources\logo.png" />
     <None Include="Resources\header.png" />
-    <None Include="Resources\buttion_convert.png" />
-    <None Include="Resources\buttion_cancel.png" />
+    <None Include="Resources\button_convert.png" />
+    <None Include="Resources\button_cancel.png" />
     <None Include="Resources\background_tab.png" />
     <None Include="Resources\background.png" />
   </ItemGroup>

@@ -29,8 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.HeaderPictureBox = new System.Windows.Forms.PictureBox();
+            this.ConvertBackgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.MainPanel = new System.Windows.Forms.Panel();
+            this.SettingButton = new System.Windows.Forms.Button();
             this.ExecProgressBar = new System.Windows.Forms.ProgressBar();
             this.ExitButton = new System.Windows.Forms.Button();
             this.ConvertButton = new System.Windows.Forms.Button();
@@ -98,12 +99,10 @@
             this.GrayscaleCheckBox = new System.Windows.Forms.CheckBox();
             this.ImageFilterCheckBox = new System.Windows.Forms.CheckBox();
             this.WebOptimizeCheckBox = new System.Windows.Forms.CheckBox();
-            this.SaveSettingCheckBox = new System.Windows.Forms.CheckBox();
             this.UpdateCheckBox = new System.Windows.Forms.CheckBox();
             this.PostProcessLiteLabel = new System.Windows.Forms.Label();
             this.PostProcessLiteComboBox = new System.Windows.Forms.ComboBox();
-            this.ConvertBackgroundWorker = new System.ComponentModel.BackgroundWorker();
-            ((System.ComponentModel.ISupportInitialize)(this.HeaderPictureBox)).BeginInit();
+            this.HeaderPictureBox = new System.Windows.Forms.PictureBox();
             this.MainPanel.SuspendLayout();
             this.MainTabControl.SuspendLayout();
             this.GeneralTabPage.SuspendLayout();
@@ -119,27 +118,19 @@
             this.UserPasswordPanel.SuspendLayout();
             this.DetailTabPage.SuspendLayout();
             this.DetailPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.HeaderPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
-            // HeaderPictureBox
+            // ConvertBackgroundWorker
             // 
-            this.HeaderPictureBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.HeaderPictureBox.Image = global::CubePDF.Properties.Resources.header;
-            this.HeaderPictureBox.Location = new System.Drawing.Point(0, 0);
-            this.HeaderPictureBox.Margin = new System.Windows.Forms.Padding(0);
-            this.HeaderPictureBox.Name = "HeaderPictureBox";
-            this.HeaderPictureBox.Size = new System.Drawing.Size(500, 80);
-            this.HeaderPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.HeaderPictureBox.TabIndex = 0;
-            this.HeaderPictureBox.TabStop = false;
-            this.HeaderPictureBox.Click += new System.EventHandler(this.HeaderPictureBox_Click);
-            this.HeaderPictureBox.MouseEnter += new System.EventHandler(this.HeaderPictureBox_MouseEnter);
-            this.HeaderPictureBox.MouseLeave += new System.EventHandler(this.HeaderPictureBox_MouseLeave);
+            this.ConvertBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ConvertBackgroundWorker_DoWork);
+            this.ConvertBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ConvertBackgroundWorker_RunWorkerCompleted);
             // 
             // MainPanel
             // 
             this.MainPanel.BackgroundImage = global::CubePDF.Properties.Resources.background;
             this.MainPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.MainPanel.Controls.Add(this.SettingButton);
             this.MainPanel.Controls.Add(this.ExecProgressBar);
             this.MainPanel.Controls.Add(this.ExitButton);
             this.MainPanel.Controls.Add(this.ConvertButton);
@@ -150,36 +141,51 @@
             this.MainPanel.Size = new System.Drawing.Size(500, 421);
             this.MainPanel.TabIndex = 1;
             // 
+            // SettingButton
+            // 
+            this.SettingButton.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.SettingButton.BackgroundImage = global::CubePDF.Properties.Resources.button_setting;
+            this.SettingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.SettingButton.Location = new System.Drawing.Point(12, 378);
+            this.SettingButton.Margin = new System.Windows.Forms.Padding(0);
+            this.SettingButton.Name = "SettingButton";
+            this.SettingButton.Size = new System.Drawing.Size(99, 32);
+            this.SettingButton.TabIndex = 3;
+            this.SettingButton.UseVisualStyleBackColor = false;
+            this.SettingButton.Click += new System.EventHandler(this.SettingButton_Click);
+            // 
             // ExecProgressBar
             // 
             this.ExecProgressBar.Location = new System.Drawing.Point(12, 395);
             this.ExecProgressBar.Name = "ExecProgressBar";
             this.ExecProgressBar.Size = new System.Drawing.Size(200, 15);
             this.ExecProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.ExecProgressBar.TabIndex = 3;
+            this.ExecProgressBar.TabIndex = 4;
             this.ExecProgressBar.Visible = false;
             // 
             // ExitButton
             // 
-            this.ExitButton.BackgroundImage = global::CubePDF.Properties.Resources.buttion_cancel;
+            this.ExitButton.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ExitButton.BackgroundImage = global::CubePDF.Properties.Resources.button_cancel;
             this.ExitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ExitButton.Location = new System.Drawing.Point(369, 362);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(119, 50);
             this.ExitButton.TabIndex = 2;
-            this.ExitButton.UseVisualStyleBackColor = true;
+            this.ExitButton.UseVisualStyleBackColor = false;
             this.ExitButton.Click += new System.EventHandler(this.ExitButton_Click);
             // 
             // ConvertButton
             // 
-            this.ConvertButton.BackgroundImage = global::CubePDF.Properties.Resources.buttion_convert;
+            this.ConvertButton.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ConvertButton.BackgroundImage = global::CubePDF.Properties.Resources.button_convert;
             this.ConvertButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ConvertButton.Location = new System.Drawing.Point(227, 362);
             this.ConvertButton.Margin = new System.Windows.Forms.Padding(0);
             this.ConvertButton.Name = "ConvertButton";
             this.ConvertButton.Size = new System.Drawing.Size(139, 50);
             this.ConvertButton.TabIndex = 1;
-            this.ConvertButton.UseVisualStyleBackColor = true;
+            this.ConvertButton.UseVisualStyleBackColor = false;
             this.ConvertButton.Click += new System.EventHandler(this.ConvertButton_Click);
             // 
             // MainTabControl
@@ -198,7 +204,7 @@
             // 
             // GeneralTabPage
             // 
-            this.GeneralTabPage.BackColor = System.Drawing.Color.White;
+            this.GeneralTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.GeneralTabPage.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.GeneralTabPage.Controls.Add(this.GeneralPanel);
             this.GeneralTabPage.Location = new System.Drawing.Point(4, 22);
@@ -210,6 +216,7 @@
             // 
             // GeneralPanel
             // 
+            this.GeneralPanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.GeneralPanel.Controls.Add(this.InputPathPanel);
             this.GeneralPanel.Controls.Add(this.OutputPathPanel);
             this.GeneralPanel.Controls.Add(this.PostProcessPanel);
@@ -239,21 +246,23 @@
             // 
             // InputPathButton
             // 
-            this.InputPathButton.Location = new System.Drawing.Point(281, 0);
+            this.InputPathButton.BackColor = System.Drawing.SystemColors.Control;
+            this.InputPathButton.Location = new System.Drawing.Point(276, 0);
             this.InputPathButton.Margin = new System.Windows.Forms.Padding(0);
             this.InputPathButton.Name = "InputPathButton";
-            this.InputPathButton.Size = new System.Drawing.Size(35, 20);
+            this.InputPathButton.Size = new System.Drawing.Size(40, 20);
             this.InputPathButton.TabIndex = 27;
             this.InputPathButton.Text = "...";
-            this.InputPathButton.UseVisualStyleBackColor = true;
+            this.InputPathButton.UseVisualStyleBackColor = false;
             this.InputPathButton.Click += new System.EventHandler(this.InputPathButton_Click);
             // 
             // InputPathTextBox
             // 
             this.InputPathTextBox.Location = new System.Drawing.Point(0, 1);
             this.InputPathTextBox.Name = "InputPathTextBox";
-            this.InputPathTextBox.Size = new System.Drawing.Size(278, 19);
+            this.InputPathTextBox.Size = new System.Drawing.Size(273, 19);
             this.InputPathTextBox.TabIndex = 26;
+            this.InputPathTextBox.TextChanged += new System.EventHandler(this.SettingChanged);
             // 
             // OutputPathPanel
             // 
@@ -274,14 +283,15 @@
             this.ExistedFileComboBox.Name = "ExistedFileComboBox";
             this.ExistedFileComboBox.Size = new System.Drawing.Size(70, 20);
             this.ExistedFileComboBox.TabIndex = 31;
+            this.ExistedFileComboBox.SelectedIndexChanged += new System.EventHandler(this.SettingChanged);
             // 
             // OutputPathButton
             // 
-            this.OutputPathButton.BackColor = System.Drawing.Color.Transparent;
-            this.OutputPathButton.Location = new System.Drawing.Point(208, 0);
+            this.OutputPathButton.BackColor = System.Drawing.SystemColors.Control;
+            this.OutputPathButton.Location = new System.Drawing.Point(203, 0);
             this.OutputPathButton.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
             this.OutputPathButton.Name = "OutputPathButton";
-            this.OutputPathButton.Size = new System.Drawing.Size(35, 20);
+            this.OutputPathButton.Size = new System.Drawing.Size(40, 20);
             this.OutputPathButton.TabIndex = 30;
             this.OutputPathButton.Text = "...";
             this.OutputPathButton.UseVisualStyleBackColor = false;
@@ -292,9 +302,10 @@
             this.OutputPathTextBox.Location = new System.Drawing.Point(0, 1);
             this.OutputPathTextBox.Margin = new System.Windows.Forms.Padding(0);
             this.OutputPathTextBox.Name = "OutputPathTextBox";
-            this.OutputPathTextBox.Size = new System.Drawing.Size(205, 19);
+            this.OutputPathTextBox.Size = new System.Drawing.Size(200, 19);
             this.OutputPathTextBox.TabIndex = 29;
             this.OutputPathTextBox.Click += new System.EventHandler(this.OutputPathTextBox_Click);
+            this.OutputPathTextBox.TextChanged += new System.EventHandler(this.SettingChanged);
             this.OutputPathTextBox.Leave += new System.EventHandler(this.OutputPathTextBox_Leave);
             // 
             // PostProcessPanel
@@ -312,19 +323,21 @@
             this.UserProgramTextBox.Location = new System.Drawing.Point(98, 0);
             this.UserProgramTextBox.Margin = new System.Windows.Forms.Padding(0);
             this.UserProgramTextBox.Name = "UserProgramTextBox";
-            this.UserProgramTextBox.Size = new System.Drawing.Size(180, 19);
+            this.UserProgramTextBox.Size = new System.Drawing.Size(175, 19);
             this.UserProgramTextBox.TabIndex = 21;
+            this.UserProgramTextBox.TextChanged += new System.EventHandler(this.SettingChanged);
             // 
             // UserProgramButton
             // 
+            this.UserProgramButton.BackColor = System.Drawing.SystemColors.Control;
             this.UserProgramButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.UserProgramButton.Location = new System.Drawing.Point(281, 0);
+            this.UserProgramButton.Location = new System.Drawing.Point(276, 0);
             this.UserProgramButton.Margin = new System.Windows.Forms.Padding(0);
             this.UserProgramButton.Name = "UserProgramButton";
-            this.UserProgramButton.Size = new System.Drawing.Size(35, 20);
+            this.UserProgramButton.Size = new System.Drawing.Size(40, 20);
             this.UserProgramButton.TabIndex = 22;
             this.UserProgramButton.Text = "...";
-            this.UserProgramButton.UseVisualStyleBackColor = true;
+            this.UserProgramButton.UseVisualStyleBackColor = false;
             this.UserProgramButton.Click += new System.EventHandler(this.UserProgramButton_Click);
             // 
             // PostProcessComboBox
@@ -347,6 +360,7 @@
             this.ResolutionComboBox.Name = "ResolutionComboBox";
             this.ResolutionComboBox.Size = new System.Drawing.Size(316, 20);
             this.ResolutionComboBox.TabIndex = 9;
+            this.ResolutionComboBox.SelectedIndexChanged += new System.EventHandler(this.SettingChanged);
             // 
             // PDFVersionComboBox
             // 
@@ -356,6 +370,7 @@
             this.PDFVersionComboBox.Name = "PDFVersionComboBox";
             this.PDFVersionComboBox.Size = new System.Drawing.Size(316, 20);
             this.PDFVersionComboBox.TabIndex = 8;
+            this.PDFVersionComboBox.SelectedIndexChanged += new System.EventHandler(this.SettingChanged);
             // 
             // FileTypeCombBox
             // 
@@ -435,7 +450,7 @@
             // 
             // DocTabPage
             // 
-            this.DocTabPage.BackColor = System.Drawing.Color.White;
+            this.DocTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.DocTabPage.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.DocTabPage.Controls.Add(this.DocPanel);
             this.DocTabPage.Location = new System.Drawing.Point(4, 22);
@@ -447,6 +462,7 @@
             // 
             // DocPanel
             // 
+            this.DocPanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.DocPanel.Controls.Add(this.DocTitleLabel);
             this.DocPanel.Controls.Add(this.DocAuthorLabel);
             this.DocPanel.Controls.Add(this.DocSubtitleLabel);
@@ -539,7 +555,7 @@
             // 
             // SecurityTabPage
             // 
-            this.SecurityTabPage.BackColor = System.Drawing.Color.White;
+            this.SecurityTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.SecurityTabPage.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.SecurityTabPage.Controls.Add(this.SecurityGroupBox);
             this.SecurityTabPage.Location = new System.Drawing.Point(4, 22);
@@ -588,16 +604,16 @@
             this.UserPasswordPanel.Controls.Add(this.UserPasswordTextBox);
             this.UserPasswordPanel.Controls.Add(this.ConfirmUserPasswordTextBox);
             this.UserPasswordPanel.Enabled = false;
-            this.UserPasswordPanel.Location = new System.Drawing.Point(117, 100);
+            this.UserPasswordPanel.Location = new System.Drawing.Point(138, 100);
             this.UserPasswordPanel.Name = "UserPasswordPanel";
-            this.UserPasswordPanel.Size = new System.Drawing.Size(290, 50);
+            this.UserPasswordPanel.Size = new System.Drawing.Size(265, 50);
             this.UserPasswordPanel.TabIndex = 37;
             // 
             // UserPasswordLabel
             // 
             this.UserPasswordLabel.AutoSize = true;
-            this.UserPasswordLabel.Location = new System.Drawing.Point(3, 7);
-            this.UserPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.UserPasswordLabel.Location = new System.Drawing.Point(2, 6);
+            this.UserPasswordLabel.Margin = new System.Windows.Forms.Padding(0);
             this.UserPasswordLabel.Name = "UserPasswordLabel";
             this.UserPasswordLabel.Size = new System.Drawing.Size(58, 12);
             this.UserPasswordLabel.TabIndex = 37;
@@ -607,8 +623,8 @@
             // ConfirmUserPasswordLabel
             // 
             this.ConfirmUserPasswordLabel.AutoSize = true;
-            this.ConfirmUserPasswordLabel.Location = new System.Drawing.Point(3, 31);
-            this.ConfirmUserPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
+            this.ConfirmUserPasswordLabel.Location = new System.Drawing.Point(2, 31);
+            this.ConfirmUserPasswordLabel.Margin = new System.Windows.Forms.Padding(0);
             this.ConfirmUserPasswordLabel.Name = "ConfirmUserPasswordLabel";
             this.ConfirmUserPasswordLabel.Size = new System.Drawing.Size(92, 12);
             this.ConfirmUserPasswordLabel.TabIndex = 36;
@@ -618,20 +634,20 @@
             // UserPasswordTextBox
             // 
             this.UserPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.UserPasswordTextBox.Location = new System.Drawing.Point(103, 4);
+            this.UserPasswordTextBox.Location = new System.Drawing.Point(100, 3);
             this.UserPasswordTextBox.Name = "UserPasswordTextBox";
             this.UserPasswordTextBox.PasswordChar = '*';
-            this.UserPasswordTextBox.Size = new System.Drawing.Size(180, 19);
+            this.UserPasswordTextBox.Size = new System.Drawing.Size(162, 19);
             this.UserPasswordTextBox.TabIndex = 38;
             this.UserPasswordTextBox.TextChanged += new System.EventHandler(this.UserPasswordTextBox_TextChanged);
             // 
             // ConfirmUserPasswordTextBox
             // 
             this.ConfirmUserPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.ConfirmUserPasswordTextBox.Location = new System.Drawing.Point(103, 28);
+            this.ConfirmUserPasswordTextBox.Location = new System.Drawing.Point(100, 28);
             this.ConfirmUserPasswordTextBox.Name = "ConfirmUserPasswordTextBox";
             this.ConfirmUserPasswordTextBox.PasswordChar = '*';
-            this.ConfirmUserPasswordTextBox.Size = new System.Drawing.Size(180, 19);
+            this.ConfirmUserPasswordTextBox.Size = new System.Drawing.Size(162, 19);
             this.ConfirmUserPasswordTextBox.TabIndex = 39;
             this.ConfirmUserPasswordTextBox.TextChanged += new System.EventHandler(this.ConfirmUserPasswordTextBox_TextChanged);
             // 
@@ -639,7 +655,7 @@
             // 
             this.UserPasswordCheckBox.AutoSize = true;
             this.UserPasswordCheckBox.Enabled = false;
-            this.UserPasswordCheckBox.Location = new System.Drawing.Point(120, 80);
+            this.UserPasswordCheckBox.Location = new System.Drawing.Point(140, 80);
             this.UserPasswordCheckBox.Name = "UserPasswordCheckBox";
             this.UserPasswordCheckBox.Size = new System.Drawing.Size(181, 16);
             this.UserPasswordCheckBox.TabIndex = 36;
@@ -768,7 +784,7 @@
             // 
             // DetailTabPage
             // 
-            this.DetailTabPage.BackColor = System.Drawing.Color.White;
+            this.DetailTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.DetailTabPage.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
             this.DetailTabPage.Controls.Add(this.DetailPanel);
             this.DetailTabPage.Location = new System.Drawing.Point(4, 22);
@@ -780,6 +796,7 @@
             // 
             // DetailPanel
             // 
+            this.DetailPanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.DetailPanel.Controls.Add(this.DownSamplingLabel);
             this.DetailPanel.Controls.Add(this.OptionLabel);
             this.DetailPanel.Controls.Add(this.OthersLabel);
@@ -789,7 +806,6 @@
             this.DetailPanel.Controls.Add(this.GrayscaleCheckBox);
             this.DetailPanel.Controls.Add(this.ImageFilterCheckBox);
             this.DetailPanel.Controls.Add(this.WebOptimizeCheckBox);
-            this.DetailPanel.Controls.Add(this.SaveSettingCheckBox);
             this.DetailPanel.Controls.Add(this.UpdateCheckBox);
             this.DetailPanel.Controls.Add(this.PostProcessLiteLabel);
             this.DetailPanel.Controls.Add(this.PostProcessLiteComboBox);
@@ -840,6 +856,7 @@
             this.DownSamplingComboBox.Name = "DownSamplingComboBox";
             this.DownSamplingComboBox.Size = new System.Drawing.Size(316, 20);
             this.DownSamplingComboBox.TabIndex = 14;
+            this.DownSamplingComboBox.SelectedIndexChanged += new System.EventHandler(this.SettingChanged);
             // 
             // PageLotationCheckBox
             // 
@@ -851,6 +868,7 @@
             this.PageLotationCheckBox.TabIndex = 15;
             this.PageLotationCheckBox.Text = "ページの自動回転";
             this.PageLotationCheckBox.UseVisualStyleBackColor = true;
+            this.PageLotationCheckBox.CheckedChanged += new System.EventHandler(this.SettingChanged);
             // 
             // EmbedFontCheckBox
             // 
@@ -862,6 +880,7 @@
             this.EmbedFontCheckBox.TabIndex = 16;
             this.EmbedFontCheckBox.Text = "フォントの埋め込み";
             this.EmbedFontCheckBox.UseVisualStyleBackColor = true;
+            this.EmbedFontCheckBox.CheckedChanged += new System.EventHandler(this.SettingChanged);
             // 
             // GrayscaleCheckBox
             // 
@@ -873,16 +892,18 @@
             this.GrayscaleCheckBox.TabIndex = 17;
             this.GrayscaleCheckBox.Text = "グレースケール";
             this.GrayscaleCheckBox.UseVisualStyleBackColor = true;
+            this.GrayscaleCheckBox.CheckedChanged += new System.EventHandler(this.SettingChanged);
             // 
             // ImageFilterCheckBox
             // 
             this.ImageFilterCheckBox.AutoSize = true;
-            this.ImageFilterCheckBox.Location = new System.Drawing.Point(120, 125);
+            this.ImageFilterCheckBox.Location = new System.Drawing.Point(120, 127);
             this.ImageFilterCheckBox.Name = "ImageFilterCheckBox";
             this.ImageFilterCheckBox.Size = new System.Drawing.Size(143, 16);
             this.ImageFilterCheckBox.TabIndex = 18;
             this.ImageFilterCheckBox.Text = "画像をJPEG形式に圧縮";
             this.ImageFilterCheckBox.UseVisualStyleBackColor = true;
+            this.ImageFilterCheckBox.CheckedChanged += new System.EventHandler(this.SettingChanged);
             // 
             // WebOptimizeCheckBox
             // 
@@ -896,32 +917,22 @@
             this.WebOptimizeCheckBox.UseVisualStyleBackColor = true;
             this.WebOptimizeCheckBox.CheckedChanged += new System.EventHandler(this.WebOptimizeCheckBox_CheckedChanged);
             // 
-            // SaveSettingCheckBox
-            // 
-            this.SaveSettingCheckBox.AutoSize = true;
-            this.SaveSettingCheckBox.Location = new System.Drawing.Point(120, 179);
-            this.SaveSettingCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.SaveSettingCheckBox.Name = "SaveSettingCheckBox";
-            this.SaveSettingCheckBox.Size = new System.Drawing.Size(100, 16);
-            this.SaveSettingCheckBox.TabIndex = 20;
-            this.SaveSettingCheckBox.Text = "設定を保存する";
-            this.SaveSettingCheckBox.UseVisualStyleBackColor = true;
-            // 
             // UpdateCheckBox
             // 
             this.UpdateCheckBox.AutoSize = true;
-            this.UpdateCheckBox.Location = new System.Drawing.Point(120, 205);
+            this.UpdateCheckBox.Location = new System.Drawing.Point(120, 179);
             this.UpdateCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.UpdateCheckBox.Name = "UpdateCheckBox";
             this.UpdateCheckBox.Size = new System.Drawing.Size(174, 16);
             this.UpdateCheckBox.TabIndex = 21;
             this.UpdateCheckBox.Text = "起動時にアップデートを確認する";
             this.UpdateCheckBox.UseVisualStyleBackColor = true;
+            this.UpdateCheckBox.CheckedChanged += new System.EventHandler(this.SettingChanged);
             // 
             // PostProcessLiteLabel
             // 
             this.PostProcessLiteLabel.AutoSize = true;
-            this.PostProcessLiteLabel.Location = new System.Drawing.Point(20, 232);
+            this.PostProcessLiteLabel.Location = new System.Drawing.Point(20, 210);
             this.PostProcessLiteLabel.Margin = new System.Windows.Forms.Padding(3);
             this.PostProcessLiteLabel.Name = "PostProcessLiteLabel";
             this.PostProcessLiteLabel.Size = new System.Drawing.Size(75, 12);
@@ -933,21 +944,32 @@
             // 
             this.PostProcessLiteComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PostProcessLiteComboBox.FormattingEnabled = true;
-            this.PostProcessLiteComboBox.Location = new System.Drawing.Point(120, 229);
+            this.PostProcessLiteComboBox.Location = new System.Drawing.Point(120, 207);
             this.PostProcessLiteComboBox.Name = "PostProcessLiteComboBox";
             this.PostProcessLiteComboBox.Size = new System.Drawing.Size(316, 20);
             this.PostProcessLiteComboBox.TabIndex = 23;
+            this.PostProcessLiteComboBox.SelectedIndexChanged += new System.EventHandler(this.SettingChanged);
             // 
-            // ConvertBackgroundWorker
+            // HeaderPictureBox
             // 
-            this.ConvertBackgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ConvertBackgroundWorker_DoWork);
-            this.ConvertBackgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ConvertBackgroundWorker_RunWorkerCompleted);
+            this.HeaderPictureBox.Dock = System.Windows.Forms.DockStyle.Top;
+            this.HeaderPictureBox.Image = global::CubePDF.Properties.Resources.header;
+            this.HeaderPictureBox.Location = new System.Drawing.Point(0, 0);
+            this.HeaderPictureBox.Margin = new System.Windows.Forms.Padding(0);
+            this.HeaderPictureBox.Name = "HeaderPictureBox";
+            this.HeaderPictureBox.Size = new System.Drawing.Size(500, 80);
+            this.HeaderPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.HeaderPictureBox.TabIndex = 0;
+            this.HeaderPictureBox.TabStop = false;
+            this.HeaderPictureBox.Click += new System.EventHandler(this.HeaderPictureBox_Click);
+            this.HeaderPictureBox.MouseEnter += new System.EventHandler(this.HeaderPictureBox_MouseEnter);
+            this.HeaderPictureBox.MouseLeave += new System.EventHandler(this.HeaderPictureBox_MouseLeave);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(500, 501);
             this.Controls.Add(this.MainPanel);
             this.Controls.Add(this.HeaderPictureBox);
@@ -959,7 +981,6 @@
             this.Text = "CubePDF";
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
-            ((System.ComponentModel.ISupportInitialize)(this.HeaderPictureBox)).EndInit();
             this.MainPanel.ResumeLayout(false);
             this.MainTabControl.ResumeLayout(false);
             this.GeneralTabPage.ResumeLayout(false);
@@ -984,6 +1005,7 @@
             this.DetailTabPage.ResumeLayout(false);
             this.DetailPanel.ResumeLayout(false);
             this.DetailPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.HeaderPictureBox)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1042,7 +1064,6 @@
         private System.Windows.Forms.CheckBox GrayscaleCheckBox;
         private System.Windows.Forms.CheckBox ImageFilterCheckBox;
         private System.Windows.Forms.CheckBox WebOptimizeCheckBox;
-        private System.Windows.Forms.CheckBox SaveSettingCheckBox;
         private System.Windows.Forms.CheckBox UpdateCheckBox;
         private System.Windows.Forms.Label PostProcessLiteLabel;
         private System.Windows.Forms.ComboBox PostProcessLiteComboBox;
@@ -1064,6 +1085,7 @@
         private System.Windows.Forms.Label ConfirmUserPasswordLabel;
         private System.Windows.Forms.TextBox UserPasswordTextBox;
         private System.Windows.Forms.TextBox ConfirmUserPasswordTextBox;
+        private System.Windows.Forms.Button SettingButton;
     }
 }
 

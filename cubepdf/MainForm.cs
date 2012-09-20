@@ -232,7 +232,6 @@ namespace CubePDF {
             this.GrayscaleCheckBox.Checked = setting.Grayscale;
             this.ImageFilterCheckBox.Checked = (setting.ImageFilter == Parameter.ImageFilters.DCTEncode) ? true : false;
             this.WebOptimizeCheckBox.Checked = setting.WebOptimize;
-            this.SaveSettingCheckBox.Checked = setting.SaveSetting;
             this.UpdateCheckBox.Checked = setting.CheckUpdate;
 
             // ポストプロセス関連
@@ -260,21 +259,15 @@ namespace CubePDF {
         /// SaveSetting
         /// 
         /// <summary>
-        /// 各種 GUI コンポーネントの情報を UserSetting に反映する．
-        /// 仮想プリンタ経由など tmp パスが入力パスのテキストボックスに
-        /// 設定されている場合，save_input を false にして反映しない
-        /// ようにする．
+        /// 各種 GUI コンポーネントの情報を UserSetting に反映します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void SaveSetting(UserSetting setting, bool save_input) {
+        private void SaveSetting(UserSetting setting) {
             string path = this.OutputPathTextBox.Text;
             setting.OutputPath = (path.Length == 0 || Directory.Exists(path)) ? path : Path.GetDirectoryName(path);
-            if (save_input)
-            {
-                path = this.InputPathTextBox.Text;
-                setting.InputPath = (path.Length == 0 || Directory.Exists(path)) ? path : Path.GetDirectoryName(path);
-            }
+            path = this.InputPathTextBox.Text;
+            setting.InputPath = (path.Length == 0 || Directory.Exists(path)) ? path : Path.GetDirectoryName(path);
             setting.UserProgram = this.UserProgramTextBox.Text;
 
             // コンボボックスのインデックス関連
@@ -291,7 +284,6 @@ namespace CubePDF {
             setting.Grayscale = this.GrayscaleCheckBox.Checked;
             setting.ImageFilter = this.ImageFilterCheckBox.Checked ? Parameter.ImageFilters.DCTEncode : Parameter.ImageFilters.FlateEncode;
             setting.WebOptimize = this.WebOptimizeCheckBox.Checked;
-            setting.SaveSetting = this.SaveSettingCheckBox.Checked;
             setting.CheckUpdate = this.UpdateCheckBox.Checked;
 
             // 文書プロパティ
@@ -355,6 +347,8 @@ namespace CubePDF {
         /// 
         /* ----------------------------------------------------------------- */
         private void MainForm_Shown(object sender, EventArgs e) {
+            this.SettingButton.BackgroundImage = Properties.Resources.button_setting_disable;
+            this.SettingButton.Enabled = false;
             this.Activate();
             this.TopMost = true;
             this.TopMost = false;
@@ -394,6 +388,7 @@ namespace CubePDF {
             if (!Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}\\lib: file not found", _setting.LibPath)));
 
             this.ConvertButton.Enabled = false;
+            this.SettingButton.Visible = false;
             this.ExecProgressBar.Visible = true;
             this.ConvertBackgroundWorker.RunWorkerAsync();
         }
@@ -406,6 +401,18 @@ namespace CubePDF {
             _messages.Add(new Message(Message.Levels.Debug, "CubePDF.MainForm.ExitButton_Click"));
             this.WriteMessage();
             this.Close();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///  SettingButton_Click
+        /* ----------------------------------------------------------------- */
+        private void SettingButton_Click(object sender, EventArgs e)
+        {
+            this.SaveSetting(_setting);
+            _setting.SaveSetting = Parameter.SaveSettings.None; // 「設定を保存」の項目は、1.0.0RC4 以降使用しない
+            _setting.Save();
+            this.SettingButton.BackgroundImage = Properties.Resources.button_setting_disable;
+            this.SettingButton.Enabled = false;
         }
 
         /* ----------------------------------------------------------------- */
@@ -435,6 +442,7 @@ namespace CubePDF {
             {
                 this.OutputPathTextBox.Text += compared;
             }
+            this.SettingChanged(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
@@ -448,6 +456,7 @@ namespace CubePDF {
             if (dialog.ShowDialog() != DialogResult.OK) return;
             
             this.InputPathTextBox.Text = dialog.FileName;
+            this.SettingChanged(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
@@ -461,6 +470,7 @@ namespace CubePDF {
             if (dialog.ShowDialog() != DialogResult.OK) return;
 
             this.UserProgramTextBox.Text = dialog.FileName;
+            this.SettingChanged(sender, e);
         }
 
         #endregion
@@ -509,8 +519,11 @@ namespace CubePDF {
             this.WebOptimizeCheckBox.Enabled = is_pdf && !is_security;
 
             // 出力パスの拡張子を変更後のファイルタイプに合わせる．
-            if (this.OutputPathTextBox.Text.Length == 0) return;
-            this.OutputPathTextBox.Text = Path.ChangeExtension(this.OutputPathTextBox.Text, Parameter.Extension(id));
+            if (this.OutputPathTextBox.Text.Length > 0)
+            {
+                this.OutputPathTextBox.Text = Path.ChangeExtension(this.OutputPathTextBox.Text, Parameter.Extension(id));
+            }
+            this.SettingChanged(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
@@ -525,6 +538,7 @@ namespace CubePDF {
 
             this.UserProgramTextBox.Enabled = is_user_program;
             this.UserProgramButton.Enabled = is_user_program;
+            this.SettingChanged(sender, e);
         }
         
         #endregion
@@ -549,6 +563,7 @@ namespace CubePDF {
             if (control == null) return;
             
             this.SecurityGroupBox.Enabled = !control.Checked;
+            this.SettingChanged(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
@@ -754,12 +769,7 @@ namespace CubePDF {
         /// ConvertBackgroundWorker_DoWork
         /* ----------------------------------------------------------------- */
         private void ConvertBackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e) {
-            // GUI の設定を UserSetting に保存する
-            this.SaveSetting(_setting, this.InputPathPanel.Enabled);
-            if (_setting.SaveSetting) {
-                _setting.SaveSetting = false; // 「設定を保存」の項目はレジストリには保存しない．
-                _setting.Save();
-            }
+            this.SaveSetting(_setting);
             _setting.InputPath = this.InputPathTextBox.Text;
             _setting.OutputPath = this.OutputPathTextBox.Text;
             
@@ -810,6 +820,22 @@ namespace CubePDF {
             if (error.Length > 0) MessageBox.Show(error, "CubePDF エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// SettingChanged
+        ///
+        /// <summary>
+        /// ユーザによって、各種設定が変更されたら実行されます。
+        /// 「設定を保存」ボタンが押下できるようになります。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void SettingChanged(object sender, EventArgs e)
+        {
+            this.SettingButton.BackgroundImage = Properties.Resources.button_setting;
+            this.SettingButton.Enabled = true;
+        }
+
         #endregion
 
         /* ----------------------------------------------------------------- */
@@ -821,5 +847,11 @@ namespace CubePDF {
         private ToolTip _tips = new ToolTip();
         private List<CubePDF.Message> _messages = new List<Message>();
         #endregion
+
+        private void SettingButton_MouseEnter(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.No;
+        }
+
     }
 }
