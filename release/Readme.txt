@@ -18,16 +18,23 @@ Microsoft .NetFramework 2.0 は、以下の URL からダウンロードして�
 http://www.microsoft.com/downloads/details.aspx?FamilyId=0856eacb-4362-4b0d-8edd-aab15c5e04f5&displaylang=ja
 
 CubePDFは、以下のライブラリを利用しています。それぞれのライブラリについては、記載した URL から取得することができます。
-- GPL Ghostscript 9.04
+- GPL Ghostscript 9.06
   Copyright (c) Artifex Software, Inc. All rights reserved.
   URL: http://www.ghostscript.com/
   GNU General Public License ( http://www.gnu.org/licenses/gpl.html )
-- iTextSharp 5.2.1
+- iTextSharp 5.3.2
   Copyright (c) 2010 - 2012 1T3XT BVBA. All rights reserved.
   URL: http://sourceforge.net/projects/itextsharp/
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
 ■バージョン履歴
+2012/09/21 version 1.0.0RC4
+- 「設定を保存」ボタンを追加
+- 64bit 版 Windows XP でインストールに失敗する不都合を修正
+- アンインストール時にスタートアップに登録されている CubePDF アップデートチェックプログラムが削除されない不都合を修正
+- プリンタスプーラのロックが解除されるタイミングをオプションで選択できるように修正
+- 「出力ファイル」欄の情報をレジストリに保存する際の方法を変更
+
 2012/05/25 version 1.0.0RC3
 - CubePDF メイン画面が表示された時点でプリンタスプーラのロックが解除されるように修正
 - ファイル名に日本語以外の文字が含まれている場合、CubePDF メイン画面の「出力ファイル」欄に表示されるファイル名が文字化けする不都合を修正
