@@ -39,14 +39,16 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// FileTypes
         /* ----------------------------------------------------------------- */
-        public enum FileTypes : int {
+        public enum FileTypes : int
+        {
             PDF, PS, EPS, SVG, PNG, JPEG, BMP, TIFF,
         };
 
         /* ----------------------------------------------------------------- */
         /// PDFVersions
         /* ----------------------------------------------------------------- */
-        public enum PDFVersions : int {
+        public enum PDFVersions : int
+        {
             Ver1_7, Ver1_6, Ver1_5, Ver1_4, Ver1_3, Ver1_2, VerPDFA, VerPDFX
         };
 
@@ -60,36 +62,60 @@ namespace CubePDF {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public enum ExistedFiles : int {
+        public enum ExistedFiles : int
+        {
             Overwrite, MergeHead, MergeTail, Rename,
         };
 
         /* ----------------------------------------------------------------- */
         /// PostProcesses
         /* ----------------------------------------------------------------- */
-        public enum PostProcesses : int {
+        public enum PostProcesses : int
+        {
             Open, None, UserProgram,
         };
 
         /* ----------------------------------------------------------------- */
         /// Resolutions
         /* ----------------------------------------------------------------- */
-        public enum Resolutions : int {
+        public enum Resolutions : int
+        {
             Resolution72, Resolution150, Resolution300, Resolution450, Resolution600,
         };
 
         /* ----------------------------------------------------------------- */
         /// DownSamplings
         /* ----------------------------------------------------------------- */
-        public enum DownSamplings : int {
+        public enum DownSamplings : int
+        {
             None, Average, Bicubic, Subsample,
         };
 
         /* ----------------------------------------------------------------- */
         /// ImageFilters
         /* ----------------------------------------------------------------- */
-        public enum ImageFilters : int {
+        public enum ImageFilters : int
+        {
             FlateEncode, DCTEncode, CCITTFaxEncode,
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// SaveSettings
+        ///
+        /// <summary>
+        /// 各種設定をレジストリに反映するかどうかを決定する。
+        /// 設定可能な値は、以下の通り:
+        /// 
+        /// None: 保存しない
+        /// Save: 保存する
+        /// Reset: 初期値にリセットする
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public enum SaveSettings : int
+        {
+            None, Save, Reset
         }
 
         #endregion

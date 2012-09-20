@@ -412,8 +412,7 @@ namespace CubePDF
                     if (this._first < this._last) args.Add("-dLastPage=" + this._last.ToString());
                 }
                 if (this._rotate) args.Add("-dAutoRotatePages=/PageByPage");
-                //else args.Add("-dAutoRotatePages=/None");
-                
+
                 // Add default options
                 foreach (string elem in defaults_) args.Add(elem);
 
@@ -443,9 +442,6 @@ namespace CubePDF
                 else
                 {
                     args.Add(String.Format("-sOutputFile={0}", dest));
-                    args.Add("-c");
-                    args.Add("<</Orientation 0>> setpagedevice");
-                    args.Add("-f");
                     foreach (var src in sources) args.Add(src);
                 }
 

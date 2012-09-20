@@ -164,15 +164,16 @@ namespace CubePDF
                 Assert.AreEqual(Parameter.ExistedFiles.Overwrite, test.ExistedFile, "ExistedFile");
                 Assert.AreEqual(Parameter.PostProcesses.Open, test.PostProcess, "PostProcess");
                 Assert.AreEqual(Parameter.ImageFilters.FlateEncode, test.ImageFilter, "ImageFilter");
+                Assert.AreEqual(Parameter.SaveSettings.None, test.SaveSetting, "SaveSetting");
                 Assert.IsTrue(test.PageRotation, "PageRotation"); // ページの自動回転
                 Assert.IsTrue(test.EmbedFont, "EmbedFont"); // フォントの埋め込み
                 Assert.IsFalse(test.Grayscale, "Grayscale"); // グレースケール
                 Assert.IsFalse(test.WebOptimize, "WebOptimize"); // Web 表示用に最適化
-                Assert.IsFalse(test.SaveSetting, "SaveSetting"); // 設定を保存する
                 Assert.IsTrue(test.CheckUpdate, "CheckUpdate"); // 起動時にアップデートを確認する
                 Assert.IsFalse(test.AdvancedMode, "AdvancedMode"); // ポストプロセスでユーザ―プログラムを選択可能にする
                 Assert.IsFalse(test.SelectInputFile, "SelectInputFile"); // 入力ファイル欄を表示
                 Assert.IsFalse(test.DeleteOnClose, "DeleteOnClose"); // 終了時に入力ファイルを消去（レジストリには項目なし）
+                Assert.IsTrue(test.Visible, "Visible");
             }
         }
 
@@ -371,13 +372,13 @@ namespace CubePDF
                     subkey.SetValue("PostProcess", 2958739);
                     subkey.SetValue("DownSampling", 493798);
                     subkey.SetValue("ImageFilter", 943724);
+                    subkey.SetValue("SaveSetting", 24);
 
                     // チェックボックスの値（正常な値は、0 or 1）
                     subkey.SetValue("PageRotation", 2);
                     subkey.SetValue("EmbedFont", 5);
                     subkey.SetValue("Grayscale", 8);
                     subkey.SetValue("WebOptimize", 12);
-                    subkey.SetValue("SaveSetting", 24);
                     subkey.SetValue("CheckUpdate", 32);
                     subkey.SetValue("AdvancedMode", 42);
                     subkey.SetValue("SelectInputFile", 128);
@@ -395,11 +396,11 @@ namespace CubePDF
                 Assert.AreEqual(Parameter.ExistedFiles.Overwrite, test.ExistedFile, "ExistedFile");
                 Assert.AreEqual(Parameter.PostProcesses.Open, test.PostProcess, "PostProcess");
                 Assert.AreEqual(Parameter.ImageFilters.FlateEncode, test.ImageFilter, "ImageFilter");
+                Assert.AreEqual(Parameter.SaveSettings.None, test.SaveSetting, "SaveSetting");
                 Assert.IsTrue(test.PageRotation, "PageRotation");
                 Assert.IsTrue(test.EmbedFont, "EmbedFont");
                 Assert.IsTrue(test.Grayscale, "Grayscale");
                 Assert.IsTrue(test.WebOptimize, "WebOptimize");
-                Assert.IsTrue(test.SaveSetting, "SaveSetting");
                 Assert.IsTrue(test.CheckUpdate, "CheckUpdate");
                 Assert.IsTrue(test.AdvancedMode, "AdvancedMode");
                 Assert.IsTrue(test.SelectInputFile, "SelectInputFile");

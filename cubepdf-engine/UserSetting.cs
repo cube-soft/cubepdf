@@ -448,7 +448,7 @@ namespace CubePDF
                 flag = (int)subkey.GetValue(REG_WEB_OPTIMIZE, 0);
                 _web = (flag != 0);
                 flag = (int)subkey.GetValue(REG_SAVE_SETTING, 0);
-                _save = (flag != 0);
+                _save = (flag != 0) ? Parameter.SaveSettings.Save : Parameter.SaveSettings.None;
                 flag = (int)subkey.GetValue(REG_CHECK_UPDATE, 1);
                 _update = (flag != 0);
                 flag = (int)subkey.GetValue(REG_ADVANCED_MODE, 0);
@@ -782,6 +782,22 @@ namespace CubePDF
 
         /* ----------------------------------------------------------------- */
         ///
+        /// SaveSetting
+        ///
+        /// <summary>
+        /// 現在の設定をレジストリに保存するかどうかを取得、または設定
+        /// します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public Parameter.SaveSettings SaveSetting
+        {
+            get { return _save; }
+            set { _save = value; }
+        }
+        
+        /* ----------------------------------------------------------------- */
+        ///
         /// PageRotation
         ///
         /// <summary>
@@ -843,22 +859,6 @@ namespace CubePDF
 
         /* ----------------------------------------------------------------- */
         ///
-        /// SaveSetting
-        ///
-        /// <summary>
-        /// 現在の設定をレジストリに保存するかどうかを取得，または設定
-        /// します．
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public bool SaveSetting
-        {
-            get { return _save; }
-            set { _save = value; }
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
         /// CheckUpdate
         ///
         /// <summary>
@@ -871,6 +871,21 @@ namespace CubePDF
         {
             get { return _update; }
             set { _update = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CheckUpdate
+        ///
+        /// <summary>
+        /// CubePDF メイン画面を表示するかどうかを取得、または設定します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool Visible
+        {
+            get { return _visible; }
+            set { _visible = value; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -990,8 +1005,6 @@ namespace CubePDF
             _grayscale = (value != 0);
             value = v.Contains(REG_WEB_OPTIMIZE) ? (int)v.Find(REG_WEB_OPTIMIZE).Value : 0;
             _web = (value != 0);
-            value = v.Contains(REG_SAVE_SETTING) ? (int)v.Find(REG_SAVE_SETTING).Value : 0;
-            _save = (value != 0);
             value = v.Contains(REG_CHECK_UPDATE) ? (int)v.Find(REG_CHECK_UPDATE).Value : 1;
             _update = (value != 0);
             value = v.Contains(REG_ADVANCED_MODE) ? (int)v.Find(REG_ADVANCED_MODE).Value : 0;
@@ -1044,6 +1057,12 @@ namespace CubePDF
             {
                 if (x == value) _filter = (Parameter.ImageFilters)value;
             }
+
+            value = v.Contains(REG_SAVE_SETTING) ? (int)v.Find(REG_SAVE_SETTING).Value : 0;
+            foreach (int x in Enum.GetValues(typeof(Parameter.SaveSettings)))
+            {
+                if (x == value) _save = (Parameter.SaveSettings)value;
+            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -1075,8 +1094,6 @@ namespace CubePDF
             config.Parameters.Add(new ParameterElement(REG_GRAYSCALE, ParameterType.Integer, flag));
             flag = _web ? 1 : 0;
             config.Parameters.Add(new ParameterElement(REG_WEB_OPTIMIZE, ParameterType.Integer, flag));
-            flag = _save ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(REG_SAVE_SETTING, ParameterType.Integer, flag));
             flag = _update ? 1 : 0;
             config.Parameters.Add(new ParameterElement(REG_CHECK_UPDATE, ParameterType.Integer, flag));
             flag = _advance ? 1 : 0;
@@ -1094,6 +1111,7 @@ namespace CubePDF
             config.Parameters.Add(new ParameterElement(REG_POST_PROCESS, ParameterType.Integer, (int)_postproc));
             config.Parameters.Add(new ParameterElement(REG_DOWNSAMPLING, ParameterType.Integer, (int)_downsampling));
             config.Parameters.Add(new ParameterElement(REG_IMAGEFILTER, ParameterType.Integer, (int)_filter));
+            config.Parameters.Add(new ParameterElement(REG_SAVE_SETTING, ParameterType.Integer, (int)_save));
 
             // アップデートプログラムの登録および削除
             using (var startup = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run"))
@@ -1131,11 +1149,11 @@ namespace CubePDF
         private Parameter.PostProcesses _postproc = Parameter.PostProcesses.Open;
         private Parameter.DownSamplings _downsampling = Parameter.DownSamplings.None;
         private Parameter.ImageFilters _filter = Parameter.ImageFilters.FlateEncode;
+        private Parameter.SaveSettings _save = Parameter.SaveSettings.None;
         private bool _rotation = true;
         private bool _embed = true;
         private bool _grayscale = false;
         private bool _web = false;
-        private bool _save = false;
         private bool _update = true;
         private bool _visible = true;
         private bool _advance = false;
