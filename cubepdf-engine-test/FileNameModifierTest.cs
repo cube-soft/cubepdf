@@ -52,7 +52,7 @@ namespace CubePDF
                 Assert.AreEqual("C__folder_to_sample.txt", FileNameModifier.GetFileName(@"C:\folder\to\sample.txt"));
                 Assert.AreEqual("http___example.com_index.html", FileNameModifier.GetFileName(@"http://example.com/index.html"));
                 Assert.AreEqual("_foo_bar_bas_hoge__", FileNameModifier.GetFileName("<foo?bar:bas|hoge*>"));
-                Assert.AreEqual("CubePDF", FileNameModifier.GetFileName(""));
+                Assert.AreEqual("CubePDF", FileNameModifier.GetFileName(string.Empty));
                 Assert.AreEqual("CubePDF", FileNameModifier.GetFileName(null));
             }
             catch (Exception err)

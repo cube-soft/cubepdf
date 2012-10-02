@@ -280,18 +280,17 @@ namespace CubePDF
                 Assert.AreEqual(dummy, test.UserProgram, "UserProgram");
                 Assert.AreEqual(dummy, test.UserArguments, "UserArguments");
 
-                string empty = "";
                 string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                test.InputPath = empty;
-                test.OutputPath = empty;
-                test.UserProgram = empty;
-                test.UserArguments = empty;
+                test.InputPath = string.Empty;
+                test.OutputPath = string.Empty;
+                test.UserProgram = string.Empty;
+                test.UserArguments = string.Empty;
                 Assert.IsTrue(test.Save(), "Save from registry (second)");
                 Assert.IsTrue(test.Load(), "Load from registry (second)");
                 Assert.AreEqual(desktop, test.OutputPath, "LastAccess"); // empty ではない
                 Assert.AreEqual(desktop, test.InputPath, "LastInputAccess"); // empty ではない
-                Assert.AreEqual(empty, test.UserProgram, "UserProgram");
-                Assert.AreEqual(empty, test.UserArguments, "UserArguments");
+                Assert.AreEqual(string.Empty, test.UserProgram, "UserProgram");
+                Assert.AreEqual(string.Empty, test.UserArguments, "UserArguments");
             }
         }
 
@@ -301,7 +300,7 @@ namespace CubePDF
         /// 
         /// <summary>
         /// レジストリの文字列型の値を消去したときのテスト。
-        /// 空を消去して、再度ロードした時の値は以下のようになる（空文字で
+        /// 値を消去して、再度ロードした時の値は以下のようになる（空文字で
         /// 保存した場合と、結果が若干異なる）。
         /// 
         /// InputPath       : デスクトップへのパス
@@ -336,7 +335,7 @@ namespace CubePDF
                 Assert.IsTrue(test.Load(), "Load from registry (second)");
                 Assert.AreEqual(desktop, test.OutputPath, "LastAccess");
                 Assert.AreEqual(desktop, test.InputPath, "LastInputAccess");
-                Assert.AreEqual("", test.UserProgram, "UserProgram");
+                Assert.AreEqual(string.Empty, test.UserProgram, "UserProgram");
                 Assert.AreEqual("%%FILE%%", test.UserArguments, "UserArguments");
             }
         }
@@ -364,7 +363,9 @@ namespace CubePDF
                     var subkey = Registry.CurrentUser.OpenSubKey(@"Software\CubeSoft\CubePDF\v2", true);
                     Assert.IsTrue(subkey != null, @"HKCU\Software\CubeSoft\CubePDF\v2");
 
-                    // コンボボックスの値（ImageFilter のみ GUI 上はチェックボックス）
+                    // コンボボックスの値
+                    // NOTE: ImageFilter のみ GUI 上はチェックボックスである。
+                    // また、SaveSetting の値は、1.0.0RC4 以降、GUI 上では使用されていない。
                     subkey.SetValue("FileType", 256);
                     subkey.SetValue("PDFVersion", 1024);
                     subkey.SetValue("Resolution", 5012);
