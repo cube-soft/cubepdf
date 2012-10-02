@@ -20,7 +20,9 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
+using System.Text;
 using NUnit.Framework;
+using iTextPDF = iTextSharp.text.pdf;
 
 namespace CubePDF
 {
@@ -30,8 +32,9 @@ namespace CubePDF
     ///
     /// <summary>
     /// いくつかの *.ps ファイルで変換テストを行うためのクラス。
-    /// 成功したかどうかは、Run() メソッドの戻り値、および出力ファイルが
-    /// 存在しているかのみで判断している。
+    /// PDF については、iTextSharp ライブラリを用いて、簡単なチェックを
+    /// 行っている。それ以外のファイルタイプについては、Run() メソッドの
+    /// 戻り値、および出力ファイルが存在しているかのみで判断している。
     /// 
     /// NOTE: このテストクラスは時間がかかるので、普段はテストケースから
     /// 外しておく事。
@@ -41,6 +44,48 @@ namespace CubePDF
     [TestFixture]
     public class ConverterTest
     {
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ValidatePDF
+        /// 
+        /// <summary>
+        /// 生成された PDF が有効なものかどうかをチェックします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void ValidatePDF(UserSetting setting)
+        {
+            try
+            {
+                iTextSharp.text.pdf.PdfReader reader = null;
+                if (setting.Password == string.Empty && setting.Permission.Password == string.Empty)
+                {
+                    reader = new iTextSharp.text.pdf.PdfReader(setting.OutputPath);
+                }
+                else
+                {
+                    var password = (setting.Permission.Password != string.Empty) ? setting.Permission.Password : setting.Password;
+                    reader = new iTextSharp.text.pdf.PdfReader(setting.OutputPath, Encoding.UTF8.GetBytes(password));
+                }
+
+                // 文書プロパティのチェック
+                var title = reader.Info.ContainsKey("Title") ? reader.Info["Title"] : string.Empty;
+                Assert.AreEqual(setting.Document.Title, title, String.Format("{0}: title unmatched", title));
+                var author = reader.Info.ContainsKey("Author") ? reader.Info["Author"] : string.Empty;
+                Assert.AreEqual(setting.Document.Author, author, String.Format("{0}: author unmatched", author));
+                var subject = reader.Info.ContainsKey("Subject") ? reader.Info["Subject"] : string.Empty;
+                Assert.AreEqual(setting.Document.Subtitle, subject, String.Format("{0}: subject unmatched", subject));
+                var keywords = reader.Info.ContainsKey("Keywords") ? reader.Info["Keywords"] : string.Empty;
+                Assert.AreEqual(setting.Document.Keyword, keywords, String.Format("{0}: keywords unmatched", keywords));
+
+                reader.Close();
+            }
+            catch (Exception err)
+            {
+                Assert.Fail(err.ToString());
+            }
+        }
+        
         /* ----------------------------------------------------------------- */
         ///
         /// ExecConvert
@@ -71,7 +116,11 @@ namespace CubePDF
                 var converter = new Converter();
                 Assert.IsTrue(converter.Run(setting), String.Format("Converter.Run() failed. source file: {0}", file));
                 bool status = File.Exists(setting.OutputPath);
-                if (!status)
+                if (status)
+                {
+                    if (setting.FileType == Parameter.FileTypes.PDF) ValidatePDF(setting);
+                }
+                else
                 {
                     string tmp = String.Format("{0}\\{1}-001{2}",
                         Path.GetDirectoryName(setting.OutputPath),
