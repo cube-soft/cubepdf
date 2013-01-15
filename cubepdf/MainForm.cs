@@ -24,6 +24,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace CubePDF {
     /* --------------------------------------------------------------------- */
@@ -115,7 +116,7 @@ namespace CubePDF {
             }
             this.DownSamplingComboBox.SelectedIndex = 0;
         }
-        
+
         #endregion
         
         /* ----------------------------------------------------------------- */
@@ -834,6 +835,67 @@ namespace CubePDF {
         {
             this.SettingButton.BackgroundImage = Properties.Resources.button_setting;
             this.SettingButton.Enabled = true;
+        }
+
+        [DllImport("user32.dll")]
+        private static extern bool GetCaretPos(out Point point);
+        private ToolTip tooltip = new ToolTip();
+
+        /* ----------------------------------------------------------------- */
+        /// 
+        /// PathTextBoxChanged
+        /// <summary>
+        /// ファイル名を入力するテキストボックスの内容が変更されたら実行。
+        /// 入力したファイル名に無効な文字が入っていないかチェックする。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void PathTextBoxChanged(object sender, EventArgs e)
+        {
+            TextBox textbox = sender as TextBox;
+            if (textbox == null) return;
+
+            int currentsel = textbox.SelectionStart;
+            char[] invalidfilenamechars = Path.GetInvalidFileNameChars();
+            char[] invalidpathchars = Path.GetInvalidPathChars();
+            Point apipoint;
+            GetCaretPos(out apipoint);
+
+            if (textbox.Text.IndexOfAny(invalidpathchars) >= 0)
+            {
+                tooltip.Hide(this);
+                string tmp = string.Join("", textbox.Text.Split(invalidpathchars));
+                string tmp2 = string.Join("", Path.GetFileName(tmp).Split(invalidfilenamechars));
+                textbox.Text = Path.GetDirectoryName(tmp) + "\\" + tmp2;
+                textbox.SelectionStart = currentsel;
+                
+                tooltip.IsBalloon = true;
+                tooltip.SetToolTip(textbox, " ");
+                tooltip.ToolTipTitle = "パス名には次の文字は使えません。";
+                tooltip.Show("\" < > |", textbox, apipoint.X+12, apipoint.Y+12, 8000);
+            }
+            else
+            {
+                string filename = Path.GetFileName(textbox.Text);
+                if (filename.IndexOfAny(invalidfilenamechars) >= 0)
+                {
+                    tooltip.Hide(this);
+                    string tmp = string.Join("", textbox.Text.Split(invalidpathchars));
+                    string tmp2 = string.Join("", Path.GetFileName(tmp).Split(invalidfilenamechars));
+                    textbox.Text = Path.GetDirectoryName(tmp) + "\\" + tmp2;
+                    textbox.SelectionStart = currentsel;
+                    
+                    tooltip.IsBalloon = true;
+                    tooltip.SetToolTip(textbox, " ");
+                    tooltip.ToolTipTitle = "ファイル名には次の文字は使えません。";
+                    tooltip.Show("/ : ? \\ \" * < > |", textbox, apipoint.X+12, apipoint.Y+12, 8000);
+                }
+                else
+                {
+                    tooltip.Hide(this);
+                    return;
+                }
+            }
         }
 
         #endregion

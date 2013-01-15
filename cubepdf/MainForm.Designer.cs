@@ -263,6 +263,7 @@
             this.InputPathTextBox.Size = new System.Drawing.Size(273, 19);
             this.InputPathTextBox.TabIndex = 26;
             this.InputPathTextBox.TextChanged += new System.EventHandler(this.SettingChanged);
+            this.InputPathTextBox.TextChanged += new System.EventHandler(this.PathTextBoxChanged);
             // 
             // OutputPathPanel
             // 
@@ -307,6 +308,7 @@
             this.OutputPathTextBox.Click += new System.EventHandler(this.OutputPathTextBox_Click);
             this.OutputPathTextBox.TextChanged += new System.EventHandler(this.SettingChanged);
             this.OutputPathTextBox.Leave += new System.EventHandler(this.OutputPathTextBox_Leave);
+            this.OutputPathTextBox.TextChanged += new System.EventHandler(this.PathTextBoxChanged);
             // 
             // PostProcessPanel
             // 
