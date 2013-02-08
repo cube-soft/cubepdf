@@ -272,13 +272,13 @@ namespace CubePDF {
             setting.UserProgram = this.UserProgramTextBox.Text;
 
             // コンボボックスのインデックス関連
-            setting.FileType     = Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex);
+            /*setting.FileType     = Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex);
             setting.PDFVersion   = Translator.IndexToPDFVersion(this.PDFVersionComboBox.SelectedIndex);
             setting.Resolution   = Translator.IndexToResolution(this.ResolutionComboBox.SelectedIndex);
             setting.ExistedFile  = Translator.IndexToExistedFile(this.ExistedFileComboBox.SelectedIndex);
             setting.PostProcess  = Translator.IndexToPostProcess(_postproc.SelectedIndex);
             setting.DownSampling = Translator.IndexToDownSampling(this.DownSamplingComboBox.SelectedIndex);
-
+            */
             // チェックボックスのフラグ関連
             setting.PageRotation = this.PageLotationCheckBox.Checked;
             setting.EmbedFont = this.EmbedFontCheckBox.Checked;

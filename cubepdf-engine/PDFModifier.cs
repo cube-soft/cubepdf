@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Microsoft.VisualBasic.FileIO;
 
 namespace CubePDF
 {
@@ -150,7 +151,7 @@ namespace CubePDF
             bool status = true;
             try
             {
-                File.Move(setting.OutputPath, tmp);
+                FileSystem.MoveFile(setting.OutputPath, tmp, UIOption.OnlyErrorDialogs);
                 reader = new iTextSharp.text.pdf.PdfReader(tmp);
                 iTextSharp.text.pdf.PdfStamper writer = new iTextSharp.text.pdf.PdfStamper(reader,
                     new FileStream(setting.OutputPath, FileMode.Create), PDFVersionToiText(setting.PDFVersion));
