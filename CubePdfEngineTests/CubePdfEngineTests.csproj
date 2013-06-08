@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CubePDF</RootNamespace>
-    <AssemblyName>cubepdf-engine-test</AssemblyName>
+    <AssemblyName>CubePdfEngineTests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
@@ -136,7 +136,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CubePdf.Engine\CubePdf.Engine.csproj">
       <Project>{F506801C-B1B4-4446-8E8D-1E97E509255C}</Project>
-      <Name>cubepdf-engine</Name>
+      <Name>CubePdf.Engine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -149,8 +149,7 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(ProjectDir)
-copy $(TargetDir)itextsharp.dll $(ProjectDir)
-copy $(TargetDir)cubepdf-engine.dll $(ProjectDir)
+copy $(TargetDir)*.dll $(ProjectDir)
 copy $(ProjectDir)..\release\$(PlatformName)\gsdll32.dll $(ProjectDir)</PostBuildEvent>
     <PreBuildEvent>
     </PreBuildEvent>

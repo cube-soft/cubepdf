@@ -98,10 +98,10 @@ namespace CubePDF
         /* ----------------------------------------------------------------- */
         private void ExecConvert(UserSetting setting, string suffix)
         {
-            string output = System.Environment.CurrentDirectory + "\\results";
+            string output = System.Environment.CurrentDirectory + "\\Results";
             if (!System.IO.Directory.Exists(output)) System.IO.Directory.CreateDirectory(output);
 
-            foreach (string file in Directory.GetFiles("examples", "*.ps"))
+            foreach (string file in Directory.GetFiles("Examples", "*.ps"))
             {
                 string filename = Path.GetFileNameWithoutExtension(file);
                 string extension = Parameter.Extension((Parameter.FileTypes)setting.FileType);
