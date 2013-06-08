@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
-[assembly: AssemblyTitle("CubePDF update checker")]
+[assembly: AssemblyTitle("UpdateChecker")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("CubeSoft")]
-[assembly: AssemblyProduct("CubePDF update checker")]
-[assembly: AssemblyCopyright("Copyright © CubeSoft 2010")]
+[assembly: AssemblyCompany("株式会社キューブ・ソフト")]
+[assembly: AssemblyProduct("UpdateChecker")]
+[assembly: AssemblyCopyright("Copyright ©  2013 CubeSoft, Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // 次の GUID は、このプロジェクトが COM に公開される場合の、typelib の ID です
-[assembly: Guid("a374e22d-9f8f-43d1-9538-bbc9adf602bd")]
+[assembly: Guid("4463574a-14ee-4c2a-87c8-48cab0e47834")]
 
 // アセンブリのバージョン情報は、以下の 4 つの値で構成されています:
 //
