@@ -98,7 +98,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void ExecConvert(UserSetting setting, string suffix)
         {
-            string output = System.Environment.CurrentDirectory + "\\Results";
+            string output = System.IO.Path.Combine(Environment.CurrentDirectory, "Results");
             if (!System.IO.Directory.Exists(output)) System.IO.Directory.CreateDirectory(output);
 
             foreach (string file in Directory.GetFiles("Examples", "*.ps"))
