@@ -48,11 +48,16 @@ namespace CubePdf {
         ///
         /// Run
         /// 
-        /// NOTE: 文書プロパティ，パスワード関連とファイル結合は iText
-        /// に任せる．出力パスに指定されたファイルが存在する場合がある．
-        /// そのときは，_setting.ExistedFile の指定に従う．
-        /// ExistedFile: 上書き，先頭に結合，末尾に結合
-        /// 結合部分は，iText が行う．
+        /// <summary>
+        /// ファイル変換処理を実行します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 文書プロパティ、パスワード関連とファイル結合は iTextSharp
+        /// を利用します。出力パスに指定されたファイルが既に存在する場合、
+        /// ExistedFile プロパティの指定（上書き、先頭に結合、末尾に結合、
+        /// リネーム）に従います。
+        /// </remarks>
         /// 
         /* ----------------------------------------------------------------- */
         public bool Run(UserSetting setting) {
@@ -79,7 +84,7 @@ namespace CubePdf {
                 
                 if (setting.FileType == Parameter.FileTypes.PDF)
                 {
-                    PDFModifier modifier = new PDFModifier(_escaped, _messages);
+                    PdfModifier modifier = new PdfModifier(_escaped, _messages);
                     status = modifier.Run(setting);
                     _messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.PDFModifier.Run: {0}", status.ToString())));
                 }

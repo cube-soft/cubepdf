@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 /*
- *  PDFModifier.cs
+ *  PdfModifier.cs
  *
  *  Copyright (c) 2009 - 2011 CubeSoft, Inc. All rights reserved.
  *
@@ -25,14 +25,14 @@ using System.Diagnostics;
 namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
-    /// PDFModifier
+    /// PdfModifier
     /* --------------------------------------------------------------------- */
-    class PDFModifier
+    class PdfModifier
     {
         /* ----------------------------------------------------------------- */
         /// Constructor
         /* ----------------------------------------------------------------- */
-        public PDFModifier()
+        public PdfModifier()
         {
             _messages = new List<CubePdf.Message>();
         }
@@ -40,7 +40,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         /// Constructor
         /* ----------------------------------------------------------------- */
-        public PDFModifier(string escaped)
+        public PdfModifier(string escaped)
         {
             _escaped = escaped;
             _messages = new List<CubePdf.Message>();
@@ -49,7 +49,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         /// Constructor
         /* ----------------------------------------------------------------- */
-        public PDFModifier(string escaped, List<CubePdf.Message> messages)
+        public PdfModifier(string escaped, List<CubePdf.Message> messages)
         {
             _escaped = escaped;
             _messages = messages;
