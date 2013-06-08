@@ -1,8 +1,8 @@
 ﻿/* ------------------------------------------------------------------------- */
 /*
- *  GsConverter.cs
+ *  Ghostscript/Converter.cs
  *
- *  Copyright (c) 2009 - 2011 CubeSoft, Inc. All rights reserved.
+ *  Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
-using Interop = System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 
 namespace CubePDF.Ghostscript
 {
@@ -286,7 +286,7 @@ namespace CubePDF.Ghostscript
                 try
                 {
                     gsapi_new_instance(out instance, IntPtr.Zero);
-                    if (instance == IntPtr.Zero) throw new Interop.ExternalException("gsapi_new_instance() failed.");
+                    if (instance == IntPtr.Zero) throw new ExternalException("gsapi_new_instance() failed.");
 
                     int result = gsapi_init_with_args(instance, args.Length, args);
                     // TODO: pdfopt がエラーコード -101 を返す．
@@ -294,7 +294,7 @@ namespace CubePDF.Ghostscript
                     // 暫定的に -101 は OK とする。エラーコードが返る理由を要調査．
                     if (result < 0 && result != -101)
                     {
-                        throw new Interop.ExternalException(String.Format("gsapi_init_with_args() failed (status code: {0})", result));
+                        throw new ExternalException(String.Format("gsapi_init_with_args() failed (status code: {0})", result));
                     }
                 }
                 catch (Exception err)
@@ -525,16 +525,16 @@ namespace CubePDF.Ghostscript
 
         #region Ghostscript APIs
 
-        [Interop.DllImport(GS_DLL, EntryPoint = "gsapi_new_instance")]
+        [DllImport(GS_DLL, EntryPoint = "gsapi_new_instance")]
         private static extern int gsapi_new_instance(out IntPtr pinstance, IntPtr caller_handle);
 
-        [Interop.DllImport(GS_DLL, EntryPoint = "gsapi_init_with_args")]
+        [DllImport(GS_DLL, EntryPoint = "gsapi_init_with_args")]
         private static extern int gsapi_init_with_args(IntPtr instance, int argc, string[] argv);
 
-        [Interop.DllImport(GS_DLL, EntryPoint = "gsapi_exit")]
+        [DllImport(GS_DLL, EntryPoint = "gsapi_exit")]
         private static extern int gsapi_exit(IntPtr instance);
 
-        [Interop.DllImport(GS_DLL, EntryPoint = "gsapi_delete_instance")]
+        [DllImport(GS_DLL, EntryPoint = "gsapi_delete_instance")]
         private static extern void gsapi_delete_instance(IntPtr instance);
 
         #endregion

@@ -181,9 +181,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\cubepdf-engine\cubepdf-engine.csproj">
+    <ProjectReference Include="..\CubePdf.Engine\CubePdf.Engine.csproj">
       <Project>{F506801C-B1B4-4446-8E8D-1E97E509255C}</Project>
-      <Name>cubepdf-engine</Name>
+      <Name>CubePdf.Engine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

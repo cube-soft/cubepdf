@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cubepdf", "cubepdf\cubepdf.csproj", "{39CDF0CB-B216-44D1-A3E9-D2A5D7CFE4F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CubePdf", "CubePdf\CubePdf.csproj", "{39CDF0CB-B216-44D1-A3E9-D2A5D7CFE4F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cubepdf-engine", "cubepdf-engine\cubepdf-engine.csproj", "{F506801C-B1B4-4446-8E8D-1E97E509255C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CubePdf.Engine", "CubePdf.Engine\CubePdf.Engine.csproj", "{F506801C-B1B4-4446-8E8D-1E97E509255C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cubepdf-engine-test", "cubepdf-engine-test\cubepdf-engine-test.csproj", "{2779F1A0-5F12-40DF-AFC5-64F98C0B87F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CubePdfEngineTests", "CubePdfEngineTests\CubePdfEngineTests.csproj", "{2779F1A0-5F12-40DF-AFC5-64F98C0B87F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
