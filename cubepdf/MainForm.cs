@@ -139,8 +139,8 @@ namespace CubePDF {
             if (enabled) status = (password == confirm);
             if (!status) {
                 MessageBox.Show(
-                    Properties.Settings.Default.PasswordUnmatched,
-                    Properties.Settings.Default.Error,
+                    Properties.Resources.PasswordUnmatched,
+                    Properties.Resources.Error,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
                 );
@@ -164,8 +164,8 @@ namespace CubePDF {
             if (this.OutputPathTextBox.Text.Length == 0)
             {
                 MessageBox.Show(
-                    Properties.Settings.Default.FileNotSpecified,
-                    Properties.Settings.Default.Error,
+                    Properties.Resources.FileNotSpecified,
+                    Properties.Resources.Error,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
                 );
@@ -183,11 +183,11 @@ namespace CubePDF {
                 if (File.Exists(this.OutputPathTextBox.Text) && Translator.IndexToExistedFile(this.ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
                 {
                     // {0} は既に存在します。{1}しますか？
-                    string message = String.Format(Properties.Settings.Default.FileExists,
+                    string message = String.Format(Properties.Resources.FileExists,
                         this.OutputPathTextBox.Text, Appearance.ExistedFileString((Parameter.ExistedFiles)do_existed_file));
                     if (MessageBox.Show(
                             message,
-                            Properties.Settings.Default.OverwritePrompt,
+                            Properties.Resources.OverwritePrompt,
                             MessageBoxButtons.OKCancel,
                             MessageBoxIcon.Warning) == DialogResult.Cancel)
                     {
@@ -452,7 +452,7 @@ namespace CubePDF {
         private void InputPathButton_Click(object sender, EventArgs e) {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.CheckFileExists = true;
-            dialog.Filter = Properties.Settings.Default.InputPathFilter;
+            dialog.Filter = Properties.Resources.InputPathFilter;
             if (this.InputPathTextBox.Text.Length > 0) dialog.FileName = this.InputPathTextBox.Text;
             if (dialog.ShowDialog() != DialogResult.OK) return;
             
@@ -466,7 +466,7 @@ namespace CubePDF {
         private void UserProgramButton_Click(object sender, EventArgs e) {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.CheckFileExists = true;
-            dialog.Filter = Properties.Settings.Default.UserProgramFilter;
+            dialog.Filter = Properties.Resources.UserProgramFilter;
             if (this.UserProgramTextBox.Text.Length > 0) dialog.FileName = this.UserProgramTextBox.Text;
             if (dialog.ShowDialog() != DialogResult.OK) return;
 
@@ -636,7 +636,7 @@ namespace CubePDF {
             _tips.InitialDelay = 500;
             _tips.ReshowDelay = 1000;
             _tips.AutoPopDelay = 1000;
-            _tips.SetToolTip(control, Properties.Settings.Default.About);
+            _tips.SetToolTip(control, Properties.Resources.About);
         }
 
         /* ----------------------------------------------------------------- */
@@ -909,11 +909,5 @@ namespace CubePDF {
         private ToolTip _tips = new ToolTip();
         private List<CubePDF.Message> _messages = new List<Message>();
         #endregion
-
-        private void SettingButton_MouseEnter(object sender, EventArgs e)
-        {
-            this.Cursor = Cursors.No;
-        }
-
     }
 }
