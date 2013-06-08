@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter.cs" />
+    <Compile Include="FileIOWrapper.cs" />
     <Compile Include="FileNameModifier.cs" />
     <Compile Include="GsConverter.cs">
       <SubType>Code</SubType>

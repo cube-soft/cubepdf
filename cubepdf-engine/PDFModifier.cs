@@ -19,10 +19,8 @@
  */
 /* ------------------------------------------------------------------------- */
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Microsoft.VisualBasic.FileIO;
 
 namespace CubePDF
 {
@@ -89,7 +87,7 @@ namespace CubePDF
                 (setting.ExistedFile != Parameter.ExistedFiles.MergeHead &&
                 setting.ExistedFile != Parameter.ExistedFiles.MergeTail)) return true;
 
-            string tmp = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
+            string tmp = Utility.WorkingDirectory + '\\' + System.IO.Path.GetRandomFileName();
             string head = (setting.ExistedFile == Parameter.ExistedFiles.MergeHead) ? setting.OutputPath : escaped;
             string tail = (setting.ExistedFile == Parameter.ExistedFiles.MergeTail) ? setting.OutputPath : escaped;
 
@@ -99,7 +97,7 @@ namespace CubePDF
                 iTextSharp.text.pdf.PdfReader reader_head = Open(head, setting.Permission.Password);
                 iTextSharp.text.pdf.PdfReader reader_tail = Open(tail, setting.Permission.Password);
 
-                using (FileStream fs = new FileStream(tmp, FileMode.Create))
+                using (var fs = new System.IO.FileStream(tmp, System.IO.FileMode.Create))
                 {
                     iTextSharp.text.pdf.PdfCopyFields copy = new iTextSharp.text.pdf.PdfCopyFields(fs);
                     copy.AddDocument(reader_head);
@@ -117,12 +115,12 @@ namespace CubePDF
             }
             finally
             {
-                if (File.Exists(setting.OutputPath)) File.Delete(setting.OutputPath);
-                if (!status || !File.Exists(tmp)) File.Move(escaped, setting.OutputPath);
-                else File.Move(tmp, setting.OutputPath);
+                if (FileIOWrapper.Exists(setting.OutputPath)) FileIOWrapper.Delete(setting.OutputPath);
+                if (!status || !FileIOWrapper.Exists(tmp)) FileIOWrapper.Move(escaped, setting.OutputPath);
+                else FileIOWrapper.Move(tmp, setting.OutputPath);
 
-                if (File.Exists(tmp)) File.Delete(tmp);
-                if (File.Exists(escaped)) File.Delete(escaped);
+                if (FileIOWrapper.Exists(tmp)) System.IO.File.Delete(tmp); // FileIOWrapper.Delete(tmp);
+                if (FileIOWrapper.Exists(escaped)) System.IO.File.Delete(escaped); // FileIOWrapper.Delete(escaped);
             }
 
             return status;
@@ -143,18 +141,18 @@ namespace CubePDF
         /* ----------------------------------------------------------------- */
         private bool AddInformation(UserSetting setting)
         {
-            if (!File.Exists(setting.OutputPath)) return false;
+            if (!FileIOWrapper.Exists(setting.OutputPath)) return false;
 
-            string tmp = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
+            string tmp = Utility.WorkingDirectory + '\\' + System.IO.Path.GetRandomFileName();
 
             iTextSharp.text.pdf.PdfReader reader = null;
             bool status = true;
             try
             {
-                FileSystem.MoveFile(setting.OutputPath, tmp, UIOption.OnlyErrorDialogs);
+                FileIOWrapper.Move(setting.OutputPath, tmp);
                 reader = new iTextSharp.text.pdf.PdfReader(tmp);
-                iTextSharp.text.pdf.PdfStamper writer = new iTextSharp.text.pdf.PdfStamper(reader,
-                    new FileStream(setting.OutputPath, FileMode.Create), PDFVersionToiText(setting.PDFVersion));
+                var writer = new iTextSharp.text.pdf.PdfStamper(reader,
+                    new System.IO.FileStream(setting.OutputPath, System.IO.FileMode.Create), PDFVersionToiText(setting.PDFVersion));
 
                 // 文書プロパティ
                 Dictionary<string, string> info = new Dictionary<string, string>();
@@ -193,14 +191,14 @@ namespace CubePDF
             finally
             {
                 if (reader != null) reader.Close();
-                if (File.Exists(tmp))
+                if (FileIOWrapper.Exists(tmp))
                 {
-                    if (!File.Exists(setting.OutputPath)) File.Move(tmp, setting.OutputPath);
+                    if (!FileIOWrapper.Exists(setting.OutputPath)) FileIOWrapper.Move(tmp, setting.OutputPath);
                     else
                     {
-                        FileInfo fi = new FileInfo(setting.OutputPath);
-                        if (fi.Length == 0) File.Move(tmp, setting.OutputPath);
-                        else File.Delete(tmp);
+                        var fi = new System.IO.FileInfo(setting.OutputPath);
+                        if (fi.Length == 0) FileIOWrapper.Move(tmp, setting.OutputPath);
+                        else System.IO.File.Delete(tmp); // FileIOWrapper.Delete(tmp);
                     }
                 }
             }
@@ -213,14 +211,14 @@ namespace CubePDF
         /* ----------------------------------------------------------------- */
         private bool WebOptimize(UserSetting setting)
         {
-            string tmp = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
+            string tmp = Utility.WorkingDirectory + '\\' + System.IO.Path.GetRandomFileName();
             Ghostscript.Converter gs = new CubePDF.Ghostscript.Converter(_messages);
             gs.Device = Ghostscript.Devices.PDF_Opt;
             bool status = true;
             try
             {
-                if (File.Exists(tmp)) File.Delete(tmp);
-                File.Move(setting.OutputPath, tmp);
+                if (FileIOWrapper.Exists(tmp)) FileIOWrapper.Delete(tmp);
+                FileIOWrapper.Move(setting.OutputPath, tmp);
                 gs.AddInclude(setting.LibPath + @"\lib");
                 gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
                 gs.PageRotation = setting.PageRotation;
@@ -253,12 +251,12 @@ namespace CubePDF
             }
             finally
             {
-                if (!File.Exists(setting.OutputPath)) File.Move(tmp, setting.OutputPath);
+                if (!FileIOWrapper.Exists(setting.OutputPath)) FileIOWrapper.Move(tmp, setting.OutputPath);
                 else
                 {
-                    FileInfo fi = new FileInfo(setting.OutputPath);
-                    if (fi.Length == 0) File.Move(tmp, setting.OutputPath);
-                    else File.Delete(tmp);
+                    var fi = new System.IO.FileInfo(setting.OutputPath);
+                    if (fi.Length == 0) FileIOWrapper.Move(tmp, setting.OutputPath);
+                    else System.IO.File.Delete(tmp); // FileWrapper.Delete(tmp);
                 }
             }
 

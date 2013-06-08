@@ -266,7 +266,7 @@ namespace CubePDF
                 // 作業ディレクトリの作成
                 string work = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
                 if (System.IO.Directory.Exists(work)) System.IO.Directory.Delete(work, true);
-                else if (System.IO.File.Exists(work)) System.IO.File.Delete(work);
+                else if (FileIOWrapper.Exists(work)) FileIOWrapper.Delete(work);
                 System.IO.Directory.CreateDirectory(work);
 
                 List<string> copies = this.EscapeSources(sources, work);
@@ -333,14 +333,14 @@ namespace CubePDF
                 {
                     foreach (string path in sources)
                     {
-                        if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
+                        if (FileIOWrapper.Exists(path)) FileIOWrapper.Delete(path);
                     }
 
                     string[] files = Directory.GetFiles(work);
                     if (files.Length == 1)
                     {
-                        if (System.IO.File.Exists(dest)) System.IO.File.Delete(dest);
-                        System.IO.File.Move(work + '\\' + System.IO.Path.GetFileName(files[0]), dest);
+                        if (FileIOWrapper.Exists(dest)) FileIOWrapper.Delete(dest);
+                        FileIOWrapper.Move(work + '\\' + System.IO.Path.GetFileName(files[0]), dest);
                     }
                     else if (files.Length > 1)
                     {
@@ -350,8 +350,8 @@ namespace CubePDF
                             if (System.IO.Path.GetExtension(path) == ".ps") continue;
                             string leaf = System.IO.Path.GetFileName(path);
                             string target = System.String.Format("{0}\\{1}-{2:D3}{3}", root, filename, i, ext);
-                            if (System.IO.File.Exists(target)) System.IO.File.Delete(target);
-                            System.IO.File.Move(work + '\\' + leaf, target);
+                            if (FileIOWrapper.Exists(target)) FileIOWrapper.Delete(target);
+                            FileIOWrapper.Move(work + '\\' + leaf, target);
                             i++;
                         }
                     }
@@ -524,9 +524,9 @@ namespace CubePDF
                 foreach (string src in sources)
                 {
                     var tmp_src = work + '\\' + Path.GetRandomFileName().Replace('.', '_') + Path.GetExtension(src);
-                    if (System.IO.File.Exists(src))
+                    if (FileIOWrapper.Exists(src))
                     {
-                        System.IO.File.Copy(src, tmp_src, true); // TODO: このコピーのコスト
+                        FileIOWrapper.Copy(src, tmp_src); // TODO: このコピーのコスト
                         dest.Add(tmp_src);
                     }
                 }
