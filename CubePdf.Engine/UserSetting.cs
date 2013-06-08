@@ -22,7 +22,6 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
-using Cubic;
 
 namespace CubePdf
 {
@@ -257,9 +256,9 @@ namespace CubePdf
             {
                 using (RegistryKey root = Registry.CurrentUser.OpenSubKey(_RegRoot + '\\' + _RegVersion, false))
                 {
-                    var param = new ParameterManager();
-                    param.Load(root);
-                    this.Load(param);
+                    var document = new CubePdf.Settings.Document();
+                    document.Read(root);
+                    Load(document);
                 }
             }
             catch (Exception /* err */)
@@ -286,9 +285,7 @@ namespace CubePdf
 
             try
             {
-                var param = new ParameterManager();
-                param.Load(path, ParameterFileType.XML);
-                this.Load(param);
+                throw new NotImplementedException();
             }
             catch (Exception /* err */)
             {
@@ -313,12 +310,12 @@ namespace CubePdf
 
             try
             {
-                var param = new ParameterManager();
-                this.Save(param);
+                var document = new CubePdf.Settings.Document();
+                Save(document);
 
                 using (var root = Registry.CurrentUser.CreateSubKey(_RegRoot + '\\' + _RegVersion))
                 {
-                    param.Save(root);
+                    document.Write(root);
                 }
             }
             catch (Exception /* err */)
@@ -345,9 +342,7 @@ namespace CubePdf
 
             try
             {
-                var param = new ParameterManager();
-                this.Save(param);
-                param.Save(path, ParameterFileType.XML);
+                throw new NotImplementedException();
             }
             catch (Exception /* err */)
             {
@@ -976,92 +971,200 @@ namespace CubePdf
         /// Load
         ///
         /// <summary>
-        /// ParameterList クラスにロードされた内容を元に設定情報をロード
-        /// する．
+        /// CubePdf.Settings.Document オブジェクトから必要な情報をロード
+        /// します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void Load(ParameterManager param)
+        private void Load(CubePdf.Settings.Document document)
         {
-            var v = param.Parameters;
+            LoadPaths(document);
+            LoadFlags(document);
+            LoadIndices(document);
+        }
 
-            // パス関連
-            string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string s = v.Contains(_RegLastAccess) ? (string)v.Find(_RegLastAccess).Value : "";
-            _output = (s.Length > 0) ? s : desktop;
-            s = v.Contains(_RegLastInputAccess) ? (string)v.Find(_RegLastInputAccess).Value : "";
-            _input = (s.Length > 0) ? s : desktop;
-            s = v.Contains(_RegUserProgram) ? (string)v.Find(_RegUserProgram).Value : "";
-            _program = s;
-            s = v.Contains(_RegUserArguments) ? (string)v.Find(_RegUserArguments).Value : "%%FILE%%";
-            _argument = s;
+        /* ----------------------------------------------------------------- */
+        ///
+        /// LoadPaths
+        ///
+        /// <summary>
+        /// CubePdf.Settings.Document オブジェクトからパス関連の情報を
+        /// 抽出して、対応する変数にロードします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void LoadPaths(CubePdf.Settings.Document document)
+        {
+            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
-            // チェックボックスのフラグ関連
-            int value = v.Contains(_RegPageRotation) ? (int)v.Find(_RegPageRotation).Value : 1;
-            _rotation = (value != 0);
-            value = v.Contains(_RegEmbedFont) ? (int)v.Find(_RegEmbedFont).Value : 1;
-            _embed = (value != 0);
-            value = v.Contains(_RegGrayscale) ? (int)v.Find(_RegGrayscale).Value : 0;
-            _grayscale = (value != 0);
-            value = v.Contains(_RegWebOptimize) ? (int)v.Find(_RegWebOptimize).Value : 0;
-            _web = (value != 0);
-            value = v.Contains(_RegCheckUpdate) ? (int)v.Find(_RegCheckUpdate).Value : 1;
-            _update = (value != 0);
-            value = v.Contains(_RegAdvancedMode) ? (int)v.Find(_RegAdvancedMode).Value : 0;
-            _advance = (value != 0);
-            value = v.Contains(_RegVisible) ? (int)v.Find(_RegVisible).Value : 1;
-            _visible = (value != 0);
-            value = v.Contains(_RegSelectInput) ? (int)v.Find(_RegSelectInput).Value : 0;
-            _selectable = (value != 0);
+            var output = document.Root.Find(_RegLastAccess);
+            if (output != null) _output = output.GetValue(_output);
+            if (string.IsNullOrEmpty(_output)) _output = desktop;
 
+            var input = document.Root.Find(_RegLastInputAccess);
+            if (input != null) _input = input.GetValue(_input);
+            if (string.IsNullOrEmpty(_input)) _input = desktop;
 
-            // コンボボックスのインデックス関連
-            value = v.Contains(_RegFileType) ? (int)v.Find(_RegFileType).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.FileTypes)))
+            var program = document.Root.Find(_RegUserProgram);
+            if (program != null) _program = program.GetValue(_program);
+
+            var argument = document.Root.Find(_RegUserArguments);
+            if (argument != null) _argument = argument.GetValue(_argument);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// LoadFlags
+        ///
+        /// <summary>
+        /// CubePdf.Settings.Document オブジェクトから CubePDF メイン画面で
+        /// 表示されているチェックボックスのフラグ関連の情報を抽出して、
+        /// 対応する変数にロードします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void LoadFlags(CubePdf.Settings.Document document)
+        {
+            var rotation = document.Root.Find(_RegPageRotation);
+            if (rotation != null) _rotation = ((int)rotation.Value != 0);
+
+            var embed = document.Root.Find(_RegEmbedFont);
+            if (embed != null) _embed = ((int)embed.Value != 0);
+
+            var grayscale = document.Root.Find(_RegGrayscale);
+            if (grayscale != null) _grayscale = ((int)grayscale.Value != 0);
+
+            var web = document.Root.Find(_RegWebOptimize);
+            if (web != null) _web = ((int)web.Value != 0);
+
+            var update = document.Root.Find(_RegCheckUpdate);
+            if (update != null) _update = ((int)update.Value != 0);
+
+            var advance = document.Root.Find(_RegAdvancedMode);
+            if (advance != null) _advance = ((int)advance.Value != 0);
+
+            var visible = document.Root.Find(_RegVisible);
+            if (visible != null) _visible = ((int)visible.Value != 0);
+
+            var selectable = document.Root.Find(_RegSelectInput);
+            if (selectable != null) _selectable = ((int)selectable.Value != 0);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// LoadIndices
+        ///
+        /// <summary>
+        /// CubePdf.Settings.Document オブジェクトから CubePDF メイン画面で
+        /// 表示されているコンボボックスのインデックス関連の情報を抽出して、
+        /// 対応する変数にロードします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void LoadIndices(CubePdf.Settings.Document document)
+        {
+            var filetype = document.Root.Find(_RegFileType);
+            if (filetype != null)
             {
-                if (x == value) _type = (Parameter.FileTypes)value;
+                foreach (int item in Enum.GetValues(typeof(Parameter.FileTypes)))
+                {
+                    if (item == (int)filetype.Value)
+                    {
+                        _type = (Parameter.FileTypes)filetype.Value;
+                        break;
+                    }
+                }
             }
 
-            value = v.Contains(_RegPdfVersion) ? (int)v.Find(_RegPdfVersion).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.PDFVersions)))
+            var pdfversion = document.Root.Find(_RegPdfVersion);
+            if (pdfversion != null)
             {
-                if (x == value) _pdfver = (Parameter.PDFVersions)value;
+                foreach (int item in Enum.GetValues(typeof(Parameter.PDFVersions)))
+                {
+                    if (item == (int)pdfversion.Value)
+                    {
+                        _pdfver = (Parameter.PDFVersions)pdfversion.Value;
+                        break;
+                    }
+                }
             }
 
-            value = v.Contains(_RegResolution) ? (int)v.Find(_RegResolution).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.Resolutions)))
+            var resolution = document.Root.Find(_RegResolution);
+            if (resolution != null)
             {
-                if (x == value) _resolution = (Parameter.Resolutions)value;
+                foreach (int item in Enum.GetValues(typeof(Parameter.Resolutions)))
+                {
+                    if (item == (int)resolution.Value)
+                    {
+                        _resolution = (Parameter.Resolutions)resolution.Value;
+                        break;
+                    }
+                }
             }
 
-            value = v.Contains(_RegExistedFile) ? (int)v.Find(_RegExistedFile).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.ExistedFiles)))
+            var exist = document.Root.Find(_RegExistedFile);
+            if (exist != null)
             {
-                if (x == value) _exist = (Parameter.ExistedFiles)value;
+                foreach (int item in Enum.GetValues(typeof(Parameter.ExistedFiles)))
+                {
+                    if (item == (int)exist.Value)
+                    {
+                        _exist = (Parameter.ExistedFiles)exist.Value;
+                        break;
+                    }
+                }
             }
 
-            value = v.Contains(_RegPostProcess) ? (int)v.Find(_RegPostProcess).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.PostProcesses)))
+            var postproc = document.Root.Find(_RegPostProcess);
+            if (postproc != null)
             {
-                if (x == value) _postproc = (Parameter.PostProcesses)value;
+                foreach (int item in Enum.GetValues(typeof(Parameter.PostProcesses)))
+                {
+                    if (item == (int)postproc.Value)
+                    {
+                        _postproc = (Parameter.PostProcesses)postproc.Value;
+                        break;
+                    }
+                }
             }
 
-            value = v.Contains(_RegDownSampling) ? (int)v.Find(_RegDownSampling).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.DownSamplings)))
+            var downsampling = document.Root.Find(_RegDownSampling);
+            if (downsampling != null)
             {
-                if (x == value) _downsampling = (Parameter.DownSamplings)value;
+                foreach (int item in Enum.GetValues(typeof(Parameter.DownSamplings)))
+                {
+                    if (item == (int)downsampling.Value)
+                    {
+                        _downsampling = (Parameter.DownSamplings)downsampling.Value;
+                        break;
+                    }
+                }
             }
 
-            value = v.Contains(_RegImageFilter) ? (int)v.Find(_RegImageFilter).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.ImageFilters)))
+            var filter = document.Root.Find(_RegImageFilter);
+            if (filter != null)
             {
-                if (x == value) _filter = (Parameter.ImageFilters)value;
+                foreach (int item in Enum.GetValues(typeof(Parameter.ImageFilters)))
+                {
+                    if (item == (int)filter.Value)
+                    {
+                        _filter = (Parameter.ImageFilters)filter.Value;
+                        break;
+                    }
+                }
             }
 
-            value = v.Contains(_RegSaveSetting) ? (int)v.Find(_RegSaveSetting).Value : 0;
-            foreach (int x in Enum.GetValues(typeof(Parameter.SaveSettings)))
+            var save = document.Root.Find(_RegSaveSetting);
+            if (save != null)
             {
-                if (x == value) _save = (Parameter.SaveSettings)value;
+                foreach (int item in Enum.GetValues(typeof(Parameter.SaveSettings)))
+                {
+                    if (item == (int)save.Value)
+                    {
+                        _save = (Parameter.SaveSettings)save.Value;
+                        break;
+                    }
+                }
             }
         }
 
@@ -1077,41 +1180,41 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void Save(ParameterManager config)
+        private void Save(CubePdf.Settings.Document document)
         {
             // パス関連
-            config.Parameters.Add(new ParameterElement(_RegLastAccess, ParameterType.String, _output));
-            config.Parameters.Add(new ParameterElement(_RegLastInputAccess, ParameterType.String, _input));
-            config.Parameters.Add(new ParameterElement(_RegUserProgram, ParameterType.String, _program));
-            config.Parameters.Add(new ParameterElement(_RegUserArguments, ParameterType.String, _argument));
+            document.Root.Add(new CubePdf.Settings.Node(_RegLastAccess, _output));
+            document.Root.Add(new CubePdf.Settings.Node(_RegLastInputAccess, _input));
+            document.Root.Add(new CubePdf.Settings.Node(_RegUserProgram, _program));
+            document.Root.Add(new CubePdf.Settings.Node(_RegUserArguments, _argument));
 
             // チェックボックスのフラグ関連
             int flag = _rotation ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(_RegPageRotation, ParameterType.Integer, flag));
+            document.Root.Add(new CubePdf.Settings.Node(_RegPageRotation, flag));
             flag = _embed ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(_RegEmbedFont, ParameterType.Integer, flag));
+            document.Root.Add(new CubePdf.Settings.Node(_RegEmbedFont, flag));
             flag = _grayscale ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(_RegGrayscale, ParameterType.Integer, flag));
+            document.Root.Add(new CubePdf.Settings.Node(_RegGrayscale, flag));
             flag = _web ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(_RegWebOptimize, ParameterType.Integer, flag));
+            document.Root.Add(new CubePdf.Settings.Node(_RegWebOptimize, flag));
             flag = _update ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(_RegCheckUpdate, ParameterType.Integer, flag));
+            document.Root.Add(new CubePdf.Settings.Node(_RegCheckUpdate, flag));
             flag = _advance ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(_RegAdvancedMode, ParameterType.Integer, flag));
+            document.Root.Add(new CubePdf.Settings.Node(_RegAdvancedMode, flag));
             flag = _visible ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(_RegVisible, ParameterType.Integer, flag));
+            document.Root.Add(new CubePdf.Settings.Node(_RegVisible, flag));
             flag = _selectable ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(_RegSelectInput, ParameterType.Integer, flag));
+            document.Root.Add(new CubePdf.Settings.Node(_RegSelectInput, flag));
 
             // コンボボックスのインデックス関連
-            config.Parameters.Add(new ParameterElement(_RegFileType, ParameterType.Integer, (int)_type));
-            config.Parameters.Add(new ParameterElement(_RegPdfVersion, ParameterType.Integer, (int)_pdfver));
-            config.Parameters.Add(new ParameterElement(_RegResolution, ParameterType.Integer, (int)_resolution));
-            config.Parameters.Add(new ParameterElement(_RegExistedFile, ParameterType.Integer, (int)_exist));
-            config.Parameters.Add(new ParameterElement(_RegPostProcess, ParameterType.Integer, (int)_postproc));
-            config.Parameters.Add(new ParameterElement(_RegDownSampling, ParameterType.Integer, (int)_downsampling));
-            config.Parameters.Add(new ParameterElement(_RegImageFilter, ParameterType.Integer, (int)_filter));
-            config.Parameters.Add(new ParameterElement(_RegSaveSetting, ParameterType.Integer, (int)_save));
+            document.Root.Add(new CubePdf.Settings.Node(_RegFileType, (int)_type));
+            document.Root.Add(new CubePdf.Settings.Node(_RegPdfVersion, (int)_pdfver));
+            document.Root.Add(new CubePdf.Settings.Node(_RegResolution, (int)_resolution));
+            document.Root.Add(new CubePdf.Settings.Node(_RegExistedFile, (int)_exist));
+            document.Root.Add(new CubePdf.Settings.Node(_RegPostProcess, (int)_postproc));
+            document.Root.Add(new CubePdf.Settings.Node(_RegDownSampling, (int)_downsampling));
+            document.Root.Add(new CubePdf.Settings.Node(_RegImageFilter, (int)_filter));
+            document.Root.Add(new CubePdf.Settings.Node(_RegSaveSetting, (int)_save));
 
             // アップデートプログラムの登録および削除
             using (var startup = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run"))
@@ -1130,9 +1233,6 @@ namespace CubePdf
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        //  変数定義
-        /* ----------------------------------------------------------------- */
         #region Variables
         private string _install = _RegUnknown;
         private string _lib = _RegUnknown;
@@ -1163,9 +1263,6 @@ namespace CubePdf
         private PermissionProperty _permission = new PermissionProperty();
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        //  定数定義
-        /* ----------------------------------------------------------------- */
         #region Constant variables
         private static readonly string _RegRoot = @"Software\CubeSoft\CubePDF";
         private static readonly string _RegVersion = "v2";
