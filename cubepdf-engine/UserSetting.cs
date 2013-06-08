@@ -218,18 +218,18 @@ namespace CubePDF
 
             try
             {
-                RegistryKey subkey = Registry.LocalMachine.OpenSubKey(REG_ROOT, false);
+                RegistryKey subkey = Registry.LocalMachine.OpenSubKey(_RegRoot, false);
                 if (subkey == null) status = false;
                 else
                 {
-                    _version = subkey.GetValue(REG_PRODUCT_VERSION, REG_VALUE_UNKNOWN) as string;
-                    _install = subkey.GetValue(REG_INSTALL_PATH, REG_VALUE_UNKNOWN) as string;
-                    _lib = subkey.GetValue(REG_LIB_PATH, REG_VALUE_UNKNOWN) as string;
+                    _version = subkey.GetValue(_RegProductVersion, _RegUnknown) as string;
+                    _install = subkey.GetValue(_RegInstall, _RegUnknown) as string;
+                    _lib = subkey.GetValue(_RegLib, _RegUnknown) as string;
                     subkey.Close();
                 }
-                if (_version == null) _version = REG_VALUE_UNKNOWN;
-                if (_install == null) _install = REG_VALUE_UNKNOWN;
-                if (_lib == null) _lib = REG_VALUE_UNKNOWN;
+                if (_version == null) _version = _RegUnknown;
+                if (_install == null) _install = _RegUnknown;
+                if (_lib == null) _lib = _RegUnknown;
             }
             catch (Exception /* err */)
             {
@@ -255,7 +255,7 @@ namespace CubePDF
 
             try
             {
-                using (RegistryKey root = Registry.CurrentUser.OpenSubKey(REG_ROOT + '\\' + REG_VERSION, false))
+                using (RegistryKey root = Registry.CurrentUser.OpenSubKey(_RegRoot + '\\' + _RegVersion, false))
                 {
                     var param = new ParameterManager();
                     param.Load(root);
@@ -316,7 +316,7 @@ namespace CubePDF
                 var param = new ParameterManager();
                 this.Save(param);
 
-                using (var root = Registry.CurrentUser.CreateSubKey(REG_ROOT + '\\' + REG_VERSION))
+                using (var root = Registry.CurrentUser.CreateSubKey(_RegRoot + '\\' + _RegVersion))
                 {
                     param.Save(root);
                 }
@@ -431,33 +431,33 @@ namespace CubePDF
 
                 // パス関連
                 string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                string path = subkey.GetValue(REG_LAST_OUTPUT_ACCESS, desktop) as string;
+                string path = subkey.GetValue(_RegLastAccess, desktop) as string;
                 if (path != null && path.Length > 0 && Directory.Exists(path)) _output = path;
-                path = subkey.GetValue(REG_LAST_INPUT_ACCESS, desktop) as string;
+                path = subkey.GetValue(_RegLastInputAccess, desktop) as string;
                 if (path != null && path.Length > 0 && Directory.Exists(path)) _input = path;
-                path = subkey.GetValue(REG_USER_PROGRAM, "") as string;
+                path = subkey.GetValue(_RegUserProgram, "") as string;
                 if (path != null && path.Length > 0 && File.Exists(path)) _program = path;
 
                 // チェックボックスのフラグ関連
-                int flag = (int)subkey.GetValue(REG_PAGE_ROTATION, 1);
+                int flag = (int)subkey.GetValue(_RegPageRotation, 1);
                 _rotation = (flag != 0);
-                flag = (int)subkey.GetValue(REG_EMBED_FONT, 1);
+                flag = (int)subkey.GetValue(_RegEmbedFont, 1);
                 _embed = (flag != 0);
-                flag = (int)subkey.GetValue(REG_GRAYSCALE, 0);
+                flag = (int)subkey.GetValue(_RegGrayscale, 0);
                 _grayscale = (flag != 0);
-                flag = (int)subkey.GetValue(REG_WEB_OPTIMIZE, 0);
+                flag = (int)subkey.GetValue(_RegWebOptimize, 0);
                 _web = (flag != 0);
-                flag = (int)subkey.GetValue(REG_SAVE_SETTING, 0);
+                flag = (int)subkey.GetValue(_RegSaveSetting, 0);
                 _save = (flag != 0) ? Parameter.SaveSettings.Save : Parameter.SaveSettings.None;
-                flag = (int)subkey.GetValue(REG_CHECK_UPDATE, 1);
+                flag = (int)subkey.GetValue(_RegCheckUpdate, 1);
                 _update = (flag != 0);
-                flag = (int)subkey.GetValue(REG_ADVANCED_MODE, 0);
+                flag = (int)subkey.GetValue(_RegAdvancedMode, 0);
                 _advance = (flag != 0);
-                flag = (int)subkey.GetValue(REG_SELECT_INPUT, 0);
+                flag = (int)subkey.GetValue(_RegSelectInput, 0);
                 _selectable = (flag != 0);
 
                 // コンボボックスの変換
-                string type = (string)subkey.GetValue(REG_FILETYPE, "");
+                string type = (string)subkey.GetValue(_RegFileType, "");
                 foreach (Parameter.FileTypes id in Enum.GetValues(typeof(Parameter.FileTypes)))
                 {
                     if (Parameter.FileTypeValue(id) == type)
@@ -467,7 +467,7 @@ namespace CubePDF
                     }
                 }
 
-                string pdfver = (string)subkey.GetValue(REG_PDF_VERSION, "");
+                string pdfver = (string)subkey.GetValue(_RegPdfVersion, "");
                 foreach (Parameter.PDFVersions id in Enum.GetValues(typeof(Parameter.PDFVersions)))
                 {
                     if (Parameter.PDFVersionValue(id).ToString() == pdfver)
@@ -477,7 +477,7 @@ namespace CubePDF
                     }
                 }
 
-                string resolution = (string)subkey.GetValue(REG_RESOLUTION, "");
+                string resolution = (string)subkey.GetValue(_RegResolution, "");
                 foreach (Parameter.Resolutions id in Enum.GetValues(typeof(Parameter.Resolutions)))
                 {
                     if (Parameter.ResolutionValue(id).ToString() == resolution)
@@ -488,19 +488,19 @@ namespace CubePDF
                 }
 
                 // ExistedFile: v1 は日本語名で直接指定されていた
-                string exist = (string)subkey.GetValue(REG_EXISTED_FILE, "");
+                string exist = (string)subkey.GetValue(_RegExistedFile, "");
                 if (exist == "上書き") _exist = Parameter.ExistedFiles.Overwrite;
                 else if (exist == "先頭に結合") _exist = Parameter.ExistedFiles.MergeHead;
                 else if (exist == "末尾に結合") _exist = Parameter.ExistedFiles.MergeTail;
 
                 // PostProcess: v1 は日本語名で直接指定されていた
-                string postproc = (string)subkey.GetValue(REG_POST_PROCESS, "");
+                string postproc = (string)subkey.GetValue(_RegPostProcess, "");
                 if (postproc == "開く") _postproc = Parameter.PostProcesses.Open;
                 else if (postproc == "何もしない") _postproc = Parameter.PostProcesses.None;
                 else if (postproc == "ユーザープログラム") _postproc = Parameter.PostProcesses.UserProgram;
 
                 // DownsSampling: v1 は日本語名で直接指定されていた
-                string downsampling = (string)subkey.GetValue(REG_DOWNSAMPLING, "");
+                string downsampling = (string)subkey.GetValue(_RegDownSampling, "");
                 if (downsampling == "なし") _downsampling = Parameter.DownSamplings.None;
                 else if (downsampling == "平均化") _downsampling = Parameter.DownSamplings.Average;
                 else if (downsampling == "バイキュービック") _downsampling = Parameter.DownSamplings.Bicubic;
@@ -532,7 +532,7 @@ namespace CubePDF
         /* ----------------------------------------------------------------- */
         public string Extension
         {
-            get { return SETTING_EXTENSION; }
+            get { return _RegSettingExtension; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -987,78 +987,78 @@ namespace CubePDF
 
             // パス関連
             string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            string s = v.Contains(REG_LAST_OUTPUT_ACCESS) ? (string)v.Find(REG_LAST_OUTPUT_ACCESS).Value : "";
+            string s = v.Contains(_RegLastAccess) ? (string)v.Find(_RegLastAccess).Value : "";
             _output = (s.Length > 0) ? s : desktop;
-            s = v.Contains(REG_LAST_INPUT_ACCESS) ? (string)v.Find(REG_LAST_INPUT_ACCESS).Value : "";
+            s = v.Contains(_RegLastInputAccess) ? (string)v.Find(_RegLastInputAccess).Value : "";
             _input = (s.Length > 0) ? s : desktop;
-            s = v.Contains(REG_USER_PROGRAM) ? (string)v.Find(REG_USER_PROGRAM).Value : "";
+            s = v.Contains(_RegUserProgram) ? (string)v.Find(_RegUserProgram).Value : "";
             _program = s;
-            s = v.Contains(REG_USER_ARGUMENTS) ? (string)v.Find(REG_USER_ARGUMENTS).Value : "%%FILE%%";
+            s = v.Contains(_RegUserArguments) ? (string)v.Find(_RegUserArguments).Value : "%%FILE%%";
             _argument = s;
 
             // チェックボックスのフラグ関連
-            int value = v.Contains(REG_PAGE_ROTATION) ? (int)v.Find(REG_PAGE_ROTATION).Value : 1;
+            int value = v.Contains(_RegPageRotation) ? (int)v.Find(_RegPageRotation).Value : 1;
             _rotation = (value != 0);
-            value = v.Contains(REG_EMBED_FONT) ? (int)v.Find(REG_EMBED_FONT).Value : 1;
+            value = v.Contains(_RegEmbedFont) ? (int)v.Find(_RegEmbedFont).Value : 1;
             _embed = (value != 0);
-            value = v.Contains(REG_GRAYSCALE) ? (int)v.Find(REG_GRAYSCALE).Value : 0;
+            value = v.Contains(_RegGrayscale) ? (int)v.Find(_RegGrayscale).Value : 0;
             _grayscale = (value != 0);
-            value = v.Contains(REG_WEB_OPTIMIZE) ? (int)v.Find(REG_WEB_OPTIMIZE).Value : 0;
+            value = v.Contains(_RegWebOptimize) ? (int)v.Find(_RegWebOptimize).Value : 0;
             _web = (value != 0);
-            value = v.Contains(REG_CHECK_UPDATE) ? (int)v.Find(REG_CHECK_UPDATE).Value : 1;
+            value = v.Contains(_RegCheckUpdate) ? (int)v.Find(_RegCheckUpdate).Value : 1;
             _update = (value != 0);
-            value = v.Contains(REG_ADVANCED_MODE) ? (int)v.Find(REG_ADVANCED_MODE).Value : 0;
+            value = v.Contains(_RegAdvancedMode) ? (int)v.Find(_RegAdvancedMode).Value : 0;
             _advance = (value != 0);
-            value = v.Contains(REG_VISIBLE) ? (int)v.Find(REG_VISIBLE).Value : 1;
+            value = v.Contains(_RegVisible) ? (int)v.Find(_RegVisible).Value : 1;
             _visible = (value != 0);
-            value = v.Contains(REG_SELECT_INPUT) ? (int)v.Find(REG_SELECT_INPUT).Value : 0;
+            value = v.Contains(_RegSelectInput) ? (int)v.Find(_RegSelectInput).Value : 0;
             _selectable = (value != 0);
 
 
             // コンボボックスのインデックス関連
-            value = v.Contains(REG_FILETYPE) ? (int)v.Find(REG_FILETYPE).Value : 0;
+            value = v.Contains(_RegFileType) ? (int)v.Find(_RegFileType).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.FileTypes)))
             {
                 if (x == value) _type = (Parameter.FileTypes)value;
             }
 
-            value = v.Contains(REG_PDF_VERSION) ? (int)v.Find(REG_PDF_VERSION).Value : 0;
+            value = v.Contains(_RegPdfVersion) ? (int)v.Find(_RegPdfVersion).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.PDFVersions)))
             {
                 if (x == value) _pdfver = (Parameter.PDFVersions)value;
             }
 
-            value = v.Contains(REG_RESOLUTION) ? (int)v.Find(REG_RESOLUTION).Value : 0;
+            value = v.Contains(_RegResolution) ? (int)v.Find(_RegResolution).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.Resolutions)))
             {
                 if (x == value) _resolution = (Parameter.Resolutions)value;
             }
 
-            value = v.Contains(REG_EXISTED_FILE) ? (int)v.Find(REG_EXISTED_FILE).Value : 0;
+            value = v.Contains(_RegExistedFile) ? (int)v.Find(_RegExistedFile).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.ExistedFiles)))
             {
                 if (x == value) _exist = (Parameter.ExistedFiles)value;
             }
 
-            value = v.Contains(REG_POST_PROCESS) ? (int)v.Find(REG_POST_PROCESS).Value : 0;
+            value = v.Contains(_RegPostProcess) ? (int)v.Find(_RegPostProcess).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.PostProcesses)))
             {
                 if (x == value) _postproc = (Parameter.PostProcesses)value;
             }
 
-            value = v.Contains(REG_DOWNSAMPLING) ? (int)v.Find(REG_DOWNSAMPLING).Value : 0;
+            value = v.Contains(_RegDownSampling) ? (int)v.Find(_RegDownSampling).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.DownSamplings)))
             {
                 if (x == value) _downsampling = (Parameter.DownSamplings)value;
             }
 
-            value = v.Contains(REG_IMAGEFILTER) ? (int)v.Find(REG_IMAGEFILTER).Value : 0;
+            value = v.Contains(_RegImageFilter) ? (int)v.Find(_RegImageFilter).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.ImageFilters)))
             {
                 if (x == value) _filter = (Parameter.ImageFilters)value;
             }
 
-            value = v.Contains(REG_SAVE_SETTING) ? (int)v.Find(REG_SAVE_SETTING).Value : 0;
+            value = v.Contains(_RegSaveSetting) ? (int)v.Find(_RegSaveSetting).Value : 0;
             foreach (int x in Enum.GetValues(typeof(Parameter.SaveSettings)))
             {
                 if (x == value) _save = (Parameter.SaveSettings)value;
@@ -1080,51 +1080,51 @@ namespace CubePDF
         private void Save(ParameterManager config)
         {
             // パス関連
-            config.Parameters.Add(new ParameterElement(REG_LAST_OUTPUT_ACCESS, ParameterType.String, _output));
-            config.Parameters.Add(new ParameterElement(REG_LAST_INPUT_ACCESS, ParameterType.String, _input));
-            config.Parameters.Add(new ParameterElement(REG_USER_PROGRAM, ParameterType.String, _program));
-            config.Parameters.Add(new ParameterElement(REG_USER_ARGUMENTS, ParameterType.String, _argument));
+            config.Parameters.Add(new ParameterElement(_RegLastAccess, ParameterType.String, _output));
+            config.Parameters.Add(new ParameterElement(_RegLastInputAccess, ParameterType.String, _input));
+            config.Parameters.Add(new ParameterElement(_RegUserProgram, ParameterType.String, _program));
+            config.Parameters.Add(new ParameterElement(_RegUserArguments, ParameterType.String, _argument));
 
             // チェックボックスのフラグ関連
             int flag = _rotation ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(REG_PAGE_ROTATION, ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(_RegPageRotation, ParameterType.Integer, flag));
             flag = _embed ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(REG_EMBED_FONT, ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(_RegEmbedFont, ParameterType.Integer, flag));
             flag = _grayscale ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(REG_GRAYSCALE, ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(_RegGrayscale, ParameterType.Integer, flag));
             flag = _web ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(REG_WEB_OPTIMIZE, ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(_RegWebOptimize, ParameterType.Integer, flag));
             flag = _update ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(REG_CHECK_UPDATE, ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(_RegCheckUpdate, ParameterType.Integer, flag));
             flag = _advance ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(REG_ADVANCED_MODE, ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(_RegAdvancedMode, ParameterType.Integer, flag));
             flag = _visible ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(REG_VISIBLE, ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(_RegVisible, ParameterType.Integer, flag));
             flag = _selectable ? 1 : 0;
-            config.Parameters.Add(new ParameterElement(REG_SELECT_INPUT, ParameterType.Integer, flag));
+            config.Parameters.Add(new ParameterElement(_RegSelectInput, ParameterType.Integer, flag));
 
             // コンボボックスのインデックス関連
-            config.Parameters.Add(new ParameterElement(REG_FILETYPE, ParameterType.Integer, (int)_type));
-            config.Parameters.Add(new ParameterElement(REG_PDF_VERSION, ParameterType.Integer, (int)_pdfver));
-            config.Parameters.Add(new ParameterElement(REG_RESOLUTION, ParameterType.Integer, (int)_resolution));
-            config.Parameters.Add(new ParameterElement(REG_EXISTED_FILE, ParameterType.Integer, (int)_exist));
-            config.Parameters.Add(new ParameterElement(REG_POST_PROCESS, ParameterType.Integer, (int)_postproc));
-            config.Parameters.Add(new ParameterElement(REG_DOWNSAMPLING, ParameterType.Integer, (int)_downsampling));
-            config.Parameters.Add(new ParameterElement(REG_IMAGEFILTER, ParameterType.Integer, (int)_filter));
-            config.Parameters.Add(new ParameterElement(REG_SAVE_SETTING, ParameterType.Integer, (int)_save));
+            config.Parameters.Add(new ParameterElement(_RegFileType, ParameterType.Integer, (int)_type));
+            config.Parameters.Add(new ParameterElement(_RegPdfVersion, ParameterType.Integer, (int)_pdfver));
+            config.Parameters.Add(new ParameterElement(_RegResolution, ParameterType.Integer, (int)_resolution));
+            config.Parameters.Add(new ParameterElement(_RegExistedFile, ParameterType.Integer, (int)_exist));
+            config.Parameters.Add(new ParameterElement(_RegPostProcess, ParameterType.Integer, (int)_postproc));
+            config.Parameters.Add(new ParameterElement(_RegDownSampling, ParameterType.Integer, (int)_downsampling));
+            config.Parameters.Add(new ParameterElement(_RegImageFilter, ParameterType.Integer, (int)_filter));
+            config.Parameters.Add(new ParameterElement(_RegSaveSetting, ParameterType.Integer, (int)_save));
 
             // アップデートプログラムの登録および削除
             using (var startup = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run"))
             {
                 if (_update)
                 {
-                    string value = startup.GetValue(UPDATE_PROGRAM) as string;
-                    if (startup.GetValue(UPDATE_PROGRAM) == null && _install.Length > 0)
+                    string value = startup.GetValue(_RegUpdateProgram) as string;
+                    if (startup.GetValue(_RegUpdateProgram) == null && _install.Length > 0)
                     {
-                        startup.SetValue(UPDATE_PROGRAM, '"' + _install + '\\' + UPDATE_PROGRAM + ".exe\"");
+                        startup.SetValue(_RegUpdateProgram, '"' + _install + '\\' + _RegUpdateProgram + ".exe\"");
                     }
                 }
-                else startup.DeleteValue(UPDATE_PROGRAM, false);
+                else startup.DeleteValue(_RegUpdateProgram, false);
             }
         }
 
@@ -1134,9 +1134,9 @@ namespace CubePDF
         //  変数定義
         /* ----------------------------------------------------------------- */
         #region Variables
-        private string _install = REG_VALUE_UNKNOWN;
-        private string _lib = REG_VALUE_UNKNOWN;
-        private string _version = REG_VALUE_UNKNOWN;
+        private string _install = _RegUnknown;
+        private string _lib = _RegUnknown;
+        private string _version = _RegUnknown;
         private string _input = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         private string _output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         private string _program = "";
@@ -1167,34 +1167,34 @@ namespace CubePDF
         //  定数定義
         /* ----------------------------------------------------------------- */
         #region Constant variables
-        const string REG_ROOT = @"Software\CubeSoft\CubePDF";
-        const string REG_VERSION = "v2";
-        const string REG_INSTALL_PATH = "InstallPath";
-        const string REG_LIB_PATH = "LibPath";
-        const string REG_PRODUCT_VERSION = "Version";
-        const string REG_ADVANCED_MODE = "AdvancedMode";
-        const string REG_CHECK_UPDATE = "CheckUpdate";
-        const string REG_VISIBLE = "Visible";
-        const string REG_DOWNSAMPLING = "DownSampling";
-        const string REG_IMAGEFILTER = "ImageFilter";
-        const string REG_EMBED_FONT = "EmbedFont";
-        const string REG_EXISTED_FILE = "ExistedFile";
-        const string REG_FILETYPE = "FileType";
-        const string REG_GRAYSCALE = "Grayscale";
-        const string REG_LAST_OUTPUT_ACCESS = "LastAccess";
-        const string REG_LAST_INPUT_ACCESS = "LastInputAccess";
-        const string REG_PAGE_ROTATION = "PageRotation";
-        const string REG_PDF_VERSION = "PDFVersion";
-        const string REG_POST_PROCESS = "PostProcess";
-        const string REG_RESOLUTION = "Resolution";
-        const string REG_SELECT_INPUT = "SelectInputFile";
-        const string REG_USER_PROGRAM = "UserProgram";
-        const string REG_USER_ARGUMENTS = "UserArguments";
-        const string REG_WEB_OPTIMIZE = "WebOptimize";
-        const string REG_SAVE_SETTING = "SaveSetting";
-        const string REG_VALUE_UNKNOWN = "Unknown";
-        const string UPDATE_PROGRAM = "cubepdf-checker";
-        const string SETTING_EXTENSION = ".cubepdfconf";
+        private static readonly string _RegRoot = @"Software\CubeSoft\CubePDF";
+        private static readonly string _RegVersion = "v2";
+        private static readonly string _RegInstall = "InstallPath";
+        private static readonly string _RegLib = "LibPath";
+        private static readonly string _RegProductVersion = "Version";
+        private static readonly string _RegAdvancedMode = "AdvancedMode";
+        private static readonly string _RegCheckUpdate = "CheckUpdate";
+        private static readonly string _RegVisible = "Visible";
+        private static readonly string _RegDownSampling = "DownSampling";
+        private static readonly string _RegImageFilter = "ImageFilter";
+        private static readonly string _RegEmbedFont = "EmbedFont";
+        private static readonly string _RegExistedFile = "ExistedFile";
+        private static readonly string _RegFileType = "FileType";
+        private static readonly string _RegGrayscale = "Grayscale";
+        private static readonly string _RegLastAccess = "LastAccess";
+        private static readonly string _RegLastInputAccess = "LastInputAccess";
+        private static readonly string _RegPageRotation = "PageRotation";
+        private static readonly string _RegPdfVersion = "PDFVersion";
+        private static readonly string _RegPostProcess = "PostProcess";
+        private static readonly string _RegResolution = "Resolution";
+        private static readonly string _RegSelectInput = "SelectInputFile";
+        private static readonly string _RegUserProgram = "UserProgram";
+        private static readonly string _RegUserArguments = "UserArguments";
+        private static readonly string _RegWebOptimize = "WebOptimize";
+        private static readonly string _RegSaveSetting = "SaveSetting";
+        private static readonly string _RegUnknown = "Unknown";
+        private static readonly string _RegUpdateProgram = "cubepdf-checker";
+        private static readonly string _RegSettingExtension = ".cubepdfconf";
         #endregion
     }
 }
