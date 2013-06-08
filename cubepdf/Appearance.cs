@@ -85,10 +85,10 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static string PDFVersionString(Parameter.PDFVersions id) {
-            if (id == Parameter.PDFVersions.VerPDFA) return ""; //"PDF/A";
-            else if (id == Parameter.PDFVersions.VerPDFX) return ""; //"PDF/X";
-            return Parameter.PDFVersionValue(id).ToString();
+        public static string PDFVersionString(Parameter.PdfVersions id) {
+            if (id == Parameter.PdfVersions.VerPDFA) return ""; //"PDF/A";
+            else if (id == Parameter.PdfVersions.VerPDFX) return ""; //"PDF/X";
+            return Parameter.PdfVersionValue(id).ToString();
         }
 
         /* ----------------------------------------------------------------- */

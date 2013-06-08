@@ -1,22 +1,22 @@
 ﻿/* ------------------------------------------------------------------------- */
-/*
- *  Converter.cs
- *
- *  Copyright (c) 2009 CubeSoft, Inc.
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see < http://www.gnu.org/licenses/ >.
- */
+///
+/// Converter.cs
+///
+/// Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU General Public License as published by
+/// the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU General Public License for more details.
+///
+/// You should have received a copy of the GNU General Public License
+/// along with this program.  If not, see < http://www.gnu.org/licenses/ >.
+///
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
@@ -24,12 +24,26 @@ using System.Collections.Generic;
 
 namespace CubePdf {
     /* --------------------------------------------------------------------- */
+    ///
     /// Converter
+    ///
+    /// <summary>
+    /// ファイルを変換するためのクラスです。
+    /// </summary>
+    ///
     /* --------------------------------------------------------------------- */
     public class Converter
     {
+        #region Initialization and Termination
+
         /* ----------------------------------------------------------------- */
-        /// Constructor
+        ///
+        /// Converter (constructor)
+        ///
+        /// <summary>
+        /// 既定の値でオブジェクトを初期化します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public Converter()
         {
@@ -37,12 +51,41 @@ namespace CubePdf {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Constructor
+        ///
+        /// <summary>
+        /// 引数に指定されたメッセージを格納するコンテナを用いて、
+        /// オブジェクトを初期化します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public Converter(List<CubePdf.Message> messages)
         {
             _messages = messages;
         }
+
+        #endregion
+
+        #region Properties
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Messages
+        ///
+        /// <summary>
+        /// メッセージ一覧を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public List<CubePdf.Message> Messages
+        {
+            get { return _messages; }
+        }
+
+        #endregion
+
+        #region Public methods
 
         /* ----------------------------------------------------------------- */
         ///
@@ -118,10 +161,13 @@ namespace CubePdf {
         /// FileExists
         ///
         /// <summary>
-        /// ファイルが存在するかどうかをチェックする．いくつかのファイル
-        /// タイプは，example-001.ext と言うファイル名を生成する場合が
-        /// あるのでそれもチェックする．
+        /// ユーザ設定で指定されたファイルが存在するかどうか判別します。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// いくつかのファイルタイプでは、example-001.ext と言ったファイル名を
+        /// 生成する事があるので、そのケースもチェックします。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         public bool FileExists(UserSetting setting) {
@@ -144,9 +190,13 @@ namespace CubePdf {
         /// EscapeExistedFile
         ///
         /// <summary>
-        /// マージオプションなどの関係で既に存在する同名ファイルを退避
-        /// させる．リネームの場合は，setting.OutputPath の値を変更する．
+        /// 結合オプションなどの関係で既に存在する同名ファイルを退避させます。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// リネームの場合は、退避させる代わりに UserSetting.OutputPath
+        /// プロパティの値を変更します。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         public void EscapeExistedFile(UserSetting setting) {
@@ -169,7 +219,13 @@ namespace CubePdf {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// CreateWorkingDirectory
+        ///
+        /// <summary>
+        /// 作業用ディレクトリを作成します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public void CreateWorkingDirectory(UserSetting setting) {
             Utility.WorkingDirectory = setting.LibPath + '\\' + Path.GetRandomFileName();
@@ -178,12 +234,7 @@ namespace CubePdf {
             Directory.CreateDirectory(Utility.WorkingDirectory);
         }
 
-        /* ----------------------------------------------------------------- */
-        /// Messages
-        /* ----------------------------------------------------------------- */
-        public List<CubePdf.Message> Messages {
-            get { return _messages; }
-        }
+        #endregion
 
         /* ----------------------------------------------------------------- */
         //  UserSetting の値を基に各種設定を行う
@@ -196,7 +247,7 @@ namespace CubePdf {
         ///
         /// <summary>
         /// bmp, png, jpeg, gif のビットマップ系ファイルに変換するために
-        /// 必要なオプションを設定する．
+        /// 必要なオプションを設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
@@ -211,12 +262,12 @@ namespace CubePdf {
         ///
         /// <summary>
         /// pdf, ps, eps, svg のベクター系ファイルに変換するために必要な
-        /// オプションを設定する．
+        /// オプションを設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         public void ConfigDocument(UserSetting setting, Ghostscript.Converter gs) {
-            if (setting.FileType == Parameter.FileTypes.PDF) this.ConfigPDF(setting, gs);
+            if (setting.FileType == Parameter.FileTypes.PDF) this.ConfigPdf(setting, gs);
             else {
                 if (setting.EmbedFont) {
                     gs.AddOption("EmbedAllFonts", true);
@@ -227,14 +278,20 @@ namespace CubePdf {
         }
 
         /* ----------------------------------------------------------------- */
-        /// ConfigPDF
+        ///
+        /// ConfigPdf
+        ///
+        /// <summary>
+        /// PDF ファイルに変換するために必要なオプションを設定します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
-        public void ConfigPDF(UserSetting setting, Ghostscript.Converter gs) {
-            gs.AddOption("CompatibilityLevel", Parameter.PDFVersionValue(setting.PDFVersion));
+        public void ConfigPdf(UserSetting setting, Ghostscript.Converter gs) {
+            gs.AddOption("CompatibilityLevel", Parameter.PdfVersionValue(setting.PDFVersion));
             gs.AddOption("UseFlateCompression", true);
 
-            if (setting.PDFVersion == Parameter.PDFVersions.VerPDFA) this.ConfigPDFA(setting, gs);
-            else if (setting.PDFVersion == Parameter.PDFVersions.VerPDFX) this.ConfigPDFX(setting, gs);
+            if (setting.PDFVersion == Parameter.PdfVersions.VerPDFA) this.ConfigPdfA(setting, gs);
+            else if (setting.PDFVersion == Parameter.PdfVersions.VerPDFX) this.ConfigPdfX(setting, gs);
             else {
                 if (setting.EmbedFont) {
                     gs.AddOption("EmbedAllFonts", true);
@@ -251,10 +308,15 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ConfigPDFA
+        /// ConfigPdfA
         ///
         /// <summary>
+        /// PDF/A 形式に変換するのに必要なオプションを設定します。
+        /// </summary>
+        /// 
+        /// <remarks>
         /// PDF/A の主な要求項目は以下の通り:
+        /// 
         /// - デバイス独立カラーまたは PDF/A-1 OutputIntent 指定でカラーの
         ///   再現性を保証する
         /// - 基本 14 フォントを含む全てのフォントの埋め込み
@@ -262,10 +324,10 @@ namespace CubePdf {
         ///   表示すること
         /// - XMPメタデータの埋め込み
         /// - タグ付きPDFとする(PDF/A-1aのみ)
-        /// </summary>
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        public void ConfigPDFA(UserSetting setting, Ghostscript.Converter gs) {
+        public void ConfigPdfA(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("PDFA");
             gs.AddOption("EmbedAllFonts", true);
             gs.AddOption("SubsetFonts", true);
@@ -278,16 +340,21 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ConfigPDFX
+        /// ConfigPdfX
         /// 
         /// <summary>
-        /// PDF/X(1-a) の主な要求項目は以下の通り:
-        /// - すべてのイメージのカラーは CMYKか 特色
-        /// - 基本 14 フォントを含む全てのフォントの埋め込み
+        /// PDF/X 形式に変換するのに必要なオプションを設定します。
         /// </summary>
         /// 
+        /// <remarks>
+        /// PDF/X(1-a) の主な要求項目は以下の通り:
+        /// 
+        /// - すべてのイメージのカラーは CMYKか 特色
+        /// - 基本 14 フォントを含む全てのフォントの埋め込み
+        /// </remarks>
+        /// 
         /* ----------------------------------------------------------------- */
-        public void ConfigPDFX(UserSetting setting, Ghostscript.Converter gs) {
+        public void ConfigPdfX(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("PDFX");
             gs.AddOption("EmbedAllFonts", true);
             gs.AddOption("SubsetFonts", true);
@@ -303,7 +370,13 @@ namespace CubePdf {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// ConfigImageOperations
+        ///
+        /// <summary>
+        /// 画像に関わるオプションを設定します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public void ConfigImageOperations(UserSetting setting, Ghostscript.Converter gs) {
             // 解像度
@@ -338,9 +411,6 @@ namespace CubePdf {
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        //  変数の定義
-        /* ----------------------------------------------------------------- */
         #region Variables
         private string _escaped = null; // null 以外ならマージが必要
         private List<CubePdf.Message> _messages = null;

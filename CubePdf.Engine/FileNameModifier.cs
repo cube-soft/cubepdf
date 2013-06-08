@@ -1,22 +1,22 @@
 ﻿/* ------------------------------------------------------------------------- */
-/*
- *  FileNameModifier.cs
- *
- *  Copyright (c) 2010 CubeSoft Inc. All rights reserved.
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see < http://www.gnu.org/licenses/ >.
- */
+///
+/// FileNameModifier.cs
+///
+/// Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU General Public License as published by
+/// the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU General Public License for more details.
+///
+/// You should have received a copy of the GNU General Public License
+/// along with this program.  If not, see < http://www.gnu.org/licenses/ >.
+///
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
@@ -24,30 +24,43 @@ using System.IO;
 namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
+    ///
     /// FileNameModifier
+    ///
+    /// <summary>
+    /// プリンタの文書名等からファイル名として問題ない文字列へ変換するための
+    /// クラスです。
+    /// </summary>
+    ///
     /* --------------------------------------------------------------------- */
     public abstract class FileNameModifier
     {
+        #region Public methods
+
         /* ----------------------------------------------------------------- */
         ///
         /// GetFileName
         ///
         /// <summary>
-        /// DocumentName からファイル名を取得する。
-        /// DocumentName は、以下のパターンに分かれる。
+        /// DocumentName からファイル名を取得します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// DocumentName は、以下のパターンに分かれます。
         /// 
         /// 1. ファイル名のみ
         /// 2. アプリケーション名 - ファイル名
         /// 3. ファイル名 - アプリケーション名
         /// 
-        /// 拡張子と思われる文字列を基にして、ファイル名部分を判別する。
-        /// どこにも存在しない場合は、DocumentName 自身を返す。
-        /// </summary>
+        /// これらのパターンを想定して、拡張子と思われる文字列を基にして
+        /// ファイル名部分を判別します。拡張子がどこにも存在しない場合は、
+        /// DocumentName 自身を返す事とします。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         public static string GetFileName(string src)
         {
-            string default_value = "CubePDF";
+            string default_value = Properties.Resources.ProductName;
 
             if (src == null || src.Length == 0) return default_value;
             string docname = ModifyFileName(src);
@@ -70,8 +83,20 @@ namespace CubePdf
             else return docname;
         }
 
+        #endregion
+
+        #region Other methods
+
         /* ----------------------------------------------------------------- */
+        ///
         /// NormalizeFilename
+        ///
+        /// <summary>
+        /// 引数に指定された文字列をファイル名として問題のない文字列へ
+        /// 変換します。ファイル名に使用できない文字が見つかった場合は、
+        /// replaced に置換します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         private static string NormalizeFilename(string src, char replaced) {
             char[] invalids = { '/', '*', '"', '<', '>', '|', '?', ':', '\\' };
@@ -97,7 +122,20 @@ namespace CubePdf
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// NormalizePath
+        ///
+        /// <summary>
+        /// 引数に指定された文字列をファイルパスとして問題のない文字列へ
+        /// 変換します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// パスとして問題ない文字列とは、ファイル名として問題ない文字列から
+        /// "\" （バックスラッシュ、または円記号）を許容するように変更
+        /// （置換対象文字から上記を除外する）したものを表します。
+        /// </remarks>
+        ///
         /* ----------------------------------------------------------------- */
         private static string NormalizePath(string src, char replaced) {
             char[] invalids = { '/', '*', '"', '<', '>', '|' };
@@ -156,7 +194,7 @@ namespace CubePdf
         /// ModifyFileName
         /// 
         /// <summary>
-        /// ファイル名として不正な文字を '_' (アンダースコア) に置換する．
+        /// ファイル名として不正な文字を '_' (アンダースコア) に置換します。
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -177,8 +215,8 @@ namespace CubePdf
         /// FindFromRecent
         ///
         /// <summary>
-        /// 「最近使ったファイル一覧」から，指定された拡張子のファイルの
-        /// うち，もっとも最近に使用したファイル名を返す．
+        /// 「最近使ったファイル一覧」から、引数に指定された拡張子のファイル
+        /// の内、直近に使用したファイル名を返します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
@@ -201,5 +239,7 @@ namespace CubePdf
             }
             return (dest == null) ? null : System.IO.Path.GetFileNameWithoutExtension(dest);
         }
+
+        #endregion
     }
 }

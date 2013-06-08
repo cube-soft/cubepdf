@@ -79,11 +79,11 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static int PDFVersionToIndex(Parameter.PDFVersions id) {
-            foreach (Parameter.PDFVersions x in Enum.GetValues(typeof(Parameter.PDFVersions))) {
+        public static int PDFVersionToIndex(Parameter.PdfVersions id) {
+            foreach (Parameter.PdfVersions x in Enum.GetValues(typeof(Parameter.PdfVersions))) {
                 if (x == id) return (int)id;
             }
-            return (int)Parameter.PDFVersions.Ver1_7;
+            return (int)Parameter.PdfVersions.Ver1_7;
         }
 
         /* ----------------------------------------------------------------- */
@@ -97,11 +97,11 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static Parameter.PDFVersions IndexToPDFVersion(int index) {
-            foreach (int x in Enum.GetValues(typeof(Parameter.PDFVersions))) {
-                if (x == index) return (Parameter.PDFVersions)index;
+        public static Parameter.PdfVersions IndexToPDFVersion(int index) {
+            foreach (int x in Enum.GetValues(typeof(Parameter.PdfVersions))) {
+                if (x == index) return (Parameter.PdfVersions)index;
             }
-            return (Parameter.PDFVersions)0;
+            return (Parameter.PdfVersions)0;
         }
 
         /* ----------------------------------------------------------------- */

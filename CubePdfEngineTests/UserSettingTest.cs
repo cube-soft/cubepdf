@@ -159,7 +159,7 @@ namespace CubePdf
                 Assert.AreEqual("", test.UserProgram, "UserProgram");
                 Assert.AreEqual("%%FILE%%", test.UserArguments, "UserArguments");
                 Assert.AreEqual(Parameter.FileTypes.PDF, test.FileType, "FileType");
-                Assert.AreEqual(Parameter.PDFVersions.Ver1_7, test.PDFVersion, "PDFVersion");
+                Assert.AreEqual(Parameter.PdfVersions.Ver1_7, test.PDFVersion, "PDFVersion");
                 Assert.AreEqual(Parameter.Resolutions.Resolution300, test.Resolution, "Resolution");
                 Assert.AreEqual(Parameter.ExistedFiles.Overwrite, test.ExistedFile, "ExistedFile");
                 Assert.AreEqual(Parameter.PostProcesses.Open, test.PostProcess, "PostProcess");
@@ -392,7 +392,7 @@ namespace CubePdf
                 var test = new UserSetting(false);
                 Assert.IsTrue(test.Load(), "Load from registry");
                 Assert.AreEqual(Parameter.FileTypes.PDF, test.FileType, "FileType");
-                Assert.AreEqual(Parameter.PDFVersions.Ver1_7, test.PDFVersion, "PDFVersion");
+                Assert.AreEqual(Parameter.PdfVersions.Ver1_7, test.PDFVersion, "PDFVersion");
                 Assert.AreEqual(Parameter.Resolutions.Resolution300, test.Resolution, "Resolution");
                 Assert.AreEqual(Parameter.ExistedFiles.Overwrite, test.ExistedFile, "ExistedFile");
                 Assert.AreEqual(Parameter.PostProcesses.Open, test.PostProcess, "PostProcess");

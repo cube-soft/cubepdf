@@ -1,22 +1,22 @@
 ﻿/* ------------------------------------------------------------------------- */
-/*
- *  PostProcess.cs
- *
- *  Copyright (c) 2009 - 2011 CubeSoft, Inc. All rights reserved.
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see < http://www.gnu.org/licenses/ >.
- */
+///
+/// PostProcess.cs
+///
+/// Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU General Public License as published by
+/// the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU General Public License for more details.
+///
+/// You should have received a copy of the GNU General Public License
+/// along with this program.  If not, see < http://www.gnu.org/licenses/ >.
+///
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
@@ -26,12 +26,27 @@ using System.Runtime.InteropServices;
 namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
+    ///
     /// PostProcess
+    ///
+    /// <summary>
+    /// CubePDF による変換処理が終了した後に、指定されたポストプロセスを
+    /// 実行するためのクラスです。
+    /// </summary>
+    ///
     /* --------------------------------------------------------------------- */
     class PostProcess
     {
+        #region Initialization and Termination
+
         /* ----------------------------------------------------------------- */
-        /// Constructor
+        ///
+        /// PostProcess (constructor)
+        ///
+        /// <summary>
+        /// 既定の値でオブジェクトを初期化します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public PostProcess()
         {
@@ -39,15 +54,50 @@ namespace CubePdf
         }
 
         /* ----------------------------------------------------------------- */
-        /// Constructor
+        ///
+        /// PostProcess (constructor)
+        ///
+        /// <summary>
+        /// 引数に指定されたメッセージ格納コンテナを用いて、オブジェクトを
+        /// 初期化します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public PostProcess(List<CubePdf.Message> messages)
         {
             _messages = messages;
         }
 
+        #endregion
+
+        #region Properties
+
         /* ----------------------------------------------------------------- */
+        ///
+        /// Messages
+        ///
+        /// <summary>
+        /// メッセージ一覧を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public List<CubePdf.Message> Messages
+        {
+            get { return _messages; }
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// Run
+        ///
+        /// <summary>
+        /// 引数にしていされているユーザ設定に従って、プロセスを実行します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public bool Run(UserSetting setting)
         {
@@ -58,8 +108,8 @@ namespace CubePdf
                 string path = setting.OutputPath;
                 if (!File.Exists(path))
                 {
-                    path = Path.GetDirectoryName(path) + '\\' +
-                        Path.GetFileNameWithoutExtension(path) + "-001" + Path.GetExtension(path);
+                    var filename = Path.GetFileNameWithoutExtension(path) + "-001" + Path.GetExtension(path);
+                    path = Path.Combine(Path.GetDirectoryName(path), filename);
                 }
                 if (!File.Exists(path)) return true; // 何らかの問題で変換に失敗しているので、スキップする。
 
@@ -98,24 +148,25 @@ namespace CubePdf
             return true;
         }
 
-        /* ----------------------------------------------------------------- */
-        /// Messages
-        /* ----------------------------------------------------------------- */
-        public List<CubePdf.Message> Messages
-        {
-            get { return _messages; }
-        }
+        #endregion
+
+        #region Other methods
 
         /* ----------------------------------------------------------------- */
         ///
         /// IsExecutable
         ///
         /// <summary>
-        /// ポストプロセスが実行可能かどうかをチェックする。判別方法は、
-        /// Open が指定された場合は関連付けられているかどうか、
-        /// UserProgram が指定された場合は指定されたプログラムが存在して
-        /// いるかどうかで判別する。
+        /// ポストプロセスが実行可能かどうかをチェックすします。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// 判別方法は、以下の通りです。
+        /// 
+        /// 1. Open が指定された場合は関連付けられているかどうか。
+        /// 2. UserProgram が指定された場合は指定されたプログラムが存在して
+        ///    いるかどうか。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         private bool IsExecutable(UserSetting setting)
@@ -126,8 +177,7 @@ namespace CubePdf
                 if (!CubePdf.Utility.IsAssociate(ext))
                 {
                     // NOTE: 関連付けされていない場合は、単純にスキップする（エラーメッセージを表示しない）。
-                    // _messages.Add(new Message(Message.Levels.Error, String.Format("{0}: ファイルが関連付けられていません", ext)));
-                    _messages.Add(new Message(Message.Levels.Debug, String.Format("{0}: ファイルが関連付けられていません。", ext)));
+                    _messages.Add(new Message(Message.Levels.Debug, String.Format(Properties.Resources.FileNotRelated, ext)));
                     return false;
                 }
             }
@@ -135,7 +185,7 @@ namespace CubePdf
             {
                 if (!File.Exists(setting.UserProgram))
                 {
-                    _messages.Add(new Message(Message.Levels.Error, String.Format("{0}: プログラムが見つかりませんでした。", setting.UserProgram)));
+                    _messages.Add(new Message(Message.Levels.Error, String.Format(Properties.Resources.ProgramNotFound, setting.UserProgram)));
                     return false;
                 }
             }
@@ -143,9 +193,8 @@ namespace CubePdf
             return true;
         }
 
-        /* ----------------------------------------------------------------- */
-        //  変数定義
-        /* ----------------------------------------------------------------- */
+        #endregion
+
         #region Variables
         List<CubePdf.Message> _messages = null;
         #endregion

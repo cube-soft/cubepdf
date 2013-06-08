@@ -190,7 +190,7 @@ namespace CubePdf
             var setting = new UserSetting(false);
             Assert.IsTrue(setting.Load(), "Load from registry");
 
-            foreach (Parameter.PDFVersions version in Enum.GetValues(typeof(Parameter.PDFVersions)))
+            foreach (Parameter.PdfVersions version in Enum.GetValues(typeof(Parameter.PdfVersions)))
             {
                 setting.FileType = Parameter.FileTypes.PDF;
                 setting.PDFVersion = version;

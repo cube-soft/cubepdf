@@ -1,22 +1,22 @@
 ﻿/* ------------------------------------------------------------------------- */
-/*
- *  PdfModifier.cs
- *
- *  Copyright (c) 2009 - 2011 CubeSoft, Inc. All rights reserved.
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see < http://www.gnu.org/licenses/ >.
- */
+///
+/// PdfModifier.cs
+///
+/// Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU General Public License as published by
+/// the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU General Public License for more details.
+///
+/// You should have received a copy of the GNU General Public License
+/// along with this program.  If not, see < http://www.gnu.org/licenses/ >.
+///
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Collections.Generic;
@@ -25,12 +25,27 @@ using System.Diagnostics;
 namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
+    ///
     /// PdfModifier
+    ///
+    /// <summary>
+    /// Ghostscript を用いて変換した PDF ファイルに対して、追加で必要な
+    /// 修正を行うためのクラスです。
+    /// </summary>
+    ///
     /* --------------------------------------------------------------------- */
-    class PdfModifier
+    public class PdfModifier
     {
+        #region Initialization and Termination
+
         /* ----------------------------------------------------------------- */
-        /// Constructor
+        ///
+        /// PdfModifier (constructor)
+        ///
+        /// <summary>
+        /// 既定の値でオブジェクトを初期化します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public PdfModifier()
         {
@@ -38,7 +53,13 @@ namespace CubePdf
         }
 
         /* ----------------------------------------------------------------- */
-        /// Constructor
+        ///
+        /// PdfModifier (constructor)
+        ///
+        /// <summary>
+        /// 結合の対象となるファイルを用いて、オブジェクトを初期化します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public PdfModifier(string escaped)
         {
@@ -47,7 +68,14 @@ namespace CubePdf
         }
 
         /* ----------------------------------------------------------------- */
-        /// Constructor
+        ///
+        /// PdfModifier (constructor)
+        ///
+        /// <summary>
+        /// 結合の対象となるファイル、およびメッセージを格納するための
+        /// コンテナを用いて、オブジェクトを初期化します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public PdfModifier(string escaped, List<CubePdf.Message> messages)
         {
@@ -55,35 +83,66 @@ namespace CubePdf
             _messages = messages;
         }
 
+        #endregion
+
+        #region Properties
+
         /* ----------------------------------------------------------------- */
+        ///
         /// Messages
+        ///
+        /// <summary>
+        /// メッセージ一覧を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public List<CubePdf.Message> Messages
         {
             get { return _messages; }
         }
 
+        #endregion
+
+        #region Public methods
+
         /* ----------------------------------------------------------------- */
+        ///
         /// Run 
+        ///
+        /// <summary>
+        /// 引数に指定されたユーザ設定にしたがって、Ghostscript で生成された
+        /// PDF ファイルに対して追加で必要な修正を行います。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public bool Run(UserSetting setting)
         {
             bool status = true;
 
-            if (_escaped != null) status &= this.Merge(setting, _escaped);
+            if (!string.IsNullOrEmpty(_escaped)) status &= this.Merge(setting, _escaped);
             if (status) status &= this.AddInformation(setting);
             if (status && setting.WebOptimize) this.WebOptimize(setting); // Web 最適化のエラーは容認する
 
             return status;
         }
 
+        #endregion
+
+        #region Other methods
+
         /* ----------------------------------------------------------------- */
+        ///
         /// Merge
+        ///
+        /// <summary>
+        /// 2 つの PDF ファイルを結合します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         private bool Merge(UserSetting setting, string escaped)
         {
             // Nothing to do.
-            if (escaped == null ||
+            if (string.IsNullOrEmpty(escaped) ||
                 (setting.ExistedFile != Parameter.ExistedFiles.MergeHead &&
                 setting.ExistedFile != Parameter.ExistedFiles.MergeTail)) return true;
 
@@ -131,12 +190,18 @@ namespace CubePdf
         /// AddInformation
         ///
         /// <summary>
-        /// iText Sharp を用いて以下の情報を付与する．
-        ///   - 文書プロパティ
-        ///   - 文書を開くためのパスワード (UserPassword)
-        ///   - 権限編集のためのパスワード (OwnerPassword)
-        ///   - 各種パーミッション
+        /// PDF ファイルに対して、引数に指定されたユーザ設定にしたがって
+        /// 必要な情報を付与します。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// iTextSharp を用いて以下の情報を付与します。
+        /// 
+        /// - 文書プロパティ
+        /// - 文書を開くためのパスワード (UserPassword)
+        /// - 権限編集のためのパスワード (OwnerPassword)
+        /// - 各種パーミッション
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         private bool AddInformation(UserSetting setting)
@@ -152,7 +217,7 @@ namespace CubePdf
                 FileIOWrapper.Move(setting.OutputPath, tmp);
                 reader = new iTextSharp.text.pdf.PdfReader(tmp);
                 var writer = new iTextSharp.text.pdf.PdfStamper(reader,
-                    new System.IO.FileStream(setting.OutputPath, System.IO.FileMode.Create), PDFVersionToiText(setting.PDFVersion));
+                    new System.IO.FileStream(setting.OutputPath, System.IO.FileMode.Create), PdfVersionToiText(setting.PDFVersion));
 
                 // 文書プロパティ
                 Dictionary<string, string> info = new Dictionary<string, string>();
@@ -160,8 +225,8 @@ namespace CubePdf
                 info["Author"] = setting.Document.Author;
                 info["Subject"] = setting.Document.Subtitle;
                 info["Keywords"] = setting.Document.Keyword;
-                info["Creator"] = PRODUCER_NAME;
-                info["Producer"] = PRODUCER_NAME;
+                info["Creator"] = Properties.Resources.ProductName;
+                info["Producer"] = Properties.Resources.ProductName;
                 writer.MoreInfo = info;
 
                 // デバッグログ
@@ -207,7 +272,18 @@ namespace CubePdf
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// WebOptimize
+        ///
+        /// <summary>
+        /// Web に最適化された PDF ファイルに変換します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// iTextSharp には Web 最適化オプションが存在しないため、
+        /// Ghostscript を再度使用して変換を行います。
+        /// </remarks>
+        ///
         /* ----------------------------------------------------------------- */
         private bool WebOptimize(UserSetting setting)
         {
@@ -223,7 +299,7 @@ namespace CubePdf
                 gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
                 gs.PageRotation = setting.PageRotation;
 
-                gs.AddOption("CompatibilityLevel", Parameter.PDFVersionValue(setting.PDFVersion));
+                gs.AddOption("CompatibilityLevel", Parameter.PdfVersionValue(setting.PDFVersion));
                 gs.AddOption("UseFlateCompression", true);
 
                 if (setting.EmbedFont)
@@ -263,24 +339,29 @@ namespace CubePdf
             return status;
         }
 
-        /* ----------------------------------------------------------------- */
-        //  UserSetting から iText のパラメータへ変換する
-        /* ----------------------------------------------------------------- */
-        #region Convert user setting to iText
+        #endregion
+
+        #region Convert UserSetting to iText
 
         /* ----------------------------------------------------------------- */
-        /// PDFVersionToiText
+        ///
+        /// PdfVersionToiText
+        ///
+        /// <summary>
+        /// PdfVersions 列挙型を対応する iTextSharp の型に変換します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
-        private char PDFVersionToiText(Parameter.PDFVersions id)
+        private char PdfVersionToiText(Parameter.PdfVersions id)
         {
             switch (id)
             {
-                case Parameter.PDFVersions.Ver1_7: return iTextSharp.text.pdf.PdfWriter.VERSION_1_7;
-                case Parameter.PDFVersions.Ver1_6: return iTextSharp.text.pdf.PdfWriter.VERSION_1_6;
-                case Parameter.PDFVersions.Ver1_5: return iTextSharp.text.pdf.PdfWriter.VERSION_1_5;
-                case Parameter.PDFVersions.Ver1_4: return iTextSharp.text.pdf.PdfWriter.VERSION_1_4;
-                case Parameter.PDFVersions.Ver1_3: return iTextSharp.text.pdf.PdfWriter.VERSION_1_3;
-                case Parameter.PDFVersions.Ver1_2: return iTextSharp.text.pdf.PdfWriter.VERSION_1_2;
+                case Parameter.PdfVersions.Ver1_7: return iTextSharp.text.pdf.PdfWriter.VERSION_1_7;
+                case Parameter.PdfVersions.Ver1_6: return iTextSharp.text.pdf.PdfWriter.VERSION_1_6;
+                case Parameter.PdfVersions.Ver1_5: return iTextSharp.text.pdf.PdfWriter.VERSION_1_5;
+                case Parameter.PdfVersions.Ver1_4: return iTextSharp.text.pdf.PdfWriter.VERSION_1_4;
+                case Parameter.PdfVersions.Ver1_3: return iTextSharp.text.pdf.PdfWriter.VERSION_1_3;
+                case Parameter.PdfVersions.Ver1_2: return iTextSharp.text.pdf.PdfWriter.VERSION_1_2;
                 default: break;
             }
 
@@ -288,7 +369,14 @@ namespace CubePdf
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// PermissionToiText
+        ///
+        /// <summary>
+        /// PermissionProperty オブジェクトを iTextSharp で利用可能な数値に
+        /// 変換します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         private int PermissionToiText(PermissionProperty permission)
         {
@@ -328,10 +416,7 @@ namespace CubePdf
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        //  静的な補助関数
-        /* ----------------------------------------------------------------- */
-        #region Static functions
+        #region Static methods
 
         /* ----------------------------------------------------------------- */
         ///
@@ -409,19 +494,9 @@ namespace CubePdf
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        //  変数定義
-        /* ----------------------------------------------------------------- */
         #region Variables
         string _escaped;
         List<CubePdf.Message> _messages = null;
-        #endregion
-
-        /* ----------------------------------------------------------------- */
-        //  定数定義
-        /* ----------------------------------------------------------------- */
-        #region Constant variables
-        private const string PRODUCER_NAME = "CubePDF";
         #endregion
     }
 }

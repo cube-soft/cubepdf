@@ -1,22 +1,22 @@
 ﻿/* ------------------------------------------------------------------------- */
-/*
- *  Parameter.cs
- *
- *  Copyright (c) 2009 - 2011 CubeSoft, Inc. All rights reserved.
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see < http://www.gnu.org/licenses/ >.
- */
+///
+/// Parameter.cs
+///
+/// Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU General Public License as published by
+/// the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU General Public License for more details.
+///
+/// You should have received a copy of the GNU General Public License
+/// along with this program.  If not, see < http://www.gnu.org/licenses/ >.
+///
 /* ------------------------------------------------------------------------- */
 using System;
 
@@ -26,18 +26,21 @@ namespace CubePdf {
     ///  Parameter
     ///  
     ///  <summary>
-    ///  各種パラメータの値を定義したクラス．
+    ///  各種パラメータの値を定義したクラスです。
     ///  </summary>
     ///
     /* --------------------------------------------------------------------- */
     public abstract class Parameter {
-        /* ----------------------------------------------------------------- */
-        /// 各種パラメータの型 (enum) 定義
-        /* ----------------------------------------------------------------- */
         #region Type definitions
 
         /* ----------------------------------------------------------------- */
+        ///
         /// FileTypes
+        ///
+        /// <summary>
+        /// CubePDF が変換可能なファイル形式を表す列挙型です。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public enum FileTypes : int
         {
@@ -45,9 +48,15 @@ namespace CubePdf {
         };
 
         /* ----------------------------------------------------------------- */
+        ///
         /// PDFVersions
+        ///
+        /// <summary>
+        /// PDF のバージョンを表す列挙型です。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
-        public enum PDFVersions : int
+        public enum PdfVersions : int
         {
             Ver1_7, Ver1_6, Ver1_5, Ver1_4, Ver1_3, Ver1_2, VerPDFA, VerPDFX
         };
@@ -57,8 +66,7 @@ namespace CubePdf {
         /// ExistedFiles
         /// 
         /// <summary>
-        /// 出力ファイルが既に存在する場合の処理．上書き，先頭に結合，
-        /// 末尾に結合の 3種類．
+        /// 出力ファイルが既に存在する場合の処理を表す列挙型です。
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -68,7 +76,13 @@ namespace CubePdf {
         };
 
         /* ----------------------------------------------------------------- */
+        ///
         /// PostProcesses
+        ///
+        /// <summary>
+        /// CubePDF の変換終了後に実行するプロセスの種類を表す列挙型です。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public enum PostProcesses : int
         {
@@ -76,7 +90,13 @@ namespace CubePdf {
         };
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Resolutions
+        ///
+        /// <summary>
+        /// 変換時の解像度を表す列挙型です。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public enum Resolutions : int
         {
@@ -84,7 +104,13 @@ namespace CubePdf {
         };
 
         /* ----------------------------------------------------------------- */
+        ///
         /// DownSamplings
+        ///
+        /// <summary>
+        /// ダウンサンプリングの方法を表す列挙型です。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public enum DownSamplings : int
         {
@@ -92,7 +118,13 @@ namespace CubePdf {
         };
 
         /* ----------------------------------------------------------------- */
+        ///
         /// ImageFilters
+        ///
+        /// <summary>
+        /// 画像ファイルの圧縮方法を表す列挙型です。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public enum ImageFilters : int
         {
@@ -104,13 +136,16 @@ namespace CubePdf {
         /// SaveSettings
         ///
         /// <summary>
-        /// 各種設定をレジストリに反映するかどうかを決定する。
+        /// 各種設定をレジストリに反映するかどうかを決定する列挙型です。
+        /// </summary>
+        /// 
+        /// <remarks>
         /// 設定可能な値は、以下の通り:
         /// 
         /// None: 保存しない
         /// Save: 保存する
         /// Reset: 初期値にリセットする
-        /// </summary>
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         public enum SaveSettings : int
@@ -120,13 +155,16 @@ namespace CubePdf {
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        //  各種チェックメソッド
-        /* ----------------------------------------------------------------- */
         #region Checking methods
 
         /* ----------------------------------------------------------------- */
+        ///
         /// IsImageType
+        ///
+        /// <summary>
+        /// ファイルの種類がビットマップイメージかどうかを判別します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static bool IsImageType(FileTypes id) {
             if (id == FileTypes.PNG || id == FileTypes.JPEG || id == FileTypes.BMP || id == FileTypes.TIFF) return true;
@@ -134,7 +172,13 @@ namespace CubePdf {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// IsDocumentType
+        ///
+        /// <summary>
+        /// ファイルの種類が「ドキュメント」であるかどうかを判別します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static bool IsDocumentType(FileTypes id) {
             return !IsImageType(id);
@@ -142,13 +186,16 @@ namespace CubePdf {
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        //  各種 types から別の何らかの値に変換するメソッド群
-        /* ----------------------------------------------------------------- */
         #region Translation methods
 
         /* ----------------------------------------------------------------- */
+        ///
         /// FileTypeValue
+        ///
+        /// <summary>
+        /// それぞれのファイル形式に対応する文字列を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static string FileTypeValue(FileTypes id) {
             switch (id) {
@@ -166,7 +213,13 @@ namespace CubePdf {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Extension
+        ///
+        /// <summary>
+        /// それぞれのファイル形式の拡張子を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static string Extension(FileTypes id) {
             switch (id) {
@@ -184,24 +237,36 @@ namespace CubePdf {
         }
 
         /* ----------------------------------------------------------------- */
-        /// PDFVersionValue
+        ///
+        /// PdfVersionValue
+        ///
+        /// <summary>
+        /// PdfVersions 列挙型の各値に対応する実際の数値を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
-        public static double PDFVersionValue(PDFVersions id) {
+        public static double PdfVersionValue(PdfVersions id) {
             switch (id) {
-            case PDFVersions.Ver1_7: return 1.7;
-            case PDFVersions.Ver1_6: return 1.6;
-            case PDFVersions.Ver1_5: return 1.5;
-            case PDFVersions.Ver1_4: return 1.4;
-            case PDFVersions.Ver1_3: return 1.3;
-            case PDFVersions.Ver1_2: return 1.2;
-            case PDFVersions.VerPDFA: return 1.3;
-            case PDFVersions.VerPDFX: return 1.3;
+            case PdfVersions.Ver1_7: return 1.7;
+            case PdfVersions.Ver1_6: return 1.6;
+            case PdfVersions.Ver1_5: return 1.5;
+            case PdfVersions.Ver1_4: return 1.4;
+            case PdfVersions.Ver1_3: return 1.3;
+            case PdfVersions.Ver1_2: return 1.2;
+            case PdfVersions.VerPDFA: return 1.3;
+            case PdfVersions.VerPDFX: return 1.3;
             }
             return 1.7;
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// ResolutionValue
+        /// 
+        /// <summary>
+        /// Resolutions 列挙型の各値に対応する実際の数値を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static int ResolutionValue(Resolutions id) {
             switch (id) {
@@ -218,13 +283,17 @@ namespace CubePdf {
         #endregion
 
 #if HAVE_GHOSTSCRIPT
-        /* ----------------------------------------------------------------- */
-        //  GsConverter (Ghostscript) が使用するメソッド群
-        /* ----------------------------------------------------------------- */
         #region Ghostscript extensions
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Device
+        ///
+        /// <summary>
+        /// 引数に指定されたファイル形式とグレースケールかどうかを表す値から
+        /// 対応する Ghostscript.Devices 列挙型の値を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static Ghostscript.Devices Device(FileTypes id, bool grayscale) {
             switch (id) {

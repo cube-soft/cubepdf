@@ -480,7 +480,7 @@ namespace CubePdf
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        public Parameter.PDFVersions PDFVersion
+        public Parameter.PdfVersions PDFVersion
         {
             get { return _pdfver; }
             set { _pdfver = value; }
@@ -1049,9 +1049,9 @@ namespace CubePdf
                 }
 
                 string pdfver = (string)subkey.GetValue(_RegPdfVersion, "");
-                foreach (Parameter.PDFVersions id in Enum.GetValues(typeof(Parameter.PDFVersions)))
+                foreach (Parameter.PdfVersions id in Enum.GetValues(typeof(Parameter.PdfVersions)))
                 {
-                    if (Parameter.PDFVersionValue(id).ToString() == pdfver)
+                    if (Parameter.PdfVersionValue(id).ToString() == pdfver)
                     {
                         _pdfver = id;
                         break;
@@ -1212,11 +1212,11 @@ namespace CubePdf
             var pdfversion = document.Root.Find(_RegPdfVersion);
             if (pdfversion != null)
             {
-                foreach (int item in Enum.GetValues(typeof(Parameter.PDFVersions)))
+                foreach (int item in Enum.GetValues(typeof(Parameter.PdfVersions)))
                 {
                     if (item == (int)pdfversion.Value)
                     {
-                        _pdfver = (Parameter.PDFVersions)pdfversion.Value;
+                        _pdfver = (Parameter.PdfVersions)pdfversion.Value;
                         break;
                     }
                 }
@@ -1379,7 +1379,7 @@ namespace CubePdf
         private string _argument = "%%FILE%%";
         private string _password = "";
         private Parameter.FileTypes _type = Parameter.FileTypes.PDF;
-        private Parameter.PDFVersions _pdfver = Parameter.PDFVersions.Ver1_7;
+        private Parameter.PdfVersions _pdfver = Parameter.PdfVersions.Ver1_7;
         private Parameter.Resolutions _resolution = Parameter.Resolutions.Resolution300;
         private Parameter.ExistedFiles _exist = Parameter.ExistedFiles.Overwrite;
         private Parameter.PostProcesses _postproc = Parameter.PostProcesses.Open;
