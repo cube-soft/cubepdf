@@ -25,10 +25,25 @@ using System.Runtime.InteropServices;
 
 namespace CubePDF
 {
+    /* --------------------------------------------------------------------- */
+    ///
+    /// Utility
+    /// 
+    /// <summary>
+    /// 雑多な補助メソッドを定義するためのクラスです。
+    /// </summary>
+    ///
+    /* --------------------------------------------------------------------- */
     public abstract class Utility
     {
         /* ------------------------------------------------------------- */
+        ///
         /// WorkingDirectory
+        ///
+        /// <summary>
+        /// CubePDF の作業用ディレクトリへのパスを取得、または設定します。
+        /// </summary>
+        ///
         /* ------------------------------------------------------------- */
         public static string WorkingDirectory
         {
@@ -41,10 +56,13 @@ namespace CubePDF
         /// CurrentDirectory
         ///
         /// <summary>
-        /// 現在の実行ディレクトリへのパスを返す。GetEntryAssembly
-        /// メソッドが失敗した場合には、CurrentDirectory 環境変数の値を
-        /// 返す。
+        /// 現在の実行ディレクトリへのパスを返します。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// GetEntryAssembly メソッドが失敗した場合には、CurrentDirectory
+        /// 環境変数の値を返す事とします。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         public static string CurrentDirectory
@@ -62,7 +80,7 @@ namespace CubePDF
         /// IsAssociate
         ///
         /// <summary>
-        /// 引数に指定された拡張子が関連付けされているかどうかチェックする。
+        /// 引数に指定された拡張子が関連付けされているかどうかを確認します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
@@ -73,21 +91,17 @@ namespace CubePDF
             return status == 0;
         }
 
-        /* ----------------------------------------------------------------- */
-        //  Win32 APIs
-        /* ----------------------------------------------------------------- */
         #region Win32APIs
 
         /* ----------------------------------------------------------------- */
         ///
         /// AssocQueryKey
         ///
-        /// <summary>
-        /// NOTE: 本来、引数の flags は ASSOCF、key は ASSOCKEY と言う
-        /// enum 型で定義される。
-        /// 
+        /// <remarks>
+        /// 本来、引数の flags は ASSOCF、key は ASSOCKEY と言う enum 型で
+        /// 定義される模様。
         /// http://msdn.microsoft.com/en-us/library/windows/desktop/bb773468.aspx
-        /// </summary>
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         [DllImport("Shlwapi.dll", SetLastError = true, CharSet = CharSet.Auto)]
@@ -95,9 +109,6 @@ namespace CubePDF
 
         #endregion
 
-        /* ------------------------------------------------------------- */
-        //  変数定義
-        /* ------------------------------------------------------------- */
         #region Variables
         private static string _work = System.IO.Path.GetTempPath();
         #endregion

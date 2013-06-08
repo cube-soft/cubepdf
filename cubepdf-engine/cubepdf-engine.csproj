@@ -93,16 +93,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandLine.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="FileIOWrapper.cs" />
     <Compile Include="FileNameModifier.cs" />
-    <Compile Include="GsConverter.cs">
+    <Compile Include="Ghostscript\Converter.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GsDevice.cs">
+    <Compile Include="Ghostscript\Device.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GsPaper.cs">
+    <Compile Include="Ghostscript\Paper.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Message.cs" />

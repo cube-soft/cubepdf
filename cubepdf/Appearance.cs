@@ -28,14 +28,20 @@ namespace CubePDF {
     ///  
     ///  <summary>
     ///  CubePDF メイン画面のコンボボックスに表示する文字列を定義した
-    ///  クラス．Parameter クラスの各種パラメータに対応する文字列を
-    ///  定義する．
+    ///  クラスです。Parameter クラスの各種パラメータに対応する文字列を
+    ///  定義しています。
     ///  </summary>
     ///  
     /* --------------------------------------------------------------------- */
     class Appearance {
         /* ----------------------------------------------------------------- */
+        ///
         /// FileFilterString
+        ///
+        /// <summary>
+        /// 保存ファイルのフィルターに適用する文字列を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static string FileFilterString() {
             StringBuilder dest = new StringBuilder();
@@ -58,14 +64,26 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// FileTypeString
+        ///
+        /// <summary>
+        /// FileTypes の各値に対応する文字列を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static string FileTypeString(Parameter.FileTypes id) {
             return Parameter.FileTypeValue(id);
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// PDFVersionString
+        ///
+        /// <summary>
+        /// PDFVersions の各値に対応する文字列を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static string PDFVersionString(Parameter.PDFVersions id) {
             if (id == Parameter.PDFVersions.VerPDFA) return ""; //"PDF/A";
@@ -74,7 +92,13 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// ExistedFileString
+        ///
+        /// <summary>
+        /// ExistedFiles の各値に対応する文字列を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static string ExistedFileString(Parameter.ExistedFiles id) {
             switch (id) {
@@ -88,7 +112,13 @@ namespace CubePDF {
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// PostProcessString
+        ///
+        /// <summary>
+        /// PostProcesses の各値に対応する文字列を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static string PostProcessString(Parameter.PostProcesses id) {
             switch (id) {
@@ -101,14 +131,26 @@ namespace CubePDF {
         }
         
         /* ----------------------------------------------------------------- */
+        ///
         /// ResolutionString
+        ///
+        /// <summary>
+        /// Resolutions の各値に対応する文字列を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static string ResolutionString(Parameter.Resolutions id) {
             return Parameter.ResolutionValue(id).ToString();
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// DownSamplingString
+        ///
+        /// <summary>
+        /// DownSamplings の各値に対応する文字列を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public static string DownSamplingString(Parameter.DownSamplings id) {
             switch (id) {
