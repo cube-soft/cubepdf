@@ -24,7 +24,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace CubePDF.Ghostscript
+namespace CubePdf.Ghostscript
 {
     /* --------------------------------------------------------------------- */
     ///
@@ -42,13 +42,13 @@ namespace CubePDF.Ghostscript
         /* ----------------------------------------------------------------- */
         public Converter()
         {
-            _messages = new List<CubePDF.Message>();
+            _messages = new List<CubePdf.Message>();
         }
 
         /* ----------------------------------------------------------------- */
         /// Constructor
         /* ----------------------------------------------------------------- */
-        public Converter(List<CubePDF.Message> messages)
+        public Converter(List<CubePdf.Message> messages)
         {
             _messages = messages;
         }
@@ -64,7 +64,7 @@ namespace CubePDF.Ghostscript
         /* ----------------------------------------------------------------- */
         /// Messages
         /* ----------------------------------------------------------------- */
-        public List<CubePDF.Message> Messages
+        public List<CubePdf.Message> Messages
         {
             get { return _messages; }
         }
@@ -395,7 +395,7 @@ namespace CubePDF.Ghostscript
             args.Add("-r" + this._resolution.ToString());
 
             // Add page settings
-            if (this._paper != CubePDF.Ghostscript.Papers.Unknown) args.Add(PaperExt.Argument(this._paper));
+            if (this._paper != Papers.Unknown) args.Add(PaperExt.Argument(this._paper));
             else if (this._device == Devices.PDF) args.Add("-dPDFFitPage");
             if (this._first > 1 || this._first < this._last)
             {
@@ -551,7 +551,7 @@ namespace CubePDF.Ghostscript
         private List<string> _fonts = new List<string>();
         private Dictionary<string, string> _options = new Dictionary<string, string>();
         private List<string> _sources = new List<string>();
-        private List<CubePDF.Message> _messages = null;
+        private List<CubePdf.Message> _messages = null;
         private static object _gslock = new object();
         #endregion
 

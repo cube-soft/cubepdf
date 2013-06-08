@@ -1,4 +1,4 @@
-﻿namespace CubePDF
+﻿namespace CubePdf
 {
     partial class VersionDialog
     {
@@ -90,7 +90,7 @@
             // 
             // TitlePictureBox
             // 
-            this.TitlePictureBox.Image = global::CubePDF.Properties.Resources.title;
+            this.TitlePictureBox.Image = global::CubePdf.Properties.Resources.title;
             this.TitlePictureBox.Location = new System.Drawing.Point(119, 12);
             this.TitlePictureBox.Name = "TitlePictureBox";
             this.TitlePictureBox.Size = new System.Drawing.Size(98, 48);
@@ -110,7 +110,7 @@
             // 
             // LogoPictureBox
             // 
-            this.LogoPictureBox.Image = global::CubePDF.Properties.Resources.logo;
+            this.LogoPictureBox.Image = global::CubePdf.Properties.Resources.logo;
             this.LogoPictureBox.Location = new System.Drawing.Point(62, 26);
             this.LogoPictureBox.Name = "LogoPictureBox";
             this.LogoPictureBox.Size = new System.Drawing.Size(32, 42);

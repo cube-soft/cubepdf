@@ -1,4 +1,4 @@
-﻿namespace CubePDF
+﻿namespace CubePdf
 {
     partial class MainForm
     {
@@ -128,7 +128,7 @@
             // 
             // MainPanel
             // 
-            this.MainPanel.BackgroundImage = global::CubePDF.Properties.Resources.background;
+            this.MainPanel.BackgroundImage = global::CubePdf.Properties.Resources.background;
             this.MainPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.MainPanel.Controls.Add(this.SettingButton);
             this.MainPanel.Controls.Add(this.ExecProgressBar);
@@ -144,7 +144,7 @@
             // SettingButton
             // 
             this.SettingButton.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.SettingButton.BackgroundImage = global::CubePDF.Properties.Resources.button_setting;
+            this.SettingButton.BackgroundImage = global::CubePdf.Properties.Resources.button_setting;
             this.SettingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.SettingButton.Location = new System.Drawing.Point(12, 378);
             this.SettingButton.Margin = new System.Windows.Forms.Padding(0);
@@ -166,7 +166,7 @@
             // ExitButton
             // 
             this.ExitButton.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ExitButton.BackgroundImage = global::CubePDF.Properties.Resources.button_cancel;
+            this.ExitButton.BackgroundImage = global::CubePdf.Properties.Resources.button_cancel;
             this.ExitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ExitButton.Location = new System.Drawing.Point(369, 362);
             this.ExitButton.Name = "ExitButton";
@@ -178,7 +178,7 @@
             // ConvertButton
             // 
             this.ConvertButton.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ConvertButton.BackgroundImage = global::CubePDF.Properties.Resources.button_convert;
+            this.ConvertButton.BackgroundImage = global::CubePdf.Properties.Resources.button_convert;
             this.ConvertButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ConvertButton.Location = new System.Drawing.Point(227, 362);
             this.ConvertButton.Margin = new System.Windows.Forms.Padding(0);
@@ -205,7 +205,7 @@
             // GeneralTabPage
             // 
             this.GeneralTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.GeneralTabPage.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
+            this.GeneralTabPage.BackgroundImage = global::CubePdf.Properties.Resources.background_tab;
             this.GeneralTabPage.Controls.Add(this.GeneralPanel);
             this.GeneralTabPage.Location = new System.Drawing.Point(4, 22);
             this.GeneralTabPage.Name = "GeneralTabPage";
@@ -453,7 +453,7 @@
             // DocTabPage
             // 
             this.DocTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.DocTabPage.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
+            this.DocTabPage.BackgroundImage = global::CubePdf.Properties.Resources.background_tab;
             this.DocTabPage.Controls.Add(this.DocPanel);
             this.DocTabPage.Location = new System.Drawing.Point(4, 22);
             this.DocTabPage.Name = "DocTabPage";
@@ -558,7 +558,7 @@
             // SecurityTabPage
             // 
             this.SecurityTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.SecurityTabPage.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
+            this.SecurityTabPage.BackgroundImage = global::CubePdf.Properties.Resources.background_tab;
             this.SecurityTabPage.Controls.Add(this.SecurityGroupBox);
             this.SecurityTabPage.Location = new System.Drawing.Point(4, 22);
             this.SecurityTabPage.Name = "SecurityTabPage";
@@ -787,7 +787,7 @@
             // DetailTabPage
             // 
             this.DetailTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.DetailTabPage.BackgroundImage = global::CubePDF.Properties.Resources.background_tab;
+            this.DetailTabPage.BackgroundImage = global::CubePdf.Properties.Resources.background_tab;
             this.DetailTabPage.Controls.Add(this.DetailPanel);
             this.DetailTabPage.Location = new System.Drawing.Point(4, 22);
             this.DetailTabPage.Name = "DetailTabPage";
@@ -955,7 +955,7 @@
             // HeaderPictureBox
             // 
             this.HeaderPictureBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.HeaderPictureBox.Image = global::CubePDF.Properties.Resources.header;
+            this.HeaderPictureBox.Image = global::CubePdf.Properties.Resources.header;
             this.HeaderPictureBox.Location = new System.Drawing.Point(0, 0);
             this.HeaderPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.HeaderPictureBox.Name = "HeaderPictureBox";

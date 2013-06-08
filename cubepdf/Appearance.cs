@@ -21,7 +21,7 @@
 using System;
 using System.Text;
 
-namespace CubePDF {
+namespace CubePdf {
     /* --------------------------------------------------------------------- */
     ///
     ///  Appearance

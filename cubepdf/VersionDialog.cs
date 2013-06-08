@@ -21,7 +21,7 @@
 using System;
 using System.Windows.Forms;
 
-namespace CubePDF {
+namespace CubePdf {
     /* --------------------------------------------------------------------- */
     /// VersionDialog
     /* --------------------------------------------------------------------- */

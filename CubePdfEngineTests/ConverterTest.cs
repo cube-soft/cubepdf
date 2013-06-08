@@ -24,7 +24,7 @@ using System.Text;
 using NUnit.Framework;
 using iTextPDF = iTextSharp.text.pdf;
 
-namespace CubePDF
+namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     ///

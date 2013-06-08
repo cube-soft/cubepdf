@@ -21,7 +21,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CubePDF
+namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     ///

@@ -22,7 +22,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-namespace CubePDF {
+namespace CubePdf {
     /* --------------------------------------------------------------------- */
     /// Converter
     /* --------------------------------------------------------------------- */
@@ -33,13 +33,13 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         public Converter()
         {
-            _messages = new List<CubePDF.Message>();
+            _messages = new List<CubePdf.Message>();
         }
 
         /* ----------------------------------------------------------------- */
         /// Constructor
         /* ----------------------------------------------------------------- */
-        public Converter(List<CubePDF.Message> messages)
+        public Converter(List<CubePdf.Message> messages)
         {
             _messages = messages;
         }
@@ -81,14 +81,14 @@ namespace CubePDF {
                 {
                     PDFModifier modifier = new PDFModifier(_escaped, _messages);
                     status = modifier.Run(setting);
-                    _messages.Add(new Message(Message.Levels.Info, String.Format("CubePDF.PDFModifier.Run: {0}", status.ToString())));
+                    _messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.PDFModifier.Run: {0}", status.ToString())));
                 }
 
                 if (status)
                 {
                     PostProcess postproc = new PostProcess(_messages);
                     status = postproc.Run(setting);
-                    _messages.Add(new Message(Message.Levels.Info, String.Format("CubePDF.PostProcess.Run: {0}", status.ToString())));
+                    _messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.PostProcess.Run: {0}", status.ToString())));
                 }
             }
             catch (Exception err) {
@@ -176,7 +176,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         /// Messages
         /* ----------------------------------------------------------------- */
-        public List<CubePDF.Message> Messages {
+        public List<CubePdf.Message> Messages {
             get { return _messages; }
         }
 
@@ -338,7 +338,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         #region Variables
         private string _escaped = null; // null 以外ならマージが必要
-        private List<CubePDF.Message> _messages = null;
+        private List<CubePdf.Message> _messages = null;
         #endregion
     }
 }

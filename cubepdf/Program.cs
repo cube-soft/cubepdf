@@ -24,7 +24,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace CubePDF
+namespace CubePdf
 {
     static class Program
     {

@@ -21,7 +21,7 @@
 using System;
 using System.IO;
 
-namespace CubePDF
+namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     /// FileNameModifier

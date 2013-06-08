@@ -21,7 +21,7 @@
 using System;
 using NUnit.Framework;
 
-namespace CubePDF
+namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     ///

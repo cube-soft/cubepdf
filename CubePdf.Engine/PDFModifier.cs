@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace CubePDF
+namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     /// PDFModifier
@@ -34,7 +34,7 @@ namespace CubePDF
         /* ----------------------------------------------------------------- */
         public PDFModifier()
         {
-            _messages = new List<CubePDF.Message>();
+            _messages = new List<CubePdf.Message>();
         }
 
         /* ----------------------------------------------------------------- */
@@ -43,13 +43,13 @@ namespace CubePDF
         public PDFModifier(string escaped)
         {
             _escaped = escaped;
-            _messages = new List<CubePDF.Message>();
+            _messages = new List<CubePdf.Message>();
         }
 
         /* ----------------------------------------------------------------- */
         /// Constructor
         /* ----------------------------------------------------------------- */
-        public PDFModifier(string escaped, List<CubePDF.Message> messages)
+        public PDFModifier(string escaped, List<CubePdf.Message> messages)
         {
             _escaped = escaped;
             _messages = messages;
@@ -58,7 +58,7 @@ namespace CubePDF
         /* ----------------------------------------------------------------- */
         /// Messages
         /* ----------------------------------------------------------------- */
-        public List<CubePDF.Message> Messages
+        public List<CubePdf.Message> Messages
         {
             get { return _messages; }
         }
@@ -212,7 +212,7 @@ namespace CubePDF
         private bool WebOptimize(UserSetting setting)
         {
             string tmp = Utility.WorkingDirectory + '\\' + System.IO.Path.GetRandomFileName();
-            Ghostscript.Converter gs = new CubePDF.Ghostscript.Converter(_messages);
+            Ghostscript.Converter gs = new CubePdf.Ghostscript.Converter(_messages);
             gs.Device = Ghostscript.Devices.PDF_Opt;
             bool status = true;
             try
@@ -245,7 +245,7 @@ namespace CubePDF
             }
             catch (Exception err)
             {
-                _messages.Add(new Message(Message.Levels.Warn, "CubePDF.PDFModifier.WebOptimize: False"));
+                _messages.Add(new Message(Message.Levels.Warn, "CubePdf.PDFModifier.WebOptimize: False"));
                 _messages.Add(new Message(Message.Levels.Debug, err));
                 status = false;
             }
@@ -414,7 +414,7 @@ namespace CubePDF
         /* ----------------------------------------------------------------- */
         #region Variables
         string _escaped;
-        List<CubePDF.Message> _messages = null;
+        List<CubePdf.Message> _messages = null;
         #endregion
 
         /* ----------------------------------------------------------------- */

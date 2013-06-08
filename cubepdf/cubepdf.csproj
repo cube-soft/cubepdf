@@ -8,7 +8,7 @@
     <ProjectGuid>{39CDF0CB-B216-44D1-A3E9-D2A5D7CFE4F8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CubePDF</RootNamespace>
+    <RootNamespace>CubePdf</RootNamespace>
     <AssemblyName>cubepdf</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

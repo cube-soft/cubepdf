@@ -23,7 +23,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace CubePDF
+namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     ///
@@ -113,4 +113,4 @@ namespace CubePDF
         private static string _work = System.IO.Path.GetTempPath();
         #endregion
     }
-} // namespace CubePDF
+} // namespace CubePdf

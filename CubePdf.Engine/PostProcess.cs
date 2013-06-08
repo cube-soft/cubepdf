@@ -23,7 +23,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace CubePDF
+namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     /// PostProcess
@@ -35,13 +35,13 @@ namespace CubePDF
         /* ----------------------------------------------------------------- */
         public PostProcess()
         {
-            _messages = new List<CubePDF.Message>();
+            _messages = new List<CubePdf.Message>();
         }
 
         /* ----------------------------------------------------------------- */
         /// Constructor
         /* ----------------------------------------------------------------- */
-        public PostProcess(List<CubePDF.Message> messages)
+        public PostProcess(List<CubePdf.Message> messages)
         {
             _messages = messages;
         }
@@ -101,7 +101,7 @@ namespace CubePDF
         /* ----------------------------------------------------------------- */
         /// Messages
         /* ----------------------------------------------------------------- */
-        public List<CubePDF.Message> Messages
+        public List<CubePdf.Message> Messages
         {
             get { return _messages; }
         }
@@ -123,7 +123,7 @@ namespace CubePDF
             if (setting.PostProcess == Parameter.PostProcesses.Open)
             {
                 string ext = Parameter.Extension(setting.FileType);
-                if (!CubePDF.Utility.IsAssociate(ext))
+                if (!CubePdf.Utility.IsAssociate(ext))
                 {
                     // NOTE: 関連付けされていない場合は、単純にスキップする（エラーメッセージを表示しない）。
                     // _messages.Add(new Message(Message.Levels.Error, String.Format("{0}: ファイルが関連付けられていません", ext)));
@@ -147,7 +147,7 @@ namespace CubePDF
         //  変数定義
         /* ----------------------------------------------------------------- */
         #region Variables
-        List<CubePDF.Message> _messages = null;
+        List<CubePdf.Message> _messages = null;
         #endregion
     }
 }

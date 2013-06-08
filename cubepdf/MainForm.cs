@@ -26,7 +26,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
-namespace CubePDF {
+namespace CubePdf {
     /* --------------------------------------------------------------------- */
     /// MainForm
     /* --------------------------------------------------------------------- */
@@ -175,7 +175,7 @@ namespace CubePDF {
             {
                 string ext = Path.GetExtension(this.OutputPathTextBox.Text);
                 string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
-                if (ext != compared && !CubePDF.Utility.IsAssociate(ext))
+                if (ext != compared && !CubePdf.Utility.IsAssociate(ext))
                 {
                     this.OutputPathTextBox.Text += compared;
                 }
@@ -251,7 +251,7 @@ namespace CubePDF {
             this.InputPathPanel.Enabled = setting.SelectInputFile && setting.InputPath.Length == 0;
 
             // ログ出力
-            _messages.Add(new Message(Message.Levels.Debug, "CubePDF.MainForm.LoadSetting"));
+            _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.LoadSetting"));
             _messages.Add(new Message(Message.Levels.Debug, setting.ToString()));
         }
 
@@ -308,7 +308,7 @@ namespace CubePDF {
             }
 
             // ログ出力
-            _messages.Add(new Message(Message.Levels.Debug, "CubePDF.MainForm.SaveSetting"));
+            _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.SaveSetting"));
             _messages.Add(new Message(Message.Levels.Debug, setting.ToString()));
         }
 
@@ -399,7 +399,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void ExitButton_Click(object sender, EventArgs e) {
             if (_setting.DeleteOnClose && File.Exists(_setting.InputPath)) File.Delete(_setting.InputPath);
-            _messages.Add(new Message(Message.Levels.Debug, "CubePDF.MainForm.ExitButton_Click"));
+            _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.ExitButton_Click"));
             this.WriteMessage();
             this.Close();
         }
@@ -439,7 +439,7 @@ namespace CubePDF {
             string ext = Path.GetExtension(this.OutputPathTextBox.Text);
             string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
             this.OutputPathTextBox.Text = dialog.FileName;
-            if (ext != compared && !CubePDF.Utility.IsAssociate(ext))
+            if (ext != compared && !CubePdf.Utility.IsAssociate(ext))
             {
                 this.OutputPathTextBox.Text += compared;
             }
@@ -621,7 +621,7 @@ namespace CubePDF {
         /// HeaderPictureBox_Click
         /* ----------------------------------------------------------------- */
         private void HeaderPictureBox_Click(object sender, EventArgs e) {
-            CubePDF.VersionDialog version = new VersionDialog(_setting.Version);
+            CubePdf.VersionDialog version = new VersionDialog(_setting.Version);
             version.ShowDialog(this);
         }
 
@@ -777,7 +777,7 @@ namespace CubePDF {
             // 変換の実行
             Converter converter = new Converter();
             bool status = converter.Run(_setting);
-            converter.Messages.Add(new Message(Message.Levels.Info, String.Format("CubePDF.Converter.Run: {0}", status.ToString())));
+            converter.Messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.Converter.Run: {0}", status.ToString())));
             e.Result = converter.Messages;
         }
 
@@ -785,7 +785,7 @@ namespace CubePDF {
         /// ConvertBackgroundWorker_RunWorkerCompleted
         /* ----------------------------------------------------------------- */
         private void ConvertBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e) {
-            if (e.Result != null) _messages.AddRange((List<CubePDF.Message>)e.Result);
+            if (e.Result != null) _messages.AddRange((List<CubePdf.Message>)e.Result);
             this.WriteMessage();
             if (_setting.DeleteOnClose && File.Exists(_setting.InputPath)) File.Delete(_setting.InputPath);
             this.Close();
@@ -811,7 +811,7 @@ namespace CubePDF {
         /* ----------------------------------------------------------------- */
         private void WriteMessage() {
             string error = "";
-            foreach (CubePDF.Message message in _messages) {
+            foreach (CubePdf.Message message in _messages) {
                 Trace.WriteLine(message.ToString());
                 if (message.Level == Message.Levels.Error || message.Level == Message.Levels.Fatal) {
                     error = message.Value;
@@ -907,7 +907,7 @@ namespace CubePDF {
         private UserSetting _setting;
         private ComboBox _postproc;
         private ToolTip _tips = new ToolTip();
-        private List<CubePDF.Message> _messages = new List<Message>();
+        private List<CubePdf.Message> _messages = new List<Message>();
         #endregion
     }
 }

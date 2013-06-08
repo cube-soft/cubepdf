@@ -24,7 +24,7 @@ using System.Diagnostics;
 using Microsoft.Win32;
 using Cubic;
 
-namespace CubePDF
+namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     /// DocumentProperty
@@ -170,7 +170,7 @@ namespace CubePDF
         /// Constructor
         ///
         /// <summary>
-        /// CubePDF.UserSetting クラスを初期化します．引数なしの場合は，
+        /// CubePdf.UserSetting クラスを初期化します．引数なしの場合は，
         /// CubePDF のバージョン情報やインストールパス等，ユーザによらず
         /// 一定 (HKEY_LOCAL_MACHINE¥Software¥CubeSoft¥CubePDF 下で定義
         /// されているもの) である情報のみロードされます．
@@ -187,7 +187,7 @@ namespace CubePDF
         /// Constructor
         /// 
         /// <summary>
-        /// CubePDF.UserSetting クラスを初期化します．true を引数に指定した
+        /// CubePdf.UserSetting クラスを初期化します．true を引数に指定した
         /// 場合，引数なしでのコンストラクタの処理に加えて，ユーザ毎の
         /// 設定情報 (HKEY_CURRENT_USER¥Software¥CubeSoft¥CubePDF¥v2) も
         /// 同時にロードされます．これは，引数なしで初期化した後に Load()
@@ -303,7 +303,7 @@ namespace CubePDF
         /// Save
         /// 
         /// <summary>
-        /// CubePDF.UserSetting クラスの現在の設定をレジストリに保存します．
+        /// CubePdf.UserSetting クラスの現在の設定をレジストリに保存します．
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
@@ -334,7 +334,7 @@ namespace CubePDF
         /// Save
         /// 
         /// <summary>
-        /// CubePDF.UserSetting クラスの現在の設定を指定されたパスにXML
+        /// CubePdf.UserSetting クラスの現在の設定を指定されたパスにXML
         /// 形式で保存します．
         /// </summary>
         /// 
@@ -611,7 +611,7 @@ namespace CubePDF
         /// <summary>
         /// CubePDF 実行終了後に実行されるプログラムへのパスを取得，または
         /// 設定します．尚，PostProcess プロパティに指定されている値が
-        /// CubePDF.Parameter.PostProcess.UserProgram 以外の場合，この設定は
+        /// CubePdf.Parameter.PostProcess.UserProgram 以外の場合，この設定は
         /// 無視されます．
         /// </summary>
         /// 
@@ -649,7 +649,7 @@ namespace CubePDF
         /// 変換するファイルの種類を取得、または設定します．
         /// 設定可能な値は以下の通りです:
         /// PDF, PS, EPS, SVG, PNG, JPEG, BMP, TIFF
-        /// これらの値は，例えば，CubePDF.Parameter.FileTypes.PDF のように
+        /// これらの値は，例えば，CubePdf.Parameter.FileTypes.PDF のように
         /// 設定します．
         /// </summary>
         ///
@@ -668,7 +668,7 @@ namespace CubePDF
         /// PDF 形式で変換する場合の PDF バージョンを取得，または設定します．
         /// 設定可能な値は以下の通りです:
         /// Ver1_7, Ver1_6, Ver1_5, Ver1_4, Ver1_3, Ver1_2
-        /// これらの値は，例えば，CubePDF.Parameter.PDFVersions.Ver1_7
+        /// これらの値は，例えば，CubePdf.Parameter.PDFVersions.Ver1_7
         /// のように設定します．
         /// </summary>
         ///
@@ -688,7 +688,7 @@ namespace CubePDF
         /// 設定可能な値は以下の通りです:
         /// Resolution72, Resolution150, Resolution300, Resolution450,
         /// Resolution600
-        /// これらの値は，例えば，CubePDF.Parameter.Resolutions.Resolution72
+        /// これらの値は，例えば，CubePdf.Parameter.Resolutions.Resolution72
         /// のように設定しま．
         /// </summary>
         ///
@@ -710,7 +710,7 @@ namespace CubePDF
         /// MergeHead : 既に存在するファイルの先頭に結合
         /// MergeTail : 既に存在するファイルの末尾に結合
         /// Rename    : Sample (2).pdf のようにリネーム
-        /// これらの値は，例えば，CubePDF.Parameter.ExistedFiles.Overwrite
+        /// これらの値は，例えば，CubePdf.Parameter.ExistedFiles.Overwrite
         /// のように設定します．
         /// </summary>
         ///
@@ -731,7 +731,7 @@ namespace CubePDF
         /// Open : 関連付けられているアプリケーションでファイルを開く
         /// None : 何もしない
         /// UserProgram : UserProgram で設定されたプログラムを実行する
-        /// これらの値は，例えば，CubePDF.Parameter.PostProcesses.Open
+        /// これらの値は，例えば，CubePdf.Parameter.PostProcesses.Open
         /// のように設定します．
         /// </summary>
         ///
@@ -750,7 +750,7 @@ namespace CubePDF
         /// 画像のダウンサンプリング方法を取得，または設定します．
         /// 設定可能な値は以下の通りです:
         /// None, Average, Bicubic, Subsample
-        /// これらの値は，例えば，CubePDF.Parameter.DownSamplings.None
+        /// これらの値は，例えば，CubePdf.Parameter.DownSamplings.None
         /// のように設定します．
         /// </summary>
         ///
@@ -769,7 +769,7 @@ namespace CubePDF
         /// 画像の圧縮方法を取得，または設定します．
         /// 設定可能な値は以下の通りです:
         /// FlateEncode, DCTEncode, CCITTFaxEncode
-        /// これらの値は，例えば，CubePDF.Parameter.ImageFilter.FlateEncode
+        /// これらの値は，例えば，CubePdf.Parameter.ImageFilter.FlateEncode
         /// のように設定します．
         /// </summary>
         /// 

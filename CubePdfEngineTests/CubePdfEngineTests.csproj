@@ -8,7 +8,7 @@
     <ProjectGuid>{2779F1A0-5F12-40DF-AFC5-64F98C0B87F6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CubePDF</RootNamespace>
+    <RootNamespace>CubePdf</RootNamespace>
     <AssemblyName>CubePdfEngineTests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -149,8 +149,7 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(ProjectDir)
-copy $(TargetDir)*.dll $(ProjectDir)
-copy $(ProjectDir)..\release\$(PlatformName)\gsdll32.dll $(ProjectDir)</PostBuildEvent>
+copy $(TargetDir)*.dll $(ProjectDir)</PostBuildEvent>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
