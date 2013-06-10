@@ -106,7 +106,7 @@
             this.CubePDFLinkLabel.TabIndex = 2;
             this.CubePDFLinkLabel.TabStop = true;
             this.CubePDFLinkLabel.Text = "http://www.cube-soft.jp/cubepdf/";
-            this.CubePDFLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CubePDFLinkLabel_LinkClicked);
+            this.CubePDFLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CubePdfLinkLabel_LinkClicked);
             // 
             // LogoPictureBox
             // 
@@ -125,7 +125,7 @@
             this.OKButton.TabIndex = 1;
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
-            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
+            this.OKButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // VersionDialog
             // 
