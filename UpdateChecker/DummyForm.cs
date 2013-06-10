@@ -1,8 +1,8 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// VersionDialog.cs
+/// DummyForm.cs
 ///
-/// Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
+/// Copyright (c) 2013 CubeSoft, Inc. All rights reserved.
 ///
 /// This program is free software: you can redistribute it and/or modify
 /// it under the terms of the GNU General Public License as published by
@@ -20,79 +20,86 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
-namespace CubePdf
+namespace CubePdfUtility
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// VersionDialog
-    ///
+    /// DummyForm
+    /// 
     /// <summary>
-    /// バージョン情報を表示するための Windows フォームクラスです。
+    /// タスクトレイに通知アイコンを表示させるためのダミーフォームです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
-    public partial class VersionDialog : Form
+    public partial class DummyForm : Form
     {
         /* ----------------------------------------------------------------- */
         ///
-        /// VersionDialog (constructor)
-        ///
+        /// DummyForm (constructor)
+        /// 
         /// <summary>
-        /// 引数に指定されたバージョン情報を利用して、オブジェクトを初期化
-        /// します。
+        /// 既定の値でオブジェクトを初期化します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public VersionDialog(string version)
+        public DummyForm()
         {
             InitializeComponent();
-            var edition = (IntPtr.Size == 4) ? "x86" : "x64";
-            this.VersionLabel.Text = String.Format("Version: {0} ({1})", version, edition);
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// VersionDialog_Shown
-        ///
+        /// DummyForm (constructor)
+        /// 
         /// <summary>
-        /// ダイアログが表示された時に実行されるイベントハンドラです。
+        /// サーバからのレスポンスを利用して、オブジェクトを初期化します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void VersionDialog_Shown(object sender, EventArgs e)
+        public DummyForm(IDictionary<string, string> response)
+            : this()
         {
-            OKButton.Focus();
+            UpdateNotifyIcon.Text = response["MESSAGE"];
+            UpdateNotifyIcon.BalloonTipText = response["MESSAGE"];
+            _url = response["URL"];
+            UpdateNotifyIcon.ShowBalloonTip(30000);
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// CubePdfLinkLabel_LinkClicked
-        ///
+        /// Run
+        /// 
         /// <summary>
-        /// リンクラベルがクリックされた時に実行されるイベントハンドラです。
-        /// CubePDF の Web ページへ移動します。
+        /// 最新バージョンを取得するための Web ページへ移動します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void CubePdfLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void Run(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(CubePDFLinkLabel.Text);
+            try { System.Diagnostics.Process.Start(_url); }
+            catch (Exception /* err */) { /* Nothing to do */ }
+            finally { Exit(sender, e); }
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// OkButton_Click
-        ///
+        /// Exit
+        /// 
         /// <summary>
-        /// OK ボタンがクリックされた時に実行されるイベントハンドラです。
-        /// バージョンダイアログを閉じます。
+        /// アプリケーションを終了します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void OkButton_Click(object sender, EventArgs e)
+        private void Exit(object sender, EventArgs e)
         {
-            this.Close();
+            UpdateNotifyIcon.Visible = false;
+            Application.Exit();
         }
+
+        #region Variables
+        private string _url = "http://www.cube-soft.jp/cubepdfutility/";
+        #endregion
     }
 }

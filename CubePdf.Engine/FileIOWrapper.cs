@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// VersionDialog.cs
+/// FileIOWrapper.cs
 ///
 /// Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
 ///
@@ -19,80 +19,88 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.Windows.Forms;
 
 namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// VersionDialog
-    ///
+    /// FileIOWrapper
+    /// 
     /// <summary>
-    /// バージョン情報を表示するための Windows フォームクラスです。
+    /// File の移動、コピー、削除等の処理をラップしたクラスです。
     /// </summary>
+    /// 
+    /// <remarks>
+    /// これらの処理は、使用するクラスによって細部の動きが異なる事がある
+    /// ので、プロジェクト内での動きを共通化するために、いったんラップ
+    /// します。CubePDF では Microsoft.VisualBasic.FileIO.FileSystem
+    /// クラスを使用します。
+    /// </remarks>
     ///
     /* --------------------------------------------------------------------- */
-    public partial class VersionDialog : Form
+    public class FileIOWrapper
     {
         /* ----------------------------------------------------------------- */
         ///
-        /// VersionDialog (constructor)
+        /// Exists
         ///
         /// <summary>
-        /// 引数に指定されたバージョン情報を利用して、オブジェクトを初期化
-        /// します。
+        /// ファイルが存在するかどうかを判別します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public VersionDialog(string version)
+        public static bool Exists(string path)
         {
-            InitializeComponent();
-            var edition = (IntPtr.Size == 4) ? "x86" : "x64";
-            this.VersionLabel.Text = String.Format("Version: {0} ({1})", version, edition);
+            return Microsoft.VisualBasic.FileIO.FileSystem.FileExists(path);
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// VersionDialog_Shown
+        /// Delete
         ///
         /// <summary>
-        /// ダイアログが表示された時に実行されるイベントハンドラです。
+        /// ファイルを削除します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void VersionDialog_Shown(object sender, EventArgs e)
+        public static void Delete(string path)
         {
-            OKButton.Focus();
+            Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(path,
+                Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                Microsoft.VisualBasic.FileIO.RecycleOption.DeletePermanently,
+                Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing);
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// CubePdfLinkLabel_LinkClicked
+        /// Copy
         ///
         /// <summary>
-        /// リンクラベルがクリックされた時に実行されるイベントハンドラです。
-        /// CubePDF の Web ページへ移動します。
+        /// ファイルをコピーします。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void CubePdfLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        public static void Copy(string src, string dest)
         {
-            System.Diagnostics.Process.Start(CubePDFLinkLabel.Text);
+            Microsoft.VisualBasic.FileIO.FileSystem.CopyFile(src, dest,
+                Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing);
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// OkButton_Click
+        /// Move
         ///
         /// <summary>
-        /// OK ボタンがクリックされた時に実行されるイベントハンドラです。
-        /// バージョンダイアログを閉じます。
+        /// ファイルを移動します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void OkButton_Click(object sender, EventArgs e)
+        public static void Move(string src, string dest)
         {
-            this.Close();
+            Microsoft.VisualBasic.FileIO.FileSystem.MoveFile(src, dest,
+                Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                Microsoft.VisualBasic.FileIO.UICancelOption.DoNothing);
         }
     }
 }

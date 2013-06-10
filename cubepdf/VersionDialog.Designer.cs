@@ -1,4 +1,4 @@
-﻿namespace CubePDF
+﻿namespace CubePdf
 {
     partial class VersionDialog
     {
@@ -90,7 +90,7 @@
             // 
             // TitlePictureBox
             // 
-            this.TitlePictureBox.Image = global::CubePDF.Properties.Resources.title;
+            this.TitlePictureBox.Image = global::CubePdf.Properties.Resources.title;
             this.TitlePictureBox.Location = new System.Drawing.Point(119, 12);
             this.TitlePictureBox.Name = "TitlePictureBox";
             this.TitlePictureBox.Size = new System.Drawing.Size(98, 48);
@@ -106,11 +106,11 @@
             this.CubePDFLinkLabel.TabIndex = 2;
             this.CubePDFLinkLabel.TabStop = true;
             this.CubePDFLinkLabel.Text = "http://www.cube-soft.jp/cubepdf/";
-            this.CubePDFLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CubePDFLinkLabel_LinkClicked);
+            this.CubePDFLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CubePdfLinkLabel_LinkClicked);
             // 
             // LogoPictureBox
             // 
-            this.LogoPictureBox.Image = global::CubePDF.Properties.Resources.logo;
+            this.LogoPictureBox.Image = global::CubePdf.Properties.Resources.logo;
             this.LogoPictureBox.Location = new System.Drawing.Point(62, 26);
             this.LogoPictureBox.Name = "LogoPictureBox";
             this.LogoPictureBox.Size = new System.Drawing.Size(32, 42);
@@ -125,7 +125,7 @@
             this.OKButton.TabIndex = 1;
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
-            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
+            this.OKButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
             // VersionDialog
             // 

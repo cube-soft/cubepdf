@@ -24,10 +24,19 @@
 *.lib
 *.sbr
 *.sdf
+*.dll
+*.sh
 ipch/
 obj/
 [Bb]in
 [Dd]ebug*/
+[Rr]elease/
+[Dd]ocument/
+[Cc]ustomize/
+[Aa]rchive/
+[Rr]esults/
+[Tt]mp/
+[Tt]emp/
 Ankh.NoLoad
 
 #Tooling

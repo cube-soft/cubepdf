@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// VersionDialog.cs
+/// CommandLine.cs
 ///
 /// Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
 ///
@@ -19,80 +19,108 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// VersionDialog
-    ///
-    /// <summary>
-    /// バージョン情報を表示するための Windows フォームクラスです。
-    /// </summary>
-    ///
+    ///  CommandLine
+    ///  
+    ///  <summary>
+    ///  コマンドラインの引数を解析するためのクラスです。
+    ///  </summary>
+    ///  
     /* --------------------------------------------------------------------- */
-    public partial class VersionDialog : Form
+    public class CommandLine
     {
+        #region Initialization and Termination
+
         /* ----------------------------------------------------------------- */
         ///
-        /// VersionDialog (constructor)
+        /// Constructor
         ///
         /// <summary>
-        /// 引数に指定されたバージョン情報を利用して、オブジェクトを初期化
+        /// 既定の値でオブジェクトを初期化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public CommandLine() { }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Constructor
+        ///
+        /// <summary>
+        /// 引数に指定されたプログラム引数を用いて、オブジェクトを初期化
         /// します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public VersionDialog(string version)
+        public CommandLine(string[] args)
+            : this()
         {
-            InitializeComponent();
-            var edition = (IntPtr.Size == 4) ? "x86" : "x64";
-            this.VersionLabel.Text = String.Format("Version: {0} ({1})", version, edition);
+            this.Parse(args);
         }
+
+        #endregion
+
+        #region Properties
 
         /* ----------------------------------------------------------------- */
         ///
-        /// VersionDialog_Shown
+        /// Arguments
         ///
         /// <summary>
-        /// ダイアログが表示された時に実行されるイベントハンドラです。
+        /// 解析後の引数一覧を取得します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void VersionDialog_Shown(object sender, EventArgs e)
+        public IDictionary<string, string> Arguments
         {
-            OKButton.Focus();
+            get { return this._args; }
         }
+
+        #endregion
+
+        #region Public methods
 
         /* ----------------------------------------------------------------- */
         ///
-        /// CubePdfLinkLabel_LinkClicked
+        /// Parse
         ///
         /// <summary>
-        /// リンクラベルがクリックされた時に実行されるイベントハンドラです。
-        /// CubePDF の Web ページへ移動します。
+        /// 引数を解析します。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// オプションは、"/" (スラッシュ) で始まる事とします。
+        /// また、各オプションは最大で 1 つの引数を持てる事とします。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private void CubePdfLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        public void Parse(string[] args)
         {
-            System.Diagnostics.Process.Start(CubePDFLinkLabel.Text);
+            string key = "";
+            for (int i = 0; i < args.Length; ++i)
+            {
+                if (args[i].Length > 0 && args[i][0] == '/')
+                {
+                    if (key.Length > 0) _args.Add(key, "");
+                    key = args[i].Substring(1);
+                }
+                else if (args.Length > 0)
+                {
+                    _args.Add(key, args[i]);
+                    key = "";
+                }
+            }
         }
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// OkButton_Click
-        ///
-        /// <summary>
-        /// OK ボタンがクリックされた時に実行されるイベントハンドラです。
-        /// バージョンダイアログを閉じます。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void OkButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        #endregion
+
+        #region Variables
+        IDictionary<string, string> _args = new Dictionary<string, string>();
+        #endregion
     }
 }
