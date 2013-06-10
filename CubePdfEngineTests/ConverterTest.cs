@@ -56,7 +56,7 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void ValidatePDF(UserSetting setting)
+        private void ValidatePdf(UserSetting setting)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace CubePdf
                 bool status = File.Exists(setting.OutputPath);
                 if (status)
                 {
-                    if (setting.FileType == Parameter.FileTypes.PDF) ValidatePDF(setting);
+                    if (setting.FileType == Parameter.FileTypes.PDF) ValidatePdf(setting);
                 }
                 else
                 {
@@ -450,6 +450,11 @@ namespace CubePdf
             setting.FileType = Parameter.FileTypes.PDF;
             setting.PostProcess = Parameter.PostProcesses.None;
             setting.Password = "test";
+            setting.Permission.Password = "owner";
+            ExecConvert(setting, "-password");
+
+            // パスワード付きの PDF ファイルに結合するテスト
+            setting.ExistedFile = Parameter.ExistedFiles.MergeHead;
             ExecConvert(setting, "-password");
         }
 

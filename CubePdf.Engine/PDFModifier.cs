@@ -239,9 +239,9 @@ namespace CubePdf
                 _messages.Add(new Message(Message.Levels.Debug, message.ToString()));
 
                 // パスワード and/or パーミッション
-                string user = (setting.Password.Length > 0) ? setting.Password : null;
-                string owner = (setting.Permission.Password.Length > 0) ? setting.Permission.Password : null;
-                if (owner == null && user != null) owner = user;
+                string user  = !string.IsNullOrEmpty(setting.Password) ? setting.Password : string.Empty;
+                string owner = !string.IsNullOrEmpty(setting.Permission.Password) ? setting.Permission.Password : string.Empty;
+                if (string.IsNullOrEmpty(owner) && !string.IsNullOrEmpty(user)) owner = user;
                 int permission = this.PermissionToiText(setting.Permission);
                 if (user != null || owner != null) writer.SetEncryption(iTextSharp.text.pdf.PdfWriter.STANDARD_ENCRYPTION_128, user, owner, permission);
 
