@@ -1,22 +1,22 @@
 ﻿/* ------------------------------------------------------------------------- */
-/*
- *  UserSettingTest.cs
- *
- *  Copyright (c) 2009 CubeSoft, Inc.
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see < http://www.gnu.org/licenses/ >.
- */
+///
+/// UserSettingTest.cs
+///
+/// Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
+///
+/// This program is free software: you can redistribute it and/or modify
+/// it under the terms of the GNU General Public License as published by
+/// the Free Software Foundation, either version 3 of the License, or
+/// (at your option) any later version.
+///
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU General Public License for more details.
+///
+/// You should have received a copy of the GNU General Public License
+/// along with this program.  If not, see < http://www.gnu.org/licenses/ >.
+///
 /* ------------------------------------------------------------------------- */
 using System;
 using System.IO;
@@ -27,75 +27,16 @@ namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// UserSettingSaver
-    /// 
-    /// <summary>
-    /// テストクラスでレジストリの値を変更するので、元の値を保存、復元する
-    /// ためのクラス。
-    /// </summary>
-    ///
-    /* --------------------------------------------------------------------- */
-    class UserSettingSaver : IDisposable
-    {
-        /* ----------------------------------------------------------------- */
-        /// Constructor
-        /* ----------------------------------------------------------------- */
-        public UserSettingSaver()
-        {
-            _setting = new UserSetting(true);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// Dispose
-        /* ----------------------------------------------------------------- */
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// Dispose
-        /// 
-        /// <summary>
-        /// レジストリの値をコンストラクタが呼び出された時点に戻す。
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    if (_setting != null)
-                    {
-                        _setting.Save();
-                        _setting = null;
-                    }
-                }
-            }
-            _disposed = true;
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// 変数定義
-        /* ----------------------------------------------------------------- */
-        #region Variables
-        private UserSetting _setting = null;
-        private bool _disposed = false;
-        #endregion
-    }
-
-    /* --------------------------------------------------------------------- */
-    ///
     /// UserSettingTest
     ///
     /// <summary>
-    /// ユーザ設定のロード/セーブをテストするためのクラス。
-    /// 現バージョンでは、ユーザ設定は全てレジストリに保存されている。
+    /// ユーザ設定のロード/セーブをテストするためのクラスです。
     /// </summary>
+    /// 
+    /// <remarks>
+    /// CubePDF の現在のバージョンでは、ユーザ設定は全てレジストリに保存
+    /// されています。
+    /// </remarks>
     ///
     /* --------------------------------------------------------------------- */
     [TestFixture]
@@ -106,12 +47,14 @@ namespace CubePdf
         /// TestLoadValue
         /// 
         /// <summary>
-        /// レジストリから値をロードするテスト。
-        /// 
-        /// NOTE: UserSetting クラスは、コンストラクタで（true を指定して）
-        /// ロードする方法と、Load() メソッドを明示的にコールしてロードする
-        /// 方法の 2 種類が存在する
+        /// レジストリから値をロードするテストを行います。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// UserSetting クラスは、コンストラクタで（true を指定して）ロード
+        /// する方法と、Load() メソッドを明示的にコールしてロードする方法の
+        /// 2 種類が存在します。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
@@ -137,7 +80,7 @@ namespace CubePdf
         /// TestSaveDefaultValue
         /// 
         /// <summary>
-        /// デフォルト値で保存するテスト。
+        /// デフォルト値で保存するテストを行います。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
@@ -184,7 +127,7 @@ namespace CubePdf
         /// <summary>
         /// アップデートチェッカが
         /// HKCU\Software\Microsoft\Windows\CurrentVersion\Run 下に登録
-        /// されたかどうかをチェックするテスト。
+        /// されたかどうかをチェックするテストを行います。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
@@ -220,12 +163,16 @@ namespace CubePdf
         /// TestSaveNotFoundPath
         /// 
         /// <summary>
-        /// 入力パス、および出力パスを存在しないパスで保存した場合のテスト。
-        /// 
-        /// NOTE: 現バージョンでは、UserSetting では特別な処理を行わずに
-        /// 指定された値をそのままレジストリに保存する。存在チェック等は、
-        /// UserSetting クラスの外側で行う。
+        /// 入力パス、および出力パスを存在しないパスで保存した場合の
+        /// テストを行います。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// 現在のバージョンでは、UserSetting では特別な処理を行わずに
+        /// 指定された値をそのままレジストリに保存します。
+        /// 設定で保存されたパスが存在するかどうかのチェック等は、
+        /// UserSetting クラスの外側で行う事とします。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
@@ -252,14 +199,18 @@ namespace CubePdf
         /// TestSaveEmptyString
         /// 
         /// <summary>
-        /// レジストリの文字列型の値に空の文字列を保存した場合のテスト。
-        /// 空の文字列を保存し、再度ロードした時の値は以下のようになる。
+        /// レジストリの文字列型の値に空の文字列を保存した場合のテストを
+        /// 行います。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 空の文字列を保存し、再度ロードした時の値は以下のようになります。
         /// 
         /// InputPath       : デスクトップへのパス
         /// OutputPath      : デスクトップへのパス
         /// UserProgram     : 空文字のまま
         /// UserArguments   : 空文字のまま
-        /// </summary>
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
@@ -299,15 +250,18 @@ namespace CubePdf
         /// TestDeleteStringValue
         /// 
         /// <summary>
-        /// レジストリの文字列型の値を消去したときのテスト。
-        /// 値を消去して、再度ロードした時の値は以下のようになる（空文字で
-        /// 保存した場合と、結果が若干異なる）。
+        /// レジストリの文字列型の値を消去したときのテストを行います。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 値を消去して、再度ロードした時の値は以下のようになります。
+        /// ※空文字で保存した場合と、結果が若干異なります。
         /// 
         /// InputPath       : デスクトップへのパス
         /// OutputPath      : デスクトップへのパス
         /// UserProgram     : 空文字のまま
         /// UserArguments   : %%FILE%%
-        /// </summary>
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
@@ -345,12 +299,15 @@ namespace CubePdf
         /// TestSaveInvalidValue
         /// 
         /// <summary>
-        /// レジストリに不正な値が設定されている場合のテスト。
-        /// 不正な値が設定されている場合の挙動は以下の通り。
+        /// レジストリに不正な値が設定されている場合のテストを行います。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 不正な値が設定されている場合の挙動は以下の通りです。
         /// 
         /// コンボボックス   : 不正な値は読み飛ばして、デフォルト値を使用
         /// チェックボックス : 0 以外の場合は true として扱う
-        /// </summary>
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
