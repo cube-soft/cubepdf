@@ -169,4 +169,10 @@
   <data name="UserProgramFilter" xml:space="preserve">
     <value>実行可能プログラム (*.exe;*.bat)|*.exe;*.bat|すべてのファイル(*.*)|*.*</value>
   </data>
+  <data name="InvalidFilename" xml:space="preserve">
+    <value>/ : ? " &lt; &gt; |</value>
+  </data>
+  <data name="InvalidFilenameTitle" xml:space="preserve">
+    <value>ファイル名には次の文字は使えません。</value>
+  </data>
 </root>

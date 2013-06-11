@@ -39,7 +39,7 @@ namespace CubePdf
     /* --------------------------------------------------------------------- */
     public partial class MainForm : Form
     {
-        #region Initialize operations
+        #region Initialization and Termination
 
         /* ----------------------------------------------------------------- */
         ///
@@ -355,7 +355,7 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// MainForm_Shown
+        /// OnShown
         ///  
         /// <summary>
         /// CubePDF メイン画面が表示された時に実行されるイベントハンドラ
@@ -364,18 +364,20 @@ namespace CubePdf
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        private void MainForm_Shown(object sender, EventArgs e)
+        protected override void OnShown(EventArgs e)
         {
-            this.SettingButton.BackgroundImage = Properties.Resources.button_setting_disable;
-            this.SettingButton.Enabled = false;
-            this.Activate();
-            this.TopMost = true;
-            this.TopMost = false;
+            base.OnShown(e);
+
+            SettingButton.BackgroundImage = Properties.Resources.button_setting_disable;
+            SettingButton.Enabled = false;
+            Activate();
+            TopMost = true;
+            TopMost = false;
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// Form_KeyDown
+        /// OnKeyDown
         ///
         /// <summary>
         /// キーボードのキーが押下された時に実行されるイベントハンドラです。
@@ -383,9 +385,10 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        protected override void OnKeyDown(KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter) this.ConvertButton_Click(this.ConvertButton, e);
+            base.OnKeyDown(e);
+            if (e.KeyCode == Keys.Enter) ConvertButton_Click(this.ConvertButton, e);
         }
 
         #endregion
@@ -759,10 +762,14 @@ namespace CubePdf
             if (control == null) return;
 
             this.Cursor = Cursors.Hand;
+
+            _tips.Hide(control);
+            _tips.ToolTipTitle = string.Empty;
+            _tips.IsBalloon    = false;
             _tips.InitialDelay = 500;
-            _tips.ReshowDelay = 1000;
+            _tips.ReshowDelay  = 100;
             _tips.AutoPopDelay = 1000;
-            _tips.SetToolTip(control, Properties.Resources.About);
+            _tips.Show(Properties.Resources.About, control);
         }
 
         /* ----------------------------------------------------------------- */
@@ -778,12 +785,16 @@ namespace CubePdf
         private void HeaderPictureBox_MouseLeave(object sender, EventArgs e)
         {
             this.Cursor = Cursors.Default;
+
+            var control = sender as Control;
+            if (control == null) return;
+            _tips.Hide(control);
         }
 
         #endregion
 
         /* ----------------------------------------------------------------- */
-        /// テキストボックス上での出力パスの変更を容易にするための仕掛け
+        /// テキストボックス上での出力パスに関する仕掛け
         /* ----------------------------------------------------------------- */
         #region Gimmicks for helping to input output path
 
@@ -833,9 +844,69 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void OutputPathTextBox_Leave(object sender, EventArgs e)
         {
+            PathTextBox_Leave(sender, e);
             Control control = sender as Control;
             if (control == null) return;
             control.Tag = null;
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// 
+        /// PathTextBox_TextChanged
+        /// 
+        /// <summary>
+        /// ファイル名を入力するテキストボックスの内容が変更された時に
+        /// 実行されるイベントハンドラです。入力したファイル名に、
+        /// ファイル名として無効な文字が含まれていないかチェックすします。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// テキストボックスに表示されている文字列はファイルへのパスなので、
+        /// ディレクトリ区切りを表す "\"（バックスラッシュ）は除外します。
+        /// </remarks>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void PathTextBox_TextChanged(object sender, EventArgs e)
+        {
+            var control = sender as TextBox;
+            if (control == null) return;
+
+            _tips.Hide(control);
+
+            char[] invalids = { '/', '*', '"', '<', '>', '|', '?', ':' };
+            var index = control.Text.IndexOfAny(invalids);
+            if (index >= 0)
+            {
+                var pos = control.SelectionStart;
+                control.Text = control.Text.Remove(index, 1);
+                control.SelectionStart = Math.Max(pos - 1, 0);
+
+                _tips.ToolTipTitle = Properties.Resources.InvalidFilenameTitle;
+                _tips.IsBalloon    = false;
+                _tips.InitialDelay = 500;
+                _tips.ReshowDelay  = 100;
+                _tips.AutoPopDelay = 1000;
+                _tips.Show(Properties.Resources.InvalidFilename, control);
+            }
+
+            SettingChanged(sender, e);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// 
+        /// PathTextBox_Leave
+        /// 
+        /// <summary>
+        /// テキストボックスがフォーカスを失った時に実行されるイベント
+        /// ハンドラです。ツールチップを非表示にします。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void PathTextBox_Leave(object sender, EventArgs e)
+        {
+            var control = sender as TextBox;
+            if (control == null) return;
+            _tips.Hide(control);
         }
 
         #endregion
@@ -1038,68 +1109,6 @@ namespace CubePdf
         {
             this.SettingButton.BackgroundImage = Properties.Resources.button_setting;
             this.SettingButton.Enabled = true;
-        }
-
-        [DllImport("user32.dll")]
-        private static extern bool GetCaretPos(out Point point);
-        private ToolTip tooltip = new ToolTip();
-
-        /* ----------------------------------------------------------------- */
-        /// 
-        /// PathTextBoxChanged
-        /// 
-        /// <summary>
-        /// ファイル名を入力するテキストボックスの内容が変更されたら実行。
-        /// 入力したファイル名に無効な文字が入っていないかチェックする。
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void PathTextBoxChanged(object sender, EventArgs e)
-        {
-            TextBox textbox = sender as TextBox;
-            if (textbox == null) return;
-
-            int currentsel = textbox.SelectionStart;
-            char[] invalidfilenamechars = Path.GetInvalidFileNameChars();
-            char[] invalidpathchars = Path.GetInvalidPathChars();
-            Point apipoint;
-            GetCaretPos(out apipoint);
-
-            if (textbox.Text.IndexOfAny(invalidpathchars) >= 0)
-            {
-                tooltip.Hide(this);
-                string tmp = string.Join("", textbox.Text.Split(invalidpathchars));
-                string tmp2 = string.Join("", Path.GetFileName(tmp).Split(invalidfilenamechars));
-                textbox.Text = Path.GetDirectoryName(tmp) + "\\" + tmp2;
-                textbox.SelectionStart = currentsel;
-
-                tooltip.IsBalloon = true;
-                tooltip.SetToolTip(textbox, " ");
-                tooltip.ToolTipTitle = "パス名には次の文字は使えません。";
-                tooltip.Show("\" < > |", textbox, apipoint.X + 12, apipoint.Y + 12, 8000);
-            }
-            else
-            {
-                string filename = Path.GetFileName(textbox.Text);
-                if (filename.IndexOfAny(invalidfilenamechars) >= 0)
-                {
-                    tooltip.Hide(this);
-                    string tmp = string.Join("", textbox.Text.Split(invalidpathchars));
-                    string tmp2 = string.Join("", Path.GetFileName(tmp).Split(invalidfilenamechars));
-                    textbox.Text = Path.GetDirectoryName(tmp) + "\\" + tmp2;
-                    textbox.SelectionStart = currentsel;
-
-                    tooltip.IsBalloon = true;
-                    tooltip.SetToolTip(textbox, " ");
-                    tooltip.ToolTipTitle = "ファイル名には次の文字は使えません。";
-                    tooltip.Show("/ : ? \\ \" * < > |", textbox, apipoint.X + 12, apipoint.Y + 12, 8000);
-                }
-                else
-                {
-                    tooltip.Hide(this);
-                    return;
-                }
-            }
         }
 
         #endregion
