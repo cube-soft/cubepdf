@@ -154,6 +154,24 @@ namespace CubePdf.Properties {
             }
         }
         
+        /// <summary>
+        ///   / : ? &quot; &lt; &gt; | に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string InvalidFilename {
+            get {
+                return ResourceManager.GetString("InvalidFilename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ファイル名には次の文字は使えません。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string InvalidFilenameTitle {
+            get {
+                return ResourceManager.GetString("InvalidFilenameTitle", resourceCulture);
+            }
+        }
+        
         internal static System.Drawing.Bitmap logo {
             get {
                 object obj = ResourceManager.GetObject("logo", resourceCulture);

@@ -262,8 +262,8 @@
             this.InputPathTextBox.Name = "InputPathTextBox";
             this.InputPathTextBox.Size = new System.Drawing.Size(273, 19);
             this.InputPathTextBox.TabIndex = 26;
-            this.InputPathTextBox.TextChanged += new System.EventHandler(this.SettingChanged);
-            this.InputPathTextBox.TextChanged += new System.EventHandler(this.PathTextBoxChanged);
+            this.InputPathTextBox.TextChanged += new System.EventHandler(this.PathTextBox_TextChanged);
+            this.InputPathTextBox.Leave += new System.EventHandler(this.PathTextBox_Leave);
             // 
             // OutputPathPanel
             // 
@@ -306,9 +306,8 @@
             this.OutputPathTextBox.Size = new System.Drawing.Size(200, 19);
             this.OutputPathTextBox.TabIndex = 29;
             this.OutputPathTextBox.Click += new System.EventHandler(this.OutputPathTextBox_Click);
-            this.OutputPathTextBox.TextChanged += new System.EventHandler(this.SettingChanged);
+            this.OutputPathTextBox.TextChanged += new System.EventHandler(this.PathTextBox_TextChanged);
             this.OutputPathTextBox.Leave += new System.EventHandler(this.OutputPathTextBox_Leave);
-            this.OutputPathTextBox.TextChanged += new System.EventHandler(this.PathTextBoxChanged);
             // 
             // PostProcessPanel
             // 
@@ -327,7 +326,8 @@
             this.UserProgramTextBox.Name = "UserProgramTextBox";
             this.UserProgramTextBox.Size = new System.Drawing.Size(175, 19);
             this.UserProgramTextBox.TabIndex = 21;
-            this.UserProgramTextBox.TextChanged += new System.EventHandler(this.SettingChanged);
+            this.UserProgramTextBox.TextChanged += new System.EventHandler(this.PathTextBox_TextChanged);
+            this.UserProgramTextBox.Leave += new System.EventHandler(this.PathTextBox_Leave);
             // 
             // UserProgramButton
             // 
@@ -981,8 +981,6 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "CubePDF";
-            this.Shown += new System.EventHandler(this.MainForm_Shown);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainForm_KeyDown);
             this.MainPanel.ResumeLayout(false);
             this.MainTabControl.ResumeLayout(false);
             this.GeneralTabPage.ResumeLayout(false);
