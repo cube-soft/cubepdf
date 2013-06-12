@@ -262,7 +262,7 @@
             this.InputPathTextBox.Name = "InputPathTextBox";
             this.InputPathTextBox.Size = new System.Drawing.Size(273, 19);
             this.InputPathTextBox.TabIndex = 26;
-            this.InputPathTextBox.TextChanged += new System.EventHandler(this.PathTextBox_TextChanged);
+            this.InputPathTextBox.TextChanged += new System.EventHandler(this.InputPathTextBox_TextChanged);
             this.InputPathTextBox.Leave += new System.EventHandler(this.PathTextBox_Leave);
             // 
             // OutputPathPanel
