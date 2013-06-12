@@ -234,6 +234,7 @@ namespace CubePdf
             this.UserProgramTextBox.Text = setting.UserProgram;
             this.OutputPathTextBox.Text = setting.OutputPath;
             this.InputPathTextBox.Text = setting.InputPath;
+            this.ConvertButton.Enabled = !string.IsNullOrEmpty(InputPathTextBox.Text);
 
             // コンボボックスのインデックス関連
             this.FileTypeCombBox.SelectedIndex = Translator.FileTypeToIndex(setting.FileType);
@@ -521,6 +522,7 @@ namespace CubePdf
             if (dialog.ShowDialog() != DialogResult.OK) return;
 
             this.InputPathTextBox.Text = dialog.FileName;
+            this.ConvertButton.Enabled = !string.IsNullOrEmpty(InputPathTextBox.Text);
             this.SettingChanged(sender, e);
         }
 
@@ -799,6 +801,65 @@ namespace CubePdf
         #region Gimmicks for helping to input output path
 
         /* ----------------------------------------------------------------- */
+        /// 
+        /// PathTextBox_TextChanged
+        /// 
+        /// <summary>
+        /// ファイル名を入力するテキストボックスの内容が変更された時に
+        /// 実行されるイベントハンドラです。入力したファイル名に、
+        /// ファイル名として無効な文字が含まれていないかチェックすします。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// テキストボックスに表示されている文字列はファイルへのパスなので、
+        /// ディレクトリ区切りを表す "\"（バックスラッシュ）は除外します。
+        /// </remarks>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void PathTextBox_TextChanged(object sender, EventArgs e)
+        {
+            var control = sender as TextBox;
+            if (control == null) return;
+
+            _tips.Hide(control);
+
+            char[] invalids = { '/', '*', '"', '<', '>', '|', '?', ':' };
+            var index = control.Text.IndexOfAny(invalids);
+            if (index >= 0)
+            {
+                var pos = control.SelectionStart;
+                control.Text = control.Text.Remove(index, 1);
+                control.SelectionStart = Math.Max(pos - 1, 0);
+
+                _tips.ToolTipTitle = Properties.Resources.InvalidFilenameTitle;
+                _tips.IsBalloon = false;
+                _tips.InitialDelay = 500;
+                _tips.ReshowDelay = 100;
+                _tips.AutoPopDelay = 1000;
+                _tips.Show(Properties.Resources.InvalidFilename, control);
+            }
+
+            SettingChanged(sender, e);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// 
+        /// PathTextBox_Leave
+        /// 
+        /// <summary>
+        /// テキストボックスがフォーカスを失った時に実行されるイベント
+        /// ハンドラです。ツールチップを非表示にします。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void PathTextBox_Leave(object sender, EventArgs e)
+        {
+            var control = sender as TextBox;
+            if (control == null) return;
+            _tips.Hide(control);
+        }
+
+        /* ----------------------------------------------------------------- */
         ///
         /// OutputPathTextBox_Click
         /// 
@@ -852,61 +913,22 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         /// 
-        /// PathTextBox_TextChanged
+        /// InputPathTextBox_TextChanged
         /// 
         /// <summary>
-        /// ファイル名を入力するテキストボックスの内容が変更された時に
-        /// 実行されるイベントハンドラです。入力したファイル名に、
-        /// ファイル名として無効な文字が含まれていないかチェックすします。
+        /// 入力ファイル名を入力するテキストボックスの内容が変更された時に
+        /// 実行されるイベントハンドラです。テキストボックスの内容が空の
+        /// 間は、変換ボタンを押下できないようにします。
         /// </summary>
         /// 
-        /// <remarks>
-        /// テキストボックスに表示されている文字列はファイルへのパスなので、
-        /// ディレクトリ区切りを表す "\"（バックスラッシュ）は除外します。
-        /// </remarks>
-        /// 
         /* ----------------------------------------------------------------- */
-        private void PathTextBox_TextChanged(object sender, EventArgs e)
+        private void InputPathTextBox_TextChanged(object sender, EventArgs e)
         {
             var control = sender as TextBox;
             if (control == null) return;
 
-            _tips.Hide(control);
-
-            char[] invalids = { '/', '*', '"', '<', '>', '|', '?', ':' };
-            var index = control.Text.IndexOfAny(invalids);
-            if (index >= 0)
-            {
-                var pos = control.SelectionStart;
-                control.Text = control.Text.Remove(index, 1);
-                control.SelectionStart = Math.Max(pos - 1, 0);
-
-                _tips.ToolTipTitle = Properties.Resources.InvalidFilenameTitle;
-                _tips.IsBalloon    = false;
-                _tips.InitialDelay = 500;
-                _tips.ReshowDelay  = 100;
-                _tips.AutoPopDelay = 1000;
-                _tips.Show(Properties.Resources.InvalidFilename, control);
-            }
-
-            SettingChanged(sender, e);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// 
-        /// PathTextBox_Leave
-        /// 
-        /// <summary>
-        /// テキストボックスがフォーカスを失った時に実行されるイベント
-        /// ハンドラです。ツールチップを非表示にします。
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void PathTextBox_Leave(object sender, EventArgs e)
-        {
-            var control = sender as TextBox;
-            if (control == null) return;
-            _tips.Hide(control);
+            PathTextBox_TextChanged(sender, e);
+            ConvertButton.Enabled = !string.IsNullOrEmpty(InputPathTextBox.Text);
         }
 
         #endregion
