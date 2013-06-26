@@ -43,7 +43,6 @@ Ankh.NoLoad
 _ReSharper*/
 *.resharper
 [Tt]est[Rr]esult*
-!cubepdf-engine-test/examples/*.*
 
 #Project files
 [Bb]uild/
