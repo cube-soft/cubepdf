@@ -418,8 +418,13 @@ namespace CubePdf
             if (!Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}\\lib: file not found", _setting.LibPath)));
 
             this.ConvertButton.Enabled = false;
-            this.SettingButton.Visible = false;
+            this.SettingButton.Visible = false;            
             this.ExecProgressBar.Visible = true;
+
+            this.SaveSetting(_setting);
+            _setting.InputPath = this.InputPathTextBox.Text;
+            _setting.OutputPath = this.OutputPathTextBox.Text;
+
             this.ConvertBackgroundWorker.RunWorkerAsync();
         }
 
@@ -823,7 +828,7 @@ namespace CubePdf
 
             _tips.Hide(control);
 
-            char[] invalids = { '/', '*', '"', '<', '>', '|', '?', ':' };
+            char[] invalids = { '/', '*', '"', '<', '>', '|', '?' };
             var index = control.Text.IndexOfAny(invalids);
             if (index >= 0)
             {
@@ -1055,11 +1060,6 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void ConvertBackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            this.SaveSetting(_setting);
-            _setting.InputPath = this.InputPathTextBox.Text;
-            _setting.OutputPath = this.OutputPathTextBox.Text;
-
-            // 変換の実行
             Converter converter = new Converter();
             bool status = converter.Run(_setting);
             converter.Messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.Converter.Run: {0}", status.ToString())));
