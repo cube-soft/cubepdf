@@ -47,7 +47,7 @@ namespace CubePdfUtility
 
             try
             {
-                var checker = new CubePdf.Settings.UpdateChecker(@"Software\CubeSoft\CubePDF\v2");
+                var checker = new CubePdf.Settings.UpdateChecker(@"Software\CubeSoft\CubePDF");
                 checker.ProductName = "cubepdf";
                 checker.CheckInterval = 1; // [day]
 
