@@ -284,7 +284,10 @@ namespace CubePdf
             setting.FileType = Parameter.FileTypes.PDF;
             setting.PostProcess = Parameter.PostProcesses.None;
             setting.EmbedFont = true;
-            ExecConvert(setting, "-font");
+            ExecConvert(setting, "-embed");
+
+            setting.EmbedFont = false;
+            ExecConvert(setting, "-noembed");
         }
 
         /* ----------------------------------------------------------------- */
