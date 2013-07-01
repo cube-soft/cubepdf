@@ -50,6 +50,7 @@ namespace CubePdf
             foreach (var s in args) Trace.WriteLine("\t" + s);
 
             SetupUserSetting(setting, args);
+            CheckUpdate(setting);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -78,10 +79,11 @@ namespace CubePdf
             {
                 if (docname.Length > 0 && Path.GetExtension(docname) == setting.Extension && File.Exists(docname)) is_config = true;
             }
-            catch (Exception /* err */)
+            catch (Exception err)
             {
                 // docname に Windows のファイル名に使用できない記号が含まれる
                 // 場合に例外が送出されるので、その対策。
+                Trace.TraceError(err.ToString());
                 is_config = false;
             }
 
@@ -129,7 +131,30 @@ namespace CubePdf
                 Trace.Listeners.Add(new TextWriterTraceListener(src));
                 Trace.AutoFlush = true;
             }
-            catch (Exception /* err */) { }
+            catch (Exception err) { Trace.TraceError(err.ToString()); }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CheckUpdate
+        ///
+        /// <summary>
+        /// アップデートの確認が必要であるかどうかを判断し、必要であれば
+        /// 確認用のプログラムを実行します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private static void CheckUpdate(UserSetting setting)
+        {
+            try
+            {
+                if (!setting.CheckUpdate ||
+                    string.IsNullOrEmpty(setting.InstallPath) ||
+                    DateTime.Now <= setting.LastCheckUpdate.AddDays(1)) return;
+                var path = System.IO.Path.Combine(setting.InstallPath, "cubepdf-checker.exe");
+                Process.Start(path);
+            }
+            catch (Exception err) { Trace.TraceError(err.ToString()); }
         }
     }
 }

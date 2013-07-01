@@ -813,6 +813,20 @@ namespace CubePdf
             set { _password = value; }
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// LastCheckUpdate
+        /// 
+        /// <summary>
+        /// 最後にアップデートの確認を行った日時を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public DateTime LastCheckUpdate
+        {
+            get { return _lastcheck; }
+        }
+
         #endregion
 
         #region Public methods
@@ -825,6 +839,11 @@ namespace CubePdf
         /// ユーザ毎の設定情報をレジストリからロードします。
         /// </summary>
         /// 
+        /// <remarks>
+        /// LastCheckUpdate の項目のみ、保存場所が異なるので別途処理を行って
+        /// います。
+        /// </remarks>
+        /// 
         /* ----------------------------------------------------------------- */
         public bool Load()
         {
@@ -832,11 +851,17 @@ namespace CubePdf
 
             try
             {
-                using (RegistryKey root = Registry.CurrentUser.OpenSubKey(_RegRoot + '\\' + _RegVersion, false))
+                using (var root = Registry.CurrentUser.OpenSubKey(_RegRoot + '\\' + _RegVersion, false))
                 {
                     var document = new CubePdf.Settings.Document();
                     document.Read(root);
                     Load(document);
+                }
+
+                using (var root = Registry.CurrentUser.OpenSubKey(_RegRoot, false))
+                {
+                    var date = root.GetValue(_RegLastCheck, string.Empty) as string;
+                    if (!string.IsNullOrEmpty(date)) _lastcheck = DateTime.Parse(date as string);
                 }
             }
             catch (Exception /* err */)
@@ -1397,6 +1422,7 @@ namespace CubePdf
         private bool _delete_input = false;
         private DocumentProperty _doc = new DocumentProperty();
         private PermissionProperty _permission = new PermissionProperty();
+        private DateTime _lastcheck = new DateTime();
         #endregion
 
         #region Constant variables
@@ -1425,6 +1451,7 @@ namespace CubePdf
         private static readonly string _RegUserArguments = "UserArguments";
         private static readonly string _RegWebOptimize = "WebOptimize";
         private static readonly string _RegSaveSetting = "SaveSetting";
+        private static readonly string _RegLastCheck = "LastCheckUpdate";
         private static readonly string _RegUnknown = "Unknown";
         private static readonly string _RegUpdateProgram = "cubepdf-checker";
         private static readonly string _RegSettingExtension = ".cubepdfconf";
