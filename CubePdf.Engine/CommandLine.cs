@@ -101,20 +101,22 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         public void Parse(string[] args)
         {
-            string key = "";
+            string key = string.Empty;
             for (int i = 0; i < args.Length; ++i)
             {
-                if (args[i].Length > 0 && args[i][0] == '/')
+                if (string.IsNullOrEmpty(args[i])) continue;
+                if (args[i][0] == '/')
                 {
-                    if (key.Length > 0) _args.Add(key, "");
+                    if (!string.IsNullOrEmpty(key)) _args[key] =  string.Empty;
                     key = args[i].Substring(1);
                 }
-                else if (args.Length > 0)
+                else
                 {
-                    _args.Add(key, args[i]);
-                    key = "";
+                    _args[key] =  args[i];
+                    key = string.Empty;
                 }
             }
+            if (!string.IsNullOrEmpty(key)) _args[key] = string.Empty;
         }
 
         #endregion
