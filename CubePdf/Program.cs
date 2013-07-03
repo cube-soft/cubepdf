@@ -71,7 +71,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private static void SetupUserSetting(UserSetting setting, string[] args)
         {
-            var cmdline = new CommandLine(args);
+            var cmdline = new CubePdf.Settings.CommandLine(args);
 
             var docname = cmdline.Arguments.ContainsKey("DocumentName") ? cmdline.Arguments["DocumentName"] : "";
             bool is_config = false;

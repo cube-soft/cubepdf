@@ -181,6 +181,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CubePdfLib\CubePdf.Settings\CubePdf.Settings.csproj">
+      <Project>{0E3F9DF4-DAC5-4C36-B82A-5C8AA45A4E2D}</Project>
+      <Name>CubePdf.Settings</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CubePdf.Engine\CubePdf.Engine.csproj">
       <Project>{F506801C-B1B4-4446-8E8D-1E97E509255C}</Project>
       <Name>CubePdf.Engine</Name>
