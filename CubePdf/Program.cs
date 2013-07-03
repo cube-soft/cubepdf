@@ -73,7 +73,7 @@ namespace CubePdf
         {
             var cmdline = new CubePdf.Settings.CommandLine(args);
 
-            var docname = cmdline.Arguments.ContainsKey("DocumentName") ? cmdline.Arguments["DocumentName"] : "";
+            var docname = cmdline.Options.ContainsKey("DocumentName") ? cmdline.Options["DocumentName"] : "";
             bool is_config = false;
             try
             {
@@ -102,8 +102,8 @@ namespace CubePdf
                 }
             }
 
-            setting.InputPath = cmdline.Arguments.ContainsKey("InputFile") ? cmdline.Arguments["InputFile"] : "";
-            setting.DeleteOnClose = cmdline.Arguments.ContainsKey("DeleteOnClose");
+            setting.InputPath = cmdline.Options.ContainsKey("InputFile") ? cmdline.Options["InputFile"] : "";
+            setting.DeleteOnClose = cmdline.Options.ContainsKey("DeleteOnClose");
         }
 
         /* ----------------------------------------------------------------- */
