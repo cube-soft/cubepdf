@@ -828,8 +828,9 @@ namespace CubePdf
 
             _tips.Hide(control);
 
-            char[] invalids = { '/', '*', '"', '<', '>', '|', '?' };
+            char[] invalids = { '/', '*', '"', '<', '>', '|', '?', ':' };
             var index = control.Text.IndexOfAny(invalids);
+            if (index == 1 && control.Text[index] == ':') index = control.Text.IndexOfAny(invalids, 2);
             if (index >= 0)
             {
                 var pos = control.SelectionStart;

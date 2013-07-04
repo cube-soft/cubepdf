@@ -174,12 +174,12 @@ namespace CubePdf
             }
             finally
             {
-                if (FileIOWrapper.Exists(setting.OutputPath)) FileIOWrapper.Delete(setting.OutputPath);
-                if (!status || !FileIOWrapper.Exists(tmp)) FileIOWrapper.Move(escaped, setting.OutputPath);
-                else FileIOWrapper.Move(tmp, setting.OutputPath);
+                if (CubePdf.Misc.File.Exists(setting.OutputPath)) CubePdf.Misc.File.Delete(setting.OutputPath, true);
+                if (!status || !CubePdf.Misc.File.Exists(tmp)) CubePdf.Misc.File.Move(escaped, setting.OutputPath, true);
+                else CubePdf.Misc.File.Move(tmp, setting.OutputPath, true);
 
-                if (FileIOWrapper.Exists(tmp)) System.IO.File.Delete(tmp); // FileIOWrapper.Delete(tmp);
-                if (FileIOWrapper.Exists(escaped)) System.IO.File.Delete(escaped); // FileIOWrapper.Delete(escaped);
+                if (CubePdf.Misc.File.Exists(tmp)) CubePdf.Misc.File.Delete(tmp, false);
+                if (CubePdf.Misc.File.Exists(escaped)) CubePdf.Misc.File.Delete(escaped, false);
             }
 
             return status;
@@ -206,7 +206,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private bool AddInformation(UserSetting setting)
         {
-            if (!FileIOWrapper.Exists(setting.OutputPath)) return false;
+            if (!CubePdf.Misc.File.Exists(setting.OutputPath)) return false;
 
             string tmp = Utility.WorkingDirectory + '\\' + System.IO.Path.GetRandomFileName();
 
@@ -214,7 +214,7 @@ namespace CubePdf
             bool status = true;
             try
             {
-                FileIOWrapper.Move(setting.OutputPath, tmp);
+                CubePdf.Misc.File.Move(setting.OutputPath, tmp, true);
                 reader = new iTextSharp.text.pdf.PdfReader(tmp);
                 var writer = new iTextSharp.text.pdf.PdfStamper(reader,
                     new System.IO.FileStream(setting.OutputPath, System.IO.FileMode.Create), PdfVersionToiText(setting.PDFVersion));
@@ -259,14 +259,14 @@ namespace CubePdf
             finally
             {
                 if (reader != null) reader.Close();
-                if (FileIOWrapper.Exists(tmp))
+                if (CubePdf.Misc.File.Exists(tmp))
                 {
-                    if (!FileIOWrapper.Exists(setting.OutputPath)) FileIOWrapper.Move(tmp, setting.OutputPath);
+                    if (!CubePdf.Misc.File.Exists(setting.OutputPath)) CubePdf.Misc.File.Move(tmp, setting.OutputPath, true);
                     else
                     {
                         var fi = new System.IO.FileInfo(setting.OutputPath);
-                        if (fi.Length == 0) FileIOWrapper.Move(tmp, setting.OutputPath);
-                        else System.IO.File.Delete(tmp); // FileIOWrapper.Delete(tmp);
+                        if (fi.Length == 0) CubePdf.Misc.File.Move(tmp, setting.OutputPath, true);
+                        else CubePdf.Misc.File.Delete(tmp, false);
                     }
                 }
             }
@@ -296,8 +296,8 @@ namespace CubePdf
             bool status = true;
             try
             {
-                if (FileIOWrapper.Exists(tmp)) FileIOWrapper.Delete(tmp);
-                FileIOWrapper.Move(setting.OutputPath, tmp);
+                if (CubePdf.Misc.File.Exists(tmp)) CubePdf.Misc.File.Delete(tmp, true);
+                CubePdf.Misc.File.Move(setting.OutputPath, tmp, true);
                 gs.AddInclude(setting.LibPath + @"\lib");
                 gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
                 gs.PageRotation = setting.PageRotation;
@@ -330,12 +330,12 @@ namespace CubePdf
             }
             finally
             {
-                if (!FileIOWrapper.Exists(setting.OutputPath)) FileIOWrapper.Move(tmp, setting.OutputPath);
+                if (!CubePdf.Misc.File.Exists(setting.OutputPath)) CubePdf.Misc.File.Move(tmp, setting.OutputPath, true);
                 else
                 {
                     var fi = new System.IO.FileInfo(setting.OutputPath);
-                    if (fi.Length == 0) FileIOWrapper.Move(tmp, setting.OutputPath);
-                    else System.IO.File.Delete(tmp); // FileWrapper.Delete(tmp);
+                    if (fi.Length == 0) CubePdf.Misc.File.Move(tmp, setting.OutputPath, true);
+                    else CubePdf.Misc.File.Delete(tmp, false);
                 }
             }
 

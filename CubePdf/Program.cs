@@ -91,7 +91,7 @@ namespace CubePdf
             else
             {
                 setting.Load();
-                var filename = FileNameModifier.GetFileName(docname);
+                var filename = DocumentName.CreateFileName(docname);
                 if (filename != null)
                 {
                     string ext = Parameter.Extension((Parameter.FileTypes)setting.FileType);

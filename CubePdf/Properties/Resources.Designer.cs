@@ -155,7 +155,7 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   / : ? &quot; &lt; &gt; | に類似しているローカライズされた文字列を検索します。
+        ///   / * : ? &quot; &lt; &gt; | に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string InvalidFilename {
             get {

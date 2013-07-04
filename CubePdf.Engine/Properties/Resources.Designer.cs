@@ -70,6 +70,15 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
+        ///   入力ファイルの解析に失敗しました。このエラーは、入力ファイルの内容を変更する事で回避できる場合があります。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string GhostscriptError {
+            get {
+                return ResourceManager.GetString("GhostscriptError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   CubePDF に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ProductName {

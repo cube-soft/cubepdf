@@ -120,6 +120,9 @@
   <data name="FileNotRelated" xml:space="preserve">
     <value>{0}: ファイルが関連付けられていません。</value>
   </data>
+  <data name="GhostscriptError" xml:space="preserve">
+    <value>入力ファイルの解析に失敗しました。このエラーは、入力ファイルの内容を変更する事で回避できる場合があります。</value>
+  </data>
   <data name="ProductName" xml:space="preserve">
     <value>CubePDF</value>
   </data>

@@ -101,8 +101,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter.cs" />
-    <Compile Include="FileIOWrapper.cs" />
-    <Compile Include="FileNameModifier.cs" />
+    <Compile Include="DocumentName.cs" />
     <Compile Include="Ghostscript\Converter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -153,6 +152,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CubePdfLib\CubePdf.Misc\CubePdf.Misc.csproj">
+      <Project>{193B7028-1F28-462A-B172-36F485002349}</Project>
+      <Name>CubePdf.Misc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CubePdfLib\CubePdf.Settings\CubePdf.Settings.csproj">
       <Project>{0E3F9DF4-DAC5-4C36-B82A-5C8AA45A4E2D}</Project>
       <Name>CubePdf.Settings</Name>
