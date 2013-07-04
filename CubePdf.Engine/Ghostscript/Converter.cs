@@ -258,17 +258,14 @@ namespace CubePdf.Ghostscript
             // 作業ディレクトリの作成
             string work = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
             if (System.IO.Directory.Exists(work)) System.IO.Directory.Delete(work, true);
-            else if (FileIOWrapper.Exists(work)) FileIOWrapper.Delete(work);
+            else if (CubePdf.Misc.File.Exists(work)) CubePdf.Misc.File.Delete(work, false);
             System.IO.Directory.CreateDirectory(work);
 
             List<string> copies = this.EscapeSources(sources, work);
             if (copies.Count == 0) return;
 
             var tmp = work + '\\' + GetTempFileName(this._device) + ext;
-            if (!ExecConvert(copies.ToArray(), tmp))
-            {
-                throw new Exception("入力ファイルの解析に失敗しました。このエラーは、入力ファイルの内容を変更する事で回避できる場合があります。");
-            }
+            if (!ExecConvert(copies.ToArray(), tmp)) throw new Exception(Properties.Resources.GhostscriptError);
             this.RunPostProcess(copies, dest, work);
         }
 
@@ -325,14 +322,14 @@ namespace CubePdf.Ghostscript
             {
                 foreach (string path in sources)
                 {
-                    if (FileIOWrapper.Exists(path)) FileIOWrapper.Delete(path);
+                    if (CubePdf.Misc.File.Exists(path)) CubePdf.Misc.File.Delete(path, true);
                 }
 
                 string[] files = Directory.GetFiles(work);
                 if (files.Length == 1)
                 {
-                    if (FileIOWrapper.Exists(dest)) FileIOWrapper.Delete(dest);
-                    FileIOWrapper.Move(work + '\\' + System.IO.Path.GetFileName(files[0]), dest);
+                    if (CubePdf.Misc.File.Exists(dest)) CubePdf.Misc.File.Delete(dest, true);
+                    CubePdf.Misc.File.Move(work + '\\' + System.IO.Path.GetFileName(files[0]), dest, true);
                 }
                 else if (files.Length > 1)
                 {
@@ -342,8 +339,8 @@ namespace CubePdf.Ghostscript
                         if (System.IO.Path.GetExtension(path) == ".ps") continue;
                         string leaf = System.IO.Path.GetFileName(path);
                         string target = System.String.Format("{0}\\{1}-{2:D3}{3}", root, filename, i, ext);
-                        if (FileIOWrapper.Exists(target)) FileIOWrapper.Delete(target);
-                        FileIOWrapper.Move(work + '\\' + leaf, target);
+                        if (CubePdf.Misc.File.Exists(target)) CubePdf.Misc.File.Delete(target, true);
+                        CubePdf.Misc.File.Move(work + '\\' + leaf, target, true);
                         i++;
                     }
                 }
@@ -512,9 +509,9 @@ namespace CubePdf.Ghostscript
             foreach (string src in sources)
             {
                 var tmp_src = work + '\\' + Path.GetRandomFileName().Replace('.', '_') + Path.GetExtension(src);
-                if (FileIOWrapper.Exists(src))
+                if (CubePdf.Misc.File.Exists(src))
                 {
-                    FileIOWrapper.Copy(src, tmp_src); // TODO: このコピーのコスト
+                    CubePdf.Misc.File.Copy(src, tmp_src, true);
                     dest.Add(tmp_src);
                 }
             }

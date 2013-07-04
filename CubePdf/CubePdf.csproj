@@ -200,6 +200,7 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>copy $(TargetPath) $(ProjectDir)..\release\$(PlatformName)\
-copy $(TargetPath).config $(ProjectDir)..\release\$(PlatformName)\</PostBuildEvent>
+copy $(TargetPath).config $(ProjectDir)..\release\$(PlatformName)\
+copy $(TargetDir)*.dll $(ProjectDir)..\Release\$(PlatformName)\</PostBuildEvent>
   </PropertyGroup>
 </Project>
