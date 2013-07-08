@@ -28,7 +28,7 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
 ■バージョン履歴
-2013/07/08 version 1.0.0RC5
+2013/07/09 version 1.0.0RC5
 - 使用しているライブラリ (Ghostscript) のライセンス変更に伴い、CubePDF のライセンスを GNU General Public License (GPLv3) から GNU Affero General Public License (AGPL) に変更
 - CubePDF を使用して変換した PDF ファイルを Adobe Reader 等の一部の PDF 閲覧ソフトで表示した際、テキストの選択状態が不自然になる不都合を修正
 - 出力先ファイルが別プロセスで使用中の場合にダイアログを表示するように修正
