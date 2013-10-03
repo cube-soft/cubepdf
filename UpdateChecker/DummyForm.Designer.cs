@@ -68,7 +68,7 @@
             // 
             this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
             this.ExitToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.ExitToolStripMenuItem.Text = "修了";
+            this.ExitToolStripMenuItem.Text = "終了";
             this.ExitToolStripMenuItem.Click += new System.EventHandler(this.Exit);
             // 
             // DummyForm
