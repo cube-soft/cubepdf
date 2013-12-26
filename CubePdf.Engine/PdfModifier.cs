@@ -209,6 +209,7 @@ namespace CubePdf
             if (!CubePdf.Misc.File.Exists(setting.OutputPath)) return false;
 
             string tmp = Utility.WorkingDirectory + '\\' + System.IO.Path.GetRandomFileName();
+            string tmp_w = Utility.WorkingDirectory + '\\' + System.IO.Path.GetRandomFileName();
 
             iTextSharp.text.pdf.PdfReader reader = null;
             bool status = true;
@@ -217,7 +218,7 @@ namespace CubePdf
                 CubePdf.Misc.File.Move(setting.OutputPath, tmp, true);
                 reader = new iTextSharp.text.pdf.PdfReader(tmp);
                 var writer = new iTextSharp.text.pdf.PdfStamper(reader,
-                    new System.IO.FileStream(setting.OutputPath, System.IO.FileMode.Create), PdfVersionToiText(setting.PDFVersion));
+                    new System.IO.FileStream(tmp_w, System.IO.FileMode.Create), PdfVersionToiText(setting.PDFVersion));
 
                 // 文書プロパティ
                 Dictionary<string, string> info = new Dictionary<string, string>();
@@ -249,6 +250,8 @@ namespace CubePdf
                 }
 
                 writer.Close();
+
+                CubePdf.Misc.File.Move(tmp_w, setting.OutputPath, true);
             }
             catch (Exception err)
             {
@@ -266,9 +269,13 @@ namespace CubePdf
                     {
                         var fi = new System.IO.FileInfo(setting.OutputPath);
                         if (fi.Length == 0) CubePdf.Misc.File.Move(tmp, setting.OutputPath, true);
-                        else CubePdf.Misc.File.Delete(tmp, false);
+                        else
+                        {
+                            CubePdf.Misc.File.Delete(tmp, false);
+                        }
                     }
                 }
+                if (CubePdf.Misc.File.Exists(tmp_w)) CubePdf.Misc.File.Delete(tmp_w, false);
             }
 
             return status;
