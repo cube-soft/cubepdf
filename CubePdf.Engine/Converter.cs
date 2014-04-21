@@ -105,21 +105,21 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         public bool Run(UserSetting setting) {
             // Ghostscript に指定するパスに日本語が入るとエラーが発生する
-            // 場合があるので，作業ディレクトリを変更する．
-            this.CreateWorkingDirectory(setting);
+            // 場合があるので、作業ディレクトリを変更する。
+            CreateWorkingDirectory(setting);
 
-            Ghostscript.Converter gs = new Ghostscript.Converter(_messages);
+            var gs = new Ghostscript.Converter(_messages);
             gs.Device = Parameter.Device(setting.FileType, setting.Grayscale);
-            bool status = true;
+            var status = true;
             try {
-                gs.AddInclude(setting.LibPath + @"\lib");
+                gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
                 gs.PageRotation = setting.PageRotation;
                 gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
 
-                this.ConfigImageOperations(setting, gs);
-                if (Parameter.IsImageType(setting.FileType)) this.ConfigImage(setting, gs);
-                else this.ConfigDocument(setting, gs);
-                this.EscapeExistedFile(setting);
+                ConfigImageOperations(setting, gs);
+                if (Parameter.IsImageType(setting.FileType)) ConfigImage(setting, gs);
+                else ConfigDocument(setting, gs);
+                EscapeExistedFile(setting);
 
                 gs.AddSource(setting.InputPath);
                 gs.Destination = setting.OutputPath;
@@ -127,14 +127,14 @@ namespace CubePdf {
                 
                 if (setting.FileType == Parameter.FileTypes.PDF)
                 {
-                    PdfModifier modifier = new PdfModifier(_escaped, _messages);
+                    var modifier = new PdfModifier(_escaped, _messages);
                     status = modifier.Run(setting);
                     _messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.PDFModifier.Run: {0}", status.ToString())));
                 }
 
                 if (status)
                 {
-                    PostProcess postproc = new PostProcess(_messages);
+                    var postproc = new PostProcess(_messages);
                     status = postproc.Run(setting);
                     _messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.PostProcess.Run: {0}", status.ToString())));
                 }
@@ -172,15 +172,16 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         public bool FileExists(UserSetting setting) {
             if (File.Exists(setting.OutputPath)) return true;
-            else if (setting.FileType == Parameter.FileTypes.EPS ||
-                setting.FileType == Parameter.FileTypes.BMP ||
-                setting.FileType == Parameter.FileTypes.JPEG ||
-                setting.FileType == Parameter.FileTypes.PNG ||
-                setting.FileType == Parameter.FileTypes.TIFF) {
+            else if (setting.FileType == Parameter.FileTypes.EPS  ||
+                     setting.FileType == Parameter.FileTypes.BMP  ||
+                     setting.FileType == Parameter.FileTypes.JPEG ||
+                     setting.FileType == Parameter.FileTypes.PNG  ||
+                     setting.FileType == Parameter.FileTypes.TIFF)
+            {
                 string dir = Path.GetDirectoryName(setting.OutputPath);
                 string basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
                 string ext = Path.GetExtension(setting.OutputPath);
-                if (File.Exists(dir + '\\' + basename + "-001" + ext)) return true;
+                if (File.Exists(System.IO.Path.Combine(dir, basename + "-001" + ext))) return true;
             }
             return false;
         }
@@ -207,12 +208,12 @@ namespace CubePdf {
                     string basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
                     string ext = Path.GetExtension(setting.OutputPath);
                     for (int i = 2; i < 10000; ++i) {
-                        setting.OutputPath = dir + '\\' + basename + '(' + i.ToString() + ')' + ext;
+                        setting.OutputPath = System.IO.Path.Combine(dir, basename + '(' + i.ToString() + ')' + ext);
                         if (!this.FileExists(setting)) break;
                     }
                 }
                 else if (setting.FileType == Parameter.FileTypes.PDF  && merge) {
-                    _escaped = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
+                    _escaped = System.IO.Path.Combine(Utility.WorkingDirectory, Path.GetRandomFileName());
                     File.Copy(setting.OutputPath, _escaped, true);
                 }
             }
