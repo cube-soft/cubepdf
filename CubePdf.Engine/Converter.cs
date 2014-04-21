@@ -251,7 +251,7 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public void ConfigImage(UserSetting setting, Ghostscript.Converter gs) {
+        private void ConfigImage(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("GraphicsAlphaBits", 4);
             gs.AddOption("TextAlphaBits", 4);
         }
@@ -266,7 +266,7 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public void ConfigDocument(UserSetting setting, Ghostscript.Converter gs) {
+        private void ConfigDocument(UserSetting setting, Ghostscript.Converter gs) {
             if (setting.FileType == Parameter.FileTypes.PDF) this.ConfigPdf(setting, gs);
             else {
                 if (setting.EmbedFont) {
@@ -286,7 +286,7 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public void ConfigPdf(UserSetting setting, Ghostscript.Converter gs) {
+        private void ConfigPdf(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("CompatibilityLevel", Parameter.PdfVersionValue(setting.PDFVersion));
             gs.AddOption("UseFlateCompression", true);
 
@@ -327,7 +327,7 @@ namespace CubePdf {
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        public void ConfigPdfA(UserSetting setting, Ghostscript.Converter gs) {
+        private void ConfigPdfA(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("PDFA");
             gs.AddOption("EmbedAllFonts", true);
             gs.AddOption("SubsetFonts", true);
@@ -354,7 +354,7 @@ namespace CubePdf {
         /// </remarks>
         /// 
         /* ----------------------------------------------------------------- */
-        public void ConfigPdfX(UserSetting setting, Ghostscript.Converter gs) {
+        private void ConfigPdfX(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("PDFX");
             gs.AddOption("EmbedAllFonts", true);
             gs.AddOption("SubsetFonts", true);
@@ -378,7 +378,7 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public void ConfigImageOperations(UserSetting setting, Ghostscript.Converter gs) {
+        private void ConfigImageOperations(UserSetting setting, Ghostscript.Converter gs) {
             // 解像度
             var resolution = Parameter.ResolutionValue(setting.Resolution);
             gs.AddOption("ColorImageResolution", resolution);
