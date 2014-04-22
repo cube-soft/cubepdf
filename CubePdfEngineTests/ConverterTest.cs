@@ -88,12 +88,13 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         [TestCase(Parameter.FileTypes.PDF,  false)]
         [TestCase(Parameter.FileTypes.PS,   true)]
-        [TestCase(Parameter.FileTypes.JPEG, true)]
+        [TestCase(Parameter.FileTypes.BMP,  true)]
         [TestCase(Parameter.FileTypes.SVG,  false)]
         public void TestRunAs(Parameter.FileTypes type, bool rename_test)
         {
             var setting = CreateSetting();
             setting.FileType = type;
+            setting.Resolution = Parameter.Resolutions.Resolution72;
             AssertRun(setting, string.Empty);
 
             if (rename_test)
