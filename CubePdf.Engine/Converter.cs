@@ -5,17 +5,17 @@
 /// Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
 ///
 /// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, either version 3 of the License, or
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
 /// (at your option) any later version.
 ///
 /// This program is distributed in the hope that it will be useful,
 /// but WITHOUT ANY WARRANTY; without even the implied warranty of
 /// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
+/// GNU Affero General Public License for more details.
 ///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see < http://www.gnu.org/licenses/ >.
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ///
 /* ------------------------------------------------------------------------- */
 using System;
@@ -104,9 +104,7 @@ namespace CubePdf {
         /// 
         /* ----------------------------------------------------------------- */
         public bool Run(UserSetting setting) {
-            // Ghostscript に指定するパスに日本語が入るとエラーが発生する
-            // 場合があるので、作業ディレクトリを変更する。
-            CreateWorkingDirectory(setting);
+            CreateWorkDirectory(setting);
 
             var gs = new Ghostscript.Converter(_messages);
             gs.Device = Parameter.Device(setting.FileType, setting.Grayscale);
@@ -129,14 +127,14 @@ namespace CubePdf {
                 {
                     var modifier = new PdfModifier(_escaped, _messages);
                     status = modifier.Run(setting);
-                    _messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.PDFModifier.Run: {0}", status.ToString())));
+                    _messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.PDFModifier.Run: {0}", status)));
                 }
 
                 if (status)
                 {
                     var postproc = new PostProcess(_messages);
                     status = postproc.Run(setting);
-                    _messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.PostProcess.Run: {0}", status.ToString())));
+                    _messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.PostProcess.Run: {0}", status)));
                 }
             }
             catch (Exception err) {
@@ -178,9 +176,9 @@ namespace CubePdf {
                      setting.FileType == Parameter.FileTypes.PNG  ||
                      setting.FileType == Parameter.FileTypes.TIFF)
             {
-                string dir = Path.GetDirectoryName(setting.OutputPath);
-                string basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
-                string ext = Path.GetExtension(setting.OutputPath);
+                var dir = Path.GetDirectoryName(setting.OutputPath);
+                var basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
+                var ext = Path.GetExtension(setting.OutputPath);
                 if (File.Exists(System.IO.Path.Combine(dir, basename + "-001" + ext))) return true;
             }
             return false;
@@ -221,14 +219,14 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// CreateWorkingDirectory
+        /// CreateWorkDirectory
         ///
         /// <summary>
         /// 作業用ディレクトリを作成します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void CreateWorkingDirectory(UserSetting setting) {
+        private void CreateWorkDirectory(UserSetting setting) {
             Utility.WorkingDirectory = Path.Combine(setting.LibPath, Path.GetRandomFileName());
             if (File.Exists(Utility.WorkingDirectory)) File.Delete(Utility.WorkingDirectory);
             if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
