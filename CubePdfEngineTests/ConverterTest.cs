@@ -192,6 +192,33 @@ namespace CubePdf
             AssertRun(setting, suffix);
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestRunAsPdfWithFilename
+        /// 
+        /// <summary>
+        /// 様々なファイル名に設定して、PDF の生成テストを行います。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// いったん Results フォルダに指定したファイル名のファイルを作成
+        /// してテストします。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        [TestCase("file with spaces.ps")]
+        [TestCase("日本語のファイル.ps")]
+        public void TestRunAsPdfWithFilename(string filename)
+        {
+            var src  = System.IO.Path.Combine(_src, "example-min.ps");
+            var dest = System.IO.Path.Combine(_dest, filename);
+            System.IO.File.Copy(src, dest, true);
+
+            var setting = CreateSetting();
+            setting.InputPath = dest;
+            AssertRun(setting, string.Empty);
+        }
+
         #endregion
 
         #region Custom assertions
