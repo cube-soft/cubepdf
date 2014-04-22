@@ -251,20 +251,20 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private void Run(string[] sources, string dest)
         {
-            string root = System.IO.Path.GetDirectoryName(dest);
-            string filename = System.IO.Path.GetFileNameWithoutExtension(dest);
-            string ext = System.IO.Path.GetExtension(dest);
+            var root = Path.GetDirectoryName(dest);
+            var filename = Path.GetFileNameWithoutExtension(dest);
+            var ext = Path.GetExtension(dest);
 
             // 作業ディレクトリの作成
-            string work = Utility.WorkingDirectory + '\\' + Path.GetRandomFileName();
-            if (System.IO.Directory.Exists(work)) System.IO.Directory.Delete(work, true);
+            var work = Path.Combine(Utility.WorkingDirectory, Path.GetRandomFileName());
+            if (Directory.Exists(work)) Directory.Delete(work, true);
             else if (CubePdf.Misc.File.Exists(work)) CubePdf.Misc.File.Delete(work, false);
-            System.IO.Directory.CreateDirectory(work);
+            Directory.CreateDirectory(work);
 
-            List<string> copies = this.EscapeSources(sources, work);
+            var copies = this.EscapeSources(sources, work);
             if (copies.Count == 0) return;
 
-            var tmp = work + '\\' + GetTempFileName(this._device) + ext;
+            var tmp = Path.Combine(work,  GetTempFileName(this._device) + ext);
             if (!ExecConvert(copies.ToArray(), tmp)) throw new Exception(Properties.Resources.GhostscriptError);
             this.RunPostProcess(copies, dest, work);
         }
@@ -274,10 +274,10 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private bool RunGhostscript(string[] args)
         {
-            IntPtr instance = IntPtr.Zero;
-            bool status = true;
+            var instance = IntPtr.Zero;
+            var status = true;
 
-            this.AddMessages(args);
+            AddMessages(args);
             lock (_gslock)
             {
                 try
@@ -314,9 +314,9 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private void RunPostProcess(List<string> sources, string dest, string work)
         {
-            string root = System.IO.Path.GetDirectoryName(dest);
-            string filename = System.IO.Path.GetFileNameWithoutExtension(dest);
-            string ext = System.IO.Path.GetExtension(dest);
+            var root = Path.GetDirectoryName(dest);
+            var filename = Path.GetFileNameWithoutExtension(dest);
+            var ext = Path.GetExtension(dest);
 
             try
             {
@@ -325,22 +325,22 @@ namespace CubePdf.Ghostscript
                     if (CubePdf.Misc.File.Exists(path)) CubePdf.Misc.File.Delete(path, true);
                 }
 
-                string[] files = Directory.GetFiles(work);
+                var files = Directory.GetFiles(work);
                 if (files.Length == 1)
                 {
                     if (CubePdf.Misc.File.Exists(dest)) CubePdf.Misc.File.Delete(dest, true);
-                    CubePdf.Misc.File.Move(work + '\\' + System.IO.Path.GetFileName(files[0]), dest, true);
+                    CubePdf.Misc.File.Move(Path.Combine(work, Path.GetFileName(files[0])), dest, true);
                 }
                 else if (files.Length > 1)
                 {
                     int i = 1;
-                    foreach (string path in files)
+                    foreach (var path in files)
                     {
                         if (System.IO.Path.GetExtension(path) == ".ps") continue;
                         string leaf = System.IO.Path.GetFileName(path);
                         string target = System.String.Format("{0}\\{1}-{2:D3}{3}", root, filename, i, ext);
                         if (CubePdf.Misc.File.Exists(target)) CubePdf.Misc.File.Delete(target, true);
-                        CubePdf.Misc.File.Move(work + '\\' + leaf, target, true);
+                        CubePdf.Misc.File.Move(Path.Combine(work, leaf), target, true);
                         i++;
                     }
                 }
@@ -384,7 +384,7 @@ namespace CubePdf.Ghostscript
 
             // Add font paths
             // Note: C:\Windows\Fonts ディレクトリを常に含めるかどうか．
-            var win = System.Environment.GetEnvironmentVariable("windir") + @"\Fonts";
+            var win = Path.Combine(System.Environment.GetEnvironmentVariable("windir"), "Fonts");
             if (!_fonts.Contains(win)) _fonts.Add(win);
             args.Add("-sFONTPATH=" + CombinePath(this._fonts));
 
@@ -505,10 +505,10 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private List<string> EscapeSources(string[] sources, string work)
         {
-            List<string> dest = new List<string>();
+            var dest = new List<string>();
             foreach (string src in sources)
             {
-                var tmp_src = work + '\\' + Path.GetRandomFileName().Replace('.', '_') + Path.GetExtension(src);
+                var tmp_src = Path.Combine(work, Path.GetRandomFileName().Replace('.', '_') + Path.GetExtension(src));
                 if (CubePdf.Misc.File.Exists(src))
                 {
                     CubePdf.Misc.File.Copy(src, tmp_src, true);
