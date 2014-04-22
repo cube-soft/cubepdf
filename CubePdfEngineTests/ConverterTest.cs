@@ -86,8 +86,8 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
+        [TestCase(Parameter.FileTypes.PDF,  false)]
         [TestCase(Parameter.FileTypes.PS,   true)]
-        [TestCase(Parameter.FileTypes.EPS,  false)]
         [TestCase(Parameter.FileTypes.JPEG, true)]
         [TestCase(Parameter.FileTypes.SVG,  false)]
         public void TestRunAs(Parameter.FileTypes type, bool rename_test)
@@ -105,43 +105,24 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestRunAsPdfWithDocument
+        /// TestRunAsPdfWithDocumentAndSecurity
         /// 
         /// <summary>
-        /// PDF の文書プロパティを設定して、生成テストを行います。
+        /// PDF の文書プロパティ、およびセキュリティを設定して、生成テストを
+        /// 行います。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestRunAsPdfWithDocument()
+        public void TestRunAsPdfWithDocumentAndSecurity()
         {
             var setting = CreateSetting();
-            setting.PDFVersion = Parameter.PdfVersions.Ver1_2;
+
             setting.Document.Title = "テスト";
             setting.Document.Author = "株式会社キューブ・ソフト";
             setting.Document.Subtitle = "Document property test. 文書プロパティのテスト";
             setting.Document.Keyword = "文書プロパティ, テスト, test, documents, CubePDF";
 
-            AssertRun(setting, "-document");
-            setting.Document.Title = "先頭に結合";
-            setting.ExistedFile = Parameter.ExistedFiles.MergeHead;
-            AssertRun(setting, "-document");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestRunAsPdfWithSecurity
-        /// 
-        /// <summary>
-        /// PDF のセキュリティを設定して、生成テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestRunAsPdfWithSecurity()
-        {
-            var setting = CreateSetting();
-            setting.PDFVersion = Parameter.PdfVersions.Ver1_4;
             setting.Password = "user";
             setting.Permission.Password = "owner";
             setting.Permission.AllowCopy = true;
@@ -157,65 +138,57 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestRunAsPdfWithWebOptimize
-        /// 
-        /// <summary>
-        /// PDF の Web 最適化オプションを設定して、生成テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestRunAsPdfWithWebOptimize()
-        {
-            var setting = CreateSetting();
-            setting.PDFVersion  = Parameter.PdfVersions.Ver1_5;
-            setting.WebOptimize = true;
-            AssertRun(setting, "-webopt");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestRunAsPdfWithNoEmbed
-        /// 
-        /// <summary>
-        /// フォント埋め込みオプションを無効にして、生成テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestRunAsPdfWithNoEmbed()
-        {
-            var setting = CreateSetting();
-            setting.EmbedFont = false;
-            AssertRun(setting, "-noembed");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestRunAsPdfWithParameters
+        /// TestRunAsPdfWithCommonParameters
         /// 
         /// <summary>
         /// いくつかの設定を行って、PDF の生成テストを行います。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        [TestCase(Parameter.Resolutions.Resolution600, Parameter.DownSamplings.None,      Parameter.ImageFilters.FlateEncode, false)]
-        [TestCase(Parameter.Resolutions.Resolution300, Parameter.DownSamplings.Average,   Parameter.ImageFilters.FlateEncode, true)]
-        [TestCase(Parameter.Resolutions.Resolution150, Parameter.DownSamplings.Bicubic,   Parameter.ImageFilters.DCTEncode,   false)]
-        [TestCase(Parameter.Resolutions.Resolution72,  Parameter.DownSamplings.Subsample, Parameter.ImageFilters.DCTEncode,   true)]
-        public void TestRunAsPdfWithParameters(
+        [TestCase(Parameter.PdfVersions.Ver1_2,  true,  true,  true)]
+        [TestCase(Parameter.PdfVersions.Ver1_3,  false, false, false)]
+        [TestCase(Parameter.PdfVersions.Ver1_4,  true,  false, false)]
+        [TestCase(Parameter.PdfVersions.VerPDFA, false, true,  true)]
+        [TestCase(Parameter.PdfVersions.VerPDFX, true,  false, true)]
+        public void TestRunAsPdfWithCommonParameters(Parameter.PdfVersions pdfver, bool rotation, bool webopt, bool embed)
+        {
+            var setting = CreateSetting();
+            setting.PDFVersion = pdfver;
+            setting.PageRotation = rotation;
+            setting.WebOptimize = webopt;
+            setting.EmbedFont = embed;
+
+            var suffix = string.Format("-{0}", pdfver);
+            if (rotation) suffix += "-pagebypage";
+            if (webopt)   suffix += "-webopt";
+            if (!embed)   suffix += "-noembed";
+            AssertRun(setting, suffix);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestRunAsPdfWithImageParameters
+        /// 
+        /// <summary>
+        /// 画像の精度に関する設定を行って、PDF の生成テストを行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [TestCase(Parameter.Resolutions.Resolution600, Parameter.DownSamplings.None,      Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution300, Parameter.DownSamplings.Average,   Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution150, Parameter.DownSamplings.Bicubic,   Parameter.ImageFilters.DCTEncode)]
+        [TestCase(Parameter.Resolutions.Resolution72,  Parameter.DownSamplings.Subsample, Parameter.ImageFilters.DCTEncode)]
+        public void TestRunAsPdfWithImageParameters(
             Parameter.Resolutions   resolution,
             Parameter.DownSamplings downsampling,
-            Parameter.ImageFilters  filter,
-            bool rotation)
+            Parameter.ImageFilters  filter)
         {
             var setting = CreateSetting();
             setting.Resolution = resolution;
             setting.DownSampling = downsampling;
             setting.ImageFilter = filter;
-            setting.PageRotation = rotation;
 
-            var suffix = string.Format("-{0}-{1}-{2}-{3}", resolution, downsampling, filter, rotation);
+            var suffix = string.Format("-{0}-{1}-{2}", resolution, downsampling, filter);
             AssertRun(setting, suffix);
         }
 
