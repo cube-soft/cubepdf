@@ -47,48 +47,42 @@ namespace CubePdf
     [TestFixture]
     public class ConverterTest
     {
+        #region Custom assertions
+
         /* ----------------------------------------------------------------- */
         ///
-        /// ValidatePDF
+        /// AssertPdf
         /// 
         /// <summary>
         /// 生成された PDF が有効なものかどうかをチェックします。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void ValidatePdf(UserSetting setting)
+        private static void AssertPdf(CubePdf.UserSetting setting)
         {
             try
             {
-                iTextSharp.text.pdf.PdfReader reader = null;
-                if (setting.Password == string.Empty && setting.Permission.Password == string.Empty)
+                var pass = !string.IsNullOrEmpty(setting.Permission.Password) ? setting.Permission.Password :
+                           !string.IsNullOrEmpty(setting.Password)            ? setting.Password            :
+                           null;
+                var obj = (pass != null) ? Encoding.UTF8.GetBytes(pass) : null;
+                using (var reader = new iTextSharp.text.pdf.PdfReader(setting.OutputPath, obj))
                 {
-                    reader = new iTextSharp.text.pdf.PdfReader(setting.OutputPath);
+                    var title = reader.Info.ContainsKey("Title") ? reader.Info["Title"] : string.Empty;
+                    Assert.AreEqual(setting.Document.Title, title);
+                    var author = reader.Info.ContainsKey("Author") ? reader.Info["Author"] : string.Empty;
+                    Assert.AreEqual(setting.Document.Author, author);
+                    var subject = reader.Info.ContainsKey("Subject") ? reader.Info["Subject"] : string.Empty;
+                    Assert.AreEqual(setting.Document.Subtitle, subject);
+                    var keywords = reader.Info.ContainsKey("Keywords") ? reader.Info["Keywords"] : string.Empty;
+                    Assert.AreEqual(setting.Document.Keyword, keywords);
                 }
-                else
-                {
-                    var password = (setting.Permission.Password != string.Empty) ? setting.Permission.Password : setting.Password;
-                    reader = new iTextSharp.text.pdf.PdfReader(setting.OutputPath, Encoding.UTF8.GetBytes(password));
-                }
-
-                // 文書プロパティのチェック
-                var title = reader.Info.ContainsKey("Title") ? reader.Info["Title"] : string.Empty;
-                Assert.AreEqual(setting.Document.Title, title, String.Format("{0}: title unmatched", title));
-                var author = reader.Info.ContainsKey("Author") ? reader.Info["Author"] : string.Empty;
-                Assert.AreEqual(setting.Document.Author, author, String.Format("{0}: author unmatched", author));
-                var subject = reader.Info.ContainsKey("Subject") ? reader.Info["Subject"] : string.Empty;
-                Assert.AreEqual(setting.Document.Subtitle, subject, String.Format("{0}: subject unmatched", subject));
-                var keywords = reader.Info.ContainsKey("Keywords") ? reader.Info["Keywords"] : string.Empty;
-                Assert.AreEqual(setting.Document.Keyword, keywords, String.Format("{0}: keywords unmatched", keywords));
-
-                reader.Close();
             }
-            catch (Exception err)
-            {
-                Assert.Fail(err.ToString());
-            }
+            catch (Exception err) { Assert.Fail(err.ToString()); }
         }
-        
+
+        #endregion
+
         /* ----------------------------------------------------------------- */
         ///
         /// ExecConvert
@@ -122,7 +116,7 @@ namespace CubePdf
                 bool status = File.Exists(setting.OutputPath);
                 if (status)
                 {
-                    if (setting.FileType == Parameter.FileTypes.PDF) ValidatePdf(setting);
+                    if (setting.FileType == Parameter.FileTypes.PDF) AssertPdf(setting);
                 }
                 else
                 {

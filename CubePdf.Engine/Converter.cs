@@ -119,7 +119,7 @@ namespace CubePdf {
                 ConfigImageOperations(setting, gs);
                 if (Parameter.IsImageType(setting.FileType)) ConfigImage(setting, gs);
                 else ConfigDocument(setting, gs);
-                EscapeExistedFile(setting);
+                EscapeIf(setting);
 
                 gs.AddSource(setting.InputPath);
                 gs.Destination = setting.OutputPath;
@@ -170,7 +170,7 @@ namespace CubePdf {
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        public bool FileExists(UserSetting setting) {
+        private bool FileExists(UserSetting setting) {
             if (File.Exists(setting.OutputPath)) return true;
             else if (setting.FileType == Parameter.FileTypes.EPS  ||
                      setting.FileType == Parameter.FileTypes.BMP  ||
@@ -188,7 +188,7 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// EscapeExistedFile
+        /// EscapeIf
         ///
         /// <summary>
         /// 結合オプションなどの関係で既に存在する同名ファイルを退避させます。
@@ -200,9 +200,9 @@ namespace CubePdf {
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        public void EscapeExistedFile(UserSetting setting) {
+        private void EscapeIf(UserSetting setting) {
             if (this.FileExists(setting)) {
-                bool merge = (setting.ExistedFile == Parameter.ExistedFiles.MergeTail || setting.ExistedFile == Parameter.ExistedFiles.MergeHead);
+                var merge = (setting.ExistedFile == Parameter.ExistedFiles.MergeTail || setting.ExistedFile == Parameter.ExistedFiles.MergeHead);
                 if (setting.ExistedFile == Parameter.ExistedFiles.Rename) {
                     string dir = Path.GetDirectoryName(setting.OutputPath);
                     string basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
@@ -213,7 +213,7 @@ namespace CubePdf {
                     }
                 }
                 else if (setting.FileType == Parameter.FileTypes.PDF  && merge) {
-                    _escaped = System.IO.Path.Combine(Utility.WorkingDirectory, Path.GetRandomFileName());
+                    _escaped = Path.Combine(Utility.WorkingDirectory, Path.GetRandomFileName());
                     File.Copy(setting.OutputPath, _escaped, true);
                 }
             }
@@ -228,8 +228,8 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public void CreateWorkingDirectory(UserSetting setting) {
-            Utility.WorkingDirectory = setting.LibPath + '\\' + Path.GetRandomFileName();
+        private void CreateWorkingDirectory(UserSetting setting) {
+            Utility.WorkingDirectory = Path.Combine(setting.LibPath, Path.GetRandomFileName());
             if (File.Exists(Utility.WorkingDirectory)) File.Delete(Utility.WorkingDirectory);
             if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
             Directory.CreateDirectory(Utility.WorkingDirectory);
@@ -237,9 +237,6 @@ namespace CubePdf {
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        //  UserSetting の値を基に各種設定を行う
-        /* ----------------------------------------------------------------- */
         #region Configuration
 
         /* ----------------------------------------------------------------- */
