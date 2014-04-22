@@ -106,23 +106,10 @@ namespace CubePdf {
         public bool Run(UserSetting setting) {
             CreateWorkDirectory(setting);
 
-            var gs = new Ghostscript.Converter(_messages);
-            gs.Device = Parameter.Device(setting.FileType, setting.Grayscale);
             var status = true;
             try {
-                gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
-                gs.PageRotation = setting.PageRotation;
-                gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
+                RunGhostscript(setting);
 
-                ConfigImageOperations(setting, gs);
-                if (Parameter.IsImageType(setting.FileType)) ConfigImage(setting, gs);
-                else ConfigDocument(setting, gs);
-                EscapeIf(setting);
-
-                gs.AddSource(setting.InputPath);
-                gs.Destination = setting.OutputPath;
-                gs.Run();
-                
                 if (setting.FileType == Parameter.FileTypes.PDF)
                 {
                     var modifier = new PdfModifier(_escaped, _messages);
@@ -154,88 +141,40 @@ namespace CubePdf {
             return status;
         }
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// FileExists
-        ///
-        /// <summary>
-        /// ユーザ設定で指定されたファイルが存在するかどうか判別します。
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// いくつかのファイルタイプでは、example-001.ext と言ったファイル名を
-        /// 生成する事があるので、そのケースもチェックします。
-        /// </remarks>
-        ///
-        /* ----------------------------------------------------------------- */
-        private bool FileExists(UserSetting setting) {
-            if (File.Exists(setting.OutputPath)) return true;
-            else if (setting.FileType == Parameter.FileTypes.EPS  ||
-                     setting.FileType == Parameter.FileTypes.BMP  ||
-                     setting.FileType == Parameter.FileTypes.JPEG ||
-                     setting.FileType == Parameter.FileTypes.PNG  ||
-                     setting.FileType == Parameter.FileTypes.TIFF)
-            {
-                var dir = Path.GetDirectoryName(setting.OutputPath);
-                var basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
-                var ext = Path.GetExtension(setting.OutputPath);
-                if (File.Exists(System.IO.Path.Combine(dir, basename + "-001" + ext))) return true;
-            }
-            return false;
-        }
+        #endregion
+
+        #region Operation methods
 
         /* ----------------------------------------------------------------- */
         ///
-        /// EscapeIf
+        /// RunGhostscript
         ///
         /// <summary>
-        /// 結合オプションなどの関係で既に存在する同名ファイルを退避させます。
+        /// Ghostscript に必要な設定を行った後、実行します。
         /// </summary>
-        /// 
-        /// <remarks>
-        /// リネームの場合は、退避させる代わりに UserSetting.OutputPath
-        /// プロパティの値を変更します。
-        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private void EscapeIf(UserSetting setting) {
-            if (this.FileExists(setting)) {
-                var merge = (setting.ExistedFile == Parameter.ExistedFiles.MergeTail || setting.ExistedFile == Parameter.ExistedFiles.MergeHead);
-                if (setting.ExistedFile == Parameter.ExistedFiles.Rename) {
-                    string dir = Path.GetDirectoryName(setting.OutputPath);
-                    string basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
-                    string ext = Path.GetExtension(setting.OutputPath);
-                    for (int i = 2; i < 10000; ++i) {
-                        setting.OutputPath = System.IO.Path.Combine(dir, basename + '(' + i.ToString() + ')' + ext);
-                        if (!this.FileExists(setting)) break;
-                    }
-                }
-                else if (setting.FileType == Parameter.FileTypes.PDF  && merge) {
-                    _escaped = Path.Combine(Utility.WorkingDirectory, Path.GetRandomFileName());
-                    File.Copy(setting.OutputPath, _escaped, true);
-                }
-            }
-        }
+        private void RunGhostscript(UserSetting setting)
+        {
+            var gs = new Ghostscript.Converter(_messages);
+            gs.Device = Parameter.Device(setting.FileType, setting.Grayscale);
+            gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
+            gs.PageRotation = setting.PageRotation;
+            gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// CreateWorkDirectory
-        ///
-        /// <summary>
-        /// 作業用ディレクトリを作成します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void CreateWorkDirectory(UserSetting setting) {
-            Utility.WorkingDirectory = Path.Combine(setting.LibPath, Path.GetRandomFileName());
-            if (File.Exists(Utility.WorkingDirectory)) File.Delete(Utility.WorkingDirectory);
-            if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
-            Directory.CreateDirectory(Utility.WorkingDirectory);
+            ConfigImageOperations(setting, gs);
+            if (Parameter.IsImageType(setting.FileType)) ConfigImage(setting, gs);
+            else ConfigDocument(setting, gs);
+            EscapeIf(setting);
+
+            gs.AddSource(setting.InputPath);
+            gs.Destination = setting.OutputPath;
+            gs.Run();
         }
 
         #endregion
 
-        #region Configuration
+        #region Configuration methods
 
         /* ----------------------------------------------------------------- */
         ///
@@ -403,6 +342,96 @@ namespace CubePdf {
                 gs.AddOption("GrayImageDownsampleType",  "/" + setting.DownSampling.ToString());
                 gs.AddOption("MonoImageDownsampleType", "/" + setting.DownSampling.ToString());
             }
+        }
+
+        #endregion
+
+        #region Other methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// FileExists
+        ///
+        /// <summary>
+        /// ユーザ設定で指定されたファイルが存在するかどうか判別します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// いくつかのファイルタイプでは、example-001.ext と言ったファイル名を
+        /// 生成する事があるので、そのケースもチェックします。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        private bool FileExists(UserSetting setting)
+        {
+            if (File.Exists(setting.OutputPath)) return true;
+            else if (setting.FileType == Parameter.FileTypes.EPS ||
+                     setting.FileType == Parameter.FileTypes.BMP ||
+                     setting.FileType == Parameter.FileTypes.JPEG ||
+                     setting.FileType == Parameter.FileTypes.PNG ||
+                     setting.FileType == Parameter.FileTypes.TIFF)
+            {
+                var dir = Path.GetDirectoryName(setting.OutputPath);
+                var basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
+                var ext = Path.GetExtension(setting.OutputPath);
+                if (File.Exists(System.IO.Path.Combine(dir, basename + "-001" + ext))) return true;
+            }
+            return false;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// EscapeIf
+        ///
+        /// <summary>
+        /// 結合オプションなどの関係で既に存在する同名ファイルを退避させます。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// リネームの場合は、退避させる代わりに UserSetting.OutputPath
+        /// プロパティの値を変更します。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void EscapeIf(UserSetting setting)
+        {
+            if (this.FileExists(setting))
+            {
+                var merge = (setting.ExistedFile == Parameter.ExistedFiles.MergeTail || setting.ExistedFile == Parameter.ExistedFiles.MergeHead);
+                if (setting.ExistedFile == Parameter.ExistedFiles.Rename)
+                {
+                    string dir = Path.GetDirectoryName(setting.OutputPath);
+                    string basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
+                    string ext = Path.GetExtension(setting.OutputPath);
+                    for (int i = 2; i < 10000; ++i)
+                    {
+                        setting.OutputPath = System.IO.Path.Combine(dir, basename + '(' + i.ToString() + ')' + ext);
+                        if (!this.FileExists(setting)) break;
+                    }
+                }
+                else if (setting.FileType == Parameter.FileTypes.PDF && merge)
+                {
+                    _escaped = Path.Combine(Utility.WorkingDirectory, Path.GetRandomFileName());
+                    File.Copy(setting.OutputPath, _escaped, true);
+                }
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CreateWorkDirectory
+        ///
+        /// <summary>
+        /// 作業用ディレクトリを作成します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void CreateWorkDirectory(UserSetting setting)
+        {
+            Utility.WorkingDirectory = Path.Combine(setting.LibPath, Path.GetRandomFileName());
+            if (File.Exists(Utility.WorkingDirectory)) File.Delete(Utility.WorkingDirectory);
+            if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
+            Directory.CreateDirectory(Utility.WorkingDirectory);
         }
 
         #endregion
