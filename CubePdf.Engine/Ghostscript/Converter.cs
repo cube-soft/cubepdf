@@ -58,7 +58,22 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         public void Run()
         {
-            Run(this._sources.ToArray(), this._dest);
+            var root = Path.GetDirectoryName(_dest);
+            var filename = Path.GetFileNameWithoutExtension(_dest);
+            var ext = Path.GetExtension(_dest);
+
+            // 作業ディレクトリの作成
+            var work = Path.Combine(Utility.WorkingDirectory, Path.GetRandomFileName());
+            if (Directory.Exists(work)) Directory.Delete(work, true);
+            else if (CubePdf.Misc.File.Exists(work)) CubePdf.Misc.File.Delete(work, false);
+            Directory.CreateDirectory(work);
+
+            var copies = CopySources(_sources, work);
+            if (copies.Count == 0) return;
+
+            var tmp = Path.Combine(work, GetTempFileName(this._device) + ext);
+            if (!ExecConvert(copies.ToArray(), tmp)) throw new Exception(Properties.Resources.GhostscriptError);
+            this.RunPostProcess(copies, _dest, work);
         }
 
         /* ----------------------------------------------------------------- */
@@ -247,29 +262,6 @@ namespace CubePdf.Ghostscript
         #region Methods for main operation
 
         /* ----------------------------------------------------------------- */
-        ///  Run
-        /* ----------------------------------------------------------------- */
-        private void Run(string[] sources, string dest)
-        {
-            var root = Path.GetDirectoryName(dest);
-            var filename = Path.GetFileNameWithoutExtension(dest);
-            var ext = Path.GetExtension(dest);
-
-            // 作業ディレクトリの作成
-            var work = Path.Combine(Utility.WorkingDirectory, Path.GetRandomFileName());
-            if (Directory.Exists(work)) Directory.Delete(work, true);
-            else if (CubePdf.Misc.File.Exists(work)) CubePdf.Misc.File.Delete(work, false);
-            Directory.CreateDirectory(work);
-
-            var copies = this.EscapeSources(sources, work);
-            if (copies.Count == 0) return;
-
-            var tmp = Path.Combine(work,  GetTempFileName(this._device) + ext);
-            if (!ExecConvert(copies.ToArray(), tmp)) throw new Exception(Properties.Resources.GhostscriptError);
-            this.RunPostProcess(copies, dest, work);
-        }
-
-        /* ----------------------------------------------------------------- */
         //  RunGhostscript (private)
         /* ----------------------------------------------------------------- */
         private bool RunGhostscript(string[] args)
@@ -438,10 +430,50 @@ namespace CubePdf.Ghostscript
 
         #endregion
 
-        #region Utility methods
+        #region Methods for sources
 
         /* ----------------------------------------------------------------- */
-        /// AddMessages (private)
+        ///
+        /// CopySources
+        /// 
+        /// <summary>
+        /// ソースファイルをコピーします。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// コピーは主に、日本語のファイル名の回避を目的としています。
+        /// コピーのコスト等の問題もあるので、次善策を要検討。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        private List<string> CopySources(List<string> sources, string work)
+        {
+            var dest = new List<string>();
+            foreach (var src in sources)
+            {
+                var filename = Path.GetRandomFileName().Replace('.', '_') + Path.GetExtension(src);
+                var tmp = Path.Combine(work, filename);
+                if (CubePdf.Misc.File.Exists(src))
+                {
+                    CubePdf.Misc.File.Copy(src, tmp, true);
+                    dest.Add(tmp);
+                }
+            }
+            return dest;
+        }
+
+        #endregion
+
+        #region Methods for messages
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddMessages
+        /// 
+        /// <summary>
+        /// デバッグ用メッセージを追加します。
+        /// </summary>
+        /// 
         /* ----------------------------------------------------------------- */
         private void AddMessages(string[] args)
         {
@@ -449,7 +481,7 @@ namespace CubePdf.Ghostscript
             _messages.Add(new Message(Message.Levels.Debug, String.Format("WorkingDirectory: {0}", Utility.WorkingDirectory)));
 
             // ライブラリの存在するディレクトリへのパス
-            string msg = "LibPath: ";
+            var msg = "LibPath: ";
             if (_includes.Count > 0)
             {
                 msg += _includes[0];
@@ -467,6 +499,10 @@ namespace CubePdf.Ghostscript
             }
         }
 
+        #endregion
+
+        #region Other methods
+
         /* ----------------------------------------------------------------- */
         /// CombinePath (private)
         /* ----------------------------------------------------------------- */
@@ -482,7 +518,13 @@ namespace CubePdf.Ghostscript
         }
 
         /* ----------------------------------------------------------------- */
-        /// GetTempFileName (private)
+        ///
+        /// GetTempFileName
+        ///
+        /// <summary>
+        /// 一時ファイル名を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         private string GetTempFileName(Devices device)
         {
@@ -491,31 +533,6 @@ namespace CubePdf.Ghostscript
                 return Path.GetRandomFileName();
             }
             else return Path.GetRandomFileName().Replace('.', '_') + "-%08d";
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// EscapeSources (private)
-        /// 
-        /// <summary>
-        /// PDF の変換を行う際は，ソースファイルのコピーを作成して，
-        /// そのコピーに対して処理を行う．
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private List<string> EscapeSources(string[] sources, string work)
-        {
-            var dest = new List<string>();
-            foreach (string src in sources)
-            {
-                var tmp_src = Path.Combine(work, Path.GetRandomFileName().Replace('.', '_') + Path.GetExtension(src));
-                if (CubePdf.Misc.File.Exists(src))
-                {
-                    CubePdf.Misc.File.Copy(src, tmp_src, true);
-                    dest.Add(tmp_src);
-                }
-            }
-            return dest;
         }
 
         #endregion
@@ -553,6 +570,7 @@ namespace CubePdf.Ghostscript
         #endregion
 
         #region Constant variables
+
         private static readonly string[] defaults_ = {
             "-dQUIET",
             "-dNOSAFER",
