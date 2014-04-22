@@ -72,7 +72,8 @@ namespace CubePdf.Ghostscript
             if (copies.Count == 0) return;
 
             var tmp = Path.Combine(work, GetTempFileName(this._device) + ext);
-            if (!ExecConvert(copies.ToArray(), tmp)) throw new Exception(Properties.Resources.GhostscriptError);
+            var args = MakeArgs(copies.ToArray(), tmp);
+            if (!RunGhostscript(args)) throw new Exception(Properties.Resources.GhostscriptError);
             this.RunPostProcess(copies, _dest, work);
         }
 
@@ -224,41 +225,6 @@ namespace CubePdf.Ghostscript
 
         #endregion
 
-        #region Methods for future extensions
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ExecConvert
-        /// 
-        /// <summary>
-        /// Converter クラスを継承するクラスは，Convert を独自に実装
-        /// する場合，Convert() メンバ関数ではなくこの ExecConvert()
-        /// メンバ関数をオーバーライドする事．
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        protected virtual bool ExecConvert(string[] sources, string dest)
-        {
-            return RunGhostscript(this.MakeArgs(sources, dest));
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ExtraArgs
-        ///
-        /// <summary>
-        /// 派生クラスで，Ghostscript に追加する引数が存在する場合は，
-        /// このメソッドをオーバーライドして追加する．
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        protected virtual void ExtraArgs(List<string> args)
-        {
-            return;
-        }
-
-        #endregion
-
         #region Methods for main operation
 
         /* ----------------------------------------------------------------- */
@@ -372,13 +338,12 @@ namespace CubePdf.Ghostscript
             }
 
             // Add include paths
-            if (_includes.Count > 0) args.Add("-I" + CombinePath(this._includes));
+            if (_includes.Count > 0) args.Add("-I" + string.Join(";", _includes.ToArray()));
 
             // Add font paths
-            // Note: C:\Windows\Fonts ディレクトリを常に含めるかどうか．
             var win = Path.Combine(System.Environment.GetEnvironmentVariable("windir"), "Fonts");
             if (!_fonts.Contains(win)) _fonts.Add(win);
-            args.Add("-sFONTPATH=" + CombinePath(this._fonts));
+            args.Add("-sFONTPATH=" + string.Join(";", _fonts.ToArray()));
 
             // Add resolution
             args.Add("-r" + this._resolution.ToString());
@@ -405,9 +370,6 @@ namespace CubePdf.Ghostscript
                     ext + elem.Key + "=" + elem.Value;
                 args.Add(tmp);
             }
-
-            // Add user options (for inherited classes)
-            this.ExtraArgs(args);
 
             //args.Add("-sstdout=ghostscript.log");
 
@@ -502,20 +464,6 @@ namespace CubePdf.Ghostscript
         #endregion
 
         #region Other methods
-
-        /* ----------------------------------------------------------------- */
-        /// CombinePath (private)
-        /* ----------------------------------------------------------------- */
-        private string CombinePath(List<string> paths)
-        {
-            var dest = new System.Text.StringBuilder();
-            foreach (var s in paths)
-            {
-                dest.Append(s);
-                dest.Append(';');
-            }
-            return dest.ToString();
-        }
 
         /* ----------------------------------------------------------------- */
         ///
