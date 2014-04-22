@@ -19,7 +19,6 @@
  */
 /* ------------------------------------------------------------------------- */
 using System;
-using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -38,7 +37,13 @@ namespace CubePdf.Ghostscript
     public class Converter
     {
         /* ----------------------------------------------------------------- */
-        /// Constructor
+        ///
+        /// Converter (constructor)
+        ///
+        /// <summary>
+        /// オブジェクトを初期化します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public Converter()
         {
@@ -46,7 +51,13 @@ namespace CubePdf.Ghostscript
         }
 
         /* ----------------------------------------------------------------- */
-        /// Constructor
+        ///
+        /// Converter (constructor)
+        ///
+        /// <summary>
+        /// オブジェクトを初期化します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public Converter(List<CubePdf.Message> messages)
         {
@@ -54,114 +65,56 @@ namespace CubePdf.Ghostscript
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Run
+        ///
+        /// <summary>
+        /// 変換処理を実行します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public void Run()
         {
-            var root = Path.GetDirectoryName(_dest);
-            var filename = Path.GetFileNameWithoutExtension(_dest);
-            var ext = Path.GetExtension(_dest);
+            var root = System.IO.Path.GetDirectoryName(_dest);
+            var filename = System.IO.Path.GetFileNameWithoutExtension(_dest);
+            var extension = System.IO.Path.GetExtension(_dest);
 
-            // 作業ディレクトリの作成
-            var work = Path.Combine(Utility.WorkingDirectory, Path.GetRandomFileName());
-            if (Directory.Exists(work)) Directory.Delete(work, true);
-            else if (CubePdf.Misc.File.Exists(work)) CubePdf.Misc.File.Delete(work, false);
-            Directory.CreateDirectory(work);
-
+            var work = CreateWorkDirectory();
             var copies = CopySources(_sources, work);
             if (copies.Count == 0) return;
 
-            var tmp = Path.Combine(work, GetTempFileName(this._device) + ext);
+            var tmp = System.IO.Path.Combine(work, GetTempFileName(_device) + extension);
             var args = MakeArgs(copies.ToArray(), tmp);
-            if (!RunGhostscript(args)) throw new Exception(Properties.Resources.GhostscriptError);
-            this.RunPostProcess(copies, _dest, work);
+            AddMessages(args);
+            if (!Run(args)) throw new ArgumentException(Properties.Resources.GhostscriptError);
+            DeleteCopiedSources(copies);
+            MoveFiles(_dest, work);
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Messages
+        ///
+        /// <summary>
+        /// 処理中に出力されたメッセージ一覧を取得します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public List<CubePdf.Message> Messages
         {
             get { return _messages; }
         }
 
-        #region Configuration
+        #region Properties
 
         /* ----------------------------------------------------------------- */
-        /// AddSource
-        /* ----------------------------------------------------------------- */
-        public void AddSource(string path)
-        {
-            _sources.Add(path);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// AddInclude
-        /* ----------------------------------------------------------------- */
-        public void AddInclude(string dir)
-        {
-            _includes.Add(dir);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// AddFont
-        /* ----------------------------------------------------------------- */
-        public void AddFont(string dir)
-        {
-            _fonts.Add(dir);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// AddOption
-        /* ----------------------------------------------------------------- */
-        public void AddOption(string key)
-        {
-            _options.Add(key, null);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// AddOption
-        /* ----------------------------------------------------------------- */
-        public void AddOption(string key, string value)
-        {
-            _options.Add(key, value);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// AddOption
-        /* ----------------------------------------------------------------- */
-        public void AddOption(string key, bool value)
-        {
-            _options.Add(key, value.ToString().ToLower());
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// AddOption
-        /* ----------------------------------------------------------------- */
-        public void AddOption<Type>(string key, Type value)
-        {
-            _options.Add(key, value.ToString());
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// DeleteOption
-        /* ----------------------------------------------------------------- */
-        public void DeleteOption(string key)
-        {
-            if (_options.ContainsKey(key)) _options.Remove(key);
-        }
-
-        /* ----------------------------------------------------------------- */
-        /// Pages
-        /* ----------------------------------------------------------------- */
-        public void Pages(int first, int last)
-        {
-            this._first = first;
-            this._last = last;
-        }
-
-        /* ----------------------------------------------------------------- */
+        ///
         /// Device
+        ///
+        /// <summary>
+        /// デバイス（ファイルタイプ）を取得、または設定します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public Devices Device
         {
@@ -170,57 +123,183 @@ namespace CubePdf.Ghostscript
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Destination
+        ///
+        /// <summary>
+        /// 出力先を取得、または設定します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public string Destination
         {
-            get { return this._dest; }
-            set { this._dest = value; }
+            get { return _dest; }
+            set { _dest = value; }
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// Resolution
+        ///
+        /// <summary>
+        /// 解像度を取得、または設定します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public int Resolution
         {
-            get { return this._resolution; }
-            set { this._resolution = value; }
+            get { return _resolution; }
+            set { _resolution = value; }
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// PaperSize
+        ///
+        /// <summary>
+        /// 用紙サイズを取得、または設定します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public Papers PaperSize
         {
-            get { return this._paper; }
-            set { this._paper = value; }
+            get { return _paper; }
+            set { _paper = value; }
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// FirstPage
+        ///
+        /// <summary>
+        /// 開始ページ番号を取得、または設定します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public int FirstPage
         {
-            get { return this._first; }
-            set { this._first = value; }
+            get { return _first; }
+            set { _first = value; }
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// LastPage
+        ///
+        /// <summary>
+        /// 終了ページ番号を取得、または設定します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public int LastPage
         {
-            get { return this._last; }
-            set { this._last = value; }
+            get { return _last; }
+            set { _last = value; }
         }
 
         /* ----------------------------------------------------------------- */
+        ///
         /// PageRotation
+        ///
+        /// <summary>
+        /// 自動回転するかどうかを表す値を取得、または設定します。
+        /// </summary>
+        ///
         /* ----------------------------------------------------------------- */
         public bool PageRotation
         {
-            get { return this._rotate; }
-            set { this._rotate = value; }
+            get { return _rotate; }
+            set { _rotate = value; }
+        }
+
+        #endregion
+
+        #region Configuration methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddSource
+        ///
+        /// <summary>
+        /// 変換元ファイルを追加します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void AddSource(string path)
+        {
+            _sources.Add(path);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddInclude
+        ///
+        /// <summary>
+        /// Ghostscript のライブラリファイルが存在するディレクトリを追加
+        /// します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void AddInclude(string dir)
+        {
+            _includes.Add(dir);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddFont
+        ///
+        /// <summary>
+        /// フォントの存在するディレクトリを追加します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void AddFont(string dir)
+        {
+            _fonts.Add(dir);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddOption
+        ///
+        /// <summary>
+        /// オプションを追加します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void AddOption<Type>(string key, Type value) { _options.Add(key, value.ToString()); }
+        public void AddOption(string key, string value) { _options.Add(key, value); }
+        public void AddOption(string key, bool value) { _options.Add(key, value.ToString().ToLower()); }
+        public void AddOption(string key) { _options.Add(key, null); }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// DeleteOption
+        ///
+        /// <summary>
+        /// オプションを削除します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void DeleteOption(string key)
+        {
+            if (_options.ContainsKey(key)) _options.Remove(key);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Pages
+        ///
+        /// <summary>
+        /// ページ範囲を設定します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void Pages(int first, int last)
+        {
+            _first = first;
+            _last = last;
         }
 
         #endregion
@@ -228,34 +307,44 @@ namespace CubePdf.Ghostscript
         #region Methods for main operation
 
         /* ----------------------------------------------------------------- */
-        //  RunGhostscript (private)
+        ///
+        /// Run
+        ///
+        /// <summary>
+        /// Ghostscript による変換を実行します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// NOTE: 現在、pdfopt を指定した場合に gsapi_init_with_args() が
+        /// エラーコード -101 を返しているようです。生成されたファイルを
+        /// 確認する限りは正常に終了しているため、暫定的に -101 は正常終了と
+        /// 見なしています。エラーコードの返る理由を要調査。
+        /// </remarks>
+        ///
         /* ----------------------------------------------------------------- */
-        private bool RunGhostscript(string[] args)
+        private bool Run(string[] args)
         {
-            var instance = IntPtr.Zero;
-            var status = true;
-
-            AddMessages(args);
             lock (_gslock)
             {
+                var instance = IntPtr.Zero;
+
                 try
                 {
                     gsapi_new_instance(out instance, IntPtr.Zero);
                     if (instance == IntPtr.Zero) throw new ExternalException("gsapi_new_instance() failed.");
 
                     int result = gsapi_init_with_args(instance, args.Length, args);
-                    // TODO: pdfopt がエラーコード -101 を返す．
-                    // 生成されたファイルを見ると正常に生成されているため，
-                    // 暫定的に -101 は OK とする。エラーコードが返る理由を要調査．
                     if (result < 0 && result != -101)
                     {
-                        throw new ExternalException(String.Format("gsapi_init_with_args() failed (status code: {0})", result));
+                        var message = string.Format("gsapi_init_with_args() failed (status code: {0})", result);
+                        throw new ExternalException(message);
                     }
+                    return true;
                 }
                 catch (Exception err)
                 {
                     _messages.Add(new Message(Message.Levels.Debug, err));
-                    status = false;
+                    return false;
                 }
                 finally
                 {
@@ -263,61 +352,16 @@ namespace CubePdf.Ghostscript
                     gsapi_delete_instance(instance);
                 }
             }
-
-            return status;
-        }
-
-        /* ----------------------------------------------------------------- */
-        //  RunPostProcess (private)
-        /* ----------------------------------------------------------------- */
-        private void RunPostProcess(List<string> sources, string dest, string work)
-        {
-            var root = Path.GetDirectoryName(dest);
-            var filename = Path.GetFileNameWithoutExtension(dest);
-            var ext = Path.GetExtension(dest);
-
-            try
-            {
-                foreach (string path in sources)
-                {
-                    if (CubePdf.Misc.File.Exists(path)) CubePdf.Misc.File.Delete(path, true);
-                }
-
-                var files = Directory.GetFiles(work);
-                if (files.Length == 1)
-                {
-                    if (CubePdf.Misc.File.Exists(dest)) CubePdf.Misc.File.Delete(dest, true);
-                    CubePdf.Misc.File.Move(Path.Combine(work, Path.GetFileName(files[0])), dest, true);
-                }
-                else if (files.Length > 1)
-                {
-                    int i = 1;
-                    foreach (var path in files)
-                    {
-                        if (System.IO.Path.GetExtension(path) == ".ps") continue;
-                        string leaf = System.IO.Path.GetFileName(path);
-                        string target = System.String.Format("{0}\\{1}-{2:D3}{3}", root, filename, i, ext);
-                        if (CubePdf.Misc.File.Exists(target)) CubePdf.Misc.File.Delete(target, true);
-                        CubePdf.Misc.File.Move(Path.Combine(work, leaf), target, true);
-                        i++;
-                    }
-                }
-            }
-            catch (Exception err)
-            {
-                _messages.Add(new Message(Message.Levels.Debug, err));
-                throw err;
-            }
-            finally
-            {
-                System.IO.Directory.Delete(work, true);
-            }
         }
 
         /* ----------------------------------------------------------------- */
         ///
         /// MakeArgs
         ///
+        /// <summary>
+        /// Ghostscript を実行するのに必要な引数を生成します。
+        /// </summary>
+        /// 
         /// <remarks>
         /// Note that the arguments are the same as the "C" main function:
         /// argv[0] is ignored and the user supplied arguments are argv[1]
@@ -328,53 +372,52 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private string[] MakeArgs(string[] sources, string dest)
         {
-            List<string> args = new List<string>();
+            var args = new List<string>();
+
+            // args[0] is ignored.
+            args.Add("dummy");
 
             // Add device
-            args.Add("dummy"); // args[0] is ignored.
-            if (this._device != Devices.Unknown && this._device != Devices.PDF_Opt)
-            {
-                args.Add(DeviceExt.Argument(this._device));
-            }
+            if (_device != Devices.Unknown && _device != Devices.PDF_Opt) args.Add(DeviceExt.Argument(_device));
 
             // Add include paths
             if (_includes.Count > 0) args.Add("-I" + string.Join(";", _includes.ToArray()));
 
             // Add font paths
-            var win = Path.Combine(System.Environment.GetEnvironmentVariable("windir"), "Fonts");
+            var win = System.IO.Path.Combine(Environment.GetEnvironmentVariable("windir"), "Fonts");
             if (!_fonts.Contains(win)) _fonts.Add(win);
             args.Add("-sFONTPATH=" + string.Join(";", _fonts.ToArray()));
 
             // Add resolution
-            args.Add("-r" + this._resolution.ToString());
+            args.Add("-r" + _resolution.ToString());
 
             // Add page settings
-            if (this._paper != Papers.Unknown) args.Add(PaperExt.Argument(this._paper));
-            else if (this._device == Devices.PDF) args.Add("-dPDFFitPage");
-            if (this._first > 1 || this._first < this._last)
+            if (_paper != Papers.Unknown) args.Add(PaperExt.Argument(_paper));
+            else if (_device == Devices.PDF) args.Add("-dPDFFitPage");
+            if (_first > 1 || _first < _last)
             {
-                args.Add("-dFirstPage=" + this._first.ToString());
-                if (this._first < this._last) args.Add("-dLastPage=" + this._last.ToString());
+                args.Add(string.Format("-dFirstPage={0}", _first));
+                if (_first < _last) args.Add(string.Format("-dLastPage={0}", _last));
             }
-            if (this._rotate) args.Add("-dAutoRotatePages=/PageByPage");
+            if (_rotate) args.Add("-dAutoRotatePages=/PageByPage");
 
             // Add default options
-            foreach (string elem in defaults_) args.Add(elem);
+            foreach (string option in _DefaultSettings) args.Add(option);
 
             // Add user options
-            foreach (var elem in this._options)
+            foreach (var option in _options)
             {
-                string ext = skeys_.Contains(elem.Key) ? "-s" : "-d";
-                string tmp = (elem.Value == null) ?
-                    ext + elem.Key :
-                    ext + elem.Key + "=" + elem.Value;
-                args.Add(tmp);
+                var flag = _SKeys.Contains(option.Key) ? "-s" : "-d";
+                var s = (option.Value == null) ?
+                    flag + option.Key :
+                    flag + option.Key + "=" + option.Value;
+                args.Add(s);
             }
 
             //args.Add("-sstdout=ghostscript.log");
 
             // Add input (source filename) and output (destination filename)
-            if (this._device == Devices.PDF_Opt)
+            if (_device == Devices.PDF_Opt)
             {
                 args.Add("--");
                 args.Add("pdfopt.ps");
@@ -383,7 +426,7 @@ namespace CubePdf.Ghostscript
             }
             else
             {
-                args.Add(String.Format("-sOutputFile={0}", dest));
+                args.Add(string.Format("-sOutputFile={0}", dest));
                 foreach (var src in sources) args.Add(src);
             }
 
@@ -392,7 +435,7 @@ namespace CubePdf.Ghostscript
 
         #endregion
 
-        #region Methods for sources
+        #region Methods for files
 
         /* ----------------------------------------------------------------- */
         ///
@@ -413,8 +456,9 @@ namespace CubePdf.Ghostscript
             var dest = new List<string>();
             foreach (var src in sources)
             {
-                var filename = Path.GetRandomFileName().Replace('.', '_') + Path.GetExtension(src);
-                var tmp = Path.Combine(work, filename);
+                var filename = System.IO.Path.GetRandomFileName().Replace('.', '_');
+                var extension = System.IO.Path.GetExtension(src);
+                var tmp = System.IO.Path.Combine(work, filename + extension);
                 if (CubePdf.Misc.File.Exists(src))
                 {
                     CubePdf.Misc.File.Copy(src, tmp, true);
@@ -424,9 +468,75 @@ namespace CubePdf.Ghostscript
             return dest;
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// DeleteCopiedSources
+        /// 
+        /// <summary>
+        /// コピーしたソースファイルを削除します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void DeleteCopiedSources(List<string> copies)
+        {
+            foreach (string path in copies)
+            {
+                try { System.IO.File.Delete(path); }
+                catch (Exception err) { _messages.Add(new Message(Message.Levels.Debug, err)); }
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// MoveFiles
+        /// 
+        /// <summary>
+        /// 生成されたファイルを作業領域から移動します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void MoveFiles(string dest, string work)
+        {
+            var root = System.IO.Path.GetDirectoryName(dest);
+            var filename = System.IO.Path.GetFileNameWithoutExtension(dest);
+            var extension = System.IO.Path.GetExtension(dest);
+
+            try
+            {
+                var files = System.IO.Directory.GetFiles(work);
+                if (files.Length == 0) return;
+                else if (files.Length == 1)
+                {
+                    if (System.IO.File.Exists(dest)) CubePdf.Misc.File.Delete(dest, true);
+                    var src = System.IO.Path.Combine(work, System.IO.Path.GetFileName(files[0]));
+                    CubePdf.Misc.File.Move(src, dest, true);
+                }
+                else
+                {
+                    int i = 1;
+                    foreach (var path in files)
+                    {
+                        if (System.IO.Path.GetExtension(path) == ".ps") continue;
+                        var leaf = System.IO.Path.GetFileName(path);
+                        var target = string.Format("{0}\\{1}-{2:D3}{3}", root, filename, i, extension);
+                        if (System.IO.File.Exists(target)) CubePdf.Misc.File.Delete(target, true);
+                        var src = System.IO.Path.Combine(work, leaf);
+                        CubePdf.Misc.File.Move(src, target, true);
+                        i++;
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                _messages.Add(new Message(Message.Levels.Debug, err));
+                throw err;
+            }
+            finally { System.IO.Directory.Delete(work, true); }
+        }
+
         #endregion
 
-        #region Methods for messages
+        #region Other methods
 
         /* ----------------------------------------------------------------- */
         ///
@@ -447,7 +557,7 @@ namespace CubePdf.Ghostscript
             if (_includes.Count > 0)
             {
                 msg += _includes[0];
-                if (!Directory.Exists(_includes[0])) msg += " (NotFound)";
+                if (!System.IO.Directory.Exists(_includes[0])) msg += " (NotFound)";
             }
             else msg += "unknown";
             _messages.Add(new Message(Message.Levels.Debug, msg));
@@ -461,9 +571,23 @@ namespace CubePdf.Ghostscript
             }
         }
 
-        #endregion
-
-        #region Other methods
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CreateWorkDirectory
+        /// 
+        /// <summary>
+        /// 作業用ディレクトリを作成します。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private string CreateWorkDirectory()
+        {
+            var dest = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+            if (System.IO.Directory.Exists(dest)) System.IO.Directory.Delete(dest, true);
+            else if (System.IO.File.Exists(dest)) System.IO.File.Delete(dest);
+            System.IO.Directory.CreateDirectory(dest);
+            return dest;
+        }
 
         /* ----------------------------------------------------------------- */
         ///
@@ -478,25 +602,25 @@ namespace CubePdf.Ghostscript
         {
             if (device == Devices.PDF || device == Devices.PDF_Opt || device == Devices.PS)
             {
-                return Path.GetRandomFileName();
+                return System.IO.Path.GetRandomFileName();
             }
-            else return Path.GetRandomFileName().Replace('.', '_') + "-%08d";
+            else return System.IO.Path.GetRandomFileName().Replace('.', '_') + "-%08d";
         }
 
         #endregion
 
         #region Ghostscript APIs
 
-        [DllImport(GS_DLL, EntryPoint = "gsapi_new_instance")]
+        [DllImport(_GhostscriptDll, EntryPoint = "gsapi_new_instance")]
         private static extern int gsapi_new_instance(out IntPtr pinstance, IntPtr caller_handle);
 
-        [DllImport(GS_DLL, EntryPoint = "gsapi_init_with_args")]
+        [DllImport(_GhostscriptDll, EntryPoint = "gsapi_init_with_args")]
         private static extern int gsapi_init_with_args(IntPtr instance, int argc, string[] argv);
 
-        [DllImport(GS_DLL, EntryPoint = "gsapi_exit")]
+        [DllImport(_GhostscriptDll, EntryPoint = "gsapi_exit")]
         private static extern int gsapi_exit(IntPtr instance);
 
-        [DllImport(GS_DLL, EntryPoint = "gsapi_delete_instance")]
+        [DllImport(_GhostscriptDll, EntryPoint = "gsapi_delete_instance")]
         private static extern void gsapi_delete_instance(IntPtr instance);
 
         #endregion
@@ -519,7 +643,8 @@ namespace CubePdf.Ghostscript
 
         #region Constant variables
 
-        private static readonly string[] defaults_ = {
+        private const string _GhostscriptDll = "gsdll32.dll";
+        private static readonly string[] _DefaultSettings = {
             "-dQUIET",
             "-dNOSAFER",
             "-dBATCH",
@@ -527,22 +652,20 @@ namespace CubePdf.Ghostscript
             //"-dWINKANJI",
         };
 
-        private const string GS_DLL = "gsdll32.dll";
-
         /* ------------------------------------------------------------- */
         //  static constructor
         /* ------------------------------------------------------------- */
-        private static List<string> skeys_; // "-s" で始まるオプション
+        private static List<string> _SKeys; // "-s" で始まるオプション
         static Converter()
         {
-            skeys_ = new List<string>();
-            skeys_.Add("FONTMAP");
-            skeys_.Add("SUBSTFONT");
-            skeys_.Add("GenericResourceDir");
-            skeys_.Add("FontResourceDir");
-            skeys_.Add("OwnerPassword");
-            skeys_.Add("UserPassword");
-            skeys_.Add("stdout");
+            _SKeys = new List<string>();
+            _SKeys.Add("FONTMAP");
+            _SKeys.Add("SUBSTFONT");
+            _SKeys.Add("GenericResourceDir");
+            _SKeys.Add("FontResourceDir");
+            _SKeys.Add("OwnerPassword");
+            _SKeys.Add("UserPassword");
+            _SKeys.Add("stdout");
 
             // 以下の要素は，専用のメンバ関数を設けている．
             // skeys_.Add("FONTPATH");
