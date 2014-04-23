@@ -165,21 +165,15 @@ namespace CubePdf
                 }
                 reader_head.Close();
                 reader_tail.Close();
+
+                if (System.IO.File.Exists(setting.OutputPath)) CubePdf.Misc.File.Delete(setting.OutputPath, true);
+                CubePdf.Misc.File.Move(tmp, setting.OutputPath, true);
             }
             catch (Exception err)
             {
                 _messages.Add(new Message(Message.Levels.Error, err));
                 _messages.Add(new Message(Message.Levels.Debug, err));
                 status = false;
-            }
-            finally
-            {
-                if (CubePdf.Misc.File.Exists(setting.OutputPath)) CubePdf.Misc.File.Delete(setting.OutputPath, true);
-                if (!status || !CubePdf.Misc.File.Exists(tmp)) CubePdf.Misc.File.Move(escaped, setting.OutputPath, true);
-                else CubePdf.Misc.File.Move(tmp, setting.OutputPath, true);
-
-                if (CubePdf.Misc.File.Exists(tmp)) CubePdf.Misc.File.Delete(tmp, false);
-                if (CubePdf.Misc.File.Exists(escaped)) CubePdf.Misc.File.Delete(escaped, false);
             }
 
             return status;
@@ -275,7 +269,6 @@ namespace CubePdf
                         }
                     }
                 }
-                if (CubePdf.Misc.File.Exists(tmp_w)) CubePdf.Misc.File.Delete(tmp_w, false);
             }
 
             return status;

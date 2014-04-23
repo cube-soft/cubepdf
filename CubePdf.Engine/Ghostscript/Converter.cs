@@ -75,7 +75,6 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         public void Run()
         {
-            var root = System.IO.Path.GetDirectoryName(_dest);
             var filename = System.IO.Path.GetFileNameWithoutExtension(_dest);
             var extension = System.IO.Path.GetExtension(_dest);
 

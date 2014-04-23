@@ -107,8 +107,9 @@ namespace CubePdf {
             CreateWorkDirectory(setting);
 
             var status = true;
-            try {
-                RunGhostscript(setting);
+            try
+            {
+                Convert(setting);
 
                 if (setting.FileType == Parameter.FileTypes.PDF)
                 {
@@ -124,19 +125,13 @@ namespace CubePdf {
                     _messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.PostProcess.Run: {0}", status)));
                 }
             }
-            catch (Exception err) {
+            catch (Exception err)
+            {
+                RecoverIf(setting);
                 _messages.Add(new Message(Message.Levels.Error, err));
-                _messages.Add(new Message(Message.Levels.Debug, err));
                 status = false;
             }
-            finally {
-                if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
-                if (setting.DeleteOnClose && File.Exists(setting.InputPath))
-                {
-                    _messages.Add(new Message(Message.Levels.Debug, String.Format("{0}: delete on close", setting.InputPath)));
-                    File.Delete(setting.InputPath);
-                }
-            }
+            finally { Sweep(setting); }
 
             return status;
         }
@@ -147,14 +142,14 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// RunGhostscript
+        /// Convert
         ///
         /// <summary>
-        /// Ghostscript に必要な設定を行った後、実行します。
+        /// Ghostscript に必要な設定を行った後、変換処理を実行します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void RunGhostscript(UserSetting setting)
+        private void Convert(UserSetting setting)
         {
             var gs = new Ghostscript.Converter(_messages);
             gs.Device = Parameter.Device(setting.FileType, setting.Grayscale);
@@ -170,6 +165,8 @@ namespace CubePdf {
             gs.AddSource(setting.InputPath);
             gs.Destination = setting.OutputPath;
             gs.Run();
+            
+            AddDebug("Convert: succeed");
         }
 
         #endregion
@@ -369,7 +366,8 @@ namespace CubePdf {
                      setting.FileType == Parameter.FileTypes.BMP ||
                      setting.FileType == Parameter.FileTypes.JPEG ||
                      setting.FileType == Parameter.FileTypes.PNG ||
-                     setting.FileType == Parameter.FileTypes.TIFF)
+                     setting.FileType == Parameter.FileTypes.TIFF ||
+                     setting.FileType == Parameter.FileTypes.SVG)
             {
                 var dir = Path.GetDirectoryName(setting.OutputPath);
                 var basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
@@ -395,26 +393,81 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         private void EscapeIf(UserSetting setting)
         {
-            if (this.FileExists(setting))
+            if (!FileExists(setting)) return;
+
+            var is_merge = setting.ExistedFile == Parameter.ExistedFiles.MergeTail ||
+                           setting.ExistedFile == Parameter.ExistedFiles.MergeHead;
+
+            if (setting.ExistedFile == Parameter.ExistedFiles.Rename)
             {
-                var merge = (setting.ExistedFile == Parameter.ExistedFiles.MergeTail || setting.ExistedFile == Parameter.ExistedFiles.MergeHead);
-                if (setting.ExistedFile == Parameter.ExistedFiles.Rename)
+                var directory = System.IO.Path.GetDirectoryName(setting.OutputPath);
+                var basename  = System.IO.Path.GetFileNameWithoutExtension(setting.OutputPath);
+                var extension = System.IO.Path.GetExtension(setting.OutputPath);
+
+                for (var i = 2; i < 10000; ++i)
                 {
-                    string dir = Path.GetDirectoryName(setting.OutputPath);
-                    string basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
-                    string ext = Path.GetExtension(setting.OutputPath);
-                    for (int i = 2; i < 10000; ++i)
-                    {
-                        setting.OutputPath = System.IO.Path.Combine(dir, basename + '(' + i.ToString() + ')' + ext);
-                        if (!this.FileExists(setting)) break;
-                    }
-                }
-                else if (setting.FileType == Parameter.FileTypes.PDF && merge)
-                {
-                    _escaped = Path.Combine(Utility.WorkingDirectory, Path.GetRandomFileName());
-                    File.Copy(setting.OutputPath, _escaped, true);
+                    var old = System.IO.Path.GetFileName(setting.OutputPath);
+                    var filename = string.Format("{0}({1}){2}", basename, i, extension);
+                    setting.OutputPath = System.IO.Path.Combine(directory, filename);
+                    AddDebug(string.Format("Rename: {0} -> {1}", old, filename));
+                    if (!FileExists(setting)) break;
                 }
             }
+            else if (setting.FileType == Parameter.FileTypes.PDF && is_merge)
+            {
+                _escaped = Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+                System.IO.File.Copy(setting.OutputPath, _escaped, true);
+                AddDebug(string.Format("Escape: {0} -> {1}", setting.OutputPath, _escaped));
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// RecoverIf
+        ///
+        /// <summary>
+        /// 結合オプションなどの関係で退避させたファイルが存在する状況で
+        /// エラーが発生した場合、退避させたファイルを復帰させます。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void RecoverIf(UserSetting setting)
+        {
+            if (string.IsNullOrEmpty(_escaped) || !System.IO.File.Exists(_escaped)) return;
+            if (!System.IO.File.Exists(setting.OutputPath))
+            {
+                CubePdf.Misc.File.Move(_escaped, setting.OutputPath, true);
+                AddDebug(string.Format("Recover: {0} -> {1}", _escaped, setting.OutputPath));
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Sweep
+        /// 
+        /// <summary>
+        /// 不要なファイルやディレクトリを削除します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void Sweep(UserSetting setting)
+        {
+            try
+            {
+                var work = Utility.WorkingDirectory;
+                if (System.IO.Directory.Exists(work))
+                {
+                    System.IO.Directory.Delete(work, true);
+                    AddDebug(string.Format("DeleteWorkingDirectory: {0}", work));
+                }
+
+                if (setting.DeleteOnClose && File.Exists(setting.InputPath))
+                {
+                    System.IO.File.Delete(setting.InputPath);
+                    AddDebug(string.Format("DeleteOnClose: {0}", setting.InputPath));
+                }
+            }
+            catch (Exception err) { AddDebug(err.ToString()); }
         }
 
         /* ----------------------------------------------------------------- */
@@ -432,6 +485,21 @@ namespace CubePdf {
             if (File.Exists(Utility.WorkingDirectory)) File.Delete(Utility.WorkingDirectory);
             if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
             Directory.CreateDirectory(Utility.WorkingDirectory);
+            AddDebug(string.Format("CreateWorkDirectory: {0}", Utility.WorkingDirectory));
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddDebug
+        /// 
+        /// <summary>
+        /// デバッグ用メッセージを追加します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void AddDebug(string message)
+        {
+            _messages.Add(new Message(Message.Levels.Debug, message));
         }
 
         #endregion
