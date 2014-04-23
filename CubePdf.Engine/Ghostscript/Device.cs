@@ -82,8 +82,8 @@ namespace CubePdf.Ghostscript {
             switch (e)
             {
                 case Devices.Unknown: return "";
-                case Devices.PS: return "-sDEVICE=pswrite";
-                case Devices.EPS: return "-sDEVICE=epswrite";
+                case Devices.PS: return "-sDEVICE=ps2write";
+                case Devices.EPS: return "-sDEVICE=eps2write";
                 case Devices.PDF: return "-sDEVICE=pdfwrite";
                 case Devices.PDF_Opt: return ""; // 特殊デバイス
                 case Devices.SVG: return "-sDEVICE=svg";
