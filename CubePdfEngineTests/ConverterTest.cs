@@ -86,10 +86,13 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        [TestCase(Parameter.FileTypes.PDF,  false)]
         [TestCase(Parameter.FileTypes.PS,   true)]
-        [TestCase(Parameter.FileTypes.BMP,  true)]
-        [TestCase(Parameter.FileTypes.SVG,  false)]
+        [TestCase(Parameter.FileTypes.EPS,  false)]
+        [TestCase(Parameter.FileTypes.BMP,  false)]
+        [TestCase(Parameter.FileTypes.PNG,  false)]
+        [TestCase(Parameter.FileTypes.JPEG, false)]
+        [TestCase(Parameter.FileTypes.TIFF, false)]
+        [TestCase(Parameter.FileTypes.SVG,  true)]
         public void TestRunAs(Parameter.FileTypes type, bool rename_test)
         {
             var setting = CreateSetting();
@@ -118,6 +121,7 @@ namespace CubePdf
         public void TestRunAsPdfWithDocumentAndSecurity()
         {
             var setting = CreateSetting();
+            setting.InputPath = System.IO.Path.Combine(_src, "example-min.ps");
 
             setting.Document.Title = "テスト";
             setting.Document.Author = "株式会社キューブ・ソフト";
@@ -146,9 +150,9 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        [TestCase(Parameter.PdfVersions.Ver1_2,  true,  true,  true)]
+        [TestCase(Parameter.PdfVersions.Ver1_4,  true,  false, true)]
         [TestCase(Parameter.PdfVersions.Ver1_3,  false, false, false)]
-        [TestCase(Parameter.PdfVersions.Ver1_4,  true,  false, false)]
+        [TestCase(Parameter.PdfVersions.Ver1_2,  true,  true,  true)]
         [TestCase(Parameter.PdfVersions.VerPDFA, false, true,  true)]
         [TestCase(Parameter.PdfVersions.VerPDFX, true,  false, true)]
         public void TestRunAsPdfWithCommonParameters(Parameter.PdfVersions pdfver, bool rotation, bool webopt, bool embed)
@@ -218,6 +222,65 @@ namespace CubePdf
             var setting = CreateSetting();
             setting.InputPath = dest;
             AssertRun(setting, string.Empty);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestErrorInGhostscript
+        /// 
+        /// <summary>
+        /// Ghostscript の実行に失敗するテストを行います。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 既に存在するファイルは削除されない事を確認します。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        [TestCase(Parameter.ExistedFiles.Overwrite)]
+        [TestCase(Parameter.ExistedFiles.MergeTail)]
+        [TestCase(Parameter.ExistedFiles.Rename)]
+        public void TestErrorInGhostscript(Parameter.ExistedFiles existed)
+        {
+            var src =  System.IO.Path.Combine(_src, "dummy.txt");
+            var dest = System.IO.Path.Combine(_dest, "dummy.pdf");
+            System.IO.File.Copy(src, dest, true);
+
+            var setting = CreateSetting();
+            setting.InputPath = src;
+            setting.OutputPath = dest;
+            setting.ExistedFile = existed;
+            var converter = new Converter();
+            Assert.IsFalse(converter.Run(setting));
+            Assert.IsTrue(System.IO.File.Exists(dest));
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestErrorInMerge
+        /// 
+        /// <summary>
+        /// 結合処理の実行に失敗するテストを行います。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 既に存在するファイルは削除されない事を確認します。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestErrorInMerge()
+        {
+            var src = System.IO.Path.Combine(_src, "dummy.txt");
+            var dest = System.IO.Path.Combine(_dest, "error-in-merge.pdf");
+            System.IO.File.Copy(src, dest, true);
+
+            var setting = CreateSetting();
+            setting.OutputPath = dest;
+            setting.ExistedFile = Parameter.ExistedFiles.MergeTail;
+            var converter = new Converter();
+            Assert.IsFalse(converter.Run(setting));
+            Assert.IsTrue(System.IO.File.Exists(dest));
         }
 
         #endregion
