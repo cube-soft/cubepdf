@@ -517,16 +517,16 @@ namespace CubePdf.Ghostscript
                 }
                 else
                 {
-                    int i = 1;
+                    var index = 1;
                     foreach (var path in files)
                     {
                         if (System.IO.Path.GetExtension(path) == ".ps") continue;
                         var leaf = System.IO.Path.GetFileName(path);
-                        var target = string.Format("{0}\\{1}-{2:D3}{3}", root, filename, i, extension);
+                        var target = string.Format("{0}\\{1}-{2:D3}{3}", root, filename, index, extension);
                         if (System.IO.File.Exists(target)) CubePdf.Misc.File.Delete(target, true);
                         var src = System.IO.Path.Combine(work, leaf);
                         CubePdf.Misc.File.Move(src, target, true);
-                        i++;
+                        ++index;
                     }
                 }
             }
