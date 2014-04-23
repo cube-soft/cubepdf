@@ -123,6 +123,7 @@ namespace CubePdf {
             {
                 RecoverIf(setting);
                 _messages.Add(new Message(Message.Levels.Error, err));
+                _messages.Add(new Message(Message.Levels.Debug, err));
                 status = false;
             }
             finally { Sweep(setting); }
@@ -192,6 +193,7 @@ namespace CubePdf {
             if (setting.ExistedFile == Parameter.ExistedFiles.MergeHead || !string.IsNullOrEmpty(_escaped)) editor.Files.Add(_escaped);
 
             var tmp = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+            AddDebug(string.Format("PageBinder.Save: {0}", tmp));
             editor.Run(tmp);
 
 

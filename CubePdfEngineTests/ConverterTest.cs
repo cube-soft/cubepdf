@@ -312,8 +312,11 @@ namespace CubePdf
                     Assert.AreEqual(setting.Document.Subtitle, reader.Metadata.Subtitle);
                     Assert.AreEqual(setting.Document.Keyword,  reader.Metadata.Keywords);
 
-                    Assert.AreEqual(setting.Password, reader.Encryption.UserPassword);
                     Assert.AreEqual(setting.Permission.Password, reader.Encryption.OwnerPassword);
+                    if (reader.Encryption.Method != Data.EncryptionMethod.Aes256)
+                    {   // AES256 の場合、ユーザパスワードを取得できないのでスキップ
+                        Assert.AreEqual(setting.Password, reader.Encryption.UserPassword);
+                    }
                 }
             }
             catch (Exception err) { Assert.Fail(err.ToString()); }
@@ -337,7 +340,9 @@ namespace CubePdf
             if (setting.ExistedFile == Parameter.ExistedFiles.Overwrite) System.IO.File.Delete(setting.OutputPath);
 
             var converter = new Converter();
-            Assert.IsTrue(converter.Run(setting), setting.InputPath);
+            var result = converter.Run(setting);
+            foreach (var message in converter.Messages) System.Diagnostics.Trace.WriteLine(message.ToString());
+            Assert.IsTrue(result, setting.InputPath);
             if (!File.Exists(setting.OutputPath))
             {
                 var dest = String.Format("{0}\\{1}-001{2}",

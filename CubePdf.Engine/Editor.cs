@@ -198,6 +198,30 @@ namespace CubePdf
         private CubePdf.Data.IEncryption ToEncryption()
         {
             var dest = new CubePdf.Data.Encryption();
+            if (string.IsNullOrEmpty(Permission.Password)) return dest;
+
+            dest.IsEnabled = true;
+            dest.OwnerPassword = Permission.Password;
+            
+            var version = GetMinorVersion();
+            dest.Method = (version >= 7) ? Data.EncryptionMethod.Aes256 :
+                          (version >= 6) ? Data.EncryptionMethod.Aes128 :
+                          (version >= 4) ? Data.EncryptionMethod.Standard128 :
+                                           Data.EncryptionMethod.Standard40;
+
+            if (!string.IsNullOrEmpty(UserPassword))
+            {
+                dest.IsUserPasswordEnabled = true;
+                dest.UserPassword = UserPassword;
+            }
+
+            dest.Permission.Assembly = true;
+            dest.Permission.Printing = Permission.AllowPrint;
+            dest.Permission.CopyContents = Permission.AllowCopy;
+            dest.Permission.InputFormFields = Permission.AllowFormInput;
+            dest.Permission.ModifyAnnotations = Permission.AllowFormInput;
+            dest.Permission.ModifyContents = Permission.AllowModify;
+            dest.Permission.Accessibility = Permission.AllowModify;
 
             return dest;
         }
