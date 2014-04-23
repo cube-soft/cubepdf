@@ -92,7 +92,6 @@ namespace CubePdf
         [TestCase(Parameter.FileTypes.PNG,  false)]
         [TestCase(Parameter.FileTypes.JPEG, false)]
         [TestCase(Parameter.FileTypes.TIFF, false)]
-        [TestCase(Parameter.FileTypes.SVG,  true)]
         public void TestRunAs(Parameter.FileTypes type, bool rename_test)
         {
             var setting = CreateSetting();
