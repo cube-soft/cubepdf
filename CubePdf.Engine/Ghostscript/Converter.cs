@@ -462,6 +462,7 @@ namespace CubePdf.Ghostscript
                 {
                     CubePdf.Misc.File.Copy(src, tmp, true);
                     dest.Add(tmp);
+                    AddDebug(string.Format("CopySource: {0} -> {1}", src, tmp));
                 }
             }
             return dest;
@@ -478,9 +479,13 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private void DeleteCopiedSources(List<string> copies)
         {
-            foreach (string path in copies)
+            foreach (string copy in copies)
             {
-                try { System.IO.File.Delete(path); }
+                try
+                {
+                    System.IO.File.Delete(copy);
+                    AddDebug(string.Format("DeleteCopiedSource: {0}", copy));
+                }
                 catch (Exception err) { _messages.Add(new Message(Message.Levels.Debug, err)); }
             }
         }
@@ -539,6 +544,20 @@ namespace CubePdf.Ghostscript
 
         /* ----------------------------------------------------------------- */
         ///
+        /// AddDebug
+        /// 
+        /// <summary>
+        /// デバッグ用メッセージを追加します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void AddDebug(string message)
+        {
+            _messages.Add(new Message(Message.Levels.Debug, message));
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// AddMessages
         /// 
         /// <summary>
@@ -548,25 +567,24 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private void AddMessages(string[] args)
         {
-            _messages.Add(new Message(Message.Levels.Debug, String.Format("CurrentDirectory: {0}", Utility.CurrentDirectory)));
-            _messages.Add(new Message(Message.Levels.Debug, String.Format("WorkingDirectory: {0}", Utility.WorkingDirectory)));
+           AddDebug(string.Format("CurrentDirectory: {0}", Utility.CurrentDirectory));
 
             // ライブラリの存在するディレクトリへのパス
-            var msg = "LibPath: ";
+            var message = "LibPath: ";
             if (_includes.Count > 0)
             {
-                msg += _includes[0];
-                if (!System.IO.Directory.Exists(_includes[0])) msg += " (NotFound)";
+                message += _includes[0];
+                if (!System.IO.Directory.Exists(_includes[0])) message += " (NotFound)";
             }
-            else msg += "unknown";
-            _messages.Add(new Message(Message.Levels.Debug, msg));
+            else message += "unknown";
+            AddDebug(message);
 
             // 指定された全ての引数
             if (args != null)
             {
-                msg = "Ghostscript Arguments";
-                foreach (string s in args) msg += ("\r\n\t" + s);
-                _messages.Add(new Message(Message.Levels.Debug, msg));
+                message = "Ghostscript Arguments";
+                foreach (string s in args) message += ("\r\n\t" + s);
+                AddDebug(message);
             }
         }
 
@@ -585,6 +603,7 @@ namespace CubePdf.Ghostscript
             if (System.IO.Directory.Exists(dest)) System.IO.Directory.Delete(dest, true);
             else if (System.IO.File.Exists(dest)) System.IO.File.Delete(dest);
             System.IO.Directory.CreateDirectory(dest);
+            AddDebug(string.Format("CreateWorkDirectory: {0}", dest));
             return dest;
         }
 
