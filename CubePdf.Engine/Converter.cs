@@ -196,7 +196,6 @@ namespace CubePdf {
             AddDebug(string.Format("PageBinder.Save: {0}", tmp));
             editor.Run(tmp);
 
-
             if (System.IO.File.Exists(tmp)) CubePdf.Misc.File.Copy(tmp, setting.OutputPath, true);
             AddDebug("RunEditor: success");
         }

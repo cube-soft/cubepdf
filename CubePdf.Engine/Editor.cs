@@ -86,8 +86,8 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         public DocumentProperty Document
         {
-            get { return _doc; }
-            set { _doc = value; }
+            get { return _document; }
+            set { _document = value; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -264,11 +264,46 @@ namespace CubePdf
         {
             foreach (var file in _files)
             {
-                using (var reader = new CubePdf.Editing.DocumentReader(file))
+                using (var reader = CreateDocumentReader(file))
                 {
                     foreach (var page in reader.Pages) dest.Add(page);
                 }
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CreateDocumentReader
+        /// 
+        /// <summary>
+        /// DocumentReader オブジェクトを生成します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// セキュリティ設定が行われている場合は、Permission.Password を
+        /// 用いて復号を試みます。全ての試行に失敗した場合、例外が送出
+        /// されます。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        private CubePdf.Editing.DocumentReader CreateDocumentReader(string path)
+        {
+            try
+            {
+                var dest = new CubePdf.Editing.DocumentReader(path);
+                if (dest.EncryptionStatus != Data.EncryptionStatus.RestrictedAccess) return dest;
+                dest.Dispose();
+                throw new CubePdf.Data.EncryptionException();
+            }
+            catch (CubePdf.Data.EncryptionException /* err */)
+            {
+                if (!string.IsNullOrEmpty(Permission.Password))
+                {
+                    try { return new Editing.DocumentReader(path, Permission.Password); }
+                    catch (CubePdf.Data.EncryptionException /* err */) { }
+                }
+            }
+            throw new ArgumentException(Properties.Resources.EncryptionError);
         }
 
         #endregion
@@ -276,7 +311,7 @@ namespace CubePdf
         #region Variables
         private List<string> _files = new List<string>();
         private Parameter.PdfVersions _version = Parameter.PdfVersions.Ver1_7;
-        private DocumentProperty _doc = new DocumentProperty();
+        private DocumentProperty _document = new DocumentProperty();
         private PermissionProperty _permission = new PermissionProperty();
         private string _userpass = string.Empty;
         #endregion
