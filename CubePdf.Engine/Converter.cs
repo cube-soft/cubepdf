@@ -169,6 +169,21 @@ namespace CubePdf {
             AddDebug("Convert: succeed");
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Edit
+        ///
+        /// <summary>
+        /// Ghostscript で変換された PDF ファイルに対して、必要な後編集を
+        /// 行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void Edit(UserSetting setting)
+        {
+
+        }
+
         #endregion
 
         #region Configuration methods

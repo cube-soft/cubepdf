@@ -152,6 +152,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\cubepdflib\CubePdf.Data\CubePdf.Data.csproj">
+      <Project>{0D7B710B-67CA-4E55-844A-31C6ACEADFED}</Project>
+      <Name>CubePdf.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\cubepdflib\CubePdf.Editing\CubePdf.Editing.csproj">
+      <Project>{6E397197-250C-404A-9FE9-BA8397C518C1}</Project>
+      <Name>CubePdf.Editing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CubePdfLib\CubePdf.Misc\CubePdf.Misc.csproj">
       <Project>{193B7028-1F28-462A-B172-36F485002349}</Project>
       <Name>CubePdf.Misc</Name>
