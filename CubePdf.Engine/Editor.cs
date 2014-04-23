@@ -31,6 +31,11 @@ namespace CubePdf
     /// <summary>
     /// 指定されたファイルを変換するためのクラスです。
     /// </summary>
+    /// 
+    /// <remarks>
+    /// CubePDF のフォーマットと（後発の）CubePdfLib で採用したフォーマットに
+    /// 若干の差異が存在するので、それらを Editor クラスで吸収します。
+    /// </remarks>
     ///
     /* --------------------------------------------------------------------- */
     public class Editor
@@ -140,7 +145,7 @@ namespace CubePdf
             binder.Metadata = ToMetadata();
             binder.Encryption = ToEncryption();
             binder.UseSmartCopy = true;
-            AddSources(binder.Pages);
+            AddPages(binder.Pages);
 
             binder.Save(dest);
         }
@@ -149,6 +154,20 @@ namespace CubePdf
 
         #region Methods for converting parameters
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ToMetadata
+        /// 
+        /// <summary>
+        /// メタ情報を取得します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// CubePDF の旧フォーマットから CubePdfLib で採用している
+        /// フォーマットへ変換します。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
         private CubePdf.Data.IMetadata ToMetadata()
         {
             var dest = new CubePdf.Data.Metadata();
@@ -162,6 +181,20 @@ namespace CubePdf
             return dest;
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ToEncryption
+        /// 
+        /// <summary>
+        /// セキュリティ情報を取得します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// CubePDF の旧フォーマットから CubePdfLib で採用している
+        /// フォーマットへ変換します。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
         private CubePdf.Data.IEncryption ToEncryption()
         {
             var dest = new CubePdf.Data.Encryption();
@@ -194,7 +227,16 @@ namespace CubePdf
             }
         }
 
-        private void AddSources(ICollection<CubePdf.Data.IPage> dest)
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddPages
+        /// 
+        /// <summary>
+        /// 結合するページを追加します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void AddPages(ICollection<CubePdf.Data.IPage> dest)
         {
             foreach (var file in _files)
             {

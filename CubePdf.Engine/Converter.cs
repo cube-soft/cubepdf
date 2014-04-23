@@ -159,8 +159,8 @@ namespace CubePdf {
             gs.AddSource(setting.InputPath);
             gs.Destination = setting.OutputPath;
             gs.Run();
-            
-            AddDebug("Convert: succeed");
+
+            AddDebug("RunConverter: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -181,9 +181,9 @@ namespace CubePdf {
             if (setting.FileType != Parameter.FileTypes.PDF) return;
 
             var editor = new Editor();
-            editor.Version = setting.PDFVersion;
-            editor.Document = setting.Document;
-            editor.Permission = setting.Permission;
+            editor.Version      = setting.PDFVersion;
+            editor.Document     = setting.Document;
+            editor.Permission   = setting.Permission;
             editor.UserPassword = setting.Password;
             
             // 結合順序を考慮してファイルを追加する。
@@ -191,12 +191,12 @@ namespace CubePdf {
             editor.Files.Add(setting.OutputPath);
             if (setting.ExistedFile == Parameter.ExistedFiles.MergeHead || !string.IsNullOrEmpty(_escaped)) editor.Files.Add(_escaped);
 
-            var dest = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
-            editor.Run(dest);
+            var tmp = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+            editor.Run(tmp);
 
 
-            if (System.IO.File.Exists(dest)) CubePdf.Misc.File.Copy(dest, setting.OutputPath, true);
-            AddDebug("Edit: succeed");
+            if (System.IO.File.Exists(tmp)) CubePdf.Misc.File.Copy(tmp, setting.OutputPath, true);
+            AddDebug("RunEditor: success");
         }
 
         #endregion

@@ -306,10 +306,14 @@ namespace CubePdf
                 {
                     Assert.AreEqual(1, reader.Metadata.Version.Major);
                     Assert.AreEqual(GetMinorVersion(setting.PDFVersion), reader.Metadata.Version.Minor);
+
                     Assert.AreEqual(setting.Document.Title,    reader.Metadata.Title);
                     Assert.AreEqual(setting.Document.Author,   reader.Metadata.Author);
                     Assert.AreEqual(setting.Document.Subtitle, reader.Metadata.Subtitle);
                     Assert.AreEqual(setting.Document.Keyword,  reader.Metadata.Keywords);
+
+                    Assert.AreEqual(setting.Password, reader.Encryption.UserPassword);
+                    Assert.AreEqual(setting.Permission.Password, reader.Encryption.OwnerPassword);
                 }
             }
             catch (Exception err) { Assert.Fail(err.ToString()); }
