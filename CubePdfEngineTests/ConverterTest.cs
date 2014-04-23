@@ -299,20 +299,17 @@ namespace CubePdf
         {
             try
             {
-                var pass = !string.IsNullOrEmpty(setting.Permission.Password) ? setting.Permission.Password :
-                           !string.IsNullOrEmpty(setting.Password) ? setting.Password :
-                           null;
-                var obj = (pass != null) ? Encoding.UTF8.GetBytes(pass) : null;
-                using (var reader = new iTextSharp.text.pdf.PdfReader(setting.OutputPath, obj))
+                var password = !string.IsNullOrEmpty(setting.Permission.Password) ? setting.Permission.Password :
+                               !string.IsNullOrEmpty(setting.Password) ? setting.Password : string.Empty;
+
+                using (var reader = new CubePdf.Editing.DocumentReader(setting.OutputPath, password))
                 {
-                    var title = reader.Info.ContainsKey("Title") ? reader.Info["Title"] : string.Empty;
-                    Assert.AreEqual(setting.Document.Title, title);
-                    var author = reader.Info.ContainsKey("Author") ? reader.Info["Author"] : string.Empty;
-                    Assert.AreEqual(setting.Document.Author, author);
-                    var subject = reader.Info.ContainsKey("Subject") ? reader.Info["Subject"] : string.Empty;
-                    Assert.AreEqual(setting.Document.Subtitle, subject);
-                    var keywords = reader.Info.ContainsKey("Keywords") ? reader.Info["Keywords"] : string.Empty;
-                    Assert.AreEqual(setting.Document.Keyword, keywords);
+                    Assert.AreEqual(1, reader.Metadata.Version.Major);
+                    Assert.AreEqual(GetMinorVersion(setting.PDFVersion), reader.Metadata.Version.Minor);
+                    Assert.AreEqual(setting.Document.Title,    reader.Metadata.Title);
+                    Assert.AreEqual(setting.Document.Author,   reader.Metadata.Author);
+                    Assert.AreEqual(setting.Document.Subtitle, reader.Metadata.Subtitle);
+                    Assert.AreEqual(setting.Document.Keyword,  reader.Metadata.Keywords);
                 }
             }
             catch (Exception err) { Assert.Fail(err.ToString()); }
@@ -384,6 +381,31 @@ namespace CubePdf
             setting.Grayscale    = false;
             setting.WebOptimize  = false;
             return setting;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// GetMinorVersion
+        /// 
+        /// <summary>
+        /// PDF バージョンの小数点以下の値を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private int GetMinorVersion(Parameter.PdfVersions pdfver)
+        {
+            switch (pdfver)
+            {
+                case Parameter.PdfVersions.Ver1_2:  return 2;
+                case Parameter.PdfVersions.Ver1_3:  return 3;
+                case Parameter.PdfVersions.Ver1_4:  return 4;
+                case Parameter.PdfVersions.Ver1_5:  return 5;
+                case Parameter.PdfVersions.Ver1_6:  return 6;
+                case Parameter.PdfVersions.Ver1_7:  return 7;
+                case Parameter.PdfVersions.VerPDFA: return 4;
+                case Parameter.PdfVersions.VerPDFX: return 4;
+                default: return 7;
+            }
         }
 
         #endregion

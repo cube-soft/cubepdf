@@ -109,14 +109,8 @@ namespace CubePdf {
             var status = true;
             try
             {
-                Convert(setting);
-
-                if (setting.FileType == Parameter.FileTypes.PDF)
-                {
-                    var modifier = new PdfModifier(_escaped, _messages);
-                    status = modifier.Run(setting);
-                    _messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.PDFModifier.Run: {0}", status)));
-                }
+                RunConverter(setting);
+                RunEditor(setting);
 
                 if (status)
                 {
@@ -142,14 +136,14 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// Convert
+        /// RunConverter
         ///
         /// <summary>
         /// Ghostscript に必要な設定を行った後、変換処理を実行します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void Convert(UserSetting setting)
+        private void RunConverter(UserSetting setting)
         {
             var gs = new Ghostscript.Converter(_messages);
             gs.Device = Parameter.Device(setting.FileType, setting.Grayscale);
@@ -171,17 +165,38 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// Edit
+        /// RunEditor
         ///
         /// <summary>
-        /// Ghostscript で変換された PDF ファイルに対して、必要な後編集を
-        /// 行います。
+        /// Ghostscript で変換したファイルに対して、必要な後処理を実行します。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// 現在、PDF ファイル以外への後処理は存在しません。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private void Edit(UserSetting setting)
+        public void RunEditor(UserSetting setting)
         {
+            if (setting.FileType != Parameter.FileTypes.PDF) return;
 
+            var editor = new Editor();
+            editor.Version = setting.PDFVersion;
+            editor.Document = setting.Document;
+            editor.Permission = setting.Permission;
+            editor.UserPassword = setting.Password;
+            
+            // 結合順序を考慮してファイルを追加する。
+            if (setting.ExistedFile == Parameter.ExistedFiles.MergeTail || !string.IsNullOrEmpty(_escaped)) editor.Files.Add(_escaped);
+            editor.Files.Add(setting.OutputPath);
+            if (setting.ExistedFile == Parameter.ExistedFiles.MergeHead || !string.IsNullOrEmpty(_escaped)) editor.Files.Add(_escaped);
+
+            var dest = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+            editor.Run(dest);
+
+
+            if (System.IO.File.Exists(dest)) CubePdf.Misc.File.Copy(dest, setting.OutputPath, true);
+            AddDebug("Edit: succeed");
         }
 
         #endregion
