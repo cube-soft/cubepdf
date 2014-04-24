@@ -19,7 +19,6 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.IO;
 using System.Collections.Generic;
 
 namespace CubePdf {
@@ -104,31 +103,22 @@ namespace CubePdf {
         /// 
         /* ----------------------------------------------------------------- */
         public bool Run(UserSetting setting) {
-            CreateWorkDirectory(setting);
-
-            var status = true;
             try
             {
+                CreateWorkDirectory(setting);
                 RunConverter(setting);
                 RunEditor(setting);
-
-                if (status)
-                {
-                    var postproc = new PostProcess(_messages);
-                    status = postproc.Run(setting);
-                    _messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.PostProcess.Run: {0}", status)));
-                }
+                RunPostProcess(setting);
             }
             catch (Exception err)
             {
                 RecoverIf(setting);
-                _messages.Add(new Message(Message.Levels.Error, err));
-                _messages.Add(new Message(Message.Levels.Debug, err));
-                status = false;
+                AddMessage(err);
+                return false;
             }
             finally { Sweep(setting); }
 
-            return status;
+            return true;
         }
 
         #endregion
@@ -161,7 +151,7 @@ namespace CubePdf {
             gs.Destination = setting.OutputPath;
             gs.Run();
 
-            AddDebug("RunConverter: success");
+            AddMessage("RunConverter: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -188,16 +178,34 @@ namespace CubePdf {
             editor.UserPassword = setting.Password;
             
             // 結合順序を考慮してファイルを追加する。
-            if (setting.ExistedFile == Parameter.ExistedFiles.MergeTail || !string.IsNullOrEmpty(_escaped)) editor.Files.Add(_escaped);
+            var head = setting.ExistedFile == Parameter.ExistedFiles.MergeHead || !string.IsNullOrEmpty(_escaped);
+            var tail = setting.ExistedFile == Parameter.ExistedFiles.MergeTail || !string.IsNullOrEmpty(_escaped);
+            if (tail) editor.Files.Add(_escaped);
             editor.Files.Add(setting.OutputPath);
-            if (setting.ExistedFile == Parameter.ExistedFiles.MergeHead || !string.IsNullOrEmpty(_escaped)) editor.Files.Add(_escaped);
+            if (head) editor.Files.Add(_escaped);
 
             var tmp = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
-            AddDebug(string.Format("PageBinder.Save: {0}", tmp));
             editor.Run(tmp);
+            AddMessage(string.Format("PageBinder.Save: {0}", tmp));
 
             if (System.IO.File.Exists(tmp)) CubePdf.Misc.File.Copy(tmp, setting.OutputPath, true);
-            AddDebug("RunEditor: success");
+            AddMessage("RunEditor: success");
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// RunPostProcess
+        ///
+        /// <summary>
+        /// ポストプロセスを実行します。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public void RunPostProcess(UserSetting setting)
+        {
+            var process = new PostProcess(_messages);
+            process.Run(setting);
+            AddMessage("PostProcess: success");
         }
 
         #endregion
@@ -209,8 +217,8 @@ namespace CubePdf {
         /// ConfigImage
         ///
         /// <summary>
-        /// bmp, png, jpeg, gif のビットマップ系ファイルに変換するために
-        /// 必要なオプションを設定します。
+        /// BMP, PNG, JPEG のビットマップ系ファイルに変換するために必要な
+        /// オプションを設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
@@ -224,19 +232,16 @@ namespace CubePdf {
         /// ConfigDocument
         ///
         /// <summary>
-        /// pdf, ps, eps, svg のベクター系ファイルに変換するために必要な
+        /// PDF, PostScript, EPS のベクター系ファイルに変換するために必要な
         /// オプションを設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         private void ConfigDocument(UserSetting setting, Ghostscript.Converter gs) {
-            if (setting.FileType == Parameter.FileTypes.PDF) this.ConfigPdf(setting, gs);
+            if (setting.FileType == Parameter.FileTypes.PDF) ConfigPdf(setting, gs);
             else {
-                if (setting.EmbedFont) {
-                    gs.AddOption("EmbedAllFonts", true);
-                    gs.AddOption("SubsetFonts", true);
-                }
-                else gs.AddOption("EmbedAllFonts", false);
+                gs.AddOption("EmbedAllFonts", setting.EmbedFont);
+                if (setting.EmbedFont) gs.AddOption("SubsetFonts", true);
             }
         }
 
@@ -253,14 +258,11 @@ namespace CubePdf {
             gs.AddOption("CompatibilityLevel", Parameter.PdfVersionValue(setting.PDFVersion));
             gs.AddOption("UseFlateCompression", true);
 
-            if (setting.PDFVersion == Parameter.PdfVersions.VerPDFA) this.ConfigPdfA(setting, gs);
-            else if (setting.PDFVersion == Parameter.PdfVersions.VerPDFX) this.ConfigPdfX(setting, gs);
+            if (setting.PDFVersion == Parameter.PdfVersions.VerPDFA) ConfigPdfA(setting, gs);
+            else if (setting.PDFVersion == Parameter.PdfVersions.VerPDFX) ConfigPdfX(setting, gs);
             else {
-                if (setting.EmbedFont) {
-                    gs.AddOption("EmbedAllFonts", true);
-                    gs.AddOption("SubsetFonts", true);
-                }
-                else gs.AddOption("EmbedAllFonts", false);
+                gs.AddOption("EmbedAllFonts", setting.EmbedFont);
+                if (setting.EmbedFont) gs.AddOption("SubsetFonts", true);
 
                 if (setting.Grayscale) {
                     gs.AddOption("ProcessColorModel", "/DeviceGray");
@@ -392,7 +394,7 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         private bool FileExists(UserSetting setting)
         {
-            if (File.Exists(setting.OutputPath)) return true;
+            if (System.IO.File.Exists(setting.OutputPath)) return true;
             else if (setting.FileType == Parameter.FileTypes.EPS ||
                      setting.FileType == Parameter.FileTypes.BMP ||
                      setting.FileType == Parameter.FileTypes.JPEG ||
@@ -400,10 +402,10 @@ namespace CubePdf {
                      setting.FileType == Parameter.FileTypes.TIFF ||
                      setting.FileType == Parameter.FileTypes.SVG)
             {
-                var dir = Path.GetDirectoryName(setting.OutputPath);
-                var basename = Path.GetFileNameWithoutExtension(setting.OutputPath);
-                var ext = Path.GetExtension(setting.OutputPath);
-                if (File.Exists(System.IO.Path.Combine(dir, basename + "-001" + ext))) return true;
+                var dir = System.IO.Path.GetDirectoryName(setting.OutputPath);
+                var basename = System.IO.Path.GetFileNameWithoutExtension(setting.OutputPath);
+                var ext = System.IO.Path.GetExtension(setting.OutputPath);
+                if (System.IO.File.Exists(System.IO.Path.Combine(dir, basename + "-001" + ext))) return true;
             }
             return false;
         }
@@ -440,15 +442,15 @@ namespace CubePdf {
                     var old = System.IO.Path.GetFileName(setting.OutputPath);
                     var filename = string.Format("{0}({1}){2}", basename, i, extension);
                     setting.OutputPath = System.IO.Path.Combine(directory, filename);
-                    AddDebug(string.Format("Rename: {0} -> {1}", old, filename));
+                    AddMessage(string.Format("Rename: {0} -> {1}", old, filename));
                     if (!FileExists(setting)) break;
                 }
             }
             else if (setting.FileType == Parameter.FileTypes.PDF && is_merge)
             {
-                _escaped = Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+                _escaped = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
                 System.IO.File.Copy(setting.OutputPath, _escaped, true);
-                AddDebug(string.Format("Escape: {0} -> {1}", setting.OutputPath, _escaped));
+                AddMessage(string.Format("Escape: {0} -> {1}", setting.OutputPath, _escaped));
             }
         }
 
@@ -468,7 +470,7 @@ namespace CubePdf {
             if (!System.IO.File.Exists(setting.OutputPath))
             {
                 CubePdf.Misc.File.Move(_escaped, setting.OutputPath, true);
-                AddDebug(string.Format("Recover: {0} -> {1}", _escaped, setting.OutputPath));
+                AddMessage(string.Format("Recover: {0} -> {1}", _escaped, setting.OutputPath));
             }
         }
 
@@ -489,16 +491,16 @@ namespace CubePdf {
                 if (System.IO.Directory.Exists(work))
                 {
                     System.IO.Directory.Delete(work, true);
-                    AddDebug(string.Format("DeleteWorkingDirectory: {0}", work));
+                    AddMessage(string.Format("DeleteWorkingDirectory: {0}", work));
                 }
 
-                if (setting.DeleteOnClose && File.Exists(setting.InputPath))
+                if (setting.DeleteOnClose && System.IO.File.Exists(setting.InputPath))
                 {
                     System.IO.File.Delete(setting.InputPath);
-                    AddDebug(string.Format("DeleteOnClose: {0}", setting.InputPath));
+                    AddMessage(string.Format("DeleteOnClose: {0}", setting.InputPath));
                 }
             }
-            catch (Exception err) { AddDebug(err.ToString()); }
+            catch (Exception err) { AddMessage(err, true); }
         }
 
         /* ----------------------------------------------------------------- */
@@ -512,11 +514,12 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         private void CreateWorkDirectory(UserSetting setting)
         {
-            Utility.WorkingDirectory = Path.Combine(setting.LibPath, Path.GetRandomFileName());
-            if (File.Exists(Utility.WorkingDirectory)) File.Delete(Utility.WorkingDirectory);
-            if (Directory.Exists(Utility.WorkingDirectory)) Directory.Delete(Utility.WorkingDirectory, true);
-            Directory.CreateDirectory(Utility.WorkingDirectory);
-            AddDebug(string.Format("CreateWorkDirectory: {0}", Utility.WorkingDirectory));
+            var work = System.IO.Path.Combine(setting.LibPath, System.IO.Path.GetRandomFileName());
+            if (System.IO.File.Exists(work)) System.IO.File.Delete(work);
+            if (System.IO.Directory.Exists(work)) System.IO.Directory.Delete(work, true);
+            System.IO.Directory.CreateDirectory(work);
+            Utility.WorkingDirectory = work;
+            AddMessage(string.Format("CreateWorkDirectory: {0}", work));
         }
 
         /* ----------------------------------------------------------------- */
@@ -528,9 +531,29 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void AddDebug(string message)
+        private void AddMessage(string message)
         {
             _messages.Add(new Message(Message.Levels.Debug, message));
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddMessage
+        /// 
+        /// <summary>
+        /// デバッグ用メッセージを追加します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Message.Levels.Error で追加するとスタックトレースが表示されない
+        /// ので、2 種類のレベルで追加します。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void AddMessage(Exception error, bool debug_only = false)
+        {
+            if (!debug_only) _messages.Add(new Message(Message.Levels.Error, error));
+            _messages.Add(new Message(Message.Levels.Debug, error));
         }
 
         #endregion
