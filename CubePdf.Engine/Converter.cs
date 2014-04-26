@@ -137,8 +137,8 @@ namespace CubePdf {
         private void RunConverter(UserSetting setting)
         {
             var gs = new Ghostscript.Converter(_messages);
+            if (!string.IsNullOrEmpty(setting.LibPath)) gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
             gs.Device = Parameter.Device(setting.FileType, setting.Grayscale);
-            gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
             gs.PageRotation = setting.PageRotation;
             gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
 
@@ -167,7 +167,7 @@ namespace CubePdf {
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        public void RunEditor(UserSetting setting)
+        private void RunEditor(UserSetting setting)
         {
             if (setting.FileType != Parameter.FileTypes.PDF) return;
 
@@ -186,10 +186,44 @@ namespace CubePdf {
 
             var tmp = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
             editor.Run(tmp);
-            AddMessage(string.Format("PageBinder.Save: {0}", tmp));
+            AddMessage(string.Format("PageBinder::Save: {0}", tmp));
+
+            if (setting.WebOptimize)
+            {
+                var src = tmp;
+                tmp = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+                RunWebOptimize(setting, src, tmp);
+            }
 
             if (System.IO.File.Exists(tmp)) CubePdf.Misc.File.Copy(tmp, setting.OutputPath, true);
             AddMessage("RunEditor: success");
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// RunWebOptimize
+        ///
+        /// <summary>
+        /// Ghostscript を利用して Web 最適化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void RunWebOptimize(UserSetting setting, string src, string dest)
+        {
+            var gs = new Ghostscript.Converter(_messages);
+            if (!string.IsNullOrEmpty(setting.LibPath)) gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
+            gs.Device = Ghostscript.Devices.PDF_Opt;
+            gs.PageRotation = setting.PageRotation;
+            gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
+
+            ConfigImageOperations(setting, gs);
+            ConfigDocument(setting, gs);
+
+            gs.AddSource(src);
+            gs.Destination = dest;
+            gs.Run();
+
+            AddMessage("RunWebOptimize: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -201,7 +235,7 @@ namespace CubePdf {
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public void RunPostProcess(UserSetting setting)
+        private void RunPostProcess(UserSetting setting)
         {
             var process = new PostProcess(_messages);
             process.Run(setting);

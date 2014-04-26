@@ -152,7 +152,7 @@ namespace CubePdf
         [TestCase(Parameter.PdfVersions.Ver1_4,  true,  false, true)]
         [TestCase(Parameter.PdfVersions.Ver1_3,  false, false, false)]
         [TestCase(Parameter.PdfVersions.Ver1_2,  true,  true,  true)]
-        [TestCase(Parameter.PdfVersions.VerPDFA, false, true,  true)]
+        [TestCase(Parameter.PdfVersions.VerPDFA, false, false, true)]
         [TestCase(Parameter.PdfVersions.VerPDFX, true,  false, true)]
         public void TestRunAsPdfWithCommonParameters(Parameter.PdfVersions pdfver, bool rotation, bool webopt, bool embed)
         {
