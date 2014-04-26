@@ -26,6 +26,7 @@
 *.sdf
 *.dll
 *.sh
+*.VisualState.xml
 ipch/
 obj/
 [Bb]in
@@ -37,6 +38,7 @@ obj/
 [Rr]esults/
 [Tt]mp/
 [Tt]emp/
+CubePdfEngineTests/Ghostscript/
 Ankh.NoLoad
 
 #Tooling
