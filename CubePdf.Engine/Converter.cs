@@ -136,22 +136,27 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         private void RunConverter(UserSetting setting)
         {
-            var gs = new Ghostscript.Converter(_messages);
-            if (!string.IsNullOrEmpty(setting.LibPath)) gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
-            gs.Device = Parameter.Device(setting.FileType, setting.Grayscale);
-            gs.PageRotation = setting.PageRotation;
-            gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
-
-            ConfigImageOperations(setting, gs);
-            if (Parameter.IsImageType(setting.FileType)) ConfigImage(setting, gs);
-            else ConfigDocument(setting, gs);
             EscapeIf(setting);
-
-            gs.AddSource(setting.InputPath);
-            gs.Destination = setting.OutputPath;
+            var gs = Configure(setting, setting.InputPath, setting.OutputPath);
             gs.Run();
-
             AddMessage("RunConverter: success");
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// RunWebOptimize
+        ///
+        /// <summary>
+        /// Ghostscript を利用して Web 最適化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void RunWebOptimize(UserSetting setting, string src, string dest)
+        {
+            var gs = Configure(setting, src, dest);
+            gs.AddOption("FastWebView");
+            gs.Run();
+            AddMessage("RunWebOptimize: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -201,34 +206,6 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// RunWebOptimize
-        ///
-        /// <summary>
-        /// Ghostscript を利用して Web 最適化します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void RunWebOptimize(UserSetting setting, string src, string dest)
-        {
-            var gs = new Ghostscript.Converter(_messages);
-            if (!string.IsNullOrEmpty(setting.LibPath)) gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
-            gs.Device = Ghostscript.Devices.PDF;
-            gs.PageRotation = setting.PageRotation;
-            gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
-
-            ConfigImageOperations(setting, gs);
-            ConfigDocument(setting, gs);
-
-            gs.AddOption("FastWebView");
-            gs.AddSource(src);
-            gs.Destination = dest;
-            gs.Run();
-
-            AddMessage("RunWebOptimize: success");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
         /// RunPostProcess
         ///
         /// <summary>
@@ -249,7 +226,34 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ConfigImage
+        /// Configure
+        /// 
+        /// <summary>
+        /// Ghostscript オブジェクトを生成し、必要な設定を行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private Ghostscript.Converter Configure(UserSetting setting, string src, string dest)
+        {
+            var gs = new Ghostscript.Converter(_messages);
+            if (!string.IsNullOrEmpty(setting.LibPath)) gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
+            gs.Device = Parameter.Device(setting.FileType, setting.Grayscale);
+            gs.PageRotation = setting.PageRotation;
+            gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
+
+            ConfigureImageParameters(setting, gs);
+            if (Parameter.IsImageType(setting.FileType)) ConfigureImage(setting, gs);
+            else ConfigureDocument(setting, gs);
+
+            gs.AddSource(src);
+            gs.Destination = dest;
+
+            return gs;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ConfigureImage
         ///
         /// <summary>
         /// BMP, PNG, JPEG のビットマップ系ファイルに変換するために必要な
@@ -257,14 +261,14 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void ConfigImage(UserSetting setting, Ghostscript.Converter gs) {
+        private void ConfigureImage(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("GraphicsAlphaBits", 4);
             gs.AddOption("TextAlphaBits", 4);
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ConfigDocument
+        /// ConfigureDocument
         ///
         /// <summary>
         /// PDF, PostScript, EPS のベクター系ファイルに変換するために必要な
@@ -272,8 +276,8 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void ConfigDocument(UserSetting setting, Ghostscript.Converter gs) {
-            if (setting.FileType == Parameter.FileTypes.PDF) ConfigPdf(setting, gs);
+        private void ConfigureDocument(UserSetting setting, Ghostscript.Converter gs) {
+            if (setting.FileType == Parameter.FileTypes.PDF) ConfigurePdf(setting, gs);
             else {
                 gs.AddOption("EmbedAllFonts", setting.EmbedFont);
                 if (setting.EmbedFont) gs.AddOption("SubsetFonts", true);
@@ -282,19 +286,19 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ConfigPdf
+        /// ConfigurePdf
         ///
         /// <summary>
         /// PDF ファイルに変換するために必要なオプションを設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void ConfigPdf(UserSetting setting, Ghostscript.Converter gs) {
+        private void ConfigurePdf(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("CompatibilityLevel", Parameter.PdfVersionValue(setting.PDFVersion));
             gs.AddOption("UseFlateCompression", true);
 
-            if (setting.PDFVersion == Parameter.PdfVersions.VerPDFA) ConfigPdfA(setting, gs);
-            else if (setting.PDFVersion == Parameter.PdfVersions.VerPDFX) ConfigPdfX(setting, gs);
+            if (setting.PDFVersion == Parameter.PdfVersions.VerPDFA) ConfigurePdfA(setting, gs);
+            else if (setting.PDFVersion == Parameter.PdfVersions.VerPDFX) ConfigurePdfX(setting, gs);
             else {
                 gs.AddOption("EmbedAllFonts", setting.EmbedFont);
                 if (setting.EmbedFont) gs.AddOption("SubsetFonts", true);
@@ -308,7 +312,7 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ConfigPdfA
+        /// ConfigurePdfA
         ///
         /// <summary>
         /// PDF/A 形式に変換するのに必要なオプションを設定します。
@@ -327,7 +331,7 @@ namespace CubePdf {
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private void ConfigPdfA(UserSetting setting, Ghostscript.Converter gs) {
+        private void ConfigurePdfA(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("PDFA");
             gs.AddOption("EmbedAllFonts", true);
             gs.AddOption("SubsetFonts", true);
@@ -340,7 +344,7 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ConfigPdfX
+        /// ConfigurePdfX
         /// 
         /// <summary>
         /// PDF/X 形式に変換するのに必要なオプションを設定します。
@@ -354,7 +358,7 @@ namespace CubePdf {
         /// </remarks>
         /// 
         /* ----------------------------------------------------------------- */
-        private void ConfigPdfX(UserSetting setting, Ghostscript.Converter gs) {
+        private void ConfigurePdfX(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("PDFX");
             gs.AddOption("EmbedAllFonts", true);
             gs.AddOption("SubsetFonts", true);
@@ -371,14 +375,14 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ConfigImageOperations
+        /// ConfigureImageParameters
         ///
         /// <summary>
         /// 画像に関わるオプションを設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void ConfigImageOperations(UserSetting setting, Ghostscript.Converter gs) {
+        private void ConfigureImageParameters(UserSetting setting, Ghostscript.Converter gs) {
             // 解像度
             var resolution = Parameter.ResolutionValue(setting.Resolution);
             gs.AddOption("ColorImageResolution", resolution);
