@@ -212,13 +212,14 @@ namespace CubePdf {
         {
             var gs = new Ghostscript.Converter(_messages);
             if (!string.IsNullOrEmpty(setting.LibPath)) gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
-            gs.Device = Ghostscript.Devices.PDF_Opt;
+            gs.Device = Ghostscript.Devices.PDF;
             gs.PageRotation = setting.PageRotation;
             gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
 
             ConfigImageOperations(setting, gs);
             ConfigDocument(setting, gs);
 
+            gs.AddOption("FastWebView");
             gs.AddSource(src);
             gs.Destination = dest;
             gs.Run();

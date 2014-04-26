@@ -61,10 +61,10 @@ namespace CubePdf
         [SetUp]
         public void Setup()
         {
-            var current = System.Environment.CurrentDirectory;
-            _src = System.IO.Path.Combine(current, "Examples");
-            _dest = System.IO.Path.Combine(current, "Results");
-            if (!System.IO.Directory.Exists(_dest)) System.IO.Directory.CreateDirectory(_dest);
+            _root = System.Environment.CurrentDirectory;
+            _examples = System.IO.Path.Combine(_root, "Examples");
+            _results = System.IO.Path.Combine(_root, "Results");
+            if (!System.IO.Directory.Exists(_results)) System.IO.Directory.CreateDirectory(_results);
         }
 
         /* ----------------------------------------------------------------- */
@@ -120,7 +120,7 @@ namespace CubePdf
         public void TestRunAsPdfWithDocumentAndSecurity()
         {
             var setting = CreateSetting();
-            setting.InputPath = System.IO.Path.Combine(_src, "example-min.ps");
+            setting.InputPath = System.IO.Path.Combine(_examples, "example-min.ps");
 
             setting.Document.Title = "テスト";
             setting.Document.Author = "株式会社キューブ・ソフト";
@@ -214,8 +214,8 @@ namespace CubePdf
         [TestCase("日本語のファイル.ps")]
         public void TestRunAsPdfWithFilename(string filename)
         {
-            var src  = System.IO.Path.Combine(_src, "example-min.ps");
-            var dest = System.IO.Path.Combine(_dest, filename);
+            var src  = System.IO.Path.Combine(_examples, "example-min.ps");
+            var dest = System.IO.Path.Combine(_results, filename);
             System.IO.File.Copy(src, dest, true);
 
             var setting = CreateSetting();
@@ -241,8 +241,8 @@ namespace CubePdf
         [TestCase(Parameter.ExistedFiles.Rename)]
         public void TestErrorInGhostscript(Parameter.ExistedFiles existed)
         {
-            var src =  System.IO.Path.Combine(_src, "dummy.txt");
-            var dest = System.IO.Path.Combine(_dest, "dummy.pdf");
+            var src =  System.IO.Path.Combine(_examples, "dummy.txt");
+            var dest = System.IO.Path.Combine(_results, "dummy.pdf");
             System.IO.File.Copy(src, dest, true);
 
             var setting = CreateSetting();
@@ -270,8 +270,8 @@ namespace CubePdf
         [Test]
         public void TestErrorInMerge()
         {
-            var src = System.IO.Path.Combine(_src, "dummy.txt");
-            var dest = System.IO.Path.Combine(_dest, "error-in-merge.pdf");
+            var src = System.IO.Path.Combine(_examples, "dummy.txt");
+            var dest = System.IO.Path.Combine(_results, "error-in-merge.pdf");
             System.IO.File.Copy(src, dest, true);
 
             var setting = CreateSetting();
@@ -336,7 +336,8 @@ namespace CubePdf
             var basename = System.IO.Path.GetFileNameWithoutExtension(setting.InputPath);
             var extension = Parameter.Extension((Parameter.FileTypes)setting.FileType);
 
-            setting.OutputPath = System.IO.Path.Combine(_dest, basename + suffix + extension);
+            setting.LibPath = System.IO.Path.Combine(_root, "Ghostscript");
+            setting.OutputPath = System.IO.Path.Combine(_results, basename + suffix + extension);
             if (setting.ExistedFile == Parameter.ExistedFiles.Overwrite) System.IO.File.Delete(setting.OutputPath);
 
             var converter = new Converter();
@@ -377,7 +378,7 @@ namespace CubePdf
         private UserSetting CreateSetting()
         {
             var setting = new UserSetting(false);
-            setting.InputPath    = System.IO.Path.Combine(_src, "example.ps");
+            setting.InputPath    = System.IO.Path.Combine(_examples, "example.ps");
             setting.FileType     = Parameter.FileTypes.PDF;
             setting.PDFVersion   = Parameter.PdfVersions.Ver1_7;
             setting.Resolution   = Parameter.Resolutions.Resolution300;
@@ -420,8 +421,9 @@ namespace CubePdf
         #endregion
 
         #region Variables
-        private string _src = string.Empty;
-        private string _dest = string.Empty;
+        private string _root = string.Empty;
+        private string _examples = string.Empty;
+        private string _results = string.Empty;
         #endregion
     }
 }
