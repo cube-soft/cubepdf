@@ -121,7 +121,7 @@
     <value>パスワードで保護されているPDFファイルに結合する事はできません。</value>
   </data>
   <data name="FileNotRelated" xml:space="preserve">
-    <value>{0}: ファイルが関連付けられていません。</value>
+    <value>CubePDFによって変換されたファイルを開くことができませんでした。関連付けが行われているかどうか確認して下さい（CubePDFによる変換は成功しています）。</value>
   </data>
   <data name="GhostscriptError" xml:space="preserve">
     <value>入力ファイルの解析に失敗しました。このエラーは、入力ファイルの内容を変更する事で回避できる場合があります。</value>

@@ -187,11 +187,7 @@ namespace CubePdf
                 process.StartInfo = info;
                 process.Start();
             }
-            catch (Exception err)
-            {
-                _messages.Add(new Message(Message.Levels.Error, err));
-                _messages.Add(new Message(Message.Levels.Debug, err));
-            }
+            catch (Exception err) { AddMessage(err); }
         }
 
         #endregion
@@ -214,6 +210,24 @@ namespace CubePdf
             var basename  = System.IO.Path.GetFileNameWithoutExtension(FileName) + "-001";
             var extension = System.IO.Path.GetExtension(FileName);
             return System.IO.Path.Combine(directory, basename + extension);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddMessage
+        ///
+        /// <summary>
+        /// デバッグ用メッセージを追加します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void AddMessage(Exception err)
+        {
+            var isopen  = (Verb == Parameter.PostProcesses.Open);
+            var message = isopen ? Properties.Resources.FileNotRelated : err.Message;
+            var level   = isopen ? Message.Levels.Warn : Message.Levels.Error;
+            _messages.Add(new Message(level, message));
+            _messages.Add(new Message(Message.Levels.Debug, err));
         }
 
         #endregion
