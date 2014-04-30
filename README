@@ -28,6 +28,9 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
 ■バージョン履歴
+2014/05/12 version 1.0.0RC7
+- 変換可能なファイルの種類から SVG を削除
+
 2013/08/13 version 1.0.0RC6
 - デスクトップに保存時、手動で「最新の情報に更新」されるまで保存したファイルが表示されない不都合を修正
 

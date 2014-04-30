@@ -22,7 +22,6 @@ using System;
 using System.IO;
 using System.Text;
 using NUnit.Framework;
-using iTextPDF = iTextSharp.text.pdf;
 
 namespace CubePdf
 {
@@ -31,465 +30,400 @@ namespace CubePdf
     /// ConverterTest
     ///
     /// <summary>
-    /// いくつかの *.ps ファイルで変換テストを行うためのクラスです。
+    /// Converter クラスの変換テストを行うためのクラスです。
     /// </summary>
     /// 
     /// <remarks>
     /// PDF については、iTextSharp ライブラリを用いて、簡単なチェックを
     /// 行っています。それ以外のファイルタイプについては、Run() メソッドの
     /// 戻り値、および出力ファイルが存在しているかのみで判断しています。
-    /// 
-    /// このテストクラスは時間がかかるので、普段はテストケースから外して
-    /// おく事を推奨します。
     /// </remarks>
     ///
     /* --------------------------------------------------------------------- */
     [TestFixture]
     public class ConverterTest
     {
+        #region Setup and TearDown
+
         /* ----------------------------------------------------------------- */
         ///
-        /// ValidatePDF
+        /// Setup
+        /// 
+        /// <summary>
+        /// NOTE: テストに使用するサンプルファイル群は、テスト用プロジェクト
+        /// フォルダ直下にある Examples と言うフォルダに存在します。
+        /// テストを実行する際には、実行ファイルをテスト用プロジェクトに
+        /// コピーしてから行う必要があります（ビルド後イベントで、自動的に
+        /// コピーされるように設定されてある）。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [SetUp]
+        public void Setup()
+        {
+            _root = System.Environment.CurrentDirectory;
+            _examples = System.IO.Path.Combine(_root, "Examples");
+            _results = System.IO.Path.Combine(_root, "Results");
+            if (!System.IO.Directory.Exists(_results)) System.IO.Directory.CreateDirectory(_results);
+        }
+
+        /* ----------------------------------------------------------------- */
+        /// TearDown
+        /* ----------------------------------------------------------------- */
+        [TearDown]
+        public void TearDown() { }
+
+        #endregion
+
+        #region Test methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestRunAsPdf
+        /// 
+        /// <summary>
+        /// ファイルタイプを設定して生成テストを行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [TestCase(Parameter.FileTypes.PS,   true)]
+        [TestCase(Parameter.FileTypes.EPS,  false)]
+        [TestCase(Parameter.FileTypes.BMP,  false)]
+        [TestCase(Parameter.FileTypes.PNG,  false)]
+        [TestCase(Parameter.FileTypes.JPEG, false)]
+        [TestCase(Parameter.FileTypes.TIFF, false)]
+        public void TestRunAs(Parameter.FileTypes type, bool rename_test)
+        {
+            var setting = CreateSetting();
+            setting.FileType = type;
+            setting.Resolution = Parameter.Resolutions.Resolution72;
+            AssertRun(setting, string.Empty);
+
+            if (rename_test)
+            {
+                setting.ExistedFile = Parameter.ExistedFiles.Rename;
+                AssertRun(setting, string.Empty);
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestRunAsPdfWithDocumentAndSecurity
+        /// 
+        /// <summary>
+        /// PDF の文書プロパティ、およびセキュリティを設定して、生成テストを
+        /// 行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestRunAsPdfWithDocumentAndSecurity()
+        {
+            var setting = CreateSetting();
+            setting.InputPath = System.IO.Path.Combine(_examples, "example-min.ps");
+
+            setting.Document.Title = "テスト";
+            setting.Document.Author = "株式会社キューブ・ソフト";
+            setting.Document.Subtitle = "Document property test. 文書プロパティのテスト";
+            setting.Document.Keyword = "文書プロパティ, テスト, test, documents, CubePDF";
+
+            setting.Password = "user";
+            setting.Permission.Password = "owner";
+            setting.Permission.AllowCopy = true;
+            setting.Permission.AllowFormInput = false;
+            setting.Permission.AllowModify = false;
+            setting.Permission.AllowPrint = true;
+
+            var suffix = string.Format("-{0}-{1}", setting.Permission.Password, setting.Password);
+            AssertRun(setting, suffix);
+            setting.ExistedFile = Parameter.ExistedFiles.MergeTail;
+            AssertRun(setting, suffix);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestRunAsPdfWithCommonParameters
+        /// 
+        /// <summary>
+        /// いくつかの設定を行って、PDF の生成テストを行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [TestCase(Parameter.PdfVersions.Ver1_4,  true,  false, true)]
+        [TestCase(Parameter.PdfVersions.Ver1_3,  false, false, false)]
+        [TestCase(Parameter.PdfVersions.Ver1_2,  true,  true,  true)]
+        [TestCase(Parameter.PdfVersions.VerPDFA, false, false, true)]
+        [TestCase(Parameter.PdfVersions.VerPDFX, true,  false, true)]
+        public void TestRunAsPdfWithCommonParameters(Parameter.PdfVersions pdfver, bool rotation, bool webopt, bool embed)
+        {
+            var setting = CreateSetting();
+            setting.PDFVersion = pdfver;
+            setting.PageRotation = rotation;
+            setting.WebOptimize = webopt;
+            setting.EmbedFont = embed;
+
+            var suffix = string.Format("-{0}", pdfver);
+            if (rotation) suffix += "-pagebypage";
+            if (webopt)   suffix += "-webopt";
+            if (!embed)   suffix += "-noembed";
+            AssertRun(setting, suffix);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestRunAsPdfWithImageParameters
+        /// 
+        /// <summary>
+        /// 画像の精度に関する設定を行って、PDF の生成テストを行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [TestCase(Parameter.Resolutions.Resolution600, Parameter.DownSamplings.None,      Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution300, Parameter.DownSamplings.Average,   Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution150, Parameter.DownSamplings.Bicubic,   Parameter.ImageFilters.DCTEncode)]
+        [TestCase(Parameter.Resolutions.Resolution72,  Parameter.DownSamplings.Subsample, Parameter.ImageFilters.DCTEncode)]
+        public void TestRunAsPdfWithImageParameters(
+            Parameter.Resolutions   resolution,
+            Parameter.DownSamplings downsampling,
+            Parameter.ImageFilters  filter)
+        {
+            var setting = CreateSetting();
+            setting.Resolution = resolution;
+            setting.DownSampling = downsampling;
+            setting.ImageFilter = filter;
+
+            var suffix = string.Format("-{0}-{1}-{2}", resolution, downsampling, filter);
+            AssertRun(setting, suffix);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestRunAsPdfWithFilename
+        /// 
+        /// <summary>
+        /// 様々なファイル名に設定して、PDF の生成テストを行います。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// いったん Results フォルダに指定したファイル名のファイルを作成
+        /// してテストします。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        [TestCase("file with spaces.ps")]
+        [TestCase("日本語のファイル.ps")]
+        public void TestRunAsPdfWithFilename(string filename)
+        {
+            var src  = System.IO.Path.Combine(_examples, "example-min.ps");
+            var dest = System.IO.Path.Combine(_results, filename);
+            System.IO.File.Copy(src, dest, true);
+
+            var setting = CreateSetting();
+            setting.InputPath = dest;
+            AssertRun(setting, string.Empty);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestErrorInGhostscript
+        /// 
+        /// <summary>
+        /// Ghostscript の実行に失敗するテストを行います。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 既に存在するファイルは削除されない事を確認します。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        [TestCase(Parameter.ExistedFiles.Overwrite)]
+        [TestCase(Parameter.ExistedFiles.MergeTail)]
+        [TestCase(Parameter.ExistedFiles.Rename)]
+        public void TestErrorInGhostscript(Parameter.ExistedFiles existed)
+        {
+            var src =  System.IO.Path.Combine(_examples, "dummy.txt");
+            var dest = System.IO.Path.Combine(_results, "dummy.pdf");
+            System.IO.File.Copy(src, dest, true);
+
+            var setting = CreateSetting();
+            setting.InputPath = src;
+            setting.OutputPath = dest;
+            setting.ExistedFile = existed;
+            var converter = new Converter();
+            Assert.IsFalse(converter.Run(setting));
+            Assert.IsTrue(System.IO.File.Exists(dest));
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestErrorInMerge
+        /// 
+        /// <summary>
+        /// 結合処理の実行に失敗するテストを行います。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 既に存在するファイルは削除されない事を確認します。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        [Test]
+        public void TestErrorInMerge()
+        {
+            var src = System.IO.Path.Combine(_examples, "dummy.txt");
+            var dest = System.IO.Path.Combine(_results, "error-in-merge.pdf");
+            System.IO.File.Copy(src, dest, true);
+
+            var setting = CreateSetting();
+            setting.OutputPath = dest;
+            setting.ExistedFile = Parameter.ExistedFiles.MergeTail;
+            var converter = new Converter();
+            Assert.IsFalse(converter.Run(setting));
+            Assert.IsTrue(System.IO.File.Exists(dest));
+        }
+
+        #endregion
+
+        #region Custom assertions
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AssertPdf
         /// 
         /// <summary>
         /// 生成された PDF が有効なものかどうかをチェックします。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void ValidatePdf(UserSetting setting)
+        private void AssertPdf(CubePdf.UserSetting setting)
         {
             try
             {
-                iTextSharp.text.pdf.PdfReader reader = null;
-                if (setting.Password == string.Empty && setting.Permission.Password == string.Empty)
-                {
-                    reader = new iTextSharp.text.pdf.PdfReader(setting.OutputPath);
-                }
-                else
-                {
-                    var password = (setting.Permission.Password != string.Empty) ? setting.Permission.Password : setting.Password;
-                    reader = new iTextSharp.text.pdf.PdfReader(setting.OutputPath, Encoding.UTF8.GetBytes(password));
-                }
+                var password = !string.IsNullOrEmpty(setting.Permission.Password) ? setting.Permission.Password :
+                               !string.IsNullOrEmpty(setting.Password) ? setting.Password : string.Empty;
 
-                // 文書プロパティのチェック
-                var title = reader.Info.ContainsKey("Title") ? reader.Info["Title"] : string.Empty;
-                Assert.AreEqual(setting.Document.Title, title, String.Format("{0}: title unmatched", title));
-                var author = reader.Info.ContainsKey("Author") ? reader.Info["Author"] : string.Empty;
-                Assert.AreEqual(setting.Document.Author, author, String.Format("{0}: author unmatched", author));
-                var subject = reader.Info.ContainsKey("Subject") ? reader.Info["Subject"] : string.Empty;
-                Assert.AreEqual(setting.Document.Subtitle, subject, String.Format("{0}: subject unmatched", subject));
-                var keywords = reader.Info.ContainsKey("Keywords") ? reader.Info["Keywords"] : string.Empty;
-                Assert.AreEqual(setting.Document.Keyword, keywords, String.Format("{0}: keywords unmatched", keywords));
+                using (var reader = new CubePdf.Editing.DocumentReader(setting.OutputPath, password))
+                {
+                    Assert.AreEqual(1, reader.Metadata.Version.Major);
+                    Assert.AreEqual(GetMinorVersion(setting.PDFVersion), reader.Metadata.Version.Minor);
 
-                reader.Close();
+                    Assert.AreEqual(setting.Document.Title,    reader.Metadata.Title);
+                    Assert.AreEqual(setting.Document.Author,   reader.Metadata.Author);
+                    Assert.AreEqual(setting.Document.Subtitle, reader.Metadata.Subtitle);
+                    Assert.AreEqual(setting.Document.Keyword,  reader.Metadata.Keywords);
+
+                    Assert.AreEqual(setting.Permission.Password, reader.Encryption.OwnerPassword);
+                    if (reader.Encryption.Method != Data.EncryptionMethod.Aes256)
+                    {   // AES256 の場合、ユーザパスワードを取得できないのでスキップ
+                        Assert.AreEqual(setting.Password, reader.Encryption.UserPassword);
+                    }
+                }
             }
-            catch (Exception err)
+            catch (Exception err) { Assert.Fail(err.ToString()); }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AssertRun
+        ///
+        /// <summary>
+        /// Converter クラスの実行をチェックします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void AssertRun(UserSetting setting, string suffix)
+        {
+            var basename = System.IO.Path.GetFileNameWithoutExtension(setting.InputPath);
+            var extension = Parameter.Extension((Parameter.FileTypes)setting.FileType);
+
+            setting.LibPath = System.IO.Path.Combine(_root, "Ghostscript");
+            setting.OutputPath = System.IO.Path.Combine(_results, basename + suffix + extension);
+            if (setting.ExistedFile == Parameter.ExistedFiles.Overwrite) System.IO.File.Delete(setting.OutputPath);
+
+            var converter = new Converter();
+            var result = converter.Run(setting);
+            foreach (var message in converter.Messages) System.Diagnostics.Trace.WriteLine(message.ToString());
+            Assert.IsTrue(result, setting.InputPath);
+            if (!File.Exists(setting.OutputPath))
             {
-                Assert.Fail(err.ToString());
+                var dest = String.Format("{0}\\{1}-001{2}",
+                    Path.GetDirectoryName(setting.OutputPath),
+                    Path.GetFileNameWithoutExtension(setting.OutputPath),
+                    Path.GetExtension(setting.OutputPath)
+                );
+                Assert.IsTrue(System.IO.File.Exists(dest), setting.OutputPath);
             }
-        }
-        
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ExecConvert
-        ///
-        /// <summary>
-        /// Examples フォルダに存在する *.ps ファイルに対して Converter.Run
-        /// メソッドを実行し、生成されたファイルを Results フォルダに保存
-        /// します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void ExecConvert(UserSetting setting, string suffix)
-        {
-            string output = System.IO.Path.Combine(Environment.CurrentDirectory, "Results");
-            if (!System.IO.Directory.Exists(output)) System.IO.Directory.CreateDirectory(output);
-
-            foreach (string file in Directory.GetFiles("Examples", "*.ps"))
-            {
-                string filename = Path.GetFileNameWithoutExtension(file);
-                string extension = Parameter.Extension((Parameter.FileTypes)setting.FileType);
-
-                setting.InputPath = Path.GetFullPath(file);
-                setting.OutputPath = output + '\\' + filename + suffix + extension;
-                if (File.Exists(setting.OutputPath) && setting.ExistedFile == Parameter.ExistedFiles.Overwrite)
-                {
-                    File.Delete(setting.OutputPath);
-                }
-
-                var converter = new Converter();
-                Assert.IsTrue(converter.Run(setting), String.Format("Converter.Run() failed. source file: {0}", file));
-                bool status = File.Exists(setting.OutputPath);
-                if (status)
-                {
-                    if (setting.FileType == Parameter.FileTypes.PDF) ValidatePdf(setting);
-                }
-                else
-                {
-                    string tmp = String.Format("{0}\\{1}-001{2}",
-                        Path.GetDirectoryName(setting.OutputPath),
-                        Path.GetFileNameWithoutExtension(setting.OutputPath),
-                        Path.GetExtension(setting.OutputPath)
-                    );
-
-                    status = File.Exists(tmp);
-                    Assert.IsTrue(status, String.Format("{0}: file not found", setting.OutputPath));
-                }
-            }
+            else if (setting.FileType == Parameter.FileTypes.PDF) AssertPdf(setting);
         }
 
+        #endregion
+
+        #region Helper methods
+
         /* ----------------------------------------------------------------- */
         ///
-        /// TestDefaultSetting
-        ///
+        /// CreateSetting
+        /// 
         /// <summary>
-        /// デフォルト設定での変換テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestDefaultSetting()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
-            setting.PostProcess = Parameter.PostProcesses.None;
-            ExecConvert(setting, "");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestFileType
-        ///
-        /// <summary>
-        /// 各種ファイルタイプでの変換テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestFileType()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
-
-            setting.PostProcess = Parameter.PostProcesses.None;
-            foreach (Parameter.FileTypes type in Enum.GetValues(typeof(Parameter.FileTypes)))
-            {
-                setting.FileType = type;                
-                ExecConvert(setting, "-type");
-            }
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestPDFVersion
-        ///
-        /// <summary>
-        /// 各種 PDF バージョンでの変換テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestPdfVersion()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
-
-            setting.FileType = Parameter.FileTypes.PDF;
-            setting.PostProcess = Parameter.PostProcesses.None;
-
-            setting.PDFVersion = Parameter.PdfVersions.Ver1_2;
-            ExecConvert(setting, '-' + setting.PDFVersion.ToString());
-
-            setting.PDFVersion = Parameter.PdfVersions.VerPDFA;
-            ExecConvert(setting, '-' + setting.PDFVersion.ToString());
-
-            setting.PDFVersion = Parameter.PdfVersions.VerPDFX;
-            ExecConvert(setting, '-' + setting.PDFVersion.ToString());
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestResolution
-        ///
-        /// <summary>
-        /// 解像度を変更したときの変換テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestResolution()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
-
-            setting.FileType = Parameter.FileTypes.JPEG;
-            setting.PostProcess = Parameter.PostProcesses.None;
-
-            setting.Resolution = Parameter.Resolutions.Resolution72;
-            ExecConvert(setting, '-' + setting.Resolution.ToString());
-
-            setting.Resolution = Parameter.Resolutions.Resolution300;
-            ExecConvert(setting, '-' + setting.Resolution.ToString());
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestDownSampling
-        ///
-        /// <summary>
-        /// 各種ダウンサンプリングでの変換テストを行います。
+        /// テスト用に各プロパティを初期化した UserSetting オブジェクトを
+        /// 生成します。
         /// </summary>
         /// 
         /// <remarks>
-        /// 現状では、PDF 形式でのみテストを行っています。
+        /// 変更する必要のあるプロパティは InitSetting() 実行後に変更する
+        /// 事とします。
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestDownSampling()
+        private UserSetting CreateSetting()
         {
             var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
+            setting.InputPath    = System.IO.Path.Combine(_examples, "example.ps");
+            setting.FileType     = Parameter.FileTypes.PDF;
+            setting.PDFVersion   = Parameter.PdfVersions.Ver1_7;
+            setting.Resolution   = Parameter.Resolutions.Resolution300;
+            setting.ExistedFile  = Parameter.ExistedFiles.Overwrite;
+            setting.PostProcess  = Parameter.PostProcesses.None;
+            setting.DownSampling = Parameter.DownSamplings.None;
+            setting.ImageFilter  = Parameter.ImageFilters.FlateEncode;
+            setting.PageRotation = true;
+            setting.EmbedFont    = true;
+            setting.Grayscale    = false;
+            setting.WebOptimize  = false;
+            return setting;
+        }
 
-            setting.FileType = Parameter.FileTypes.PDF;
-            foreach (Parameter.DownSamplings sampling in Enum.GetValues(typeof(Parameter.DownSamplings)))
+        /* ----------------------------------------------------------------- */
+        ///
+        /// GetMinorVersion
+        /// 
+        /// <summary>
+        /// PDF バージョンの小数点以下の値を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private int GetMinorVersion(Parameter.PdfVersions pdfver)
+        {
+            switch (pdfver)
             {
-                setting.DownSampling = sampling;
-                setting.PostProcess = Parameter.PostProcesses.None;
-                ExecConvert(setting, '-' + sampling.ToString());
+                case Parameter.PdfVersions.Ver1_2:  return 2;
+                case Parameter.PdfVersions.Ver1_3:  return 3;
+                case Parameter.PdfVersions.Ver1_4:  return 4;
+                case Parameter.PdfVersions.Ver1_5:  return 5;
+                case Parameter.PdfVersions.Ver1_6:  return 6;
+                case Parameter.PdfVersions.Ver1_7:  return 7;
+                case Parameter.PdfVersions.VerPDFA: return 4;
+                case Parameter.PdfVersions.VerPDFX: return 4;
+                default: return 7;
             }
         }
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestEmbedFont
-        ///
-        /// <summary>
-        /// フォント埋め込みの変換テストを行います。
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// Ghostscript のフォント埋め込み機能に問題があるため、
-        /// CubePDF の現在のバージョンでは「埋め込みしない」と言う選択肢は
-        /// 選べないようになっています。
-        /// </remarks>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestEmbedFont()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
+        #endregion
 
-            setting.FileType = Parameter.FileTypes.PDF;
-            setting.PostProcess = Parameter.PostProcesses.None;
-            setting.EmbedFont = true;
-            ExecConvert(setting, "-embed");
-
-            setting.EmbedFont = false;
-            ExecConvert(setting, "-noembed");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestGrayscale
-        ///
-        /// <summary>
-        /// グレースケールの変換テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestGrayscale()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
-
-            setting.Grayscale = true;
-            setting.PostProcess = Parameter.PostProcesses.None;
-
-            setting.FileType = Parameter.FileTypes.PDF;
-            ExecConvert(setting, "-grayscale");
-
-            setting.FileType = Parameter.FileTypes.JPEG;
-            ExecConvert(setting, "-grayscale");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestImageFilter
-        /// 
-        /// <summary>
-        /// PDF 中の画像を JPEG 形式に圧縮して変換するテストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestImageFilter()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
-
-            setting.FileType = Parameter.FileTypes.PDF;
-            setting.ImageFilter = Parameter.ImageFilters.DCTEncode;
-            setting.PostProcess = Parameter.PostProcesses.None;
-            ExecConvert(setting, "-filter");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestWebOptimize
-        ///
-        /// <summary>
-        /// PDF の Web 最適化オプションを有効にした変換テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestWebOptimize()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
-
-            setting.FileType = Parameter.FileTypes.PDF;
-            setting.PostProcess = Parameter.PostProcesses.None;
-            setting.WebOptimize = true;
-            ExecConvert(setting, "-webopt");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestDocument
-        ///
-        /// <summary>
-        /// PDF の 文書プロパティを設定した変換テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestDocument()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
-
-            setting.FileType = Parameter.FileTypes.PDF;
-            setting.PostProcess = Parameter.PostProcesses.None;
-            setting.Document.Title = "テスト";
-            setting.Document.Author = "株式会社キューブ・ソフト";
-            setting.Document.Subtitle = "Document property test. 文書プロパティのテスト";
-            setting.Document.Keyword = "文書プロパティ, テスト, test, documents, CubePDF";
-            ExecConvert(setting, "-document");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestMerge
-        ///
-        /// <summary>
-        /// 「先頭に結合」、「末尾に結合」を設定した変換テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestMerge()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
-
-            setting.FileType = Parameter.FileTypes.PDF;
-            setting.PostProcess = Parameter.PostProcesses.None;
-            ExecConvert(setting, "-head");
-            setting.ExistedFile = Parameter.ExistedFiles.MergeHead;
-            ExecConvert(setting, "-head");
-
-            setting.ExistedFile = Parameter.ExistedFiles.Overwrite;
-            ExecConvert(setting, "-tail");
-            setting.ExistedFile = Parameter.ExistedFiles.MergeTail;
-            ExecConvert(setting, "-tail");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestRename
-        /// 
-        /// <summary>
-        /// 「リネーム」を設定した変換テストを行います。
-        /// </summary>
-        /// 
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestRename()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
-
-            setting.ExistedFile = Parameter.ExistedFiles.Rename;
-            setting.PostProcess = Parameter.PostProcesses.None;
-
-            setting.FileType = Parameter.FileTypes.PDF;
-            ExecConvert(setting, "-rename");
-            ExecConvert(setting, "-rename");
-
-            setting.FileType = Parameter.FileTypes.JPEG;
-            ExecConvert(setting, "-rename");
-            ExecConvert(setting, "-rename");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestPassword
-        ///
-        /// <summary>
-        /// PDF の パスワードを設定した変換テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestPassword()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
-
-            setting.FileType = Parameter.FileTypes.PDF;
-            setting.PostProcess = Parameter.PostProcesses.None;
-            setting.Password = "test";
-            setting.Permission.Password = "owner";
-            ExecConvert(setting, "-password");
-
-            // パスワード付きの PDF ファイルに結合するテスト
-            setting.ExistedFile = Parameter.ExistedFiles.MergeHead;
-            ExecConvert(setting, "-password");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// TestPermission
-        ///
-        /// <summary>
-        /// PDF の パーミッションを設定した変換テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestPermission()
-        {
-            var setting = new UserSetting(false);
-            Assert.IsTrue(setting.Load(), "Load from registry");
-
-            setting.FileType = Parameter.FileTypes.PDF;
-            setting.PostProcess = Parameter.PostProcesses.None;
-            setting.Permission.Password = "test";
-            setting.Permission.AllowCopy = false;
-            setting.Permission.AllowFormInput = false;
-            setting.Permission.AllowModify = false;
-            setting.Permission.AllowPrint = false;
-            ExecConvert(setting, "-deny");
-
-            setting.Permission.AllowCopy = true;
-            setting.Permission.AllowFormInput = true;
-            setting.Permission.AllowModify = true;
-            setting.Permission.AllowPrint = true;
-            ExecConvert(setting, "-allow");
-        }
+        #region Variables
+        private string _root = string.Empty;
+        private string _examples = string.Empty;
+        private string _results = string.Empty;
+        #endregion
     }
 }

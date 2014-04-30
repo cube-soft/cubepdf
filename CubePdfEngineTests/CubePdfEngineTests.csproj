@@ -84,13 +84,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="itextsharp, Version=5.3.2.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\release\itextsharp.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\NUnit 2.5.10\bin\net-2.0\framework\nunit.framework.dll</HintPath>
+      <HintPath>C:\Program Files (x86)\NUnit\bin\framework\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -135,6 +131,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\cubepdflib\CubePdf.Data\CubePdf.Data.csproj">
+      <Project>{0D7B710B-67CA-4E55-844A-31C6ACEADFED}</Project>
+      <Name>CubePdf.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\cubepdflib\CubePdf.Editing\CubePdf.Editing.csproj">
+      <Project>{6E397197-250C-404A-9FE9-BA8397C518C1}</Project>
+      <Name>CubePdf.Editing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CubePdf.Engine\CubePdf.Engine.csproj">
       <Project>{F506801C-B1B4-4446-8E8D-1E97E509255C}</Project>
       <Name>CubePdf.Engine</Name>

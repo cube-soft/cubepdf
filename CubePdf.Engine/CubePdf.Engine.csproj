@@ -90,10 +90,6 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="itextsharp, Version=5.0.5.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\release\itextsharp.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -102,6 +98,7 @@
   <ItemGroup>
     <Compile Include="Converter.cs" />
     <Compile Include="DocumentName.cs" />
+    <Compile Include="Editor.cs" />
     <Compile Include="Ghostscript\Converter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -112,7 +109,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Message.cs" />
-    <Compile Include="PdfModifier.cs" />
     <Compile Include="PostProcess.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -152,6 +148,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\cubepdflib\CubePdf.Data\CubePdf.Data.csproj">
+      <Project>{0D7B710B-67CA-4E55-844A-31C6ACEADFED}</Project>
+      <Name>CubePdf.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\cubepdflib\CubePdf.Editing\CubePdf.Editing.csproj">
+      <Project>{6E397197-250C-404A-9FE9-BA8397C518C1}</Project>
+      <Name>CubePdf.Editing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CubePdfLib\CubePdf.Misc\CubePdf.Misc.csproj">
       <Project>{193B7028-1F28-462A-B172-36F485002349}</Project>
       <Name>CubePdf.Misc</Name>
