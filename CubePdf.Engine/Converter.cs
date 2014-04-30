@@ -216,7 +216,11 @@ namespace CubePdf {
         private void RunPostProcess(UserSetting setting)
         {
             var process = new PostProcess(_messages);
-            process.Run(setting);
+            process.Verb          = setting.PostProcess;
+            process.FileName      = setting.OutputPath;
+            process.UserProgram   = setting.UserProgram;
+            process.UserArguments = setting.UserArguments;
+            process.Run();
             AddMessage("PostProcess: success");
         }
 

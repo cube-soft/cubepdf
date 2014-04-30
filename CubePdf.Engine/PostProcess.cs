@@ -74,6 +74,66 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
+        /// Verb
+        /// 
+        /// <summary>
+        /// ポストプロセスの種類を取得、または設定します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public Parameter.PostProcesses Verb
+        {
+            get { return _verb; }
+            set { _verb = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// UserProgram
+        /// 
+        /// <summary>
+        /// ユーザプログラム名を取得、または設定します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public string UserProgram
+        {
+            get { return _program; }
+            set { _program = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// UserArguments
+        /// 
+        /// <summary>
+        /// ユーザ引数を取得、または設定します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public string UserArguments
+        {
+            get { return _args; }
+            set { _args = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// FileName
+        /// 
+        /// <summary>
+        /// 変換に成功したファイル名（パス）を取得、または設定します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public string FileName
+        {
+            get { return _filename; }
+            set { _filename = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// Messages
         ///
         /// <summary>
@@ -99,53 +159,40 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public bool Run(UserSetting setting)
+        public void Run()
         {
-            if (setting.PostProcess == Parameter.PostProcesses.None) return true;
+            if (Verb == Parameter.PostProcesses.None) return;
 
             try
             {
-                string path = setting.OutputPath;
-                if (!File.Exists(path))
-                {
-                    var filename = Path.GetFileNameWithoutExtension(path) + "-001" + Path.GetExtension(path);
-                    path = Path.Combine(Path.GetDirectoryName(path), filename);
-                }
-                if (!File.Exists(path)) return true; // 何らかの問題で変換に失敗しているので、スキップする。
+                var path = GetNormalizedPath();
+                if (!File.Exists(path)) return; // 何らかの問題で変換に失敗しているので、スキップする。
 
-                if (!IsExecutable(setting)) return false;
-
-                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo();
-                System.Diagnostics.Process proc = new System.Diagnostics.Process();
-                if (setting.PostProcess == Parameter.PostProcesses.Open)
-                {
-                    psi.FileName = path;
-                }
+                var info = new System.Diagnostics.ProcessStartInfo();
+                var process = new System.Diagnostics.Process();
+                if (Verb == Parameter.PostProcesses.Open) info.FileName = path;
                 else
                 {
-                    psi.FileName = setting.UserProgram;
-                    if (setting.UserArguments.Length > 0)
+                    info.FileName = UserProgram;
+                    if (!string.IsNullOrEmpty(UserArguments))
                     {
-                        string replaced = "\"" + path + "\"";
-                        psi.Arguments = setting.UserArguments.Replace("%%FILE%%", replaced);
+                        var replaced = "\"" + path + "\"";
+                        info.Arguments = UserArguments.Replace("%%FILE%%", replaced);
                     }
                 }
-                psi.CreateNoWindow = false;
-                psi.UseShellExecute = true;
-                psi.LoadUserProfile = false;
-                psi.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+                info.CreateNoWindow = false;
+                info.UseShellExecute = true;
+                info.LoadUserProfile = false;
+                info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
 
-                proc.StartInfo = psi;
-                proc.Start();
+                process.StartInfo = info;
+                process.Start();
             }
             catch (Exception err)
             {
                 _messages.Add(new Message(Message.Levels.Error, err));
                 _messages.Add(new Message(Message.Levels.Debug, err));
-                return false;
             }
-
-            return true;
         }
 
         #endregion
@@ -154,49 +201,30 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// IsExecutable
+        /// GetNormalizedPath
         ///
         /// <summary>
-        /// ポストプロセスが実行可能かどうかをチェックすします。
+        /// 変換に成功したファイル名（パス）を取得します。
         /// </summary>
-        /// 
-        /// <remarks>
-        /// 判別方法は、以下の通りです。
-        /// 
-        /// 1. Open が指定された場合は関連付けられているかどうか。
-        /// 2. UserProgram が指定された場合は指定されたプログラムが存在して
-        ///    いるかどうか。
-        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private bool IsExecutable(UserSetting setting)
+        private string GetNormalizedPath()
         {
-            if (setting.PostProcess == Parameter.PostProcesses.Open)
-            {
-                string ext = Parameter.Extension(setting.FileType);
-                if (!CubePdf.Utility.IsAssociate(ext))
-                {
-                    // NOTE: 関連付けされていない場合は、単純にスキップする（エラーメッセージを表示しない）。
-                    _messages.Add(new Message(Message.Levels.Debug, String.Format(Properties.Resources.FileNotRelated, ext)));
-                    return false;
-                }
-            }
-            else if (setting.PostProcess == Parameter.PostProcesses.UserProgram && setting.UserProgram.Length > 0)
-            {
-                if (!File.Exists(setting.UserProgram))
-                {
-                    _messages.Add(new Message(Message.Levels.Error, String.Format(Properties.Resources.ProgramNotFound, setting.UserProgram)));
-                    return false;
-                }
-            }
-
-            return true;
+            if (System.IO.File.Exists(FileName)) return FileName;
+            var directory = System.IO.Path.GetDirectoryName(FileName);
+            var basename  = System.IO.Path.GetFileNameWithoutExtension(FileName) + "-001";
+            var extension = System.IO.Path.GetExtension(FileName);
+            return System.IO.Path.Combine(directory, basename + extension);
         }
 
         #endregion
 
         #region Variables
         List<CubePdf.Message> _messages = null;
+        Parameter.PostProcesses _verb = Parameter.PostProcesses.None;
+        private string _filename = string.Empty;
+        private string _program = string.Empty;
+        private string _args = string.Empty;
         #endregion
     }
 }
