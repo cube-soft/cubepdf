@@ -205,7 +205,6 @@
             // GeneralTabPage
             // 
             this.GeneralTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.GeneralTabPage.BackgroundImage = global::CubePdf.Properties.Resources.background_tab;
             this.GeneralTabPage.Controls.Add(this.GeneralPanel);
             this.GeneralTabPage.Location = new System.Drawing.Point(4, 22);
             this.GeneralTabPage.Name = "GeneralTabPage";
@@ -453,7 +452,6 @@
             // DocTabPage
             // 
             this.DocTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.DocTabPage.BackgroundImage = global::CubePdf.Properties.Resources.background_tab;
             this.DocTabPage.Controls.Add(this.DocPanel);
             this.DocTabPage.Location = new System.Drawing.Point(4, 22);
             this.DocTabPage.Name = "DocTabPage";
@@ -558,7 +556,6 @@
             // SecurityTabPage
             // 
             this.SecurityTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.SecurityTabPage.BackgroundImage = global::CubePdf.Properties.Resources.background_tab;
             this.SecurityTabPage.Controls.Add(this.SecurityGroupBox);
             this.SecurityTabPage.Location = new System.Drawing.Point(4, 22);
             this.SecurityTabPage.Name = "SecurityTabPage";
@@ -787,7 +784,6 @@
             // DetailTabPage
             // 
             this.DetailTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.DetailTabPage.BackgroundImage = global::CubePdf.Properties.Resources.background_tab;
             this.DetailTabPage.Controls.Add(this.DetailPanel);
             this.DetailTabPage.Location = new System.Drawing.Point(4, 22);
             this.DetailTabPage.Name = "DetailTabPage";
