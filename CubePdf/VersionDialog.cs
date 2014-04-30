@@ -5,17 +5,17 @@
 /// Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
 ///
 /// This program is free software: you can redistribute it and/or modify
-/// it under the terms of the GNU General Public License as published by
-/// the Free Software Foundation, either version 3 of the License, or
+/// it under the terms of the GNU Affero General Public License as published
+/// by the Free Software Foundation, either version 3 of the License, or
 /// (at your option) any later version.
 ///
 /// This program is distributed in the hope that it will be useful,
 /// but WITHOUT ANY WARRANTY; without even the implied warranty of
 /// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-/// GNU General Public License for more details.
+/// GNU Affero General Public License for more details.
 ///
-/// You should have received a copy of the GNU General Public License
-/// along with this program.  If not, see < http://www.gnu.org/licenses/ >.
+/// You should have received a copy of the GNU Affero General Public License
+/// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ///
 /* ------------------------------------------------------------------------- */
 using System;
@@ -34,22 +34,44 @@ namespace CubePdf
     /* --------------------------------------------------------------------- */
     public partial class VersionDialog : Form
     {
+        #region Initialization and Termination
+
         /* ----------------------------------------------------------------- */
         ///
         /// VersionDialog (constructor)
         ///
         /// <summary>
-        /// 引数に指定されたバージョン情報を利用して、オブジェクトを初期化
-        /// します。
+        /// オブジェクトを初期化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public VersionDialog()
+        {
+            InitializeComponent();
+            CloseButton.Click += (s, e) => { Close(); };
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// VersionDialog (constructor)
+        ///
+        /// <summary>
+        /// オブジェクトを初期化します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         public VersionDialog(string version)
+            : this()
         {
-            InitializeComponent();
             var edition = (IntPtr.Size == 4) ? "x86" : "x64";
-            this.VersionLabel.Text = String.Format("Version: {0} ({1})", version, edition);
+            VersionLabel.Text = string.Format("Version {0} ({1})", version, edition);
+            OSVersionLabel.Text = Environment.OSVersion.ToString();
+            DotNetVersionLabel.Text = string.Format(".NET Framework {0}", Environment.Version.ToString());
         }
+
+        #endregion
+
+        #region Event handlers
 
         /* ----------------------------------------------------------------- */
         ///
@@ -62,7 +84,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void VersionDialog_Shown(object sender, EventArgs e)
         {
-            OKButton.Focus();
+            CloseButton.Focus();
         }
 
         /* ----------------------------------------------------------------- */
@@ -77,22 +99,11 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void CubePdfLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start(CubePDFLinkLabel.Text);
+            var control = sender as LinkLabel;
+            try { System.Diagnostics.Process.Start(control.Text); }
+            catch (Exception err) { System.Diagnostics.Trace.WriteLine(err.ToString()); }
         }
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// OkButton_Click
-        ///
-        /// <summary>
-        /// OK ボタンがクリックされた時に実行されるイベントハンドラです。
-        /// バージョンダイアログを閉じます。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void OkButton_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        #endregion
     }
 }
