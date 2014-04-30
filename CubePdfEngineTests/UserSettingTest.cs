@@ -19,7 +19,6 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.IO;
 using NUnit.Framework;
 using Microsoft.Win32;
 

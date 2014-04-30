@@ -118,7 +118,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="UserSetting.cs" />
-    <Compile Include="Utility.cs">
+    <Compile Include="Path.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

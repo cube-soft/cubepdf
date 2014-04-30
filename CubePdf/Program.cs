@@ -19,7 +19,6 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -77,7 +76,12 @@ namespace CubePdf
             bool is_config = false;
             try
             {
-                if (docname.Length > 0 && Path.GetExtension(docname) == setting.Extension && File.Exists(docname)) is_config = true;
+                if (!string.IsNullOrEmpty(docname) &&
+                    System.IO.Path.GetExtension(docname) == setting.Extension &&
+                    System.IO.File.Exists(docname))
+                {
+                    is_config = true;
+                }
             }
             catch (Exception err)
             {
@@ -95,9 +99,9 @@ namespace CubePdf
                 if (filename != null)
                 {
                     string ext = Parameter.Extension((Parameter.FileTypes)setting.FileType);
-                    filename = Path.ChangeExtension(filename, ext);
-                    string dir = (setting.OutputPath.Length == 0 || Directory.Exists(setting.OutputPath)) ?
-                        setting.OutputPath : Path.GetDirectoryName(setting.OutputPath);
+                    filename = System.IO.Path.ChangeExtension(filename, ext);
+                    string dir = (setting.OutputPath.Length == 0 || System.IO.Directory.Exists(setting.OutputPath)) ?
+                        setting.OutputPath : System.IO.Path.GetDirectoryName(setting.OutputPath);
                     setting.OutputPath = dir + '\\' + filename;
                 }
             }

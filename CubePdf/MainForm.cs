@@ -19,7 +19,6 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Drawing;
@@ -187,11 +186,12 @@ namespace CubePdf
             }
             else
             {
-                var ext = Path.GetExtension(this.OutputPathTextBox.Text);
+                var ext = System.IO.Path.GetExtension(this.OutputPathTextBox.Text);
                 var compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
                 if (ext != compared) OutputPathTextBox.Text += compared;
 
-                if (File.Exists(this.OutputPathTextBox.Text) && Translator.IndexToExistedFile(this.ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
+                if (System.IO.File.Exists(this.OutputPathTextBox.Text) &&
+                    Translator.IndexToExistedFile(ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
                 {
                     // {0} は既に存在します。{1}しますか？
                     string message = String.Format(Properties.Resources.FileExists,
@@ -280,9 +280,9 @@ namespace CubePdf
         private void SaveSetting(UserSetting setting)
         {
             string path = this.OutputPathTextBox.Text;
-            setting.OutputPath = (path.Length == 0 || Directory.Exists(path)) ? path : Path.GetDirectoryName(path);
+            setting.OutputPath = (path.Length == 0 || System.IO.Directory.Exists(path)) ? path : System.IO.Path.GetDirectoryName(path);
             path = this.InputPathTextBox.Text;
-            setting.InputPath = (path.Length == 0 || Directory.Exists(path)) ? path : Path.GetDirectoryName(path);
+            setting.InputPath = (path.Length == 0 || System.IO.Directory.Exists(path)) ? path : System.IO.Path.GetDirectoryName(path);
             setting.UserProgram = this.UserProgramTextBox.Text;
 
             // コンボボックスのインデックス関連
@@ -411,8 +411,8 @@ namespace CubePdf
             if (!this.CheckOutput(this.ExistedFileComboBox.SelectedIndex)) return;
 
             // ライブラリが存在してるかどうかをログに記録。
-            if (!Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}: file not found", _setting.LibPath)));
-            if (!Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}\\lib: file not found", _setting.LibPath)));
+            if (!System.IO.Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}: file not found", _setting.LibPath)));
+            if (!System.IO.Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}\\lib: file not found", _setting.LibPath)));
 
             this.ConvertButton.Enabled = false;
             this.SettingButton.Visible = false;            
@@ -436,7 +436,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void ExitButton_Click(object sender, EventArgs e)
         {
-            if (_setting.DeleteOnClose && File.Exists(_setting.InputPath)) File.Delete(_setting.InputPath);
+            if (_setting.DeleteOnClose && System.IO.File.Exists(_setting.InputPath)) System.IO.File.Delete(_setting.InputPath);
             _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.ExitButton_Click"));
             this.WriteMessage();
             this.Close();
@@ -476,8 +476,8 @@ namespace CubePdf
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.AddExtension = true;
             dialog.FileName = (this.OutputPathTextBox.TextLength > 0) ?
-                Path.GetFileNameWithoutExtension(this.OutputPathTextBox.Text) :
-                Path.GetFileNameWithoutExtension(this.InputPathTextBox.Text);
+                System.IO.Path.GetFileNameWithoutExtension(this.OutputPathTextBox.Text) :
+                System.IO.Path.GetFileNameWithoutExtension(this.InputPathTextBox.Text);
             dialog.Filter = Appearance.FileFilterString();
             dialog.FilterIndex = this.FileTypeCombBox.SelectedIndex + 1;
             dialog.OverwritePrompt = false;
@@ -490,7 +490,7 @@ namespace CubePdf
 
             // 拡張子が選択されているファイルタイプと異なる場合は、末尾に拡張子を追加する。
             // ただし、入力された拡張子がユーザのコンピュータに登録されている場合は、それを優先する。
-            string ext = Path.GetExtension(this.OutputPathTextBox.Text);
+            string ext = System.IO.Path.GetExtension(this.OutputPathTextBox.Text);
             string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
             this.OutputPathTextBox.Text = dialog.FileName;
             if (ext != compared) OutputPathTextBox.Text += compared;
@@ -603,7 +603,7 @@ namespace CubePdf
             // 出力パスの拡張子を変更後のファイルタイプに合わせる．
             if (this.OutputPathTextBox.Text.Length > 0)
             {
-                this.OutputPathTextBox.Text = Path.ChangeExtension(this.OutputPathTextBox.Text, Parameter.Extension(id));
+                this.OutputPathTextBox.Text = System.IO.Path.ChangeExtension(this.OutputPathTextBox.Text, Parameter.Extension(id));
             }
             this.SettingChanged(sender, e);
         }
@@ -884,7 +884,7 @@ namespace CubePdf
                 if (control.Text[control.Text.Length - 1] == '\\') control.SelectionStart = control.Text.Length;
                 else
                 {
-                    string dir = Path.GetDirectoryName(control.Text);
+                    string dir = System.IO.Path.GetDirectoryName(control.Text);
                     int pos = (dir != null) ? dir.Length : 0;
                     while (pos < control.Text.Length && control.Text[pos] == '\\') pos += 1;
                     control.Select(pos, Math.Max(control.Text.Length - pos, 0));
@@ -1075,7 +1075,7 @@ namespace CubePdf
         {
             if (e.Result != null) _messages.AddRange((List<CubePdf.Message>)e.Result);
             this.WriteMessage();
-            if (_setting.DeleteOnClose && File.Exists(_setting.InputPath)) File.Delete(_setting.InputPath);
+            if (_setting.DeleteOnClose && System.IO.File.Exists(_setting.InputPath)) System.IO.File.Delete(_setting.InputPath);
             this.Close();
         }
 

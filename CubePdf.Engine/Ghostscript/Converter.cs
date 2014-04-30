@@ -557,7 +557,7 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private void AddMessages(string[] args)
         {
-           AddDebug(string.Format("CurrentDirectory: {0}", Utility.CurrentDirectory));
+           AddDebug(string.Format("CurrentDirectory: {0}", Path.CurrentDirectory));
 
             // ライブラリの存在するディレクトリへのパス
             var message = "LibPath: ";
@@ -589,7 +589,7 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private string CreateWorkDirectory()
         {
-            var dest = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+            var dest = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
             if (System.IO.Directory.Exists(dest)) System.IO.Directory.Delete(dest, true);
             else if (System.IO.File.Exists(dest)) System.IO.File.Delete(dest);
             System.IO.Directory.CreateDirectory(dest);

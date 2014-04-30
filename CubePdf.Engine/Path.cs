@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 ///
-/// Utility.cs
+/// Path.cs
 ///
 /// Copyright (c) 2009 CubeSoft, Inc. All rights reserved.
 ///
@@ -25,14 +25,14 @@ namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     ///
-    /// Utility
+    /// Path
     /// 
     /// <summary>
-    /// 雑多な補助メソッドを定義するためのクラスです。
+    /// CubePDF プロジェクトで使用するパスに関するクラスです。
     /// </summary>
     ///
     /* --------------------------------------------------------------------- */
-    public abstract class Utility
+    public abstract class Path
     {
         /* ------------------------------------------------------------- */
         ///
@@ -45,8 +45,8 @@ namespace CubePdf
         /* ------------------------------------------------------------- */
         public static string WorkingDirectory
         {
-            get { return _work; }
-            set { _work = value; }
+            get { return _WorkingDirectory; }
+            set { _WorkingDirectory = value; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -74,7 +74,7 @@ namespace CubePdf
         }
 
         #region Variables
-        private static string _work = System.IO.Path.GetTempPath();
+        private static string _WorkingDirectory = System.IO.Path.GetTempPath();
         #endregion
     }
 }

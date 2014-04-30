@@ -189,14 +189,14 @@ namespace CubePdf {
             editor.Files.Add(setting.OutputPath);
             if (head) editor.Files.Add(_escaped);
 
-            var tmp = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+            var tmp = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
             editor.Run(tmp);
             AddMessage(string.Format("PageBinder::Save: {0}", tmp));
 
             if (setting.WebOptimize)
             {
                 var src = tmp;
-                tmp = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+                tmp = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
                 RunWebOptimize(setting, src, tmp);
             }
 
@@ -491,7 +491,7 @@ namespace CubePdf {
             }
             else if (setting.FileType == Parameter.FileTypes.PDF && is_merge)
             {
-                _escaped = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+                _escaped = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
                 System.IO.File.Copy(setting.OutputPath, _escaped, true);
                 AddMessage(string.Format("Escape: {0} -> {1}", setting.OutputPath, _escaped));
             }
@@ -530,7 +530,7 @@ namespace CubePdf {
         {
             try
             {
-                var work = Utility.WorkingDirectory;
+                var work = Path.WorkingDirectory;
                 if (System.IO.Directory.Exists(work))
                 {
                     System.IO.Directory.Delete(work, true);
@@ -561,7 +561,7 @@ namespace CubePdf {
             if (System.IO.File.Exists(work)) System.IO.File.Delete(work);
             if (System.IO.Directory.Exists(work)) System.IO.Directory.Delete(work, true);
             System.IO.Directory.CreateDirectory(work);
-            Utility.WorkingDirectory = work;
+            Path.WorkingDirectory = work;
             AddMessage(string.Format("CreateWorkDirectory: {0}", work));
         }
 
