@@ -377,7 +377,7 @@ namespace CubePdf.Ghostscript
             args.Add("dummy");
 
             // Add device
-            if (_device != Devices.Unknown && _device != Devices.PDF_Opt) args.Add(DeviceExt.Argument(_device));
+            if (_device != Devices.Unknown) args.Add(DeviceExt.Argument(_device));
 
             // Add include paths
             if (_includes.Count > 0) args.Add("-I" + string.Join(";", _includes.ToArray()));
@@ -416,18 +416,8 @@ namespace CubePdf.Ghostscript
             //args.Add("-sstdout=ghostscript.log");
 
             // Add input (source filename) and output (destination filename)
-            if (_device == Devices.PDF_Opt)
-            {
-                args.Add("--");
-                args.Add("pdfopt.ps");
-                foreach (var src in sources) args.Add(src);
-                args.Add(dest);
-            }
-            else
-            {
-                args.Add(string.Format("-sOutputFile={0}", dest));
-                foreach (var src in sources) args.Add(src);
-            }
+            args.Add(string.Format("-sOutputFile={0}", dest));
+            foreach (var src in sources) args.Add(src);
 
             return args.ToArray();
         }
@@ -618,10 +608,7 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private string GetTempFileName(Devices device)
         {
-            if (device == Devices.PDF || device == Devices.PDF_Opt || device == Devices.PS)
-            {
-                return System.IO.Path.GetRandomFileName();
-            }
+            if (device == Devices.PDF || device == Devices.PS) return System.IO.Path.GetRandomFileName();
             else return System.IO.Path.GetRandomFileName().Replace('.', '_') + "-%08d";
         }
 
