@@ -73,40 +73,6 @@ namespace CubePdf
             }
         }
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// IsAssociate
-        ///
-        /// <summary>
-        /// 引数に指定された拡張子が関連付けされているかどうかを確認します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static bool IsAssociate(string ext)
-        {
-            IntPtr key = IntPtr.Zero;
-            var status = AssocQueryKey(0x40 /* ASSOCF_VERIFY */, 1 /* ASSOCKEY_SHELLEXECCLASS */, ext, "open", out key);
-            return status == 0;
-        }
-
-        #region Win32APIs
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// AssocQueryKey
-        ///
-        /// <remarks>
-        /// 本来、引数の flags は ASSOCF、key は ASSOCKEY と言う enum 型で
-        /// 定義される模様。
-        /// http://msdn.microsoft.com/en-us/library/windows/desktop/bb773468.aspx
-        /// </remarks>
-        ///
-        /* ----------------------------------------------------------------- */
-        [DllImport("Shlwapi.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern uint AssocQueryKey(uint flags, uint key, string pszAssoc, string pszExtra, out IntPtr phkeyOut);
-
-        #endregion
-
         #region Variables
         private static string _work = System.IO.Path.GetTempPath();
         #endregion

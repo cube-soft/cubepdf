@@ -187,12 +187,9 @@ namespace CubePdf
             }
             else
             {
-                string ext = Path.GetExtension(this.OutputPathTextBox.Text);
-                string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
-                if (ext != compared && !CubePdf.Utility.IsAssociate(ext))
-                {
-                    this.OutputPathTextBox.Text += compared;
-                }
+                var ext = Path.GetExtension(this.OutputPathTextBox.Text);
+                var compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
+                if (ext != compared) OutputPathTextBox.Text += compared;
 
                 if (File.Exists(this.OutputPathTextBox.Text) && Translator.IndexToExistedFile(this.ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
                 {
@@ -496,10 +493,7 @@ namespace CubePdf
             string ext = Path.GetExtension(this.OutputPathTextBox.Text);
             string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
             this.OutputPathTextBox.Text = dialog.FileName;
-            if (ext != compared && !CubePdf.Utility.IsAssociate(ext))
-            {
-                this.OutputPathTextBox.Text += compared;
-            }
+            if (ext != compared) OutputPathTextBox.Text += compared;
             this.SettingChanged(sender, e);
         }
 

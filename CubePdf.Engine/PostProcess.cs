@@ -19,7 +19,6 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -166,7 +165,7 @@ namespace CubePdf
             try
             {
                 var path = GetNormalizedPath();
-                if (!File.Exists(path)) return; // 何らかの問題で変換に失敗しているので、スキップする。
+                if (!System.IO.File.Exists(path)) return;
 
                 var info = new System.Diagnostics.ProcessStartInfo();
                 var process = new System.Diagnostics.Process();
