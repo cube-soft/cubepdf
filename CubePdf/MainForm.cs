@@ -1099,17 +1099,20 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void WriteMessage()
         {
-            string error = "";
-            foreach (CubePdf.Message message in _messages)
+            var error = string.Empty;
+            var warn  = string.Empty;
+            foreach (var message in _messages)
             {
                 Trace.WriteLine(message.ToString());
-                if (message.Level == Message.Levels.Error || message.Level == Message.Levels.Fatal)
-                {
-                    error = message.Value;
-                }
+                if (message.Level == Message.Levels.Error || message.Level == Message.Levels.Fatal) error = message.Value;
+                else if (message.Level == Message.Levels.Warn) warn = message.Value;
             }
 
-            if (error.Length > 0) MessageBox.Show(error, "CubePDF エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            var iserror = !string.IsNullOrEmpty(error);
+            var descr   = iserror ? error : warn;
+            var title   = iserror ? "CubePDF エラー" : "CubePDF";
+            var icon    = iserror ? MessageBoxIcon.Error : MessageBoxIcon.Warning;
+            if (!string.IsNullOrEmpty(descr)) MessageBox.Show(descr, title, MessageBoxButtons.OK, icon);
         }
 
         /* ----------------------------------------------------------------- */
