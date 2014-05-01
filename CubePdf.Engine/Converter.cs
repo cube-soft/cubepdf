@@ -139,7 +139,7 @@ namespace CubePdf {
             EscapeIf(setting);
             var gs = Configure(setting, setting.InputPath, setting.OutputPath);
             gs.Run();
-            AddMessage("RunConverter: success");
+            AddMessage("CubePdf.Converter.RunConverter: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -156,7 +156,7 @@ namespace CubePdf {
             var gs = Configure(setting, src, dest);
             gs.AddOption("FastWebView");
             gs.Run();
-            AddMessage("RunWebOptimize: success");
+            AddMessage("CubePdf.Converter.RunWebOptimize: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -189,19 +189,19 @@ namespace CubePdf {
             editor.Files.Add(setting.OutputPath);
             if (head) editor.Files.Add(_escaped);
 
-            var tmp = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+            var tmp = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
             editor.Run(tmp);
-            AddMessage(string.Format("PageBinder::Save: {0}", tmp));
+            AddMessage(string.Format("CubePdf.PageBinder.Save: {0}", tmp));
 
             if (setting.WebOptimize)
             {
                 var src = tmp;
-                tmp = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+                tmp = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
                 RunWebOptimize(setting, src, tmp);
             }
 
             if (System.IO.File.Exists(tmp)) CubePdf.Misc.File.Copy(tmp, setting.OutputPath, true);
-            AddMessage("RunEditor: success");
+            AddMessage("CubePdf.Converter.RunEditor: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -216,8 +216,12 @@ namespace CubePdf {
         private void RunPostProcess(UserSetting setting)
         {
             var process = new PostProcess(_messages);
-            process.Run(setting);
-            AddMessage("PostProcess: success");
+            process.Verb          = setting.PostProcess;
+            process.FileName      = setting.OutputPath;
+            process.UserProgram   = setting.UserProgram;
+            process.UserArguments = setting.UserArguments;
+            process.Run();
+            AddMessage("CubePdf.Converter.RunPostProcess: success");
         }
 
         #endregion
@@ -487,7 +491,7 @@ namespace CubePdf {
             }
             else if (setting.FileType == Parameter.FileTypes.PDF && is_merge)
             {
-                _escaped = System.IO.Path.Combine(Utility.WorkingDirectory, System.IO.Path.GetRandomFileName());
+                _escaped = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
                 System.IO.File.Copy(setting.OutputPath, _escaped, true);
                 AddMessage(string.Format("Escape: {0} -> {1}", setting.OutputPath, _escaped));
             }
@@ -526,7 +530,7 @@ namespace CubePdf {
         {
             try
             {
-                var work = Utility.WorkingDirectory;
+                var work = Path.WorkingDirectory;
                 if (System.IO.Directory.Exists(work))
                 {
                     System.IO.Directory.Delete(work, true);
@@ -557,7 +561,7 @@ namespace CubePdf {
             if (System.IO.File.Exists(work)) System.IO.File.Delete(work);
             if (System.IO.Directory.Exists(work)) System.IO.Directory.Delete(work, true);
             System.IO.Directory.CreateDirectory(work);
-            Utility.WorkingDirectory = work;
+            Path.WorkingDirectory = work;
             AddMessage(string.Format("CreateWorkDirectory: {0}", work));
         }
 

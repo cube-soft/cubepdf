@@ -120,11 +120,11 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   エラー に類似しているローカライズされた文字列を検索します。
+        ///   CubePDF エラー に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static string Error {
+        internal static string ErrorTitle {
             get {
-                return ResourceManager.GetString("Error", resourceCulture);
+                return ResourceManager.GetString("ErrorTitle", resourceCulture);
             }
         }
         
@@ -227,6 +227,15 @@ namespace CubePdf.Properties {
         internal static string UserProgramFilter {
             get {
                 return ResourceManager.GetString("UserProgramFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   CubePDF 警告 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string WarningTitle {
+            get {
+                return ResourceManager.GetString("WarningTitle", resourceCulture);
             }
         }
     }

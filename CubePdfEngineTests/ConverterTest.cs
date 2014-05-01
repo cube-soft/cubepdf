@@ -19,7 +19,6 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.IO;
 using System.Text;
 using NUnit.Framework;
 
@@ -344,12 +343,12 @@ namespace CubePdf
             var result = converter.Run(setting);
             foreach (var message in converter.Messages) System.Diagnostics.Trace.WriteLine(message.ToString());
             Assert.IsTrue(result, setting.InputPath);
-            if (!File.Exists(setting.OutputPath))
+            if (!System.IO.File.Exists(setting.OutputPath))
             {
                 var dest = String.Format("{0}\\{1}-001{2}",
-                    Path.GetDirectoryName(setting.OutputPath),
-                    Path.GetFileNameWithoutExtension(setting.OutputPath),
-                    Path.GetExtension(setting.OutputPath)
+                    System.IO.Path.GetDirectoryName(setting.OutputPath),
+                    System.IO.Path.GetFileNameWithoutExtension(setting.OutputPath),
+                    System.IO.Path.GetExtension(setting.OutputPath)
                 );
                 Assert.IsTrue(System.IO.File.Exists(dest), setting.OutputPath);
             }

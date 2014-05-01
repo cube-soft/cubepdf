@@ -19,7 +19,6 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Drawing;
@@ -147,19 +146,13 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private bool CheckPassword(bool enabled, string password, string confirm)
         {
-            bool status = true;
-            if (enabled) status = (password == confirm);
-            if (!status)
+            if (enabled && password != confirm)
             {
-                MessageBox.Show(
-                    Properties.Resources.PasswordUnmatched,
-                    Properties.Resources.Error,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
-                this.MainTabControl.SelectedTab = this.SecurityTabPage;
+                ShowError(Properties.Resources.PasswordUnmatched);
+                MainTabControl.SelectedTab = SecurityTabPage;
+                return false;
             }
-            return status;
+            else return true;
         }
 
         /* ----------------------------------------------------------------- */
@@ -177,24 +170,17 @@ namespace CubePdf
         {
             if (this.OutputPathTextBox.Text.Length == 0)
             {
-                MessageBox.Show(
-                    Properties.Resources.FileNotSpecified,
-                    Properties.Resources.Error,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                ShowError(Properties.Resources.FileNotSpecified);
                 return false;
             }
             else
             {
-                string ext = Path.GetExtension(this.OutputPathTextBox.Text);
-                string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
-                if (ext != compared && !CubePdf.Utility.IsAssociate(ext))
-                {
-                    this.OutputPathTextBox.Text += compared;
-                }
+                var ext = System.IO.Path.GetExtension(this.OutputPathTextBox.Text);
+                var compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
+                if (ext != compared) OutputPathTextBox.Text += compared;
 
-                if (File.Exists(this.OutputPathTextBox.Text) && Translator.IndexToExistedFile(this.ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
+                if (System.IO.File.Exists(this.OutputPathTextBox.Text) &&
+                    Translator.IndexToExistedFile(ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
                 {
                     // {0} は既に存在します。{1}しますか？
                     string message = String.Format(Properties.Resources.FileExists,
@@ -283,9 +269,9 @@ namespace CubePdf
         private void SaveSetting(UserSetting setting)
         {
             string path = this.OutputPathTextBox.Text;
-            setting.OutputPath = (path.Length == 0 || Directory.Exists(path)) ? path : Path.GetDirectoryName(path);
+            setting.OutputPath = (path.Length == 0 || System.IO.Directory.Exists(path)) ? path : System.IO.Path.GetDirectoryName(path);
             path = this.InputPathTextBox.Text;
-            setting.InputPath = (path.Length == 0 || Directory.Exists(path)) ? path : Path.GetDirectoryName(path);
+            setting.InputPath = (path.Length == 0 || System.IO.Directory.Exists(path)) ? path : System.IO.Path.GetDirectoryName(path);
             setting.UserProgram = this.UserProgramTextBox.Text;
 
             // コンボボックスのインデックス関連
@@ -414,8 +400,8 @@ namespace CubePdf
             if (!this.CheckOutput(this.ExistedFileComboBox.SelectedIndex)) return;
 
             // ライブラリが存在してるかどうかをログに記録。
-            if (!Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}: file not found", _setting.LibPath)));
-            if (!Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}\\lib: file not found", _setting.LibPath)));
+            if (!System.IO.Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}: file not found", _setting.LibPath)));
+            if (!System.IO.Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}\\lib: file not found", _setting.LibPath)));
 
             this.ConvertButton.Enabled = false;
             this.SettingButton.Visible = false;            
@@ -439,9 +425,9 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void ExitButton_Click(object sender, EventArgs e)
         {
-            if (_setting.DeleteOnClose && File.Exists(_setting.InputPath)) File.Delete(_setting.InputPath);
+            if (_setting.DeleteOnClose && System.IO.File.Exists(_setting.InputPath)) System.IO.File.Delete(_setting.InputPath);
             _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.ExitButton_Click"));
-            this.WriteMessage();
+            this.ShowMessage();
             this.Close();
         }
 
@@ -479,8 +465,8 @@ namespace CubePdf
             SaveFileDialog dialog = new SaveFileDialog();
             dialog.AddExtension = true;
             dialog.FileName = (this.OutputPathTextBox.TextLength > 0) ?
-                Path.GetFileNameWithoutExtension(this.OutputPathTextBox.Text) :
-                Path.GetFileNameWithoutExtension(this.InputPathTextBox.Text);
+                System.IO.Path.GetFileNameWithoutExtension(this.OutputPathTextBox.Text) :
+                System.IO.Path.GetFileNameWithoutExtension(this.InputPathTextBox.Text);
             dialog.Filter = Appearance.FileFilterString();
             dialog.FilterIndex = this.FileTypeCombBox.SelectedIndex + 1;
             dialog.OverwritePrompt = false;
@@ -493,13 +479,10 @@ namespace CubePdf
 
             // 拡張子が選択されているファイルタイプと異なる場合は、末尾に拡張子を追加する。
             // ただし、入力された拡張子がユーザのコンピュータに登録されている場合は、それを優先する。
-            string ext = Path.GetExtension(this.OutputPathTextBox.Text);
+            string ext = System.IO.Path.GetExtension(this.OutputPathTextBox.Text);
             string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
             this.OutputPathTextBox.Text = dialog.FileName;
-            if (ext != compared && !CubePdf.Utility.IsAssociate(ext))
-            {
-                this.OutputPathTextBox.Text += compared;
-            }
+            if (ext != compared) OutputPathTextBox.Text += compared;
             this.SettingChanged(sender, e);
         }
 
@@ -609,7 +592,7 @@ namespace CubePdf
             // 出力パスの拡張子を変更後のファイルタイプに合わせる．
             if (this.OutputPathTextBox.Text.Length > 0)
             {
-                this.OutputPathTextBox.Text = Path.ChangeExtension(this.OutputPathTextBox.Text, Parameter.Extension(id));
+                this.OutputPathTextBox.Text = System.IO.Path.ChangeExtension(this.OutputPathTextBox.Text, Parameter.Extension(id));
             }
             this.SettingChanged(sender, e);
         }
@@ -800,6 +783,26 @@ namespace CubePdf
 
         #endregion
 
+        #region Other event handlers
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// SettingChanged
+        ///
+        /// <summary>
+        /// ユーザによって各種設定が変更された時に実行されるイベントハンドラ
+        /// です。「設定を保存」ボタンが押下できるようになります。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void SettingChanged(object sender, EventArgs e)
+        {
+            SettingButton.BackgroundImage = Properties.Resources.button_setting;
+            SettingButton.Enabled = true;
+        }
+
+        #endregion
+
         /* ----------------------------------------------------------------- */
         /// テキストボックス上での出力パスに関する仕掛け
         /* ----------------------------------------------------------------- */
@@ -890,7 +893,7 @@ namespace CubePdf
                 if (control.Text[control.Text.Length - 1] == '\\') control.SelectionStart = control.Text.Length;
                 else
                 {
-                    string dir = Path.GetDirectoryName(control.Text);
+                    string dir = System.IO.Path.GetDirectoryName(control.Text);
                     int pos = (dir != null) ? dir.Length : 0;
                     while (pos < control.Text.Length && control.Text[pos] == '\\') pos += 1;
                     control.Select(pos, Math.Max(control.Text.Length - pos, 0));
@@ -1080,18 +1083,56 @@ namespace CubePdf
         private void ConvertBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             if (e.Result != null) _messages.AddRange((List<CubePdf.Message>)e.Result);
-            this.WriteMessage();
-            if (_setting.DeleteOnClose && File.Exists(_setting.InputPath)) File.Delete(_setting.InputPath);
+            this.ShowMessage();
+            if (_setting.DeleteOnClose && System.IO.File.Exists(_setting.InputPath)) System.IO.File.Delete(_setting.InputPath);
             this.Close();
         }
 
         #endregion
 
-        #region Other methods
+        #region Methods about messages
 
         /* ----------------------------------------------------------------- */
         ///
-        /// WriteMessage
+        /// ShowError
+        /// 
+        /// <summary>
+        /// エラーメッセージを表示します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void ShowError(string message)
+        {
+            MessageBox.Show(
+                message,
+                Properties.Resources.ErrorTitle,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ShowWarning
+        /// 
+        /// <summary>
+        /// 警告メッセージを表示します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void ShowWarning(string message)
+        {
+            MessageBox.Show(
+                message,
+                Properties.Resources.WarningTitle,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            );
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ShowMessage
         ///
         /// <summary>
         /// エラーメッセージの表示、およびログファイルへの書き込みを行います。
@@ -1103,35 +1144,23 @@ namespace CubePdf
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private void WriteMessage()
+        private void ShowMessage()
         {
-            string error = "";
-            foreach (CubePdf.Message message in _messages)
+            var error = string.Empty;
+            var warn  = string.Empty;
+            foreach (var message in _messages)
             {
                 Trace.WriteLine(message.ToString());
-                if (message.Level == Message.Levels.Error || message.Level == Message.Levels.Fatal)
-                {
-                    error = message.Value;
-                }
+                if (message.Level == Message.Levels.Error || message.Level == Message.Levels.Fatal) error = message.Value;
+                else if (message.Level == Message.Levels.Warn) warn = message.Value;
             }
 
-            if (error.Length > 0) MessageBox.Show(error, "CubePDF エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
+            var iserror = !string.IsNullOrEmpty(error);
+            var description = iserror ? error : warn;
+            if (string.IsNullOrEmpty(description)) return;
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// SettingChanged
-        ///
-        /// <summary>
-        /// ユーザによって各種設定が変更された時に実行されるイベントハンドラ
-        /// です。「設定を保存」ボタンが押下できるようになります。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void SettingChanged(object sender, EventArgs e)
-        {
-            this.SettingButton.BackgroundImage = Properties.Resources.button_setting;
-            this.SettingButton.Enabled = true;
+            if (iserror) ShowError(description);
+            else ShowWarning(description);
         }
 
         #endregion

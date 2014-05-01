@@ -19,7 +19,6 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.IO;
 using System.Diagnostics;
 using Microsoft.Win32;
 
@@ -1043,11 +1042,11 @@ namespace CubePdf
                 // パス関連
                 string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 string path = subkey.GetValue(_RegLastAccess, desktop) as string;
-                if (path != null && path.Length > 0 && Directory.Exists(path)) _output = path;
+                if (path != null && path.Length > 0 && System.IO.Directory.Exists(path)) _output = path;
                 path = subkey.GetValue(_RegLastInputAccess, desktop) as string;
-                if (path != null && path.Length > 0 && Directory.Exists(path)) _input = path;
+                if (path != null && path.Length > 0 && System.IO.Directory.Exists(path)) _input = path;
                 path = subkey.GetValue(_RegUserProgram, "") as string;
-                if (path != null && path.Length > 0 && File.Exists(path)) _program = path;
+                if (path != null && path.Length > 0 && System.IO.File.Exists(path)) _program = path;
 
                 // チェックボックスのフラグ関連
                 int flag = (int)subkey.GetValue(_RegPageRotation, 1);

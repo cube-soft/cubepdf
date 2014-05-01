@@ -117,11 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AnnotWithPostProcess" xml:space="preserve">
+    <value>CubePDFによる変換は成功しています。</value>
+  </data>
   <data name="EncryptionError" xml:space="preserve">
     <value>パスワードで保護されているPDFファイルに結合する事はできません。</value>
   </data>
   <data name="FileNotRelated" xml:space="preserve">
-    <value>{0}: ファイルが関連付けられていません。</value>
+    <value>ファイルを開くことができませんでした。関連付けが行われているかどうか確認して下さい。</value>
   </data>
   <data name="GhostscriptError" xml:space="preserve">
     <value>入力ファイルの解析に失敗しました。このエラーは、入力ファイルの内容を変更する事で回避できる場合があります。</value>

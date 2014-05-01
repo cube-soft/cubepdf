@@ -61,6 +61,15 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
+        ///   CubePDFによる変換は成功しています。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string AnnotWithPostProcess {
+            get {
+                return ResourceManager.GetString("AnnotWithPostProcess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   パスワードで保護されているPDFファイルに結合する事はできません。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string EncryptionError {
@@ -70,7 +79,7 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   {0}: ファイルが関連付けられていません。 に類似しているローカライズされた文字列を検索します。
+        ///   ファイルを開くことができませんでした。関連付けが行われているかどうか確認して下さい。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string FileNotRelated {
             get {
