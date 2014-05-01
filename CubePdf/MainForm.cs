@@ -366,7 +366,7 @@ namespace CubePdf
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            if (e.KeyCode == Keys.Enter) ConvertButton_Click(this.ConvertButton, e);
+            if (e.KeyCode == Keys.Enter) ConvertButton_Click(ConvertButton, e);
         }
 
         #endregion
@@ -386,23 +386,23 @@ namespace CubePdf
         private void ConvertButton_Click(object sender, EventArgs e)
         {
             // 各種チェック
-            if (!this.IsValidPassword(this.OwnerPasswordCheckBox.Checked, this.OwnerPasswordTextBox.Text, this.ConfirmOwnerPasswordTextBox.Text)) return;
-            if (!this.IsValidPassword(this.OwnerPasswordCheckBox.Checked & this.UserPasswordCheckBox.Checked, this.UserPasswordTextBox.Text, this.ConfirmUserPasswordTextBox.Text)) return;
-            if (!this.IsValidOutput(this.ExistedFileComboBox.SelectedIndex)) return;
+            if (!IsValidPassword(OwnerPasswordCheckBox.Checked, OwnerPasswordTextBox.Text, ConfirmOwnerPasswordTextBox.Text)) return;
+            if (!IsValidPassword(OwnerPasswordCheckBox.Checked & UserPasswordCheckBox.Checked, UserPasswordTextBox.Text, ConfirmUserPasswordTextBox.Text)) return;
+            if (!IsValidOutput(ExistedFileComboBox.SelectedIndex)) return;
 
             // ライブラリが存在してるかどうかをログに記録。
-            if (!System.IO.Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}: file not found", _setting.LibPath)));
-            if (!System.IO.Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}\\lib: file not found", _setting.LibPath)));
+            if (!System.IO.Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Debug, string.Format("{0}: file not found", _setting.LibPath)));
+            if (!System.IO.Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Debug, string.Format("{0}\\lib: file not found", _setting.LibPath)));
 
-            this.ConvertButton.Enabled = false;
-            this.SettingButton.Visible = false;            
-            this.ExecProgressBar.Visible = true;
+            ConvertButton.Enabled   = false;
+            SettingButton.Visible   = false;            
+            ExecProgressBar.Visible = true;
 
-            this.SaveSetting(_setting);
-            _setting.InputPath = this.InputPathTextBox.Text;
-            _setting.OutputPath = this.OutputPathTextBox.Text;
+            SaveSetting(_setting);
+            _setting.InputPath  = InputPathTextBox.Text;
+            _setting.OutputPath = OutputPathTextBox.Text;
 
-            this.ConvertBackgroundWorker.RunWorkerAsync();
+            ConvertBackgroundWorker.RunWorkerAsync();
         }
 
         /* ----------------------------------------------------------------- */
@@ -416,10 +416,10 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void ExitButton_Click(object sender, EventArgs e)
         {
-            if (_setting.DeleteOnClose && System.IO.File.Exists(_setting.InputPath)) System.IO.File.Delete(_setting.InputPath);
+            if (_setting.DeleteOnClose) System.IO.File.Delete(_setting.InputPath);
             _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.ExitButton_Click"));
-            this.ShowMessage();
-            this.Close();
+            ShowMessage();
+            Close();
         }
 
         /* ----------------------------------------------------------------- */
@@ -434,11 +434,11 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void SettingButton_Click(object sender, EventArgs e)
         {
-            this.SaveSetting(_setting);
-            _setting.SaveSetting = Parameter.SaveSettings.None; // 「設定を保存」の項目は、1.0.0RC4 以降使用しない
+            SaveSetting(_setting);
+            _setting.SaveSetting = Parameter.SaveSettings.None; // deprecated
             _setting.Save();
-            this.SettingButton.BackgroundImage = Properties.Resources.button_setting_disable;
-            this.SettingButton.Enabled = false;
+            SettingButton.BackgroundImage = Properties.Resources.button_setting_disable;
+            SettingButton.Enabled = false;
         }
 
         /* ----------------------------------------------------------------- */
@@ -453,28 +453,29 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void OutputPathButton_Click(object sender, EventArgs e)
         {
-            SaveFileDialog dialog = new SaveFileDialog();
+            var dialog = new SaveFileDialog();
             dialog.AddExtension = true;
-            dialog.FileName = (this.OutputPathTextBox.TextLength > 0) ?
-                System.IO.Path.GetFileNameWithoutExtension(this.OutputPathTextBox.Text) :
-                System.IO.Path.GetFileNameWithoutExtension(this.InputPathTextBox.Text);
+            dialog.FileName = !string.IsNullOrEmpty(OutputPathTextBox.Text) ?
+                System.IO.Path.GetFileNameWithoutExtension(OutputPathTextBox.Text) :
+                System.IO.Path.GetFileNameWithoutExtension(InputPathTextBox.Text);
             dialog.Filter = Properties.Resources.OutputPathFilter;
-            dialog.FilterIndex = this.FileTypeCombBox.SelectedIndex + 1;
+            dialog.FilterIndex = FileTypeCombBox.SelectedIndex + 1;
             dialog.OverwritePrompt = false;
             if (dialog.ShowDialog() != DialogResult.OK) return;
 
-            if (dialog.FilterIndex != 0 && dialog.FilterIndex - 1 != this.FileTypeCombBox.SelectedIndex)
+            if (dialog.FilterIndex != 0 && dialog.FilterIndex - 1 != FileTypeCombBox.SelectedIndex)
             {
-                this.FileTypeCombBox.SelectedIndex = dialog.FilterIndex - 1;
+                FileTypeCombBox.SelectedIndex = dialog.FilterIndex - 1;
             }
 
             // 拡張子が選択されているファイルタイプと異なる場合は、末尾に拡張子を追加する。
             // ただし、入力された拡張子がユーザのコンピュータに登録されている場合は、それを優先する。
-            string ext = System.IO.Path.GetExtension(this.OutputPathTextBox.Text);
-            string compared = Parameter.Extension(Translator.ToFileType(this.FileTypeCombBox.SelectedIndex));
-            this.OutputPathTextBox.Text = dialog.FileName;
-            if (ext != compared) OutputPathTextBox.Text += compared;
-            this.SettingChanged(sender, e);
+            var extension = System.IO.Path.GetExtension(OutputPathTextBox.Text);
+            var type = Translator.ToFileType(FileTypeCombBox.SelectedIndex);
+            var compared = Parameter.Extension(type);
+            OutputPathTextBox.Text = dialog.FileName;
+            if (extension != compared) OutputPathTextBox.Text += compared;
+            SettingChanged(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
@@ -494,15 +495,15 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void InputPathButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
+            var dialog = new OpenFileDialog();
             dialog.CheckFileExists = true;
             dialog.Filter = Properties.Resources.InputPathFilter;
-            if (this.InputPathTextBox.Text.Length > 0) dialog.FileName = this.InputPathTextBox.Text;
+            if (!string.IsNullOrEmpty(InputPathTextBox.Text)) dialog.FileName = InputPathTextBox.Text;
             if (dialog.ShowDialog() != DialogResult.OK) return;
 
-            this.InputPathTextBox.Text = dialog.FileName;
-            this.ConvertButton.Enabled = !string.IsNullOrEmpty(InputPathTextBox.Text);
-            this.SettingChanged(sender, e);
+            InputPathTextBox.Text = dialog.FileName;
+            ConvertButton.Enabled = !string.IsNullOrEmpty(InputPathTextBox.Text);
+            SettingChanged(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
@@ -521,14 +522,14 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void UserProgramButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
+            var dialog = new OpenFileDialog();
             dialog.CheckFileExists = true;
             dialog.Filter = Properties.Resources.UserProgramFilter;
-            if (this.UserProgramTextBox.Text.Length > 0) dialog.FileName = this.UserProgramTextBox.Text;
+            if (!string.IsNullOrEmpty(UserProgramTextBox.Text)) dialog.FileName = UserProgramTextBox.Text;
             if (dialog.ShowDialog() != DialogResult.OK) return;
 
-            this.UserProgramTextBox.Text = dialog.FileName;
-            this.SettingChanged(sender, e);
+            UserProgramTextBox.Text = dialog.FileName;
+            SettingChanged(sender, e);
         }
 
         #endregion
@@ -568,24 +569,24 @@ namespace CubePdf
             bool is_pdf = (id == Parameter.FileTypes.PDF);
             bool is_bitmap = (id == Parameter.FileTypes.BMP || id == Parameter.FileTypes.JPEG || id == Parameter.FileTypes.PNG || id == Parameter.FileTypes.TIFF);
             bool is_grayscale = !(id == Parameter.FileTypes.PS || id == Parameter.FileTypes.EPS || id == Parameter.FileTypes.SVG);
-            bool is_webopt = this.WebOptimizeCheckBox.Checked;
-            bool is_security = (this.RequiredUserPasswordCheckBox.Checked || this.OwnerPasswordCheckBox.Checked);
+            bool is_webopt = WebOptimizeCheckBox.Checked;
+            bool is_security = (RequiredUserPasswordCheckBox.Checked || OwnerPasswordCheckBox.Checked);
 
-            this.PdfVersionComboBox.Enabled = is_pdf;
-            this.ResolutionComboBox.Enabled = is_bitmap;
-            this.DocPanel.Enabled = is_pdf;
-            this.SecurityGroupBox.Enabled = is_pdf && !is_webopt;
-            this.EmbedFontCheckBox.Enabled = false; //!is_bitmap;
-            this.GrayscaleCheckBox.Enabled = is_grayscale;
-            this.ImageFilterCheckBox.Enabled = !is_bitmap;
-            this.WebOptimizeCheckBox.Enabled = is_pdf && !is_security;
+            PdfVersionComboBox.Enabled = is_pdf;
+            ResolutionComboBox.Enabled = is_bitmap;
+            DocPanel.Enabled = is_pdf;
+            SecurityGroupBox.Enabled = is_pdf && !is_webopt;
+            EmbedFontCheckBox.Enabled = false; //!is_bitmap;
+            GrayscaleCheckBox.Enabled = is_grayscale;
+            ImageFilterCheckBox.Enabled = !is_bitmap;
+            WebOptimizeCheckBox.Enabled = is_pdf && !is_security;
 
             // 出力パスの拡張子を変更後のファイルタイプに合わせる．
-            if (this.OutputPathTextBox.Text.Length > 0)
+            if (OutputPathTextBox.Text.Length > 0)
             {
-                this.OutputPathTextBox.Text = System.IO.Path.ChangeExtension(this.OutputPathTextBox.Text, Parameter.Extension(id));
+                OutputPathTextBox.Text = System.IO.Path.ChangeExtension(OutputPathTextBox.Text, Parameter.Extension(id));
             }
-            this.SettingChanged(sender, e);
+            SettingChanged(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
@@ -607,9 +608,9 @@ namespace CubePdf
             Parameter.PostProcesses id = Translator.ToPostProcess(control.SelectedIndex);
             bool is_user_program = (id == Parameter.PostProcesses.UserProgram);
 
-            this.UserProgramTextBox.Enabled = is_user_program;
-            this.UserProgramButton.Enabled = is_user_program;
-            this.SettingChanged(sender, e);
+            UserProgramTextBox.Enabled = is_user_program;
+            UserProgramButton.Enabled = is_user_program;
+            SettingChanged(sender, e);
         }
 
         #endregion
@@ -637,8 +638,8 @@ namespace CubePdf
             CheckBox control = sender as CheckBox;
             if (control == null) return;
 
-            this.SecurityGroupBox.Enabled = !control.Checked;
-            this.SettingChanged(sender, e);
+            SecurityGroupBox.Enabled = !control.Checked;
+            SettingChanged(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
@@ -662,9 +663,9 @@ namespace CubePdf
             CheckBox control = sender as CheckBox;
             if (control == null) return;
 
-            this.ConfirmOwnerPasswordTextBox.BackColor = control.Checked ? SystemColors.Window : SystemColors.Control;
-            this.SecurityPanel.Enabled = control.Checked;
-            this.WebOptimizeCheckBox.Enabled = !control.Checked;
+            ConfirmOwnerPasswordTextBox.BackColor = control.Checked ? SystemColors.Window : SystemColors.Control;
+            SecurityPanel.Enabled = control.Checked;
+            WebOptimizeCheckBox.Enabled = !control.Checked;
         }
 
         /* ----------------------------------------------------------------- */
@@ -682,8 +683,8 @@ namespace CubePdf
             var control = sender as CheckBox;
             if (control == null) return;
 
-            this.UserPasswordCheckBox.Enabled = control.Checked;
-            this.UserPasswordPanel.Enabled = (control.Checked & this.UserPasswordCheckBox.Checked);
+            UserPasswordCheckBox.Enabled = control.Checked;
+            UserPasswordPanel.Enabled = (control.Checked & UserPasswordCheckBox.Checked);
         }
 
         /* ----------------------------------------------------------------- */
@@ -703,7 +704,7 @@ namespace CubePdf
             CheckBox control = sender as CheckBox;
             if (control == null) return;
 
-            this.UserPasswordPanel.Enabled = control.Checked;
+            UserPasswordPanel.Enabled = control.Checked;
         }
 
         #endregion
@@ -742,7 +743,7 @@ namespace CubePdf
             Control control = sender as Control;
             if (control == null) return;
 
-            this.Cursor = Cursors.Hand;
+            Cursor = Cursors.Hand;
 
             _tips.Hide(control);
             _tips.ToolTipTitle = string.Empty;
@@ -765,7 +766,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void HeaderPictureBox_MouseLeave(object sender, EventArgs e)
         {
-            this.Cursor = Cursors.Default;
+            Cursor = Cursors.Default;
 
             var control = sender as Control;
             if (control == null) return;
@@ -951,8 +952,8 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void UserPasswordTextBox_TextChanged(object sender, EventArgs e)
         {
-            this.ConfirmUserPasswordTextBox.BackColor = SystemColors.Window;
-            if (this.ConfirmUserPasswordTextBox.Text.Length > 0) this.ConfirmUserPasswordTextBox.Text = "";
+            ConfirmUserPasswordTextBox.BackColor = SystemColors.Window;
+            if (ConfirmUserPasswordTextBox.Text.Length > 0) ConfirmUserPasswordTextBox.Text = "";
         }
 
         /* ----------------------------------------------------------------- */
@@ -980,7 +981,7 @@ namespace CubePdf
         {
             TextBox control = sender as TextBox;
             if (control == null) return;
-            if (control.Text.Length > 0 && this.UserPasswordTextBox.Text != control.Text)
+            if (control.Text.Length > 0 && UserPasswordTextBox.Text != control.Text)
             {
                 control.BackColor = Color.FromArgb(255, 102, 102);
             }
@@ -1000,8 +1001,8 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void OwnerPasswordTextBox_TextChanged(object sender, EventArgs e)
         {
-            this.ConfirmOwnerPasswordTextBox.BackColor = SystemColors.Window;
-            if (this.ConfirmOwnerPasswordTextBox.Text.Length > 0) this.ConfirmOwnerPasswordTextBox.Text = "";
+            ConfirmOwnerPasswordTextBox.BackColor = SystemColors.Window;
+            if (ConfirmOwnerPasswordTextBox.Text.Length > 0) ConfirmOwnerPasswordTextBox.Text = "";
         }
 
         /* ----------------------------------------------------------------- */
@@ -1029,7 +1030,7 @@ namespace CubePdf
         {
             TextBox control = sender as TextBox;
             if (control == null) return;
-            if (control.Text.Length > 0 && this.OwnerPasswordTextBox.Text != control.Text)
+            if (control.Text.Length > 0 && OwnerPasswordTextBox.Text != control.Text)
             {
                 control.BackColor = Color.FromArgb(255, 102, 102);
             }
@@ -1074,9 +1075,9 @@ namespace CubePdf
         private void ConvertBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             if (e.Result != null) _messages.AddRange((List<CubePdf.Message>)e.Result);
-            this.ShowMessage();
+            ShowMessage();
             if (_setting.DeleteOnClose && System.IO.File.Exists(_setting.InputPath)) System.IO.File.Delete(_setting.InputPath);
-            this.Close();
+            Close();
         }
 
         #endregion
