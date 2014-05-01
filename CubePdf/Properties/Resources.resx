@@ -136,9 +136,6 @@
   <data name="button_setting_disable" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\button_setting_disable.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Error" xml:space="preserve">
-    <value>エラー</value>
-  </data>
   <data name="FileExists" xml:space="preserve">
     <value>{0} は既に存在します。{1}しますか？</value>
   </data>
@@ -171,5 +168,11 @@
   </data>
   <data name="InvalidFilenameTitle" xml:space="preserve">
     <value>ファイル名には次の文字は使えません。</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>CubePDF エラー</value>
+  </data>
+  <data name="WarningTitle" xml:space="preserve">
+    <value>CubePDF 警告</value>
   </data>
 </root>

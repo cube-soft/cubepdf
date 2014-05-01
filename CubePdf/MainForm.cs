@@ -146,19 +146,13 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private bool CheckPassword(bool enabled, string password, string confirm)
         {
-            bool status = true;
-            if (enabled) status = (password == confirm);
-            if (!status)
+            if (enabled && password != confirm)
             {
-                MessageBox.Show(
-                    Properties.Resources.PasswordUnmatched,
-                    Properties.Resources.Error,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
-                this.MainTabControl.SelectedTab = this.SecurityTabPage;
+                ShowError(Properties.Resources.PasswordUnmatched);
+                MainTabControl.SelectedTab = SecurityTabPage;
+                return false;
             }
-            return status;
+            else return true;
         }
 
         /* ----------------------------------------------------------------- */
@@ -176,12 +170,7 @@ namespace CubePdf
         {
             if (this.OutputPathTextBox.Text.Length == 0)
             {
-                MessageBox.Show(
-                    Properties.Resources.FileNotSpecified,
-                    Properties.Resources.Error,
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
+                ShowError(Properties.Resources.FileNotSpecified);
                 return false;
             }
             else
@@ -438,7 +427,7 @@ namespace CubePdf
         {
             if (_setting.DeleteOnClose && System.IO.File.Exists(_setting.InputPath)) System.IO.File.Delete(_setting.InputPath);
             _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.ExitButton_Click"));
-            this.WriteMessage();
+            this.ShowMessage();
             this.Close();
         }
 
@@ -794,6 +783,26 @@ namespace CubePdf
 
         #endregion
 
+        #region Other event handlers
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// SettingChanged
+        ///
+        /// <summary>
+        /// ユーザによって各種設定が変更された時に実行されるイベントハンドラ
+        /// です。「設定を保存」ボタンが押下できるようになります。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void SettingChanged(object sender, EventArgs e)
+        {
+            SettingButton.BackgroundImage = Properties.Resources.button_setting;
+            SettingButton.Enabled = true;
+        }
+
+        #endregion
+
         /* ----------------------------------------------------------------- */
         /// テキストボックス上での出力パスに関する仕掛け
         /* ----------------------------------------------------------------- */
@@ -1074,18 +1083,56 @@ namespace CubePdf
         private void ConvertBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             if (e.Result != null) _messages.AddRange((List<CubePdf.Message>)e.Result);
-            this.WriteMessage();
+            this.ShowMessage();
             if (_setting.DeleteOnClose && System.IO.File.Exists(_setting.InputPath)) System.IO.File.Delete(_setting.InputPath);
             this.Close();
         }
 
         #endregion
 
-        #region Other methods
+        #region Methods about messages
 
         /* ----------------------------------------------------------------- */
         ///
-        /// WriteMessage
+        /// ShowError
+        /// 
+        /// <summary>
+        /// エラーメッセージを表示します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void ShowError(string message)
+        {
+            MessageBox.Show(
+                message,
+                Properties.Resources.ErrorTitle,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error
+            );
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ShowWarning
+        /// 
+        /// <summary>
+        /// 警告メッセージを表示します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void ShowWarning(string message)
+        {
+            MessageBox.Show(
+                message,
+                Properties.Resources.WarningTitle,
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning
+            );
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ShowMessage
         ///
         /// <summary>
         /// エラーメッセージの表示、およびログファイルへの書き込みを行います。
@@ -1097,7 +1144,7 @@ namespace CubePdf
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private void WriteMessage()
+        private void ShowMessage()
         {
             var error = string.Empty;
             var warn  = string.Empty;
@@ -1109,26 +1156,11 @@ namespace CubePdf
             }
 
             var iserror = !string.IsNullOrEmpty(error);
-            var descr   = iserror ? error : warn;
-            var title   = iserror ? "CubePDF エラー" : "CubePDF";
-            var icon    = iserror ? MessageBoxIcon.Error : MessageBoxIcon.Warning;
-            if (!string.IsNullOrEmpty(descr)) MessageBox.Show(descr, title, MessageBoxButtons.OK, icon);
-        }
+            var description = iserror ? error : warn;
+            if (string.IsNullOrEmpty(description)) return;
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// SettingChanged
-        ///
-        /// <summary>
-        /// ユーザによって各種設定が変更された時に実行されるイベントハンドラ
-        /// です。「設定を保存」ボタンが押下できるようになります。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void SettingChanged(object sender, EventArgs e)
-        {
-            this.SettingButton.BackgroundImage = Properties.Resources.button_setting;
-            this.SettingButton.Enabled = true;
+            if (iserror) ShowError(description);
+            else ShowWarning(description);
         }
 
         #endregion

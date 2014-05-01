@@ -219,13 +219,19 @@ namespace CubePdf
         /// <summary>
         /// デバッグ用メッセージを追加します。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// 現状では、関連付けされておらずファイルを開く事に失敗した場合、
+        /// エラーメッセージは表示させないようにしています。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
         private void AddMessage(Exception err)
         {
             var isopen  = (Verb == Parameter.PostProcesses.Open);
-            var message = isopen ? Properties.Resources.FileNotRelated : err.Message;
-            var level   = isopen ? Message.Levels.Warn : Message.Levels.Error;
+            var descr   = isopen ? Properties.Resources.FileNotRelated : err.Message;
+            var message = string.Format("{0}{1}({2})", descr, Environment.NewLine, Properties.Resources.AnnotWithPostProcess);
+            var level   = isopen ? Message.Levels.Debug : Message.Levels.Error;
             _messages.Add(new Message(level, message));
             _messages.Add(new Message(Message.Levels.Debug, err));
         }

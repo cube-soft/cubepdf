@@ -139,7 +139,7 @@ namespace CubePdf {
             EscapeIf(setting);
             var gs = Configure(setting, setting.InputPath, setting.OutputPath);
             gs.Run();
-            AddMessage("RunConverter: success");
+            AddMessage("CubePdf.Converter.RunConverter: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -156,7 +156,7 @@ namespace CubePdf {
             var gs = Configure(setting, src, dest);
             gs.AddOption("FastWebView");
             gs.Run();
-            AddMessage("RunWebOptimize: success");
+            AddMessage("CubePdf.Converter.RunWebOptimize: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -191,7 +191,7 @@ namespace CubePdf {
 
             var tmp = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
             editor.Run(tmp);
-            AddMessage(string.Format("PageBinder::Save: {0}", tmp));
+            AddMessage(string.Format("CubePdf.PageBinder.Save: {0}", tmp));
 
             if (setting.WebOptimize)
             {
@@ -201,7 +201,7 @@ namespace CubePdf {
             }
 
             if (System.IO.File.Exists(tmp)) CubePdf.Misc.File.Copy(tmp, setting.OutputPath, true);
-            AddMessage("RunEditor: success");
+            AddMessage("CubePdf.Converter.RunEditor: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -221,7 +221,7 @@ namespace CubePdf {
             process.UserProgram   = setting.UserProgram;
             process.UserArguments = setting.UserArguments;
             process.Run();
-            AddMessage("PostProcess: success");
+            AddMessage("CubePdf.Converter.RunPostProcess: success");
         }
 
         #endregion
