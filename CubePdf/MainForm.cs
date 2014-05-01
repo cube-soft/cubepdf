@@ -177,26 +177,20 @@ namespace CubePdf
                 return false;
             }
 
-            var ext = System.IO.Path.GetExtension(this.OutputPathTextBox.Text);
-            var compared = Parameter.Extension(Translator.ToFileType(this.FileTypeCombBox.SelectedIndex));
-            if (ext != compared) OutputPathTextBox.Text += compared;
+            var extension = System.IO.Path.GetExtension(OutputPathTextBox.Text);
+            var compared = Parameter.Extension(Translator.ToFileType(FileTypeCombBox.SelectedIndex));
+            if (extension != compared) OutputPathTextBox.Text += compared;
 
-            if (System.IO.File.Exists(this.OutputPathTextBox.Text) &&
+            if (System.IO.File.Exists(OutputPathTextBox.Text) &&
                 Translator.ToExistedFile(ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
             {
-                // {0} は既に存在します。{1}しますか？
-                string message = String.Format(Properties.Resources.FileExists,
-                    this.OutputPathTextBox.Text, Appearance.GetString((Parameter.ExistedFiles)do_existed_file));
-                if (MessageBox.Show(
-                        message,
-                        Properties.Resources.OverwritePrompt,
-                        MessageBoxButtons.OKCancel,
-                        MessageBoxIcon.Warning) == DialogResult.Cancel)
-                {
-                    return false;
-                }
+                var message = string.Format(Properties.Resources.FileExists, OutputPathTextBox.Text,
+                    Appearance.GetString((Parameter.ExistedFiles)do_existed_file));
+                var result = MessageBox.Show(message, Properties.Resources.OverwritePrompt,
+                    MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                return result != DialogResult.Cancel;
             }
-            return true;
+            else return true;
         }
 
         #endregion
@@ -218,42 +212,41 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void LoadSetting(UserSetting setting)
         {
-            this.UserProgramTextBox.Text = setting.UserProgram;
-            this.OutputPathTextBox.Text = setting.OutputPath;
-            this.InputPathTextBox.Text = setting.InputPath;
-            this.ConvertButton.Enabled = !string.IsNullOrEmpty(InputPathTextBox.Text);
+            UserProgramTextBox.Text = setting.UserProgram;
+            OutputPathTextBox.Text  = setting.OutputPath;
+            InputPathTextBox.Text   = setting.InputPath;
+            ConvertButton.Enabled   = !string.IsNullOrEmpty(InputPathTextBox.Text);
 
             // コンボボックスのインデックス関連
-            this.FileTypeCombBox.SelectedIndex = Translator.ToIndex(setting.FileType);
-            this.PdfVersionComboBox.SelectedIndex = Translator.ToIndex(setting.PDFVersion);
-            this.ResolutionComboBox.SelectedIndex = Translator.ToIndex(setting.Resolution);
-            this.ExistedFileComboBox.SelectedIndex = Translator.ToIndex(setting.ExistedFile);
-            this.DownSamplingComboBox.SelectedIndex = Translator.ToIndex(setting.DownSampling);
+            FileTypeCombBox.SelectedIndex      = Translator.ToIndex(setting.FileType);
+            PdfVersionComboBox.SelectedIndex   = Translator.ToIndex(setting.PDFVersion);
+            ResolutionComboBox.SelectedIndex   = Translator.ToIndex(setting.Resolution);
+            ExistedFileComboBox.SelectedIndex  = Translator.ToIndex(setting.ExistedFile);
+            DownSamplingComboBox.SelectedIndex = Translator.ToIndex(setting.DownSampling);
 
             // チェックボックスのフラグ関連
-            this.PageLotationCheckBox.Checked = setting.PageRotation;
-            this.EmbedFontCheckBox.Checked = setting.EmbedFont;
-            this.GrayscaleCheckBox.Checked = setting.Grayscale;
-            this.ImageFilterCheckBox.Checked = (setting.ImageFilter == Parameter.ImageFilters.DCTEncode) ? true : false;
-            this.WebOptimizeCheckBox.Checked = setting.WebOptimize;
-            this.UpdateCheckBox.Checked = setting.CheckUpdate;
+            PageLotationCheckBox.Checked = setting.PageRotation;
+            EmbedFontCheckBox.Checked    = setting.EmbedFont;
+            GrayscaleCheckBox.Checked    = setting.Grayscale;
+            ImageFilterCheckBox.Checked  = (setting.ImageFilter == Parameter.ImageFilters.DCTEncode) ? true : false;
+            WebOptimizeCheckBox.Checked  = setting.WebOptimize;
+            UpdateCheckBox.Checked       = setting.CheckUpdate;
 
             // ポストプロセス関連
-            _postproc = setting.AdvancedMode ? this.PostProcessComboBox : this.PostProcessLiteComboBox;
+            _postproc = setting.AdvancedMode ? PostProcessComboBox : PostProcessLiteComboBox;
             _postproc.SelectedIndex = Math.Min(Translator.ToIndex(setting.PostProcess), Math.Max(_postproc.Items.Count - 1, 0));
-            this.PostProcessPanel.Enabled = setting.AdvancedMode;
-            this.PostProcessPanel.Visible = setting.AdvancedMode;
-            this.PostProcessLabel.Visible = setting.AdvancedMode;
-            this.PostProcessLiteComboBox.Enabled = !setting.AdvancedMode;
-            this.PostProcessLiteComboBox.Visible = !setting.AdvancedMode;
-            this.PostProcessLiteLabel.Visible = !setting.AdvancedMode;
+            PostProcessPanel.Enabled = setting.AdvancedMode;
+            PostProcessPanel.Visible = setting.AdvancedMode;
+            PostProcessLabel.Visible = setting.AdvancedMode;
+            PostProcessLiteComboBox.Enabled = !setting.AdvancedMode;
+            PostProcessLiteComboBox.Visible = !setting.AdvancedMode;
+            PostProcessLiteLabel.Visible    = !setting.AdvancedMode;
 
             // 入力パスを選択可能にするかどうか
-            this.InputPathLabel.Visible = setting.SelectInputFile;
-            this.InputPathPanel.Visible = setting.SelectInputFile;
-            this.InputPathPanel.Enabled = setting.SelectInputFile && setting.InputPath.Length == 0;
+            InputPathLabel.Visible = setting.SelectInputFile;
+            InputPathPanel.Visible = setting.SelectInputFile;
+            InputPathPanel.Enabled = setting.SelectInputFile && setting.InputPath.Length == 0;
 
-            // ログ出力
             _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.LoadSetting"));
             _messages.Add(new Message(Message.Levels.Debug, setting.ToString()));
         }
@@ -269,50 +262,47 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void SaveSetting(UserSetting setting)
         {
-            string path = this.OutputPathTextBox.Text;
-            setting.OutputPath = (path.Length == 0 || System.IO.Directory.Exists(path)) ? path : System.IO.Path.GetDirectoryName(path);
-            path = this.InputPathTextBox.Text;
-            setting.InputPath = (path.Length == 0 || System.IO.Directory.Exists(path)) ? path : System.IO.Path.GetDirectoryName(path);
-            setting.UserProgram = this.UserProgramTextBox.Text;
+            setting.OutputPath  = GetDirectoryName(OutputPathTextBox.Text);
+            setting.InputPath   = GetDirectoryName(InputPathTextBox.Text);
+            setting.UserProgram = UserProgramTextBox.Text;
 
             // コンボボックスのインデックス関連
-            setting.FileType = Translator.ToFileType(this.FileTypeCombBox.SelectedIndex);
-            setting.PDFVersion = Translator.ToPdfVersion(this.PdfVersionComboBox.SelectedIndex);
-            setting.Resolution = Translator.ToResolution(this.ResolutionComboBox.SelectedIndex);
-            setting.ExistedFile = Translator.ToExistedFile(this.ExistedFileComboBox.SelectedIndex);
-            setting.PostProcess = Translator.ToPostProcess(_postproc.SelectedIndex);
-            setting.DownSampling = Translator.ToDownSampling(this.DownSamplingComboBox.SelectedIndex);
+            setting.FileType     = Translator.ToFileType(FileTypeCombBox.SelectedIndex);
+            setting.PDFVersion   = Translator.ToPdfVersion(PdfVersionComboBox.SelectedIndex);
+            setting.Resolution   = Translator.ToResolution(ResolutionComboBox.SelectedIndex);
+            setting.ExistedFile  = Translator.ToExistedFile(ExistedFileComboBox.SelectedIndex);
+            setting.PostProcess  = Translator.ToPostProcess(_postproc.SelectedIndex);
+            setting.DownSampling = Translator.ToDownSampling(DownSamplingComboBox.SelectedIndex);
 
             // チェックボックスのフラグ関連
-            setting.PageRotation = this.PageLotationCheckBox.Checked;
-            setting.EmbedFont = this.EmbedFontCheckBox.Checked;
-            setting.Grayscale = this.GrayscaleCheckBox.Checked;
-            setting.ImageFilter = this.ImageFilterCheckBox.Checked ? Parameter.ImageFilters.DCTEncode : Parameter.ImageFilters.FlateEncode;
-            setting.WebOptimize = this.WebOptimizeCheckBox.Checked;
-            setting.CheckUpdate = this.UpdateCheckBox.Checked;
+            setting.PageRotation = PageLotationCheckBox.Checked;
+            setting.EmbedFont    = EmbedFontCheckBox.Checked;
+            setting.Grayscale    = GrayscaleCheckBox.Checked;
+            setting.ImageFilter  = ImageFilterCheckBox.Checked ? Parameter.ImageFilters.DCTEncode : Parameter.ImageFilters.FlateEncode;
+            setting.WebOptimize  = WebOptimizeCheckBox.Checked;
+            setting.CheckUpdate  = UpdateCheckBox.Checked;
 
             // 文書プロパティ
-            setting.Document.Title = this.DocTitleTextBox.Text;
-            setting.Document.Author = this.DocAuthorTextBox.Text;
-            setting.Document.Subtitle = this.DocSubtitleTextBox.Text;
-            setting.Document.Keyword = this.DocKeywordTextBox.Text;
+            setting.Document.Title    = DocTitleTextBox.Text;
+            setting.Document.Author   = DocAuthorTextBox.Text;
+            setting.Document.Subtitle = DocSubtitleTextBox.Text;
+            setting.Document.Keyword  = DocKeywordTextBox.Text;
 
-            // パスワード
-            if (this.OwnerPasswordCheckBox.Checked)
+            // セキュリティ
+            if (OwnerPasswordCheckBox.Checked)
             {
-                setting.Permission.Password = String.Copy(this.OwnerPasswordTextBox.Text);
-                setting.Permission.AllowPrint = this.AllowPrintCheckBox.Checked;
-                setting.Permission.AllowCopy = this.AllowCopyCheckBox.Checked;
-                setting.Permission.AllowFormInput = this.AllowFormInputCheckBox.Checked;
-                setting.Permission.AllowModify = this.AllowModifyCheckBox.Checked;
+                setting.Permission.Password       = OwnerPasswordTextBox.Text;
+                setting.Permission.AllowPrint     = AllowPrintCheckBox.Checked;
+                setting.Permission.AllowCopy      = AllowCopyCheckBox.Checked;
+                setting.Permission.AllowFormInput = AllowFormInputCheckBox.Checked;
+                setting.Permission.AllowModify    = AllowModifyCheckBox.Checked;
 
-                if (this.RequiredUserPasswordCheckBox.Checked)
+                if (RequiredUserPasswordCheckBox.Checked)
                 {
-                    setting.Password = String.Copy(this.UserPasswordCheckBox.Checked ? this.UserPasswordTextBox.Text : this.OwnerPasswordTextBox.Text);
+                    setting.Password = UserPasswordCheckBox.Checked ? UserPasswordTextBox.Text : OwnerPasswordTextBox.Text;
                 }
             }
 
-            // ログ出力
             _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.SaveSetting"));
             _messages.Add(new Message(Message.Levels.Debug, setting.ToString()));
         }
@@ -329,7 +319,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void UpgradeSetting(UserSetting setting)
         {
-            string v1 = @"Software\CubePDF";
+            var v1 = @"Software\CubePDF";
             if (Microsoft.Win32.Registry.CurrentUser.OpenSubKey(v1, false) != null)
             {
                 setting.UpgradeFromV1(v1);
@@ -1162,6 +1152,25 @@ namespace CubePdf
 
             if (iserror) ShowError(description);
             else ShowWarning(description);
+        }
+
+        #endregion
+
+        #region Other methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// GetDirectoryName
+        ///
+        /// <summary>
+        /// パスからディレクトリ部分の名前を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private string GetDirectoryName(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return string.Empty;
+            return System.IO.Directory.Exists(path) ? path : System.IO.Path.GetDirectoryName(path);
         }
 
         #endregion
