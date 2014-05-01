@@ -50,7 +50,7 @@
             this.UserProgramButton = new System.Windows.Forms.Button();
             this.PostProcessComboBox = new System.Windows.Forms.ComboBox();
             this.ResolutionComboBox = new System.Windows.Forms.ComboBox();
-            this.PDFVersionComboBox = new System.Windows.Forms.ComboBox();
+            this.PdfVersionComboBox = new System.Windows.Forms.ComboBox();
             this.FileTypeCombBox = new System.Windows.Forms.ComboBox();
             this.InputPathLabel = new System.Windows.Forms.Label();
             this.PostProcessLabel = new System.Windows.Forms.Label();
@@ -220,7 +220,7 @@
             this.GeneralPanel.Controls.Add(this.OutputPathPanel);
             this.GeneralPanel.Controls.Add(this.PostProcessPanel);
             this.GeneralPanel.Controls.Add(this.ResolutionComboBox);
-            this.GeneralPanel.Controls.Add(this.PDFVersionComboBox);
+            this.GeneralPanel.Controls.Add(this.PdfVersionComboBox);
             this.GeneralPanel.Controls.Add(this.FileTypeCombBox);
             this.GeneralPanel.Controls.Add(this.InputPathLabel);
             this.GeneralPanel.Controls.Add(this.PostProcessLabel);
@@ -365,13 +365,13 @@
             // 
             // PDFVersionComboBox
             // 
-            this.PDFVersionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.PDFVersionComboBox.FormattingEnabled = true;
-            this.PDFVersionComboBox.Location = new System.Drawing.Point(120, 47);
-            this.PDFVersionComboBox.Name = "PDFVersionComboBox";
-            this.PDFVersionComboBox.Size = new System.Drawing.Size(316, 20);
-            this.PDFVersionComboBox.TabIndex = 8;
-            this.PDFVersionComboBox.SelectedIndexChanged += new System.EventHandler(this.SettingChanged);
+            this.PdfVersionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.PdfVersionComboBox.FormattingEnabled = true;
+            this.PdfVersionComboBox.Location = new System.Drawing.Point(120, 47);
+            this.PdfVersionComboBox.Name = "PDFVersionComboBox";
+            this.PdfVersionComboBox.Size = new System.Drawing.Size(316, 20);
+            this.PdfVersionComboBox.TabIndex = 8;
+            this.PdfVersionComboBox.SelectedIndexChanged += new System.EventHandler(this.SettingChanged);
             // 
             // FileTypeCombBox
             // 
@@ -1033,7 +1033,7 @@
         private System.Windows.Forms.Button UserProgramButton;
         private System.Windows.Forms.ComboBox PostProcessComboBox;
         private System.Windows.Forms.ComboBox ResolutionComboBox;
-        private System.Windows.Forms.ComboBox PDFVersionComboBox;
+        private System.Windows.Forms.ComboBox PdfVersionComboBox;
         private System.Windows.Forms.ComboBox FileTypeCombBox;
         private System.Windows.Forms.Label InputPathLabel;
         private System.Windows.Forms.Label PostProcessLabel;

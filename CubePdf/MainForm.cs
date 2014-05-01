@@ -52,86 +52,89 @@ namespace CubePdf
         public MainForm(UserSetting setting)
         {
             InitializeComponent();
-            InitializeComboAppearance();
+            InitializeComboBox();
 
-            this._setting = setting;
-            this.UpgradeSetting(_setting);
-            this.LoadSetting(_setting);
+            _setting = setting;
+            UpgradeSetting(_setting);
+            LoadSetting(_setting);
 
+            var name    = Properties.Resources.ProductName;
+            var version = _setting.Version;
             var edition = (IntPtr.Size == 4) ? "x86" : "x64";
-            this.Text = String.Format("CubePDF {0} ({1})", _setting.Version, edition);
+            Text = string.Format("{0} {1} ({2})", name, version, edition);
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// InitializeComboAppearance
+        /// InitializeComboBox
         /// 
         /// <summary>
         /// 各種コンボボックスに表示される文字列を初期化します。
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        private void InitializeComboAppearance()
+        private void InitializeComboBox()
         {
             // FileType
-            this.FileTypeCombBox.Items.Clear();
+            FileTypeCombBox.Items.Clear();
             foreach (Parameter.FileTypes id in Enum.GetValues(typeof(Parameter.FileTypes)))
             {
-                this.FileTypeCombBox.Items.Add(Appearance.FileTypeString(id));
+                FileTypeCombBox.Items.Add(Appearance.GetString(id));
             }
-            this.FileTypeCombBox.SelectedIndex = 0;
+            FileTypeCombBox.SelectedIndex = 0;
 
-            // PDFVersion
-            this.PDFVersionComboBox.Items.Clear();
+            // PDF Version
+            PdfVersionComboBox.Items.Clear();
             foreach (Parameter.PdfVersions id in Enum.GetValues(typeof(Parameter.PdfVersions)))
             {
-                string s = Appearance.PDFVersionString(id);
-                if (s.Length > 0) this.PDFVersionComboBox.Items.Add(s);
+                var str = Appearance.GetString(id);
+                if (string.IsNullOrEmpty(str)) continue;
+                PdfVersionComboBox.Items.Add(str);
             }
-            this.PDFVersionComboBox.SelectedIndex = 0;
+            PdfVersionComboBox.SelectedIndex = 0;
 
             // Resolution
-            this.ResolutionComboBox.Items.Clear();
+            ResolutionComboBox.Items.Clear();
             foreach (Parameter.Resolutions id in Enum.GetValues(typeof(Parameter.Resolutions)))
             {
-                this.ResolutionComboBox.Items.Add(Appearance.ResolutionString(id));
+                ResolutionComboBox.Items.Add(Appearance.GetString(id));
             }
-            this.ResolutionComboBox.SelectedIndex = 0;
+            ResolutionComboBox.SelectedIndex = 0;
 
             // ExistedFile
-            this.ExistedFileComboBox.Items.Clear();
+            ExistedFileComboBox.Items.Clear();
             foreach (Parameter.ExistedFiles id in Enum.GetValues(typeof(Parameter.ExistedFiles)))
             {
-                this.ExistedFileComboBox.Items.Add(Appearance.ExistedFileString(id));
+                ExistedFileComboBox.Items.Add(Appearance.GetString(id));
             }
-            this.ExistedFileComboBox.SelectedIndex = 0;
+            ExistedFileComboBox.SelectedIndex = 0;
 
             // PostProcess
-            this.PostProcessComboBox.Items.Clear();
+            PostProcessComboBox.Items.Clear();
             foreach (Parameter.PostProcesses id in Enum.GetValues(typeof(Parameter.PostProcesses)))
             {
-                this.PostProcessComboBox.Items.Add(Appearance.PostProcessString(id));
+                PostProcessComboBox.Items.Add(Appearance.GetString(id));
             }
-            this.PostProcessComboBox.SelectedIndex = 0;
+            PostProcessComboBox.SelectedIndex = 0;
 
             // Advance モードに設定されていない PostProcess
-            this.PostProcessLiteComboBox.Items.Clear();
-            this.PostProcessLiteComboBox.Items.Add(Appearance.PostProcessString(Parameter.PostProcesses.Open));
-            this.PostProcessLiteComboBox.Items.Add(Appearance.PostProcessString(Parameter.PostProcesses.None));
-            this.PostProcessLiteComboBox.SelectedIndex = 0;
+            PostProcessLiteComboBox.Items.Clear();
+            PostProcessLiteComboBox.Items.Add(Appearance.GetString(Parameter.PostProcesses.Open));
+            PostProcessLiteComboBox.Items.Add(Appearance.GetString(Parameter.PostProcesses.None));
+            PostProcessLiteComboBox.SelectedIndex = 0;
 
             // DownSampling
-            this.DownSamplingComboBox.Items.Clear();
+            DownSamplingComboBox.Items.Clear();
             foreach (Parameter.DownSamplings id in Enum.GetValues(typeof(Parameter.DownSamplings)))
             {
-                this.DownSamplingComboBox.Items.Add(Appearance.DownSamplingString(id));
+                DownSamplingComboBox.Items.Add(Appearance.GetString(id));
             }
-            this.DownSamplingComboBox.SelectedIndex = 0;
+            DownSamplingComboBox.SelectedIndex = 0;
         }
 
         #endregion
 
-        #region Checking methods when the convert button is pushed
+        #region Varlidation methods when the convert button is pushed
 
         /* ----------------------------------------------------------------- */
         ///
@@ -184,7 +187,7 @@ namespace CubePdf
                 {
                     // {0} は既に存在します。{1}しますか？
                     string message = String.Format(Properties.Resources.FileExists,
-                        this.OutputPathTextBox.Text, Appearance.ExistedFileString((Parameter.ExistedFiles)do_existed_file));
+                        this.OutputPathTextBox.Text, Appearance.GetString((Parameter.ExistedFiles)do_existed_file));
                     if (MessageBox.Show(
                             message,
                             Properties.Resources.OverwritePrompt,
@@ -224,7 +227,7 @@ namespace CubePdf
 
             // コンボボックスのインデックス関連
             this.FileTypeCombBox.SelectedIndex = Translator.FileTypeToIndex(setting.FileType);
-            this.PDFVersionComboBox.SelectedIndex = Translator.PDFVersionToIndex(setting.PDFVersion);
+            this.PdfVersionComboBox.SelectedIndex = Translator.PDFVersionToIndex(setting.PDFVersion);
             this.ResolutionComboBox.SelectedIndex = Translator.ResolutionToIndex(setting.Resolution);
             this.ExistedFileComboBox.SelectedIndex = Translator.ExistedFileToIndex(setting.ExistedFile);
             this.DownSamplingComboBox.SelectedIndex = Translator.DownSamplingToIndex(setting.DownSampling);
@@ -276,7 +279,7 @@ namespace CubePdf
 
             // コンボボックスのインデックス関連
             setting.FileType = Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex);
-            setting.PDFVersion = Translator.IndexToPDFVersion(this.PDFVersionComboBox.SelectedIndex);
+            setting.PDFVersion = Translator.IndexToPDFVersion(this.PdfVersionComboBox.SelectedIndex);
             setting.Resolution = Translator.IndexToResolution(this.ResolutionComboBox.SelectedIndex);
             setting.ExistedFile = Translator.IndexToExistedFile(this.ExistedFileComboBox.SelectedIndex);
             setting.PostProcess = Translator.IndexToPostProcess(_postproc.SelectedIndex);
@@ -467,7 +470,7 @@ namespace CubePdf
             dialog.FileName = (this.OutputPathTextBox.TextLength > 0) ?
                 System.IO.Path.GetFileNameWithoutExtension(this.OutputPathTextBox.Text) :
                 System.IO.Path.GetFileNameWithoutExtension(this.InputPathTextBox.Text);
-            dialog.Filter = Appearance.FileFilterString();
+            dialog.Filter = Properties.Resources.OutputPathFilter;
             dialog.FilterIndex = this.FileTypeCombBox.SelectedIndex + 1;
             dialog.OverwritePrompt = false;
             if (dialog.ShowDialog() != DialogResult.OK) return;
@@ -580,7 +583,7 @@ namespace CubePdf
             bool is_webopt = this.WebOptimizeCheckBox.Checked;
             bool is_security = (this.RequiredUserPasswordCheckBox.Checked || this.OwnerPasswordCheckBox.Checked);
 
-            this.PDFVersionComboBox.Enabled = is_pdf;
+            this.PdfVersionComboBox.Enabled = is_pdf;
             this.ResolutionComboBox.Enabled = is_bitmap;
             this.DocPanel.Enabled = is_pdf;
             this.SecurityGroupBox.Enabled = is_pdf && !is_webopt;
