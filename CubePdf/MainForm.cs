@@ -138,7 +138,7 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// CheckPassword
+        /// IsValidPassword
         ///
         /// <summary>
         /// パスワードのチェックを行います。パスワードダイアログと
@@ -147,7 +147,7 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private bool CheckPassword(bool enabled, string password, string confirm)
+        private bool IsValidPassword(bool enabled, string password, string confirm)
         {
             if (enabled && password != confirm)
             {
@@ -160,7 +160,7 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// CheckOutput
+        /// IsValidOutput
         /// 
         /// <summary>
         /// 出力先パスが正しいかどうかをチェックします。出力先パスが指定
@@ -169,33 +169,31 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private bool CheckOutput(int do_existed_file)
+        private bool IsValidOutput(int do_existed_file)
         {
-            if (this.OutputPathTextBox.Text.Length == 0)
+            if (string.IsNullOrEmpty(OutputPathTextBox.Text))
             {
                 ShowError(Properties.Resources.FileNotSpecified);
                 return false;
             }
-            else
-            {
-                var ext = System.IO.Path.GetExtension(this.OutputPathTextBox.Text);
-                var compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
-                if (ext != compared) OutputPathTextBox.Text += compared;
 
-                if (System.IO.File.Exists(this.OutputPathTextBox.Text) &&
-                    Translator.IndexToExistedFile(ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
+            var ext = System.IO.Path.GetExtension(this.OutputPathTextBox.Text);
+            var compared = Parameter.Extension(Translator.ToFileType(this.FileTypeCombBox.SelectedIndex));
+            if (ext != compared) OutputPathTextBox.Text += compared;
+
+            if (System.IO.File.Exists(this.OutputPathTextBox.Text) &&
+                Translator.ToExistedFile(ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
+            {
+                // {0} は既に存在します。{1}しますか？
+                string message = String.Format(Properties.Resources.FileExists,
+                    this.OutputPathTextBox.Text, Appearance.GetString((Parameter.ExistedFiles)do_existed_file));
+                if (MessageBox.Show(
+                        message,
+                        Properties.Resources.OverwritePrompt,
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Warning) == DialogResult.Cancel)
                 {
-                    // {0} は既に存在します。{1}しますか？
-                    string message = String.Format(Properties.Resources.FileExists,
-                        this.OutputPathTextBox.Text, Appearance.GetString((Parameter.ExistedFiles)do_existed_file));
-                    if (MessageBox.Show(
-                            message,
-                            Properties.Resources.OverwritePrompt,
-                            MessageBoxButtons.OKCancel,
-                            MessageBoxIcon.Warning) == DialogResult.Cancel)
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
             return true;
@@ -226,11 +224,11 @@ namespace CubePdf
             this.ConvertButton.Enabled = !string.IsNullOrEmpty(InputPathTextBox.Text);
 
             // コンボボックスのインデックス関連
-            this.FileTypeCombBox.SelectedIndex = Translator.FileTypeToIndex(setting.FileType);
-            this.PdfVersionComboBox.SelectedIndex = Translator.PDFVersionToIndex(setting.PDFVersion);
-            this.ResolutionComboBox.SelectedIndex = Translator.ResolutionToIndex(setting.Resolution);
-            this.ExistedFileComboBox.SelectedIndex = Translator.ExistedFileToIndex(setting.ExistedFile);
-            this.DownSamplingComboBox.SelectedIndex = Translator.DownSamplingToIndex(setting.DownSampling);
+            this.FileTypeCombBox.SelectedIndex = Translator.ToIndex(setting.FileType);
+            this.PdfVersionComboBox.SelectedIndex = Translator.ToIndex(setting.PDFVersion);
+            this.ResolutionComboBox.SelectedIndex = Translator.ToIndex(setting.Resolution);
+            this.ExistedFileComboBox.SelectedIndex = Translator.ToIndex(setting.ExistedFile);
+            this.DownSamplingComboBox.SelectedIndex = Translator.ToIndex(setting.DownSampling);
 
             // チェックボックスのフラグ関連
             this.PageLotationCheckBox.Checked = setting.PageRotation;
@@ -242,7 +240,7 @@ namespace CubePdf
 
             // ポストプロセス関連
             _postproc = setting.AdvancedMode ? this.PostProcessComboBox : this.PostProcessLiteComboBox;
-            _postproc.SelectedIndex = Math.Min(Translator.PostProcessToIndex(setting.PostProcess), Math.Max(_postproc.Items.Count - 1, 0));
+            _postproc.SelectedIndex = Math.Min(Translator.ToIndex(setting.PostProcess), Math.Max(_postproc.Items.Count - 1, 0));
             this.PostProcessPanel.Enabled = setting.AdvancedMode;
             this.PostProcessPanel.Visible = setting.AdvancedMode;
             this.PostProcessLabel.Visible = setting.AdvancedMode;
@@ -278,12 +276,12 @@ namespace CubePdf
             setting.UserProgram = this.UserProgramTextBox.Text;
 
             // コンボボックスのインデックス関連
-            setting.FileType = Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex);
-            setting.PDFVersion = Translator.IndexToPDFVersion(this.PdfVersionComboBox.SelectedIndex);
-            setting.Resolution = Translator.IndexToResolution(this.ResolutionComboBox.SelectedIndex);
-            setting.ExistedFile = Translator.IndexToExistedFile(this.ExistedFileComboBox.SelectedIndex);
-            setting.PostProcess = Translator.IndexToPostProcess(_postproc.SelectedIndex);
-            setting.DownSampling = Translator.IndexToDownSampling(this.DownSamplingComboBox.SelectedIndex);
+            setting.FileType = Translator.ToFileType(this.FileTypeCombBox.SelectedIndex);
+            setting.PDFVersion = Translator.ToPdfVersion(this.PdfVersionComboBox.SelectedIndex);
+            setting.Resolution = Translator.ToResolution(this.ResolutionComboBox.SelectedIndex);
+            setting.ExistedFile = Translator.ToExistedFile(this.ExistedFileComboBox.SelectedIndex);
+            setting.PostProcess = Translator.ToPostProcess(_postproc.SelectedIndex);
+            setting.DownSampling = Translator.ToDownSampling(this.DownSamplingComboBox.SelectedIndex);
 
             // チェックボックスのフラグ関連
             setting.PageRotation = this.PageLotationCheckBox.Checked;
@@ -398,9 +396,9 @@ namespace CubePdf
         private void ConvertButton_Click(object sender, EventArgs e)
         {
             // 各種チェック
-            if (!this.CheckPassword(this.OwnerPasswordCheckBox.Checked, this.OwnerPasswordTextBox.Text, this.ConfirmOwnerPasswordTextBox.Text)) return;
-            if (!this.CheckPassword(this.OwnerPasswordCheckBox.Checked & this.UserPasswordCheckBox.Checked, this.UserPasswordTextBox.Text, this.ConfirmUserPasswordTextBox.Text)) return;
-            if (!this.CheckOutput(this.ExistedFileComboBox.SelectedIndex)) return;
+            if (!this.IsValidPassword(this.OwnerPasswordCheckBox.Checked, this.OwnerPasswordTextBox.Text, this.ConfirmOwnerPasswordTextBox.Text)) return;
+            if (!this.IsValidPassword(this.OwnerPasswordCheckBox.Checked & this.UserPasswordCheckBox.Checked, this.UserPasswordTextBox.Text, this.ConfirmUserPasswordTextBox.Text)) return;
+            if (!this.IsValidOutput(this.ExistedFileComboBox.SelectedIndex)) return;
 
             // ライブラリが存在してるかどうかをログに記録。
             if (!System.IO.Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}: file not found", _setting.LibPath)));
@@ -483,7 +481,7 @@ namespace CubePdf
             // 拡張子が選択されているファイルタイプと異なる場合は、末尾に拡張子を追加する。
             // ただし、入力された拡張子がユーザのコンピュータに登録されている場合は、それを優先する。
             string ext = System.IO.Path.GetExtension(this.OutputPathTextBox.Text);
-            string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
+            string compared = Parameter.Extension(Translator.ToFileType(this.FileTypeCombBox.SelectedIndex));
             this.OutputPathTextBox.Text = dialog.FileName;
             if (ext != compared) OutputPathTextBox.Text += compared;
             this.SettingChanged(sender, e);
@@ -576,7 +574,7 @@ namespace CubePdf
             ComboBox control = sender as ComboBox;
             if (control == null) return;
 
-            Parameter.FileTypes id = Translator.IndexToFileType(control.SelectedIndex);
+            Parameter.FileTypes id = Translator.ToFileType(control.SelectedIndex);
             bool is_pdf = (id == Parameter.FileTypes.PDF);
             bool is_bitmap = (id == Parameter.FileTypes.BMP || id == Parameter.FileTypes.JPEG || id == Parameter.FileTypes.PNG || id == Parameter.FileTypes.TIFF);
             bool is_grayscale = !(id == Parameter.FileTypes.PS || id == Parameter.FileTypes.EPS || id == Parameter.FileTypes.SVG);
@@ -616,7 +614,7 @@ namespace CubePdf
             ComboBox control = sender as ComboBox;
             if (control == null) return;
 
-            Parameter.PostProcesses id = Translator.IndexToPostProcess(control.SelectedIndex);
+            Parameter.PostProcesses id = Translator.ToPostProcess(control.SelectedIndex);
             bool is_user_program = (id == Parameter.PostProcesses.UserProgram);
 
             this.UserProgramTextBox.Enabled = is_user_program;
