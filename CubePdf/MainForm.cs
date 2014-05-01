@@ -549,11 +549,10 @@ namespace CubePdf
         /// <remarks>
         /// ファイルタイプに依存するオプションは以下の通りです。
         /// 
-        /// PDF, PS, EPS, SVG: フォントの埋め込み
+        /// PDF, PS, EPS: フォントの埋め込み
         /// PDF: バージョン、 文書プロパティ、セキュリティ、Web 最適化
-        /// BMP, JPEG, PNG: 解像度
         /// 
-        /// 尚、Ghostscript のバグで現在のところ PS, EPS, SVG は
+        /// 尚、Ghostscript のバグで現在のところ PS, EPS は
         /// グレースケール設定ができないようです。また，フォント埋め込みを
         /// 無効にすると文字化けが発生するので、暫定的に強制無効設定にして
         /// います。
@@ -562,27 +561,24 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void FileTypeCombBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboBox control = sender as ComboBox;
+            var control = sender as ComboBox;
             if (control == null) return;
 
-            Parameter.FileTypes id = Translator.ToFileType(control.SelectedIndex);
-            bool is_pdf = (id == Parameter.FileTypes.PDF);
-            bool is_bitmap = (id == Parameter.FileTypes.BMP || id == Parameter.FileTypes.JPEG || id == Parameter.FileTypes.PNG || id == Parameter.FileTypes.TIFF);
-            bool is_grayscale = !(id == Parameter.FileTypes.PS || id == Parameter.FileTypes.EPS || id == Parameter.FileTypes.SVG);
-            bool is_webopt = WebOptimizeCheckBox.Checked;
-            bool is_security = (RequiredUserPasswordCheckBox.Checked || OwnerPasswordCheckBox.Checked);
+            var id = Translator.ToFileType(control.SelectedIndex);
+            var ispdf = (id == Parameter.FileTypes.PDF);
+            var isbmp = (id == Parameter.FileTypes.BMP || id == Parameter.FileTypes.JPEG || id == Parameter.FileTypes.PNG || id == Parameter.FileTypes.TIFF);
+            var isweb = WebOptimizeCheckBox.Checked;
+            var issecurity = (RequiredUserPasswordCheckBox.Checked || OwnerPasswordCheckBox.Checked);
 
-            PdfVersionComboBox.Enabled = is_pdf;
-            ResolutionComboBox.Enabled = is_bitmap;
-            DocPanel.Enabled = is_pdf;
-            SecurityGroupBox.Enabled = is_pdf && !is_webopt;
-            EmbedFontCheckBox.Enabled = false; //!is_bitmap;
-            GrayscaleCheckBox.Enabled = is_grayscale;
-            ImageFilterCheckBox.Enabled = !is_bitmap;
-            WebOptimizeCheckBox.Enabled = is_pdf && !is_security;
+            PdfVersionComboBox.Enabled  = ispdf;
+            DocPanel.Enabled            = ispdf;
+            SecurityGroupBox.Enabled    = ispdf && !isweb;
+            EmbedFontCheckBox.Enabled   = false; //!is_bitmap;
+            ImageFilterCheckBox.Enabled = !isbmp;
+            WebOptimizeCheckBox.Enabled = ispdf && !issecurity;
 
             // 出力パスの拡張子を変更後のファイルタイプに合わせる．
-            if (OutputPathTextBox.Text.Length > 0)
+            if (!string.IsNullOrEmpty(OutputPathTextBox.Text))
             {
                 OutputPathTextBox.Text = System.IO.Path.ChangeExtension(OutputPathTextBox.Text, Parameter.Extension(id));
             }
@@ -602,14 +598,14 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void PostProcessComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboBox control = sender as ComboBox;
+            var control = sender as ComboBox;
             if (control == null) return;
 
-            Parameter.PostProcesses id = Translator.ToPostProcess(control.SelectedIndex);
-            bool is_user_program = (id == Parameter.PostProcesses.UserProgram);
+            var id = Translator.ToPostProcess(control.SelectedIndex);
+            var isuser = (id == Parameter.PostProcesses.UserProgram);
 
-            UserProgramTextBox.Enabled = is_user_program;
-            UserProgramButton.Enabled = is_user_program;
+            UserProgramTextBox.Enabled = isuser;
+            UserProgramButton.Enabled  = isuser;
             SettingChanged(sender, e);
         }
 
