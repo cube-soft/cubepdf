@@ -245,8 +245,8 @@ namespace CubePdf {
             gs.PageRotation = setting.PageRotation;
             gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
 
-            ConfigureImageParameters(setting, gs);
-            if (Parameter.IsImageType(setting.FileType)) ConfigureImage(setting, gs);
+            ConfigureCommonImage(setting, gs);
+            if (Parameter.IsImageType(setting.FileType)) ConfigureBitmap(setting, gs);
             else ConfigureDocument(setting, gs);
 
             gs.AddSource(src);
@@ -257,7 +257,50 @@ namespace CubePdf {
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ConfigureImage
+        /// ConfigureCommonImage
+        ///
+        /// <summary>
+        /// 画像に関わるオプションを設定します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 全てのファイルタイプ共通の設定です。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void ConfigureCommonImage(UserSetting setting, Ghostscript.Converter gs)
+        {
+            gs.AddOption("ColorConversionStrategy", setting.Grayscale ? "/Gray" : "/RGB");
+            gs.AddOption("DownsampleColorImages", true);
+            gs.AddOption("DownsampleGrayImages",  true);
+            gs.AddOption("DownsampleMonoImages",  true);
+
+            // 解像度
+            var resolution = Parameter.ResolutionValue(setting.Resolution);
+            gs.AddOption("ColorImageResolution", resolution);
+            gs.AddOption("GrayImageResolution",  resolution);
+            gs.AddOption("MonoImageResolution",  resolution);
+
+            // 画像圧縮
+            gs.AddOption("AutoFilterColorImages", false);
+            gs.AddOption("AutoFilterGrayImages",  false);
+            gs.AddOption("AutoFilterMonoImages",  false);
+            gs.AddOption("ColorImageFilter", "/" + setting.ImageFilter.ToString());
+            gs.AddOption("GrayImageFilter",  "/" + setting.ImageFilter.ToString());
+            gs.AddOption("MonoImageFilter",  "/" + setting.ImageFilter.ToString());
+
+            // ダウンサンプリング
+            if (setting.DownSampling != Parameter.DownSamplings.None)
+            {
+                gs.AddOption("ColorImageDownsampleType", "/" + setting.DownSampling.ToString());
+                gs.AddOption("GrayImageDownsampleType",  "/" + setting.DownSampling.ToString());
+                gs.AddOption("MonoImageDownsampleType",  "/" + setting.DownSampling.ToString());
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ConfigureBitmap
         ///
         /// <summary>
         /// BMP, PNG, JPEG のビットマップ系ファイルに変換するために必要な
@@ -265,7 +308,7 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void ConfigureImage(UserSetting setting, Ghostscript.Converter gs) {
+        private void ConfigureBitmap(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("GraphicsAlphaBits", 4);
             gs.AddOption("TextAlphaBits", 4);
         }
@@ -275,8 +318,8 @@ namespace CubePdf {
         /// ConfigureDocument
         ///
         /// <summary>
-        /// PDF, PostScript, EPS のベクター系ファイルに変換するために必要な
-        /// オプションを設定します。
+        /// PDF, PostScript, EPS のファイルに変換するために必要なオプションを
+        /// 設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
@@ -350,43 +393,6 @@ namespace CubePdf {
             gs.AddOption("EmbedAllFonts", true);
             gs.AddOption("SubsetFonts", true);
             if (!setting.Grayscale) gs.AddOption("ColorConversionStrategy", "/CMYK");
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ConfigureImageParameters
-        ///
-        /// <summary>
-        /// 画像に関わるオプションを設定します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void ConfigureImageParameters(UserSetting setting, Ghostscript.Converter gs) {
-            gs.AddOption("ColorConversionStrategy", setting.Grayscale ? "/Gray" : "/RGB");
-            gs.AddOption("DownsampleColorImages", true);
-            gs.AddOption("DownsampleGrayImages",  true);
-            gs.AddOption("DownsampleMonoImages",  true);
-
-            // 解像度
-            var resolution = Parameter.ResolutionValue(setting.Resolution);
-            gs.AddOption("ColorImageResolution", resolution);
-            gs.AddOption("GrayImageResolution",  resolution);
-            gs.AddOption("MonoImageResolution",  resolution);
-
-            // 画像圧縮
-            gs.AddOption("AutoFilterColorImages", false);
-            gs.AddOption("AutoFilterGrayImages",  false);
-            gs.AddOption("AutoFilterMonoImages",  false);
-            gs.AddOption("ColorImageFilter", "/" + setting.ImageFilter.ToString());
-            gs.AddOption("GrayImageFilter",  "/" + setting.ImageFilter.ToString());
-            gs.AddOption("MonoImageFilter",  "/" + setting.ImageFilter.ToString());
-
-            // ダウンサンプリング
-            if (setting.DownSampling != Parameter.DownSamplings.None) {
-                gs.AddOption("ColorImageDownsampleType", "/" + setting.DownSampling.ToString());
-                gs.AddOption("GrayImageDownsampleType",  "/" + setting.DownSampling.ToString());
-                gs.AddOption("MonoImageDownsampleType",  "/" + setting.DownSampling.ToString());
-            }
         }
 
         #endregion
