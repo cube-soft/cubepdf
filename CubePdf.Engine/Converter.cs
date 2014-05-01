@@ -281,11 +281,9 @@ namespace CubePdf {
         ///
         /* ----------------------------------------------------------------- */
         private void ConfigureDocument(UserSetting setting, Ghostscript.Converter gs) {
+            gs.AddOption("EmbedAllFonts", setting.EmbedFont);
+            if (setting.EmbedFont) gs.AddOption("SubsetFonts", true);
             if (setting.FileType == Parameter.FileTypes.PDF) ConfigurePdf(setting, gs);
-            else {
-                gs.AddOption("EmbedAllFonts", setting.EmbedFont);
-                if (setting.EmbedFont) gs.AddOption("SubsetFonts", true);
-            }
         }
 
         /* ----------------------------------------------------------------- */
@@ -300,18 +298,8 @@ namespace CubePdf {
         private void ConfigurePdf(UserSetting setting, Ghostscript.Converter gs) {
             gs.AddOption("CompatibilityLevel", Parameter.PdfVersionValue(setting.PDFVersion));
             gs.AddOption("UseFlateCompression", true);
-
             if (setting.PDFVersion == Parameter.PdfVersions.VerPDFA) ConfigurePdfA(setting, gs);
-            else if (setting.PDFVersion == Parameter.PdfVersions.VerPDFX) ConfigurePdfX(setting, gs);
-            else {
-                gs.AddOption("EmbedAllFonts", setting.EmbedFont);
-                if (setting.EmbedFont) gs.AddOption("SubsetFonts", true);
-
-                if (setting.Grayscale) {
-                    gs.AddOption("ProcessColorModel", "/DeviceGray");
-                    gs.AddOption("ColorConversionStrategy", "/Gray");
-                }
-            }
+            if (setting.PDFVersion == Parameter.PdfVersions.VerPDFX) ConfigurePdfX(setting, gs);
         }
 
         /* ----------------------------------------------------------------- */
@@ -339,11 +327,6 @@ namespace CubePdf {
             gs.AddOption("PDFA");
             gs.AddOption("EmbedAllFonts", true);
             gs.AddOption("SubsetFonts", true);
-            if (setting.Grayscale) {
-                gs.AddOption("ProcessColorModel", "/DeviceGray");
-                gs.AddOption("ColorConversionStrategy", "/Gray");
-            }
-            gs.AddOption("UseCIEColor");
         }
 
         /* ----------------------------------------------------------------- */
@@ -366,15 +349,7 @@ namespace CubePdf {
             gs.AddOption("PDFX");
             gs.AddOption("EmbedAllFonts", true);
             gs.AddOption("SubsetFonts", true);
-            if (setting.Grayscale) {
-                gs.AddOption("ProcessColorModel", "/DeviceGray");
-                gs.AddOption("ColorConversionStrategy", "/Gray");
-            }
-            else {
-                gs.AddOption("ProcessColorModel", "/DeviceCMYK");
-                gs.AddOption("ColorConversionStrategy", "/CMYK");
-            }
-            gs.AddOption("UseCIEColor");
+            if (!setting.Grayscale) gs.AddOption("ColorConversionStrategy", "/CMYK");
         }
 
         /* ----------------------------------------------------------------- */
@@ -387,11 +362,16 @@ namespace CubePdf {
         ///
         /* ----------------------------------------------------------------- */
         private void ConfigureImageParameters(UserSetting setting, Ghostscript.Converter gs) {
+            gs.AddOption("ColorConversionStrategy", setting.Grayscale ? "/Gray" : "/RGB");
+            gs.AddOption("DownsampleColorImages", true);
+            gs.AddOption("DownsampleGrayImages",  true);
+            gs.AddOption("DownsampleMonoImages",  true);
+
             // 解像度
             var resolution = Parameter.ResolutionValue(setting.Resolution);
             gs.AddOption("ColorImageResolution", resolution);
-            gs.AddOption("GrayImageResolution", resolution);
-            gs.AddOption("MonoImageResolution", (resolution < 300) ? 300 : 1200);
+            gs.AddOption("GrayImageResolution",  resolution);
+            gs.AddOption("MonoImageResolution",  resolution);
 
             // 画像圧縮
             gs.AddOption("AutoFilterColorImages", false);
@@ -402,18 +382,10 @@ namespace CubePdf {
             gs.AddOption("MonoImageFilter",  "/" + setting.ImageFilter.ToString());
 
             // ダウンサンプリング
-            if (setting.DownSampling == Parameter.DownSamplings.None) {
-                gs.AddOption("DownsampleColorImages", false);
-                gs.AddOption("DownsampleGrayImages",  false);
-                gs.AddOption("DownsampleMonoImages",  false);
-            }
-            else {
-                gs.AddOption("DownsampleColorImages", true);
-                gs.AddOption("DownsampleGrayImages",  true);
-                gs.AddOption("DownsampleMonoImages",  true);
+            if (setting.DownSampling != Parameter.DownSamplings.None) {
                 gs.AddOption("ColorImageDownsampleType", "/" + setting.DownSampling.ToString());
                 gs.AddOption("GrayImageDownsampleType",  "/" + setting.DownSampling.ToString());
-                gs.AddOption("MonoImageDownsampleType", "/" + setting.DownSampling.ToString());
+                gs.AddOption("MonoImageDownsampleType",  "/" + setting.DownSampling.ToString());
             }
         }
 

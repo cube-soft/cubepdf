@@ -178,20 +178,33 @@ namespace CubePdf
         ///
         /* ----------------------------------------------------------------- */
         [TestCase(Parameter.Resolutions.Resolution600, Parameter.DownSamplings.None,      Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution300, Parameter.DownSamplings.None,      Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution150, Parameter.DownSamplings.None,      Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution72,  Parameter.DownSamplings.None,      Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution600, Parameter.DownSamplings.Bicubic,   Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution300, Parameter.DownSamplings.Bicubic,   Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution150, Parameter.DownSamplings.Bicubic,   Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution72,  Parameter.DownSamplings.Bicubic,   Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution600, Parameter.DownSamplings.Subsample, Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution300, Parameter.DownSamplings.Subsample, Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution150, Parameter.DownSamplings.Subsample, Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution72,  Parameter.DownSamplings.Subsample, Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution600, Parameter.DownSamplings.Average,   Parameter.ImageFilters.FlateEncode)]
         [TestCase(Parameter.Resolutions.Resolution300, Parameter.DownSamplings.Average,   Parameter.ImageFilters.FlateEncode)]
-        [TestCase(Parameter.Resolutions.Resolution150, Parameter.DownSamplings.Bicubic,   Parameter.ImageFilters.DCTEncode)]
-        [TestCase(Parameter.Resolutions.Resolution72,  Parameter.DownSamplings.Subsample, Parameter.ImageFilters.DCTEncode)]
+        [TestCase(Parameter.Resolutions.Resolution150, Parameter.DownSamplings.Average,   Parameter.ImageFilters.FlateEncode)]
+        [TestCase(Parameter.Resolutions.Resolution72,  Parameter.DownSamplings.Average,   Parameter.ImageFilters.FlateEncode)]
         public void TestRunAsPdfWithImageParameters(
             Parameter.Resolutions   resolution,
             Parameter.DownSamplings downsampling,
             Parameter.ImageFilters  filter)
         {
             var setting = CreateSetting();
+            setting.InputPath = System.IO.Path.Combine(_examples, "cubepdf-manual.ps");
             setting.Resolution = resolution;
             setting.DownSampling = downsampling;
             setting.ImageFilter = filter;
 
-            var suffix = string.Format("-{0}-{1}-{2}", resolution, downsampling, filter);
+            var suffix = string.Format("-{0}-{1}-{2}", downsampling, filter, resolution);
             AssertRun(setting, suffix);
         }
 
