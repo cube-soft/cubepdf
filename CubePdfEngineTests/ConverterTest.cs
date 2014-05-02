@@ -116,7 +116,7 @@ namespace CubePdf
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestRunAsPdfWithDocumentAndSecurity()
+        public void TestPdfWithDocumentAndSecurity()
         {
             var setting = CreateSetting();
             setting.InputPath = System.IO.Path.Combine(_examples, "example-min.ps");
@@ -148,7 +148,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         [TestCase(Parameter.ExistedFiles.MergeHead)]
         [TestCase(Parameter.ExistedFiles.MergeTail)]
-        public void TestRunAsPdfWithMerge(Parameter.ExistedFiles merge)
+        public void TestPdfWithMerge(Parameter.ExistedFiles merge)
         {
             var src  = System.IO.Path.Combine(_examples, "example-min.ps");
             var copy = System.IO.Path.Combine(_results, "merge.ps");
@@ -174,19 +174,19 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        [TestCase(Parameter.PdfVersions.Ver1_4,  false, true)]
-        [TestCase(Parameter.PdfVersions.Ver1_3,  false, false)]
-        [TestCase(Parameter.PdfVersions.Ver1_2,  true,  true)]
-        [TestCase(Parameter.PdfVersions.VerPDFA, false, true)]
-        [TestCase(Parameter.PdfVersions.VerPDFX, false, true)]
-        public void TestRunAsPdfWithCommonParameters(Parameter.PdfVersions pdfver, bool webopt, bool embed)
+        [TestCase(Parameter.PdfVersions.Ver1_4,  Parameter.Orientations.Landscape, false, true)]
+        [TestCase(Parameter.PdfVersions.Ver1_3,  Parameter.Orientations.Portrait,  false, false)]
+        [TestCase(Parameter.PdfVersions.Ver1_2,  Parameter.Orientations.Auto,      true,  true)]
+        [TestCase(Parameter.PdfVersions.VerPDFA, Parameter.Orientations.Auto,      false, true)]
+        [TestCase(Parameter.PdfVersions.VerPDFX, Parameter.Orientations.Auto,      false, true)]
+        public void TestPdfWithCommonParameters(Parameter.PdfVersions pdfver, Parameter.Orientations orient, bool webopt, bool embed)
         {
             var setting = CreateSetting();
             setting.PDFVersion = pdfver;
             setting.WebOptimize = webopt;
             setting.EmbedFont = embed;
 
-            var suffix = string.Format("-{0}", pdfver);
+            var suffix = string.Format("-{0}-{1}", pdfver, orient);
             if (webopt)   suffix += "-webopt";
             if (!embed)   suffix += "-noembed";
             AssertRun(setting, suffix);
@@ -206,7 +206,7 @@ namespace CubePdf
         [TestCase(Parameter.Resolutions.Resolution150, Parameter.DownSamplings.Subsample, Parameter.ImageFilters.FlateEncode)]
         [TestCase(Parameter.Resolutions.Resolution72,  Parameter.DownSamplings.Average,   Parameter.ImageFilters.FlateEncode)]
         [TestCase(Parameter.Resolutions.Resolution300, Parameter.DownSamplings.Average,   Parameter.ImageFilters.DCTEncode)]
-        public void TestRunAsPdfWithImageParameters(
+        public void TestPdfWithImageParameters(
             Parameter.Resolutions   resolution,
             Parameter.DownSamplings downsampling,
             Parameter.ImageFilters  filter)
@@ -236,7 +236,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         [TestCase("file with spaces.ps")]
         [TestCase("日本語のファイル.ps")]
-        public void TestRunAsPdfWithFilename(string filename)
+        public void TestPdfWithFilename(string filename)
         {
             var src  = System.IO.Path.Combine(_examples, "example-min.ps");
             var dest = System.IO.Path.Combine(_results, filename);
