@@ -483,10 +483,12 @@ namespace CubePdf.Ghostscript
             // Add output
             args.Add(string.Format("-sOutputFile={0}", dest));
 
-            args.Add("-c");
-
             // Add orientation
-            args.Add(string.Format("<</Orientation {0}>> setpagedevice", _orientation));
+            if (!_rotate)
+            {
+                args.Add("-c");
+                args.Add(string.Format("<</Orientation {0}>> setpagedevice", _orientation));
+            }
 
             // Add input (source filename) and output (destination filename)
             args.Add("-f");
