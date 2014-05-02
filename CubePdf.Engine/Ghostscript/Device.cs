@@ -36,7 +36,6 @@ namespace CubePdf.Ghostscript {
         PS,
         EPS,
         PDF,
-        SVG,
         JPEG,
         JPEG_Gray,
         PNG,
@@ -84,7 +83,6 @@ namespace CubePdf.Ghostscript {
                 case Devices.PS: return "-sDEVICE=ps2write";
                 case Devices.EPS: return "-sDEVICE=eps2write";
                 case Devices.PDF: return "-sDEVICE=pdfwrite";
-                case Devices.SVG: return "-sDEVICE=svg";
                 case Devices.JPEG: return "-sDEVICE=jpeg";
                 case Devices.JPEG_Gray: return "-sDEVICE=jpeggray";
                 case Devices.PNG: return "-sDEVICE=png16m";

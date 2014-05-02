@@ -44,7 +44,7 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         public enum FileTypes : int
         {
-            PDF, PS, EPS, SVG, PNG, JPEG, BMP, TIFF,
+            PDF, PS, EPS, PNG, JPEG, BMP, TIFF,
         };
 
         /* ----------------------------------------------------------------- */
@@ -206,7 +206,6 @@ namespace CubePdf {
             case FileTypes.JPEG: return "JPEG";
             case FileTypes.BMP: return "BMP";
             case FileTypes.TIFF: return "TIFF";
-            case FileTypes.SVG: return "SVG";
             default: break;
             }
             return "";
@@ -230,7 +229,6 @@ namespace CubePdf {
             case FileTypes.JPEG: return ".jpg";
             case FileTypes.BMP:  return ".bmp";
             case FileTypes.TIFF: return ".tiff";
-            case FileTypes.SVG:  return ".svg";
             default: break;
             }
             return "";
@@ -304,7 +302,6 @@ namespace CubePdf {
             case FileTypes.JPEG: return grayscale ? Ghostscript.Devices.JPEG_Gray : Ghostscript.Devices.JPEG;
             case FileTypes.BMP:  return grayscale ? Ghostscript.Devices.BMP_Gray : Ghostscript.Devices.BMP;
             case FileTypes.TIFF: return grayscale ? Ghostscript.Devices.TIFF_Gray : Ghostscript.Devices.TIFF;
-            case FileTypes.SVG:  return Ghostscript.Devices.SVG;
             default:
                 break;
             }
