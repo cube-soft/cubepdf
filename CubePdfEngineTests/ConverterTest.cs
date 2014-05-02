@@ -135,7 +135,33 @@ namespace CubePdf
 
             var suffix = string.Format("-{0}-{1}", setting.Permission.Password, setting.Password);
             AssertRun(setting, suffix);
-            setting.ExistedFile = Parameter.ExistedFiles.MergeTail;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestRunAsPdfWithMerge
+        /// 
+        /// <summary>
+        /// PDF の結合テストを行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [TestCase(Parameter.ExistedFiles.MergeHead)]
+        [TestCase(Parameter.ExistedFiles.MergeTail)]
+        public void TestRunAsPdfWithMerge(Parameter.ExistedFiles merge)
+        {
+            var src  = System.IO.Path.Combine(_examples, "example-min.ps");
+            var copy = System.IO.Path.Combine(_results, "merge.ps");
+            System.IO.File.Copy(src, copy, true);
+
+            var setting = CreateSetting();
+            setting.InputPath = copy;
+            var suffix = string.Format("-{0}", merge);
+            AssertRun(setting, suffix);
+
+            src = System.IO.Path.Combine(_examples, "example.ps");
+            System.IO.File.Copy(src, copy, true);
+            setting.ExistedFile = merge;
             AssertRun(setting, suffix);
         }
 
