@@ -46,26 +46,20 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestCreateFilename()
+        [TestCase("sample.txt",                               "sample.txt")]
+        [TestCase("日本語.txt",                               "日本語.txt")]
+        [TestCase("Microsoft Word 2010 - sample.doc",         "sample.doc")]
+        [TestCase("芸能界構わない.doc - Microsoft Word 2020", "芸能界構わない.doc")]
+        [TestCase("無題 - メモ帳",                            "無題 - メモ帳")]
+        [TestCase("C:\\folder\\to\\sample.txt",               "sample.txt")]
+        [TestCase("http://example.com/index.html",            "http___example.com_index.html")]
+        [TestCase("<foo?bar:bas|hoge*>",                      "_foo_bar_bas_hoge__")]
+        [TestCase("",                                         "CubePDF")]
+        [TestCase(null,                                       "CubePDF")]
+        public void TestCreateFilename(string src, string expected)
         {
-            try
-            {
-                Assert.AreEqual("sample.txt", DocumentName.CreateFileName("sample.txt"));
-                Assert.AreEqual("日本語.txt", DocumentName.CreateFileName("日本語.txt"));
-                Assert.AreEqual("sample.doc", DocumentName.CreateFileName("Microsoft Word 2010 - sample.doc"));
-                Assert.AreEqual("芸能界構わない.doc", DocumentName.CreateFileName("芸能界構わない.doc - Microsoft Word 2020"));
-                Assert.AreEqual("無題 - メモ帳", DocumentName.CreateFileName("無題 - メモ帳"));
-                Assert.AreEqual("C__folder_to_sample.txt", DocumentName.CreateFileName(@"C:\folder\to\sample.txt"));
-                Assert.AreEqual("http___example.com_index.html", DocumentName.CreateFileName(@"http://example.com/index.html"));
-                Assert.AreEqual("_foo_bar_bas_hoge__", DocumentName.CreateFileName("<foo?bar:bas|hoge*>"));
-                Assert.AreEqual("CubePDF", DocumentName.CreateFileName(string.Empty));
-                Assert.AreEqual("CubePDF", DocumentName.CreateFileName(null));
-            }
-            catch (Exception err)
-            {
-                Assert.Fail(err.ToString());
-            }
+            try { Assert.AreEqual(expected, DocumentName.CreateFileName(src)); }
+            catch (Exception err) { Assert.Fail(err.ToString()); }
         }
     }
 }
