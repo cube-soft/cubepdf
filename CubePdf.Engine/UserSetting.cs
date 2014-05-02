@@ -1070,7 +1070,7 @@ namespace CubePdf
                 string type = (string)subkey.GetValue(_RegFileType, "");
                 foreach (Parameter.FileTypes id in Enum.GetValues(typeof(Parameter.FileTypes)))
                 {
-                    if (Parameter.FileTypeValue(id) == type)
+                    if (Parameter.ToValue(id) == type)
                     {
                         _type = id;
                         break;
@@ -1080,7 +1080,7 @@ namespace CubePdf
                 string pdfver = (string)subkey.GetValue(_RegPdfVersion, "");
                 foreach (Parameter.PdfVersions id in Enum.GetValues(typeof(Parameter.PdfVersions)))
                 {
-                    if (Parameter.PdfVersionValue(id).ToString() == pdfver)
+                    if (Parameter.ToValue(id).ToString() == pdfver)
                     {
                         _pdfver = id;
                         break;
@@ -1090,7 +1090,7 @@ namespace CubePdf
                 string resolution = (string)subkey.GetValue(_RegResolution, "");
                 foreach (Parameter.Resolutions id in Enum.GetValues(typeof(Parameter.Resolutions)))
                 {
-                    if (Parameter.ResolutionValue(id).ToString() == resolution)
+                    if (Parameter.ToValue(id).ToString() == resolution)
                     {
                         _resolution = id;
                         break;

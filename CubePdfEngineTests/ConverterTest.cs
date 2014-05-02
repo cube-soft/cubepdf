@@ -360,7 +360,7 @@ namespace CubePdf
         private void AssertRun(UserSetting setting, string suffix)
         {
             var basename = System.IO.Path.GetFileNameWithoutExtension(setting.InputPath);
-            var extension = Parameter.Extension((Parameter.FileTypes)setting.FileType);
+            var extension = Parameter.GetExtension((Parameter.FileTypes)setting.FileType);
 
             setting.LibPath = System.IO.Path.Combine(_root, "Ghostscript");
             setting.OutputPath = System.IO.Path.Combine(_results, basename + suffix + extension);

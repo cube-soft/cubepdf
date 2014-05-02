@@ -155,6 +155,83 @@ namespace CubePdf {
 
         #endregion
 
+        #region Translating methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ToValue
+        ///
+        /// <summary>
+        /// それぞれのファイル形式に対応する文字列を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public static string ToValue(FileTypes id)
+        {
+            switch (id)
+            {
+                case FileTypes.PDF: return "PDF";
+                case FileTypes.PS: return "PS";
+                case FileTypes.EPS: return "EPS";
+                case FileTypes.PNG: return "PNG";
+                case FileTypes.JPEG: return "JPEG";
+                case FileTypes.BMP: return "BMP";
+                case FileTypes.TIFF: return "TIFF";
+                default: break;
+            }
+            return "";
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ToValue
+        ///
+        /// <summary>
+        /// PdfVersions 列挙型の各値に対応する実際の数値を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public static double ToValue(PdfVersions id)
+        {
+            switch (id)
+            {
+                case PdfVersions.Ver1_7: return 1.7;
+                case PdfVersions.Ver1_6: return 1.6;
+                case PdfVersions.Ver1_5: return 1.5;
+                case PdfVersions.Ver1_4: return 1.4;
+                case PdfVersions.Ver1_3: return 1.3;
+                case PdfVersions.Ver1_2: return 1.2;
+                case PdfVersions.VerPDFA: return 1.3;
+                case PdfVersions.VerPDFX: return 1.3;
+            }
+            return 1.7;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ToValue
+        /// 
+        /// <summary>
+        /// Resolutions 列挙型の各値に対応する実際の数値を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public static int ToValue(Resolutions id)
+        {
+            switch (id)
+            {
+                case Resolutions.Resolution72: return 72;
+                case Resolutions.Resolution150: return 150;
+                case Resolutions.Resolution300: return 300;
+                case Resolutions.Resolution450: return 450;
+                case Resolutions.Resolution600: return 600;
+                default: break;
+            }
+            return 300;
+        }
+
+        #endregion
+
         #region Checking methods
 
         /* ----------------------------------------------------------------- */
@@ -186,105 +263,36 @@ namespace CubePdf {
 
         #endregion
 
-        #region Translation methods
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// FileTypeValue
-        ///
-        /// <summary>
-        /// それぞれのファイル形式に対応する文字列を取得します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static string FileTypeValue(FileTypes id) {
-            switch (id) {
-            case FileTypes.PDF: return "PDF";
-            case FileTypes.PS: return "PS";
-            case FileTypes.EPS: return "EPS";
-            case FileTypes.PNG: return "PNG";
-            case FileTypes.JPEG: return "JPEG";
-            case FileTypes.BMP: return "BMP";
-            case FileTypes.TIFF: return "TIFF";
-            default: break;
-            }
-            return "";
-        }
+        #region Getting methods
 
         /* ----------------------------------------------------------------- */
         ///
         /// Extension
         ///
         /// <summary>
-        /// それぞれのファイル形式の拡張子を取得します。
+        /// ファイル形式に対応する拡張子を取得します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static string Extension(FileTypes id) {
-            switch (id) {
-            case FileTypes.PDF:  return ".pdf";
-            case FileTypes.PS:   return ".ps";
-            case FileTypes.EPS:  return ".eps";
-            case FileTypes.PNG:  return ".png";
-            case FileTypes.JPEG: return ".jpg";
-            case FileTypes.BMP:  return ".bmp";
-            case FileTypes.TIFF: return ".tiff";
-            default: break;
+        public static string GetExtension(FileTypes id)
+        {
+            switch (id)
+            {
+                case FileTypes.PDF: return ".pdf";
+                case FileTypes.PS: return ".ps";
+                case FileTypes.EPS: return ".eps";
+                case FileTypes.PNG: return ".png";
+                case FileTypes.JPEG: return ".jpg";
+                case FileTypes.BMP: return ".bmp";
+                case FileTypes.TIFF: return ".tiff";
+                default: break;
             }
             return "";
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// PdfVersionValue
-        ///
-        /// <summary>
-        /// PdfVersions 列挙型の各値に対応する実際の数値を取得します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static double PdfVersionValue(PdfVersions id) {
-            switch (id) {
-            case PdfVersions.Ver1_7: return 1.7;
-            case PdfVersions.Ver1_6: return 1.6;
-            case PdfVersions.Ver1_5: return 1.5;
-            case PdfVersions.Ver1_4: return 1.4;
-            case PdfVersions.Ver1_3: return 1.3;
-            case PdfVersions.Ver1_2: return 1.2;
-            case PdfVersions.VerPDFA: return 1.3;
-            case PdfVersions.VerPDFX: return 1.3;
-            }
-            return 1.7;
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ResolutionValue
-        /// 
-        /// <summary>
-        /// Resolutions 列挙型の各値に対応する実際の数値を取得します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static int ResolutionValue(Resolutions id) {
-            switch (id) {
-            case Resolutions.Resolution72:  return 72;
-            case Resolutions.Resolution150: return 150;
-            case Resolutions.Resolution300: return 300;
-            case Resolutions.Resolution450: return 450;
-            case Resolutions.Resolution600: return 600;
-            default: break;
-            }
-            return 300;
-        }
-
-        #endregion
-
-        #region Ghostscript extensions
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// Device
+        /// GetDevice
         ///
         /// <summary>
         /// 引数に指定されたファイル形式とグレースケールかどうかを表す値から
@@ -292,7 +300,7 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static Ghostscript.Devices Device(FileTypes id, bool grayscale) {
+        public static Ghostscript.Devices GetDevice(FileTypes id, bool grayscale) {
             switch (id) {
             case FileTypes.PDF:  return Ghostscript.Devices.PDF;
             case FileTypes.PS:   return Ghostscript.Devices.PS;
