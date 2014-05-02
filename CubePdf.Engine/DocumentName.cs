@@ -96,7 +96,8 @@ namespace CubePdf
         /// 
         /* ----------------------------------------------------------------- */
         private static string ModifyFilename(string filename) {
-            var dest = CubePdf.Misc.Path.NormalizeFilename(filename, '_');
+            var normalize = CubePdf.Misc.Path.Normalize(filename, '_');
+            var dest = System.IO.Path.GetFileName(normalize);
             if (dest.ToLower() == "pptview") {
                 var s = FindFromRecent(".ppt");
                 if (s == null) s = FindFromRecent(".pptx");
