@@ -495,7 +495,7 @@ namespace CubePdf
         /// Resolution
         ///
         /// <summary>
-        /// ビットマップ形式で保存する場合の解像度を取得、または設定します。
+        /// 解像度を取得、または設定します。
         /// </summary>
         /// 
         /// <remarks>
@@ -511,6 +511,28 @@ namespace CubePdf
         {
             get { return _resolution; }
             set { _resolution = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Orientation
+        ///
+        /// <summary>
+        /// ページの向きを取得、または設定します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 設定可能な値は以下の通りです:
+        /// Portrait, Landscape, Auto
+        /// これらの値は、例えば、CubePdf.Parameter.Orientations.Portrait
+        /// のように設定します。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        public Parameter.Orientations Orientation
+        {
+            get { return _orientation; }
+            set { _orientation = value; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -630,12 +652,18 @@ namespace CubePdf
         /// <summary>
         /// ページの自動回転を行うかどうかを取得、または設定します。
         /// </summary>
+        /// 
+        /// <remarks>
+        /// このプロパティは推奨されません。代わりに Orientation プロパティを
+        /// 使用して下さい。
+        /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
+        [Obsolete("Use Orientation instead", false)]
         public bool PageRotation
         {
-            get { return _rotation; }
-            set { _rotation = value; }
+            get { return Orientation == Parameter.Orientations.Auto; }
+            set { Orientation = value ? Parameter.Orientations.Auto : Parameter.Orientations.Portrait; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -991,7 +1019,7 @@ namespace CubePdf
             dest.AppendLine("\t\tUserArguments   = " + _argument);
             dest.AppendLine("\t\tDownsampling    = " + _downsampling.ToString());
             dest.AppendLine("\t\tImageFilter     = " + _filter.ToString());
-            dest.AppendLine("\t\tPageRotation    = " + _rotation.ToString());
+            dest.AppendLine("\t\tOrientation     = " + _orientation.ToString());
             dest.AppendLine("\t\tEmbedFonts      = " + _embed.ToString());
             dest.AppendLine("\t\tGrayscale       = " + _grayscale.ToString());
             dest.AppendLine("\t\tWebOptimize     = " + _web.ToString());
@@ -1049,9 +1077,7 @@ namespace CubePdf
                 if (path != null && path.Length > 0 && System.IO.File.Exists(path)) _program = path;
 
                 // チェックボックスのフラグ関連
-                int flag = (int)subkey.GetValue(_RegPageRotation, 1);
-                _rotation = (flag != 0);
-                flag = (int)subkey.GetValue(_RegEmbedFont, 1);
+                int flag = (int)subkey.GetValue(_RegEmbedFont, 1);
                 _embed = (flag != 0);
                 flag = (int)subkey.GetValue(_RegGrayscale, 0);
                 _grayscale = (flag != 0);
@@ -1187,9 +1213,6 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void LoadFlags(CubePdf.Settings.Document document)
         {
-            var rotation = document.Root.Find(_RegPageRotation);
-            if (rotation != null) _rotation = ((int)rotation.Value != 0);
-
             var embed = document.Root.Find(_RegEmbedFont);
             if (embed != null) _embed = ((int)embed.Value != 0);
 
@@ -1259,6 +1282,19 @@ namespace CubePdf
                     if (item == (int)resolution.Value)
                     {
                         _resolution = (Parameter.Resolutions)resolution.Value;
+                        break;
+                    }
+                }
+            }
+
+            var orientation = document.Root.Find(_RegOrientation);
+            if (orientation != null)
+            {
+                foreach (int item in Enum.GetValues(typeof(Parameter.Orientations)))
+                {
+                    if (item == (int)orientation.Value)
+                    {
+                        _orientation = (Parameter.Orientations)orientation.Value;
                         break;
                     }
                 }
@@ -1354,9 +1390,7 @@ namespace CubePdf
             document.Root.Add(new CubePdf.Settings.Node(_RegUserArguments, _argument));
 
             // チェックボックスのフラグ関連
-            int flag = _rotation ? 1 : 0;
-            document.Root.Add(new CubePdf.Settings.Node(_RegPageRotation, flag));
-            flag = _embed ? 1 : 0;
+            int flag = _embed ? 1 : 0;
             document.Root.Add(new CubePdf.Settings.Node(_RegEmbedFont, flag));
             flag = _grayscale ? 1 : 0;
             document.Root.Add(new CubePdf.Settings.Node(_RegGrayscale, flag));
@@ -1375,6 +1409,7 @@ namespace CubePdf
             document.Root.Add(new CubePdf.Settings.Node(_RegFileType, (int)_type));
             document.Root.Add(new CubePdf.Settings.Node(_RegPdfVersion, (int)_pdfver));
             document.Root.Add(new CubePdf.Settings.Node(_RegResolution, (int)_resolution));
+            document.Root.Add(new CubePdf.Settings.Node(_RegOrientation, (int)_orientation));
             document.Root.Add(new CubePdf.Settings.Node(_RegExistedFile, (int)_exist));
             document.Root.Add(new CubePdf.Settings.Node(_RegPostProcess, (int)_postproc));
             document.Root.Add(new CubePdf.Settings.Node(_RegDownSampling, (int)_downsampling));
@@ -1410,12 +1445,12 @@ namespace CubePdf
         private Parameter.FileTypes _type = Parameter.FileTypes.PDF;
         private Parameter.PdfVersions _pdfver = Parameter.PdfVersions.Ver1_7;
         private Parameter.Resolutions _resolution = Parameter.Resolutions.Resolution300;
+        private Parameter.Orientations _orientation = Parameter.Orientations.Auto;
         private Parameter.ExistedFiles _exist = Parameter.ExistedFiles.Overwrite;
         private Parameter.PostProcesses _postproc = Parameter.PostProcesses.Open;
         private Parameter.DownSamplings _downsampling = Parameter.DownSamplings.None;
         private Parameter.ImageFilters _filter = Parameter.ImageFilters.FlateEncode;
         private Parameter.SaveSettings _save = Parameter.SaveSettings.None;
-        private bool _rotation = true;
         private bool _embed = true;
         private bool _grayscale = false;
         private bool _web = false;
@@ -1446,10 +1481,10 @@ namespace CubePdf
         private static readonly string _RegGrayscale = "Grayscale";
         private static readonly string _RegLastAccess = "LastAccess";
         private static readonly string _RegLastInputAccess = "LastInputAccess";
-        private static readonly string _RegPageRotation = "PageRotation";
         private static readonly string _RegPdfVersion = "PDFVersion";
         private static readonly string _RegPostProcess = "PostProcess";
         private static readonly string _RegResolution = "Resolution";
+        private static readonly string _RegOrientation = "Orientation";
         private static readonly string _RegSelectInput = "SelectInputFile";
         private static readonly string _RegUserProgram = "UserProgram";
         private static readonly string _RegUserArguments = "UserArguments";

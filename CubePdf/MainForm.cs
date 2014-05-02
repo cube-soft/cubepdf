@@ -224,8 +224,12 @@ namespace CubePdf
             ExistedFileComboBox.SelectedIndex  = Translator.ToIndex(setting.ExistedFile);
             DownSamplingComboBox.SelectedIndex = Translator.ToIndex(setting.DownSampling);
 
+            // ラジオボタンのフラグ関連
+            if (setting.Orientation == Parameter.Orientations.Portrait) PortraitRadioButton.Checked = true;
+            else if (setting.Orientation == Parameter.Orientations.Landscape) LandscapeRadioButton.Checked = true;
+            else AutoRadioButton.Checked = true;
+
             // チェックボックスのフラグ関連
-            PageLotationCheckBox.Checked = setting.PageRotation;
             EmbedFontCheckBox.Checked    = setting.EmbedFont;
             GrayscaleCheckBox.Checked    = setting.Grayscale;
             ImageFilterCheckBox.Checked  = (setting.ImageFilter == Parameter.ImageFilters.DCTEncode) ? true : false;
@@ -274,8 +278,11 @@ namespace CubePdf
             setting.PostProcess  = Translator.ToPostProcess(_postproc.SelectedIndex);
             setting.DownSampling = Translator.ToDownSampling(DownSamplingComboBox.SelectedIndex);
 
+            // ラジオボタンのフラグ関連
+            setting.Orientation  = PortraitRadioButton.Checked ? Parameter.Orientations.Portrait :
+                LandscapeRadioButton.Checked ? Parameter.Orientations.Landscape : Parameter.Orientations.Auto;
+
             // チェックボックスのフラグ関連
-            setting.PageRotation = PageLotationCheckBox.Checked;
             setting.EmbedFont    = EmbedFontCheckBox.Checked;
             setting.Grayscale    = GrayscaleCheckBox.Checked;
             setting.ImageFilter  = ImageFilterCheckBox.Checked ? Parameter.ImageFilters.DCTEncode : Parameter.ImageFilters.FlateEncode;

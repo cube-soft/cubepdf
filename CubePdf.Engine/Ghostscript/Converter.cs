@@ -198,14 +198,36 @@ namespace CubePdf.Ghostscript
 
         /* ----------------------------------------------------------------- */
         ///
-        /// PageRotation
+        /// Orientation
+        ///
+        /// <summary>
+        /// ページの向きを表す値を取得、または設定します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 0: 縦向き
+        /// 1: 横向き（180度回転）
+        /// 2: 縦向き（180度回転）
+        /// 3: 横向き
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        public int Orientation
+        {
+            get { return _orientation; }
+            set { _orientation = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AutoRotatePages
         ///
         /// <summary>
         /// 自動回転するかどうかを表す値を取得、または設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public bool PageRotation
+        public bool AutoRotatePages
         {
             get { return _rotate; }
             set { _rotate = value; }
@@ -443,6 +465,7 @@ namespace CubePdf.Ghostscript
                 if (_first < _last) args.Add(string.Format("-dLastPage={0}", _last));
             }
             if (_rotate) args.Add("-dAutoRotatePages=/PageByPage");
+            else args.Add("-dAutoRotatePages=/No");
 
             // Add default options
             foreach (string option in _DefaultSettings) args.Add(option);
@@ -457,10 +480,18 @@ namespace CubePdf.Ghostscript
                 args.Add(s);
             }
 
-            //args.Add("-sstdout=ghostscript.log");
+            // Add output
+            args.Add(string.Format("-sOutputFile={0}", dest));
+
+            // Add orientation
+            if (!_rotate)
+            {
+                args.Add("-c");
+                args.Add(string.Format("<</Orientation {0}>> setpagedevice", _orientation));
+            }
 
             // Add input (source filename) and output (destination filename)
-            args.Add(string.Format("-sOutputFile={0}", dest));
+            args.Add("-f");
             foreach (var src in sources) args.Add(src);
 
             return args.ToArray();
@@ -680,7 +711,8 @@ namespace CubePdf.Ghostscript
         private Papers _paper = Papers.Unknown;
         private int _first = 1;
         private int _last = 1;
-        private bool _rotate = true;
+        private int _orientation = 0;
+        private bool _rotate = false;
         private string _dest = "";
         private List<string> _includes = new List<string>();
         private List<string> _fonts = new List<string>();
