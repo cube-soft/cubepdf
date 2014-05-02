@@ -103,11 +103,11 @@ namespace CubePdf
                 Assert.AreEqual(Parameter.FileTypes.PDF, test.FileType, "FileType");
                 Assert.AreEqual(Parameter.PdfVersions.Ver1_7, test.PDFVersion, "PDFVersion");
                 Assert.AreEqual(Parameter.Resolutions.Resolution300, test.Resolution, "Resolution");
+                Assert.AreEqual(Parameter.Orientations.Auto, test.Orientation, "Orientation");
                 Assert.AreEqual(Parameter.ExistedFiles.Overwrite, test.ExistedFile, "ExistedFile");
                 Assert.AreEqual(Parameter.PostProcesses.Open, test.PostProcess, "PostProcess");
                 Assert.AreEqual(Parameter.ImageFilters.FlateEncode, test.ImageFilter, "ImageFilter");
                 Assert.AreEqual(Parameter.SaveSettings.None, test.SaveSetting, "SaveSetting");
-                Assert.IsTrue(test.PageRotation, "PageRotation"); // ページの自動回転
                 Assert.IsTrue(test.EmbedFont, "EmbedFont"); // フォントの埋め込み
                 Assert.IsFalse(test.Grayscale, "Grayscale"); // グレースケール
                 Assert.IsFalse(test.WebOptimize, "WebOptimize"); // Web 表示用に最適化
@@ -325,6 +325,7 @@ namespace CubePdf
                     subkey.SetValue("FileType", 256);
                     subkey.SetValue("PDFVersion", 1024);
                     subkey.SetValue("Resolution", 5012);
+                    subkey.SetValue("Orientation", 12345);
                     subkey.SetValue("ExistedFile", 8252);
                     subkey.SetValue("PostProcess", 2958739);
                     subkey.SetValue("DownSampling", 493798);
@@ -332,7 +333,6 @@ namespace CubePdf
                     subkey.SetValue("SaveSetting", 24);
 
                     // チェックボックスの値（正常な値は、0 or 1）
-                    subkey.SetValue("PageRotation", 2);
                     subkey.SetValue("EmbedFont", 5);
                     subkey.SetValue("Grayscale", 8);
                     subkey.SetValue("WebOptimize", 12);
@@ -350,11 +350,11 @@ namespace CubePdf
                 Assert.AreEqual(Parameter.FileTypes.PDF, test.FileType, "FileType");
                 Assert.AreEqual(Parameter.PdfVersions.Ver1_7, test.PDFVersion, "PDFVersion");
                 Assert.AreEqual(Parameter.Resolutions.Resolution300, test.Resolution, "Resolution");
+                Assert.AreEqual(Parameter.Orientations.Auto, test.Orientation, "Orientation");
                 Assert.AreEqual(Parameter.ExistedFiles.Overwrite, test.ExistedFile, "ExistedFile");
                 Assert.AreEqual(Parameter.PostProcesses.Open, test.PostProcess, "PostProcess");
                 Assert.AreEqual(Parameter.ImageFilters.FlateEncode, test.ImageFilter, "ImageFilter");
                 Assert.AreEqual(Parameter.SaveSettings.None, test.SaveSetting, "SaveSetting");
-                Assert.IsTrue(test.PageRotation, "PageRotation");
                 Assert.IsTrue(test.EmbedFont, "EmbedFont");
                 Assert.IsTrue(test.Grayscale, "Grayscale");
                 Assert.IsTrue(test.WebOptimize, "WebOptimize");
