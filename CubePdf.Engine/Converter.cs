@@ -278,9 +278,10 @@ namespace CubePdf {
 
             // 解像度
             var resolution = Parameter.ToValue(setting.Resolution);
+            var mono = resolution < 300 ? 300 : 1200;
             gs.AddOption("ColorImageResolution", resolution);
             gs.AddOption("GrayImageResolution",  resolution);
-            gs.AddOption("MonoImageResolution",  resolution);
+            gs.AddOption("MonoImageResolution",  mono);
 
             // 画像圧縮
             gs.AddOption("AutoFilterColorImages", false);
