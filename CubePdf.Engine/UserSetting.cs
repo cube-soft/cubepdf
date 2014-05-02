@@ -495,7 +495,7 @@ namespace CubePdf
         /// Resolution
         ///
         /// <summary>
-        /// ビットマップ形式で保存する場合の解像度を取得、または設定します。
+        /// 解像度を取得、または設定します。
         /// </summary>
         /// 
         /// <remarks>
@@ -511,6 +511,28 @@ namespace CubePdf
         {
             get { return _resolution; }
             set { _resolution = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Orientation
+        ///
+        /// <summary>
+        /// ページの向きを取得、または設定します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 設定可能な値は以下の通りです:
+        /// Portrait, Landscape, Auto
+        /// これらの値は、例えば、CubePdf.Parameter.Orientations.Portrait
+        /// のように設定します。
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        public Parameter.Orientations Orientation
+        {
+            get { return _orientation; }
+            set { _orientation = value; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -1264,6 +1286,19 @@ namespace CubePdf
                 }
             }
 
+            var orientation = document.Root.Find(_RegOrientation);
+            if (orientation != null)
+            {
+                foreach (int item in Enum.GetValues(typeof(Parameter.Orientations)))
+                {
+                    if (item == (int)orientation.Value)
+                    {
+                        _orientation = (Parameter.Orientations)orientation.Value;
+                        break;
+                    }
+                }
+            }
+
             var exist = document.Root.Find(_RegExistedFile);
             if (exist != null)
             {
@@ -1375,6 +1410,7 @@ namespace CubePdf
             document.Root.Add(new CubePdf.Settings.Node(_RegFileType, (int)_type));
             document.Root.Add(new CubePdf.Settings.Node(_RegPdfVersion, (int)_pdfver));
             document.Root.Add(new CubePdf.Settings.Node(_RegResolution, (int)_resolution));
+            document.Root.Add(new CubePdf.Settings.Node(_RegOrientation, (int)_orientation));
             document.Root.Add(new CubePdf.Settings.Node(_RegExistedFile, (int)_exist));
             document.Root.Add(new CubePdf.Settings.Node(_RegPostProcess, (int)_postproc));
             document.Root.Add(new CubePdf.Settings.Node(_RegDownSampling, (int)_downsampling));
@@ -1410,6 +1446,7 @@ namespace CubePdf
         private Parameter.FileTypes _type = Parameter.FileTypes.PDF;
         private Parameter.PdfVersions _pdfver = Parameter.PdfVersions.Ver1_7;
         private Parameter.Resolutions _resolution = Parameter.Resolutions.Resolution300;
+        private Parameter.Orientations _orientation = Parameter.Orientations.Auto;
         private Parameter.ExistedFiles _exist = Parameter.ExistedFiles.Overwrite;
         private Parameter.PostProcesses _postproc = Parameter.PostProcesses.Open;
         private Parameter.DownSamplings _downsampling = Parameter.DownSamplings.None;
@@ -1450,6 +1487,7 @@ namespace CubePdf
         private static readonly string _RegPdfVersion = "PDFVersion";
         private static readonly string _RegPostProcess = "PostProcess";
         private static readonly string _RegResolution = "Resolution";
+        private static readonly string _RegOrientation = "Orientation";
         private static readonly string _RegSelectInput = "SelectInputFile";
         private static readonly string _RegUserProgram = "UserProgram";
         private static readonly string _RegUserArguments = "UserArguments";
