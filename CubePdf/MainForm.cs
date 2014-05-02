@@ -178,7 +178,7 @@ namespace CubePdf
             }
 
             var extension = System.IO.Path.GetExtension(OutputPathTextBox.Text);
-            var compared = Parameter.Extension(Translator.ToFileType(FileTypeCombBox.SelectedIndex));
+            var compared = Parameter.GetExtension(Translator.ToFileType(FileTypeCombBox.SelectedIndex));
             if (extension != compared) OutputPathTextBox.Text += compared;
 
             if (System.IO.File.Exists(OutputPathTextBox.Text) &&
@@ -472,7 +472,7 @@ namespace CubePdf
             // ただし、入力された拡張子がユーザのコンピュータに登録されている場合は、それを優先する。
             var extension = System.IO.Path.GetExtension(OutputPathTextBox.Text);
             var type = Translator.ToFileType(FileTypeCombBox.SelectedIndex);
-            var compared = Parameter.Extension(type);
+            var compared = Parameter.GetExtension(type);
             OutputPathTextBox.Text = dialog.FileName;
             if (extension != compared) OutputPathTextBox.Text += compared;
             SettingChanged(sender, e);
@@ -580,7 +580,7 @@ namespace CubePdf
             // 出力パスの拡張子を変更後のファイルタイプに合わせる．
             if (!string.IsNullOrEmpty(OutputPathTextBox.Text))
             {
-                OutputPathTextBox.Text = System.IO.Path.ChangeExtension(OutputPathTextBox.Text, Parameter.Extension(id));
+                OutputPathTextBox.Text = System.IO.Path.ChangeExtension(OutputPathTextBox.Text, Parameter.GetExtension(id));
             }
             SettingChanged(sender, e);
         }

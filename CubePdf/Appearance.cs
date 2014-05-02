@@ -47,7 +47,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         public static string GetString(Parameter.FileTypes id)
         {
-            return Parameter.FileTypeValue(id);
+            return Parameter.ToValue(id);
         }
 
         /* ----------------------------------------------------------------- */
@@ -63,7 +63,7 @@ namespace CubePdf
         {
             if (id == Parameter.PdfVersions.VerPDFA) return ""; //"PDF/A";
             else if (id == Parameter.PdfVersions.VerPDFX) return ""; //"PDF/X";
-            return Parameter.PdfVersionValue(id).ToString();
+            return Parameter.ToValue(id).ToString();
         }
 
         /* ----------------------------------------------------------------- */
@@ -120,7 +120,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         public static string GetString(Parameter.Resolutions id)
         {
-            return Parameter.ResolutionValue(id).ToString();
+            return Parameter.ToValue(id).ToString();
         }
 
         /* ----------------------------------------------------------------- */

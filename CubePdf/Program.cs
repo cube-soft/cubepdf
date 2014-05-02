@@ -98,7 +98,7 @@ namespace CubePdf
                 var filename = DocumentName.CreateFileName(docname);
                 if (filename != null)
                 {
-                    string ext = Parameter.Extension((Parameter.FileTypes)setting.FileType);
+                    string ext = Parameter.GetExtension((Parameter.FileTypes)setting.FileType);
                     filename = System.IO.Path.ChangeExtension(filename, ext);
                     string dir = (setting.OutputPath.Length == 0 || System.IO.Directory.Exists(setting.OutputPath)) ?
                         setting.OutputPath : System.IO.Path.GetDirectoryName(setting.OutputPath);

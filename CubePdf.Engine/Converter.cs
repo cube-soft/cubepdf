@@ -183,8 +183,8 @@ namespace CubePdf {
             editor.UserPassword = setting.Password;
             
             // 結合順序を考慮してファイルを追加する。
-            var head = setting.ExistedFile == Parameter.ExistedFiles.MergeHead || !string.IsNullOrEmpty(_escaped);
-            var tail = setting.ExistedFile == Parameter.ExistedFiles.MergeTail || !string.IsNullOrEmpty(_escaped);
+            var head = setting.ExistedFile == Parameter.ExistedFiles.MergeHead && !string.IsNullOrEmpty(_escaped);
+            var tail = setting.ExistedFile == Parameter.ExistedFiles.MergeTail && !string.IsNullOrEmpty(_escaped);
             if (tail) editor.Files.Add(_escaped);
             editor.Files.Add(setting.OutputPath);
             if (head) editor.Files.Add(_escaped);
@@ -241,9 +241,9 @@ namespace CubePdf {
         {
             var gs = new Ghostscript.Converter(_messages);
             if (!string.IsNullOrEmpty(setting.LibPath)) gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
-            gs.Device = Parameter.Device(setting.FileType, setting.Grayscale);
+            gs.Device = Parameter.GetDevice(setting.FileType, setting.Grayscale);
             gs.PageRotation = setting.PageRotation;
-            gs.Resolution = Parameter.ResolutionValue(setting.Resolution);
+            gs.Resolution = Parameter.ToValue(setting.Resolution);
 
             ConfigureCommonImage(setting, gs);
             if (Parameter.IsImageType(setting.FileType)) ConfigureBitmap(setting, gs);
@@ -276,7 +276,7 @@ namespace CubePdf {
             gs.AddOption("DownsampleMonoImages",  true);
 
             // 解像度
-            var resolution = Parameter.ResolutionValue(setting.Resolution);
+            var resolution = Parameter.ToValue(setting.Resolution);
             gs.AddOption("ColorImageResolution", resolution);
             gs.AddOption("GrayImageResolution",  resolution);
             gs.AddOption("MonoImageResolution",  resolution);
@@ -339,7 +339,7 @@ namespace CubePdf {
         ///
         /* ----------------------------------------------------------------- */
         private void ConfigurePdf(UserSetting setting, Ghostscript.Converter gs) {
-            gs.AddOption("CompatibilityLevel", Parameter.PdfVersionValue(setting.PDFVersion));
+            gs.AddOption("CompatibilityLevel", Parameter.ToValue(setting.PDFVersion));
             gs.AddOption("UseFlateCompression", true);
             if (setting.PDFVersion == Parameter.PdfVersions.VerPDFA) ConfigurePdfA(setting, gs);
             if (setting.PDFVersion == Parameter.PdfVersions.VerPDFX) ConfigurePdfX(setting, gs);
@@ -487,11 +487,8 @@ namespace CubePdf {
         private void RecoverIf(UserSetting setting)
         {
             if (string.IsNullOrEmpty(_escaped) || !System.IO.File.Exists(_escaped)) return;
-            if (!System.IO.File.Exists(setting.OutputPath))
-            {
-                CubePdf.Misc.File.Move(_escaped, setting.OutputPath, true);
-                AddMessage(string.Format("Recover: {0} -> {1}", _escaped, setting.OutputPath));
-            }
+            CubePdf.Misc.File.Move(_escaped, setting.OutputPath, true);
+            AddMessage(string.Format("Recover: {0} -> {1}", _escaped, setting.OutputPath));
         }
 
         /* ----------------------------------------------------------------- */
