@@ -94,7 +94,6 @@
             this.OptionLabel = new System.Windows.Forms.Label();
             this.OthersLabel = new System.Windows.Forms.Label();
             this.DownSamplingComboBox = new System.Windows.Forms.ComboBox();
-            this.PageLotationCheckBox = new System.Windows.Forms.CheckBox();
             this.EmbedFontCheckBox = new System.Windows.Forms.CheckBox();
             this.GrayscaleCheckBox = new System.Windows.Forms.CheckBox();
             this.ImageFilterCheckBox = new System.Windows.Forms.CheckBox();
@@ -103,6 +102,10 @@
             this.PostProcessLiteLabel = new System.Windows.Forms.Label();
             this.PostProcessLiteComboBox = new System.Windows.Forms.ComboBox();
             this.HeaderPictureBox = new System.Windows.Forms.PictureBox();
+            this.OrientationLabel = new System.Windows.Forms.Label();
+            this.PortraitRadioButton = new System.Windows.Forms.RadioButton();
+            this.LandscapeRadioButton = new System.Windows.Forms.RadioButton();
+            this.AutoRadioButton = new System.Windows.Forms.RadioButton();
             this.MainPanel.SuspendLayout();
             this.MainTabControl.SuspendLayout();
             this.GeneralTabPage.SuspendLayout();
@@ -363,12 +366,12 @@
             this.ResolutionComboBox.TabIndex = 9;
             this.ResolutionComboBox.SelectedIndexChanged += new System.EventHandler(this.SettingChanged);
             // 
-            // PDFVersionComboBox
+            // PdfVersionComboBox
             // 
             this.PdfVersionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PdfVersionComboBox.FormattingEnabled = true;
             this.PdfVersionComboBox.Location = new System.Drawing.Point(120, 47);
-            this.PdfVersionComboBox.Name = "PDFVersionComboBox";
+            this.PdfVersionComboBox.Name = "PdfVersionComboBox";
             this.PdfVersionComboBox.Size = new System.Drawing.Size(316, 20);
             this.PdfVersionComboBox.TabIndex = 8;
             this.PdfVersionComboBox.SelectedIndexChanged += new System.EventHandler(this.SettingChanged);
@@ -795,11 +798,14 @@
             // DetailPanel
             // 
             this.DetailPanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.DetailPanel.Controls.Add(this.AutoRadioButton);
+            this.DetailPanel.Controls.Add(this.LandscapeRadioButton);
+            this.DetailPanel.Controls.Add(this.PortraitRadioButton);
+            this.DetailPanel.Controls.Add(this.OrientationLabel);
             this.DetailPanel.Controls.Add(this.DownSamplingLabel);
             this.DetailPanel.Controls.Add(this.OptionLabel);
             this.DetailPanel.Controls.Add(this.OthersLabel);
             this.DetailPanel.Controls.Add(this.DownSamplingComboBox);
-            this.DetailPanel.Controls.Add(this.PageLotationCheckBox);
             this.DetailPanel.Controls.Add(this.EmbedFontCheckBox);
             this.DetailPanel.Controls.Add(this.GrayscaleCheckBox);
             this.DetailPanel.Controls.Add(this.ImageFilterCheckBox);
@@ -820,18 +826,18 @@
             this.DownSamplingLabel.Margin = new System.Windows.Forms.Padding(3);
             this.DownSamplingLabel.Name = "DownSamplingLabel";
             this.DownSamplingLabel.Size = new System.Drawing.Size(91, 12);
-            this.DownSamplingLabel.TabIndex = 13;
+            this.DownSamplingLabel.TabIndex = 100;
             this.DownSamplingLabel.Text = "ダウンサンプリング：";
             this.DownSamplingLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // OptionLabel
             // 
             this.OptionLabel.AutoSize = true;
-            this.OptionLabel.Location = new System.Drawing.Point(20, 50);
+            this.OptionLabel.Location = new System.Drawing.Point(20, 76);
             this.OptionLabel.Margin = new System.Windows.Forms.Padding(3);
             this.OptionLabel.Name = "OptionLabel";
             this.OptionLabel.Size = new System.Drawing.Size(54, 12);
-            this.OptionLabel.TabIndex = 12;
+            this.OptionLabel.TabIndex = 100;
             this.OptionLabel.Text = "オプション：";
             this.OptionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -842,7 +848,7 @@
             this.OthersLabel.Margin = new System.Windows.Forms.Padding(3);
             this.OthersLabel.Name = "OthersLabel";
             this.OthersLabel.Size = new System.Drawing.Size(42, 12);
-            this.OthersLabel.TabIndex = 11;
+            this.OthersLabel.TabIndex = 100;
             this.OthersLabel.Text = "その他：";
             this.OthersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -855,18 +861,6 @@
             this.DownSamplingComboBox.Size = new System.Drawing.Size(316, 20);
             this.DownSamplingComboBox.TabIndex = 14;
             this.DownSamplingComboBox.SelectedIndexChanged += new System.EventHandler(this.SettingChanged);
-            // 
-            // PageLotationCheckBox
-            // 
-            this.PageLotationCheckBox.AutoSize = true;
-            this.PageLotationCheckBox.Location = new System.Drawing.Point(120, 49);
-            this.PageLotationCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-            this.PageLotationCheckBox.Name = "PageLotationCheckBox";
-            this.PageLotationCheckBox.Size = new System.Drawing.Size(112, 16);
-            this.PageLotationCheckBox.TabIndex = 15;
-            this.PageLotationCheckBox.Text = "ページの自動回転";
-            this.PageLotationCheckBox.UseVisualStyleBackColor = true;
-            this.PageLotationCheckBox.CheckedChanged += new System.EventHandler(this.SettingChanged);
             // 
             // EmbedFontCheckBox
             // 
@@ -934,7 +928,7 @@
             this.PostProcessLiteLabel.Margin = new System.Windows.Forms.Padding(3);
             this.PostProcessLiteLabel.Name = "PostProcessLiteLabel";
             this.PostProcessLiteLabel.Size = new System.Drawing.Size(75, 12);
-            this.PostProcessLiteLabel.TabIndex = 22;
+            this.PostProcessLiteLabel.TabIndex = 100;
             this.PostProcessLiteLabel.Text = "ポストプロセス：";
             this.PostProcessLiteLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -962,6 +956,47 @@
             this.HeaderPictureBox.Click += new System.EventHandler(this.HeaderPictureBox_Click);
             this.HeaderPictureBox.MouseEnter += new System.EventHandler(this.HeaderPictureBox_MouseEnter);
             this.HeaderPictureBox.MouseLeave += new System.EventHandler(this.HeaderPictureBox_MouseLeave);
+            // 
+            // OrientationLabel
+            // 
+            this.OrientationLabel.AutoSize = true;
+            this.OrientationLabel.Location = new System.Drawing.Point(20, 50);
+            this.OrientationLabel.Name = "OrientationLabel";
+            this.OrientationLabel.Size = new System.Drawing.Size(72, 12);
+            this.OrientationLabel.TabIndex = 100;
+            this.OrientationLabel.Text = "ページの向き：";
+            // 
+            // PortraitRadioButton
+            // 
+            this.PortraitRadioButton.AutoSize = true;
+            this.PortraitRadioButton.Location = new System.Drawing.Point(120, 48);
+            this.PortraitRadioButton.Name = "PortraitRadioButton";
+            this.PortraitRadioButton.Size = new System.Drawing.Size(35, 16);
+            this.PortraitRadioButton.TabIndex = 101;
+            this.PortraitRadioButton.Text = "縦";
+            this.PortraitRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // LandscapeRadioButton
+            // 
+            this.LandscapeRadioButton.AutoSize = true;
+            this.LandscapeRadioButton.Location = new System.Drawing.Point(180, 48);
+            this.LandscapeRadioButton.Name = "LandscapeRadioButton";
+            this.LandscapeRadioButton.Size = new System.Drawing.Size(35, 16);
+            this.LandscapeRadioButton.TabIndex = 102;
+            this.LandscapeRadioButton.Text = "横";
+            this.LandscapeRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // AutoRadioButton
+            // 
+            this.AutoRadioButton.AutoSize = true;
+            this.AutoRadioButton.Checked = true;
+            this.AutoRadioButton.Location = new System.Drawing.Point(240, 48);
+            this.AutoRadioButton.Name = "AutoRadioButton";
+            this.AutoRadioButton.Size = new System.Drawing.Size(47, 16);
+            this.AutoRadioButton.TabIndex = 103;
+            this.AutoRadioButton.TabStop = true;
+            this.AutoRadioButton.Text = "自動";
+            this.AutoRadioButton.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
@@ -1055,7 +1090,6 @@
         private System.Windows.Forms.Label OptionLabel;
         private System.Windows.Forms.Label OthersLabel;
         private System.Windows.Forms.ComboBox DownSamplingComboBox;
-        private System.Windows.Forms.CheckBox PageLotationCheckBox;
         private System.Windows.Forms.CheckBox EmbedFontCheckBox;
         private System.Windows.Forms.CheckBox GrayscaleCheckBox;
         private System.Windows.Forms.CheckBox ImageFilterCheckBox;
@@ -1082,6 +1116,10 @@
         private System.Windows.Forms.TextBox UserPasswordTextBox;
         private System.Windows.Forms.TextBox ConfirmUserPasswordTextBox;
         private System.Windows.Forms.Button SettingButton;
+        private System.Windows.Forms.Label OrientationLabel;
+        private System.Windows.Forms.RadioButton AutoRadioButton;
+        private System.Windows.Forms.RadioButton LandscapeRadioButton;
+        private System.Windows.Forms.RadioButton PortraitRadioButton;
     }
 }
 
