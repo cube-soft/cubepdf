@@ -122,14 +122,6 @@ namespace CubePdf
             PostProcessLiteComboBox.Items.Add(Appearance.GetString(Parameter.PostProcesses.Open));
             PostProcessLiteComboBox.Items.Add(Appearance.GetString(Parameter.PostProcesses.None));
             PostProcessLiteComboBox.SelectedIndex = 0;
-
-            // DownSampling
-            DownSamplingComboBox.Items.Clear();
-            foreach (Parameter.DownSamplings id in Enum.GetValues(typeof(Parameter.DownSamplings)))
-            {
-                DownSamplingComboBox.Items.Add(Appearance.GetString(id));
-            }
-            DownSamplingComboBox.SelectedIndex = 0;
         }
 
         #endregion
@@ -222,7 +214,6 @@ namespace CubePdf
             PdfVersionComboBox.SelectedIndex   = Translator.ToIndex(setting.PDFVersion);
             ResolutionComboBox.SelectedIndex   = Translator.ToIndex(setting.Resolution);
             ExistedFileComboBox.SelectedIndex  = Translator.ToIndex(setting.ExistedFile);
-            DownSamplingComboBox.SelectedIndex = Translator.ToIndex(setting.DownSampling);
 
             // ラジオボタンのフラグ関連
             if (setting.Orientation == Parameter.Orientations.Portrait) PortraitRadioButton.Checked = true;
@@ -276,7 +267,7 @@ namespace CubePdf
             setting.Resolution   = Translator.ToResolution(ResolutionComboBox.SelectedIndex);
             setting.ExistedFile  = Translator.ToExistedFile(ExistedFileComboBox.SelectedIndex);
             setting.PostProcess  = Translator.ToPostProcess(_postproc.SelectedIndex);
-            setting.DownSampling = Translator.ToDownSampling(DownSamplingComboBox.SelectedIndex);
+            setting.DownSampling = Parameter.DownSamplings.Bicubic;
 
             // ラジオボタンのフラグ関連
             setting.Orientation  = PortraitRadioButton.Checked ? Parameter.Orientations.Portrait :
