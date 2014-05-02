@@ -420,8 +420,7 @@ namespace CubePdf {
                      setting.FileType == Parameter.FileTypes.BMP ||
                      setting.FileType == Parameter.FileTypes.JPEG ||
                      setting.FileType == Parameter.FileTypes.PNG ||
-                     setting.FileType == Parameter.FileTypes.TIFF ||
-                     setting.FileType == Parameter.FileTypes.SVG)
+                     setting.FileType == Parameter.FileTypes.TIFF)
             {
                 var dir = System.IO.Path.GetDirectoryName(setting.OutputPath);
                 var basename = System.IO.Path.GetFileNameWithoutExtension(setting.OutputPath);
