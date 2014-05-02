@@ -280,7 +280,6 @@ namespace CubePdf {
 
         #endregion
 
-#if HAVE_GHOSTSCRIPT
         #region Ghostscript extensions
 
         /* ----------------------------------------------------------------- */
@@ -309,6 +308,5 @@ namespace CubePdf {
         }
 
         #endregion
-#endif
     }
 }
