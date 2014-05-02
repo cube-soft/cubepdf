@@ -198,14 +198,36 @@ namespace CubePdf.Ghostscript
 
         /* ----------------------------------------------------------------- */
         ///
-        /// PageRotation
+        /// Orientation
+        ///
+        /// <summary>
+        /// ページの向きを表す値を取得、または設定します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// 0: 縦向き
+        /// 1: 横向き（180度回転）
+        /// 2: 縦向き（180度回転）
+        /// 3: 横向き
+        /// </remarks>
+        ///
+        /* ----------------------------------------------------------------- */
+        public int Orientation
+        {
+            get { return _orientation; }
+            set { _orientation = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AutoRotatePages
         ///
         /// <summary>
         /// 自動回転するかどうかを表す値を取得、または設定します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public bool PageRotation
+        public bool AutoRotatePages
         {
             get { return _rotate; }
             set { _rotate = value; }
@@ -680,7 +702,8 @@ namespace CubePdf.Ghostscript
         private Papers _paper = Papers.Unknown;
         private int _first = 1;
         private int _last = 1;
-        private bool _rotate = true;
+        private int _orientation = 0;
+        private bool _rotate = false;
         private string _dest = "";
         private List<string> _includes = new List<string>();
         private List<string> _fonts = new List<string>();

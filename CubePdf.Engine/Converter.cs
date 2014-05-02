@@ -242,8 +242,9 @@ namespace CubePdf {
             var gs = new Ghostscript.Converter(_messages);
             if (!string.IsNullOrEmpty(setting.LibPath)) gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
             gs.Device = Parameter.GetDevice(setting.FileType, setting.Grayscale);
-            gs.PageRotation = setting.PageRotation;
             gs.Resolution = Parameter.ToValue(setting.Resolution);
+            if (setting.Orientation == Parameter.Orientations.Auto) gs.AutoRotatePages = true;
+            else gs.Orientation = (int)setting.Orientation;
 
             ConfigureCommonImage(setting, gs);
             if (Parameter.IsImageType(setting.FileType)) ConfigureBitmap(setting, gs);

@@ -114,7 +114,7 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         public enum Orientations : int
         {
-            Portrait, Landscape, Auto,
+            Portrait, Landscape = 3, Auto,
         };
 
         /* ----------------------------------------------------------------- */

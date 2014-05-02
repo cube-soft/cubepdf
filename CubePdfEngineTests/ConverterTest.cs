@@ -174,21 +174,19 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        [TestCase(Parameter.PdfVersions.Ver1_4,  true,  false, true)]
-        [TestCase(Parameter.PdfVersions.Ver1_3,  false, false, false)]
-        [TestCase(Parameter.PdfVersions.Ver1_2,  true,  true,  true)]
-        [TestCase(Parameter.PdfVersions.VerPDFA, false, false, true)]
-        [TestCase(Parameter.PdfVersions.VerPDFX, true,  false, true)]
-        public void TestRunAsPdfWithCommonParameters(Parameter.PdfVersions pdfver, bool rotation, bool webopt, bool embed)
+        [TestCase(Parameter.PdfVersions.Ver1_4,  false, true)]
+        [TestCase(Parameter.PdfVersions.Ver1_3,  false, false)]
+        [TestCase(Parameter.PdfVersions.Ver1_2,  true,  true)]
+        [TestCase(Parameter.PdfVersions.VerPDFA, false, true)]
+        [TestCase(Parameter.PdfVersions.VerPDFX, false, true)]
+        public void TestRunAsPdfWithCommonParameters(Parameter.PdfVersions pdfver, bool webopt, bool embed)
         {
             var setting = CreateSetting();
             setting.PDFVersion = pdfver;
-            setting.PageRotation = rotation;
             setting.WebOptimize = webopt;
             setting.EmbedFont = embed;
 
             var suffix = string.Format("-{0}", pdfver);
-            if (rotation) suffix += "-pagebypage";
             if (webopt)   suffix += "-webopt";
             if (!embed)   suffix += "-noembed";
             AssertRun(setting, suffix);
@@ -408,11 +406,11 @@ namespace CubePdf
             setting.FileType     = Parameter.FileTypes.PDF;
             setting.PDFVersion   = Parameter.PdfVersions.Ver1_7;
             setting.Resolution   = Parameter.Resolutions.Resolution300;
+            setting.Orientation  = Parameter.Orientations.Auto;
             setting.ExistedFile  = Parameter.ExistedFiles.Overwrite;
             setting.PostProcess  = Parameter.PostProcesses.None;
             setting.DownSampling = Parameter.DownSamplings.None;
             setting.ImageFilter  = Parameter.ImageFilters.FlateEncode;
-            setting.PageRotation = true;
             setting.EmbedFont    = true;
             setting.Grayscale    = false;
             setting.WebOptimize  = false;
