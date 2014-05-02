@@ -85,29 +85,59 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        [TestCase(Parameter.FileTypes.PS,   true)]
-        [TestCase(Parameter.FileTypes.EPS,  false)]
-        [TestCase(Parameter.FileTypes.BMP,  false)]
-        [TestCase(Parameter.FileTypes.PNG,  false)]
-        [TestCase(Parameter.FileTypes.JPEG, false)]
-        [TestCase(Parameter.FileTypes.TIFF, false)]
-        public void TestRunAs(Parameter.FileTypes type, bool rename_test)
+        [TestCase(Parameter.FileTypes.PS,   Parameter.Orientations.Auto,      true)]
+        [TestCase(Parameter.FileTypes.EPS,  Parameter.Orientations.Auto,      false)]
+        [TestCase(Parameter.FileTypes.BMP,  Parameter.Orientations.Auto,      false)]
+        [TestCase(Parameter.FileTypes.PNG,  Parameter.Orientations.Portrait,  false)]
+        [TestCase(Parameter.FileTypes.JPEG, Parameter.Orientations.Landscape, false)]
+        [TestCase(Parameter.FileTypes.TIFF, Parameter.Orientations.Auto,      false)]
+        public void TestRunAs(Parameter.FileTypes type, Parameter.Orientations orient, bool rename_test)
         {
             var setting = CreateSetting();
             setting.FileType = type;
             setting.Resolution = Parameter.Resolutions.Resolution72;
-            AssertRun(setting, string.Empty);
+            setting.Orientation = orient;
+            var suffix = string.Format("-{0}", orient);
+            AssertRun(setting, suffix);
 
             if (rename_test)
             {
                 setting.ExistedFile = Parameter.ExistedFiles.Rename;
-                AssertRun(setting, string.Empty);
+                AssertRun(setting, suffix);
             }
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestRunAsPdfWithDocumentAndSecurity
+        /// TestRunAsPdf
+        /// 
+        /// <summary>
+        /// いくつかの設定を行って、PDF の生成テストを行います。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [TestCase(Parameter.PdfVersions.Ver1_4,  Parameter.Orientations.Landscape, false, true)]
+        [TestCase(Parameter.PdfVersions.Ver1_3,  Parameter.Orientations.Auto,      false, false)]
+        [TestCase(Parameter.PdfVersions.Ver1_2,  Parameter.Orientations.Auto,      true,  true)]
+        [TestCase(Parameter.PdfVersions.VerPDFA, Parameter.Orientations.Auto,      false, true)]
+        [TestCase(Parameter.PdfVersions.VerPDFX, Parameter.Orientations.Portrait,  false, true)]
+        public void TestRunAsPdf(Parameter.PdfVersions pdfver, Parameter.Orientations orient, bool webopt, bool embed)
+        {
+            var setting = CreateSetting();
+            setting.PDFVersion = pdfver;
+            setting.Orientation = orient;
+            setting.WebOptimize = webopt;
+            setting.EmbedFont = embed;
+
+            var suffix = string.Format("-{0}-{1}", pdfver, orient);
+            if (webopt) suffix += "-webopt";
+            if (!embed) suffix += "-noembed";
+            AssertRun(setting, suffix);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// TestRunAsPdfWithProperties
         /// 
         /// <summary>
         /// PDF の文書プロパティ、およびセキュリティを設定して、生成テストを
@@ -116,7 +146,7 @@ namespace CubePdf
         ///
         /* ----------------------------------------------------------------- */
         [Test]
-        public void TestPdfWithDocumentAndSecurity()
+        public void TestRunAsPdfWithProperties()
         {
             var setting = CreateSetting();
             setting.InputPath = System.IO.Path.Combine(_examples, "example-min.ps");
@@ -139,7 +169,7 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestRunAsPdfWithMerge
+        /// TestRunAsPdfAndMerge
         /// 
         /// <summary>
         /// PDF の結合テストを行います。
@@ -148,7 +178,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         [TestCase(Parameter.ExistedFiles.MergeHead)]
         [TestCase(Parameter.ExistedFiles.MergeTail)]
-        public void TestPdfWithMerge(Parameter.ExistedFiles merge)
+        public void TestRunAsPdfAndMerge(Parameter.ExistedFiles merge)
         {
             var src  = System.IO.Path.Combine(_examples, "example-min.ps");
             var copy = System.IO.Path.Combine(_results, "merge.ps");
@@ -167,33 +197,6 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestRunAsPdfWithCommonParameters
-        /// 
-        /// <summary>
-        /// いくつかの設定を行って、PDF の生成テストを行います。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        [TestCase(Parameter.PdfVersions.Ver1_4,  Parameter.Orientations.Landscape, false, true)]
-        [TestCase(Parameter.PdfVersions.Ver1_3,  Parameter.Orientations.Portrait,  false, false)]
-        [TestCase(Parameter.PdfVersions.Ver1_2,  Parameter.Orientations.Auto,      true,  true)]
-        [TestCase(Parameter.PdfVersions.VerPDFA, Parameter.Orientations.Auto,      false, true)]
-        [TestCase(Parameter.PdfVersions.VerPDFX, Parameter.Orientations.Auto,      false, true)]
-        public void TestPdfWithCommonParameters(Parameter.PdfVersions pdfver, Parameter.Orientations orient, bool webopt, bool embed)
-        {
-            var setting = CreateSetting();
-            setting.PDFVersion = pdfver;
-            setting.WebOptimize = webopt;
-            setting.EmbedFont = embed;
-
-            var suffix = string.Format("-{0}-{1}", pdfver, orient);
-            if (webopt)   suffix += "-webopt";
-            if (!embed)   suffix += "-noembed";
-            AssertRun(setting, suffix);
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
         /// TestRunAsPdfWithImageParameters
         /// 
         /// <summary>
@@ -206,7 +209,7 @@ namespace CubePdf
         [TestCase(Parameter.Resolutions.Resolution150, Parameter.DownSamplings.Subsample, Parameter.ImageFilters.FlateEncode)]
         [TestCase(Parameter.Resolutions.Resolution72,  Parameter.DownSamplings.Average,   Parameter.ImageFilters.FlateEncode)]
         [TestCase(Parameter.Resolutions.Resolution300, Parameter.DownSamplings.Average,   Parameter.ImageFilters.DCTEncode)]
-        public void TestPdfWithImageParameters(
+        public void TestRunAsPdfWithImageParameters(
             Parameter.Resolutions   resolution,
             Parameter.DownSamplings downsampling,
             Parameter.ImageFilters  filter)
@@ -222,7 +225,7 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// TestRunAsPdfWithFilename
+        /// TestFilename
         /// 
         /// <summary>
         /// 様々なファイル名に設定して、PDF の生成テストを行います。
@@ -236,7 +239,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         [TestCase("file with spaces.ps")]
         [TestCase("日本語のファイル.ps")]
-        public void TestPdfWithFilename(string filename)
+        public void TestFilename(string filename)
         {
             var src  = System.IO.Path.Combine(_examples, "example-min.ps");
             var dest = System.IO.Path.Combine(_results, filename);
