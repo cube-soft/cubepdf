@@ -94,10 +94,8 @@
             this.LandscapeRadioButton = new System.Windows.Forms.RadioButton();
             this.PortraitRadioButton = new System.Windows.Forms.RadioButton();
             this.OrientationLabel = new System.Windows.Forms.Label();
-            this.DownSamplingLabel = new System.Windows.Forms.Label();
             this.OptionLabel = new System.Windows.Forms.Label();
             this.OthersLabel = new System.Windows.Forms.Label();
-            this.DownSamplingComboBox = new System.Windows.Forms.ComboBox();
             this.EmbedFontCheckBox = new System.Windows.Forms.CheckBox();
             this.GrayscaleCheckBox = new System.Windows.Forms.CheckBox();
             this.ImageFilterCheckBox = new System.Windows.Forms.CheckBox();
@@ -802,10 +800,8 @@
             this.DetailPanel.Controls.Add(this.LandscapeRadioButton);
             this.DetailPanel.Controls.Add(this.PortraitRadioButton);
             this.DetailPanel.Controls.Add(this.OrientationLabel);
-            this.DetailPanel.Controls.Add(this.DownSamplingLabel);
             this.DetailPanel.Controls.Add(this.OptionLabel);
             this.DetailPanel.Controls.Add(this.OthersLabel);
-            this.DetailPanel.Controls.Add(this.DownSamplingComboBox);
             this.DetailPanel.Controls.Add(this.EmbedFontCheckBox);
             this.DetailPanel.Controls.Add(this.GrayscaleCheckBox);
             this.DetailPanel.Controls.Add(this.ImageFilterCheckBox);
@@ -823,7 +819,7 @@
             // 
             this.AutoRadioButton.AutoSize = true;
             this.AutoRadioButton.Checked = true;
-            this.AutoRadioButton.Location = new System.Drawing.Point(240, 48);
+            this.AutoRadioButton.Location = new System.Drawing.Point(240, 22);
             this.AutoRadioButton.Name = "AutoRadioButton";
             this.AutoRadioButton.Size = new System.Drawing.Size(47, 16);
             this.AutoRadioButton.TabIndex = 73;
@@ -835,7 +831,7 @@
             // LandscapeRadioButton
             // 
             this.LandscapeRadioButton.AutoSize = true;
-            this.LandscapeRadioButton.Location = new System.Drawing.Point(180, 48);
+            this.LandscapeRadioButton.Location = new System.Drawing.Point(180, 22);
             this.LandscapeRadioButton.Name = "LandscapeRadioButton";
             this.LandscapeRadioButton.Size = new System.Drawing.Size(35, 16);
             this.LandscapeRadioButton.TabIndex = 72;
@@ -846,7 +842,7 @@
             // PortraitRadioButton
             // 
             this.PortraitRadioButton.AutoSize = true;
-            this.PortraitRadioButton.Location = new System.Drawing.Point(120, 48);
+            this.PortraitRadioButton.Location = new System.Drawing.Point(120, 22);
             this.PortraitRadioButton.Name = "PortraitRadioButton";
             this.PortraitRadioButton.Size = new System.Drawing.Size(35, 16);
             this.PortraitRadioButton.TabIndex = 71;
@@ -857,27 +853,16 @@
             // OrientationLabel
             // 
             this.OrientationLabel.AutoSize = true;
-            this.OrientationLabel.Location = new System.Drawing.Point(20, 50);
+            this.OrientationLabel.Location = new System.Drawing.Point(20, 24);
             this.OrientationLabel.Name = "OrientationLabel";
             this.OrientationLabel.Size = new System.Drawing.Size(72, 12);
             this.OrientationLabel.TabIndex = 100;
             this.OrientationLabel.Text = "ページの向き：";
             // 
-            // DownSamplingLabel
-            // 
-            this.DownSamplingLabel.AutoSize = true;
-            this.DownSamplingLabel.Location = new System.Drawing.Point(20, 24);
-            this.DownSamplingLabel.Margin = new System.Windows.Forms.Padding(3);
-            this.DownSamplingLabel.Name = "DownSamplingLabel";
-            this.DownSamplingLabel.Size = new System.Drawing.Size(91, 12);
-            this.DownSamplingLabel.TabIndex = 100;
-            this.DownSamplingLabel.Text = "ダウンサンプリング：";
-            this.DownSamplingLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // OptionLabel
             // 
             this.OptionLabel.AutoSize = true;
-            this.OptionLabel.Location = new System.Drawing.Point(20, 76);
+            this.OptionLabel.Location = new System.Drawing.Point(20, 50);
             this.OptionLabel.Margin = new System.Windows.Forms.Padding(3);
             this.OptionLabel.Name = "OptionLabel";
             this.OptionLabel.Size = new System.Drawing.Size(54, 12);
@@ -888,7 +873,7 @@
             // OthersLabel
             // 
             this.OthersLabel.AutoSize = true;
-            this.OthersLabel.Location = new System.Drawing.Point(20, 180);
+            this.OthersLabel.Location = new System.Drawing.Point(20, 154);
             this.OthersLabel.Margin = new System.Windows.Forms.Padding(3);
             this.OthersLabel.Name = "OthersLabel";
             this.OthersLabel.Size = new System.Drawing.Size(42, 12);
@@ -896,20 +881,10 @@
             this.OthersLabel.Text = "その他：";
             this.OthersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // DownSamplingComboBox
-            // 
-            this.DownSamplingComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.DownSamplingComboBox.FormattingEnabled = true;
-            this.DownSamplingComboBox.Location = new System.Drawing.Point(120, 21);
-            this.DownSamplingComboBox.Name = "DownSamplingComboBox";
-            this.DownSamplingComboBox.Size = new System.Drawing.Size(316, 20);
-            this.DownSamplingComboBox.TabIndex = 70;
-            this.DownSamplingComboBox.SelectedIndexChanged += new System.EventHandler(this.SettingChanged);
-            // 
             // EmbedFontCheckBox
             // 
             this.EmbedFontCheckBox.AutoSize = true;
-            this.EmbedFontCheckBox.Location = new System.Drawing.Point(120, 75);
+            this.EmbedFontCheckBox.Location = new System.Drawing.Point(120, 49);
             this.EmbedFontCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.EmbedFontCheckBox.Name = "EmbedFontCheckBox";
             this.EmbedFontCheckBox.Size = new System.Drawing.Size(112, 16);
@@ -921,7 +896,7 @@
             // GrayscaleCheckBox
             // 
             this.GrayscaleCheckBox.AutoSize = true;
-            this.GrayscaleCheckBox.Location = new System.Drawing.Point(120, 101);
+            this.GrayscaleCheckBox.Location = new System.Drawing.Point(120, 75);
             this.GrayscaleCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.GrayscaleCheckBox.Name = "GrayscaleCheckBox";
             this.GrayscaleCheckBox.Size = new System.Drawing.Size(90, 16);
@@ -933,7 +908,7 @@
             // ImageFilterCheckBox
             // 
             this.ImageFilterCheckBox.AutoSize = true;
-            this.ImageFilterCheckBox.Location = new System.Drawing.Point(120, 127);
+            this.ImageFilterCheckBox.Location = new System.Drawing.Point(120, 101);
             this.ImageFilterCheckBox.Name = "ImageFilterCheckBox";
             this.ImageFilterCheckBox.Size = new System.Drawing.Size(143, 16);
             this.ImageFilterCheckBox.TabIndex = 76;
@@ -944,7 +919,7 @@
             // WebOptimizeCheckBox
             // 
             this.WebOptimizeCheckBox.AutoSize = true;
-            this.WebOptimizeCheckBox.Location = new System.Drawing.Point(120, 153);
+            this.WebOptimizeCheckBox.Location = new System.Drawing.Point(120, 127);
             this.WebOptimizeCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.WebOptimizeCheckBox.Name = "WebOptimizeCheckBox";
             this.WebOptimizeCheckBox.Size = new System.Drawing.Size(126, 16);
@@ -956,7 +931,7 @@
             // UpdateCheckBox
             // 
             this.UpdateCheckBox.AutoSize = true;
-            this.UpdateCheckBox.Location = new System.Drawing.Point(120, 179);
+            this.UpdateCheckBox.Location = new System.Drawing.Point(120, 153);
             this.UpdateCheckBox.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
             this.UpdateCheckBox.Name = "UpdateCheckBox";
             this.UpdateCheckBox.Size = new System.Drawing.Size(174, 16);
@@ -968,7 +943,7 @@
             // PostProcessLiteLabel
             // 
             this.PostProcessLiteLabel.AutoSize = true;
-            this.PostProcessLiteLabel.Location = new System.Drawing.Point(20, 210);
+            this.PostProcessLiteLabel.Location = new System.Drawing.Point(20, 184);
             this.PostProcessLiteLabel.Margin = new System.Windows.Forms.Padding(3);
             this.PostProcessLiteLabel.Name = "PostProcessLiteLabel";
             this.PostProcessLiteLabel.Size = new System.Drawing.Size(75, 12);
@@ -980,7 +955,7 @@
             // 
             this.PostProcessLiteComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PostProcessLiteComboBox.FormattingEnabled = true;
-            this.PostProcessLiteComboBox.Location = new System.Drawing.Point(120, 207);
+            this.PostProcessLiteComboBox.Location = new System.Drawing.Point(120, 181);
             this.PostProcessLiteComboBox.Name = "PostProcessLiteComboBox";
             this.PostProcessLiteComboBox.Size = new System.Drawing.Size(316, 20);
             this.PostProcessLiteComboBox.TabIndex = 79;
@@ -1089,10 +1064,8 @@
         private System.Windows.Forms.TextBox DocSubtitleTextBox;
         private System.Windows.Forms.TextBox DocKeywordTextBox;
         private System.Windows.Forms.Panel DetailPanel;
-        private System.Windows.Forms.Label DownSamplingLabel;
         private System.Windows.Forms.Label OptionLabel;
         private System.Windows.Forms.Label OthersLabel;
-        private System.Windows.Forms.ComboBox DownSamplingComboBox;
         private System.Windows.Forms.CheckBox EmbedFontCheckBox;
         private System.Windows.Forms.CheckBox GrayscaleCheckBox;
         private System.Windows.Forms.CheckBox ImageFilterCheckBox;
