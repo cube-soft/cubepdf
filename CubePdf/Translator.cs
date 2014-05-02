@@ -33,22 +33,18 @@ namespace CubePdf
     /* --------------------------------------------------------------------- */
     public abstract class Translator
     {
+        #region Enum value to index
+
         /* ----------------------------------------------------------------- */
         ///
-        /// FileTypeToIndex
+        /// ToIndex
         ///
         /// <summary>
         /// FileTypes からコンボボックスのインデックスに変換します。
         /// </summary>
         /// 
-        /// <remarks>
-        /// 現状は全て同じ値なのでキャストを行うだけの実装となっています。
-        /// 今後、この2 つの値が異なるケースが現れた場合は、このメソッドで
-        /// 調整します。
-        /// </remarks>
-        ///
         /* ----------------------------------------------------------------- */
-        public static int FileTypeToIndex(Parameter.FileTypes id)
+        public static int ToIndex(Parameter.FileTypes id)
         {
             foreach (Parameter.FileTypes x in Enum.GetValues(typeof(Parameter.FileTypes)))
             {
@@ -59,43 +55,14 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// IndexToFileType
+        /// ToIndex
         ///
         /// <summary>
-        /// コンボボックスのインデックスから FileTypes に変換します。
+        /// PdfVersions からコンボボックスのインデックスに変換します。
         /// </summary>
         /// 
-        /// <remarks>
-        /// 現状は全て同じ値なのでキャストを行うだけの実装となっています。
-        /// 今後、この 2 つの値が異なるケースが現れた場合は、このメソッドで
-        /// 調整します。
-        /// </remarks>
-        ///
         /* ----------------------------------------------------------------- */
-        public static Parameter.FileTypes IndexToFileType(int index)
-        {
-            foreach (int x in Enum.GetValues(typeof(Parameter.FileTypes)))
-            {
-                if (x == index) return (Parameter.FileTypes)index;
-            }
-            return (Parameter.FileTypes)0;
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// PDFVersionToIndex
-        ///
-        /// <summary>
-        /// PDFVersions からコンボボックスのインデックスに変換します。
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// NOTE: 現状は全て同じ値なのでキャストを行うだけ．今後，この
-        /// 2 つの値が異なるケースが現れた場合は，この関数で調整する．
-        /// </remarks>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static int PDFVersionToIndex(Parameter.PdfVersions id)
+        public static int ToIndex(Parameter.PdfVersions id)
         {
             foreach (Parameter.PdfVersions x in Enum.GetValues(typeof(Parameter.PdfVersions)))
             {
@@ -106,44 +73,14 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// IndexToPDFVersion
-        ///
-        /// <summary>
-        /// コンボボックスのインデックスから PDFVersions に変換します。
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// 現状は全て同じ値なのでキャストを行うだけの実装となっています。
-        /// 今後、この 2 つの値が異なるケースが現れた場合は、このメソッドで
-        /// 調整します。
-        /// </remarks>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static Parameter.PdfVersions IndexToPDFVersion(int index)
-        {
-            foreach (int x in Enum.GetValues(typeof(Parameter.PdfVersions)))
-            {
-                if (x == index) return (Parameter.PdfVersions)index;
-            }
-            return (Parameter.PdfVersions)0;
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ResolutionToIndex
+        /// ToIndex
         ///
         /// <summary>
         /// Resolutions からコンボボックスのインデックスに変換します。
         /// </summary>
         /// 
-        /// <remarks>
-        /// 現状は全て同じ値なのでキャストを行うだけの実装となっています。
-        /// 今後、この 2 つの値が異なるケースが現れた場合は、このメソッドで
-        /// 調整します。
-        /// </remarks>
-        ///
         /* ----------------------------------------------------------------- */
-        public static int ResolutionToIndex(Parameter.Resolutions id)
+        public static int ToIndex(Parameter.Resolutions id)
         {
             foreach (Parameter.Resolutions x in Enum.GetValues(typeof(Parameter.Resolutions)))
             {
@@ -154,44 +91,14 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// IndexToResolution
-        ///
-        /// <summary>
-        /// コンボボックスのインデックスから Resolutions に変換します。
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// 現状は全て同じ値なのでキャストを行うだけの実装となっています。
-        /// 今後、この 2 つの値が異なるケースが現れた場合は、このメソッドで
-        /// 調整します。
-        /// </remarks>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static Parameter.Resolutions IndexToResolution(int index)
-        {
-            foreach (int x in Enum.GetValues(typeof(Parameter.Resolutions)))
-            {
-                if (x == index) return (Parameter.Resolutions)index;
-            }
-            return (Parameter.Resolutions)0;
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ExistedFileToIndex
+        /// ToIndex
         ///
         /// <summary>
         /// ExistedFiles からコンボボックスのインデックスに変換します。
         /// </summary>
         /// 
-        /// <remarks>
-        /// 現状は全て同じ値なのでキャストを行うだけの実装となっています。
-        /// 今後、この 2 つの値が異なるケースが現れた場合は、このメソッドで
-        /// 調整します。
-        /// </remarks>
-        ///
         /* ----------------------------------------------------------------- */
-        public static int ExistedFileToIndex(Parameter.ExistedFiles id)
+        public static int ToIndex(Parameter.ExistedFiles id)
         {
             foreach (Parameter.ExistedFiles x in Enum.GetValues(typeof(Parameter.ExistedFiles)))
             {
@@ -202,44 +109,14 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// IndexToExistedFile
-        ///
-        /// <summary>
-        /// コンボボックスのインデックスから ExistedFiles に変換します。
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// 現状は全て同じ値なのでキャストを行うだけの実装となっています。
-        /// 今後、この 2 つの値が異なるケースが現れた場合は、このメソッドで
-        /// 調整します。
-        /// </remarks>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static Parameter.ExistedFiles IndexToExistedFile(int index)
-        {
-            foreach (int x in Enum.GetValues(typeof(Parameter.ExistedFiles)))
-            {
-                if (x == index) return (Parameter.ExistedFiles)index;
-            }
-            return (Parameter.ExistedFiles)0;
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// PostProcessToIndex
+        /// ToIndex
         ///
         /// <summary>
         /// PostProcesses からコンボボックスのインデックスに変換します。
         /// </summary>
         /// 
-        /// <remarks>
-        /// 現状は全て同じ値なのでキャストを行うだけの実装となっています。
-        /// 今後、この 2 つの値が異なるケースが現れた場合は、このメソッドで
-        /// 調整します。
-        /// </remarks>
-        ///
         /* ----------------------------------------------------------------- */
-        public static int PostProcessToIndex(Parameter.PostProcesses id)
+        public static int ToIndex(Parameter.PostProcesses id)
         {
             foreach (Parameter.PostProcesses x in Enum.GetValues(typeof(Parameter.PostProcesses)))
             {
@@ -250,20 +127,108 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// IndexToPostProcess
+        /// ToIndex
+        ///
+        /// <summary>
+        /// DownSamplings からコンボボックスのインデックスに変換します。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public static int ToIndex(Parameter.DownSamplings id)
+        {
+            foreach (Parameter.DownSamplings x in Enum.GetValues(typeof(Parameter.DownSamplings)))
+            {
+                if (x == id) return (int)id;
+            }
+            return (int)Parameter.DownSamplings.None;
+        }
+
+        #endregion
+
+        #region Index to enum value
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ToFileType
+        ///
+        /// <summary>
+        /// コンボボックスのインデックスから FileTypes に変換します。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public static Parameter.FileTypes ToFileType(int index)
+        {
+            foreach (int x in Enum.GetValues(typeof(Parameter.FileTypes)))
+            {
+                if (x == index) return (Parameter.FileTypes)index;
+            }
+            return (Parameter.FileTypes)0;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ToPdfVersion
+        ///
+        /// <summary>
+        /// コンボボックスのインデックスから PDFVersions に変換します。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public static Parameter.PdfVersions ToPdfVersion(int index)
+        {
+            foreach (int x in Enum.GetValues(typeof(Parameter.PdfVersions)))
+            {
+                if (x == index) return (Parameter.PdfVersions)index;
+            }
+            return (Parameter.PdfVersions)0;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ToResolution
+        ///
+        /// <summary>
+        /// コンボボックスのインデックスから Resolutions に変換します。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public static Parameter.Resolutions ToResolution(int index)
+        {
+            foreach (int x in Enum.GetValues(typeof(Parameter.Resolutions)))
+            {
+                if (x == index) return (Parameter.Resolutions)index;
+            }
+            return (Parameter.Resolutions)0;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ToExistedFile
+        ///
+        /// <summary>
+        /// コンボボックスのインデックスから ExistedFiles に変換します。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        public static Parameter.ExistedFiles ToExistedFile(int index)
+        {
+            foreach (int x in Enum.GetValues(typeof(Parameter.ExistedFiles)))
+            {
+                if (x == index) return (Parameter.ExistedFiles)index;
+            }
+            return (Parameter.ExistedFiles)0;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ToPostProcess
         ///
         /// <summary>
         /// コンボボックスのインデックスから PostProcesses に変換します。
         /// </summary>
         /// 
-        /// <remarks>
-        /// 現状は全て同じ値なのでキャストを行うだけの実装となっています。
-        /// 今後、この 2 つの値が異なるケースが現れた場合は、このメソッドで
-        /// 調整します。
-        /// </remarks>
-        ///
         /* ----------------------------------------------------------------- */
-        public static Parameter.PostProcesses IndexToPostProcess(int index)
+        public static Parameter.PostProcesses ToPostProcess(int index)
         {
             foreach (int x in Enum.GetValues(typeof(Parameter.PostProcesses)))
             {
@@ -274,44 +239,14 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// DownSamplingToIndex
-        ///
-        /// <summary>
-        /// DownSamplings からコンボボックスのインデックスに変換します。
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// 現状は全て同じ値なのでキャストを行うだけの実装となっています。
-        /// 今後、この 2 つの値が異なるケースが現れた場合は、このメソッドで
-        /// 調整します。
-        /// </remarks>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static int DownSamplingToIndex(Parameter.DownSamplings id)
-        {
-            foreach (Parameter.DownSamplings x in Enum.GetValues(typeof(Parameter.DownSamplings)))
-            {
-                if (x == id) return (int)id;
-            }
-            return (int)Parameter.DownSamplings.None;
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// IndexToDownSampling
+        /// ToDownSampling
         ///
         /// <summary>
         /// コンボボックスのインデックスから DownSamplings に変換します。
         /// </summary>
         /// 
-        /// <remarks>
-        /// 現状は全て同じ値なのでキャストを行うだけの実装となっています。
-        /// 今後、この 2 つの値が異なるケースが現れた場合は、このメソッドで
-        /// 調整します。
-        /// </remarks>
-        ///
         /* ----------------------------------------------------------------- */
-        public static Parameter.DownSamplings IndexToDownSampling(int index)
+        public static Parameter.DownSamplings ToDownSampling(int index)
         {
             foreach (int x in Enum.GetValues(typeof(Parameter.DownSamplings)))
             {
@@ -319,5 +254,7 @@ namespace CubePdf
             }
             return (Parameter.DownSamplings)0;
         }
+
+        #endregion
     }
 }

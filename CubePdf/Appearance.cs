@@ -38,58 +38,28 @@ namespace CubePdf
     {
         /* ----------------------------------------------------------------- */
         ///
-        /// FileFilterString
-        ///
-        /// <summary>
-        /// 保存ファイルのフィルターに適用する文字列を取得します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static string FileFilterString()
-        {
-            StringBuilder dest = new StringBuilder();
-            dest.Append("PDF ファイル (*.pdf)|*.pdf");
-            dest.Append("|");
-            dest.Append("PS ファイル (*.ps)|*.ps");
-            dest.Append("|");
-            dest.Append("EPS ファイル (*.eps)|*.eps");
-            dest.Append("|");
-            dest.Append("SVG ファイル (*.svg)|*.svg");
-            dest.Append("|");
-            dest.Append("PNG ファイル (*.png)|*.png");
-            dest.Append("|");
-            dest.Append("JPEG ファイル (*.jpg;*.jpeg)|*.jpg;*.jpeg");
-            dest.Append("|");
-            dest.Append("BMP ファイル (*.bmp)|*.bmp");
-            dest.Append("|");
-            dest.Append("TIFF ファイル (*.tiff;*.tif)|*.tiff;*.tif");
-            return dest.ToString();
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// FileTypeString
+        /// GetString
         ///
         /// <summary>
         /// FileTypes の各値に対応する文字列を取得します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static string FileTypeString(Parameter.FileTypes id)
+        public static string GetString(Parameter.FileTypes id)
         {
             return Parameter.FileTypeValue(id);
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// PDFVersionString
+        /// GetString
         ///
         /// <summary>
         /// PDFVersions の各値に対応する文字列を取得します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static string PDFVersionString(Parameter.PdfVersions id)
+        public static string GetString(Parameter.PdfVersions id)
         {
             if (id == Parameter.PdfVersions.VerPDFA) return ""; //"PDF/A";
             else if (id == Parameter.PdfVersions.VerPDFX) return ""; //"PDF/X";
@@ -98,14 +68,14 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ExistedFileString
+        /// GetString
         ///
         /// <summary>
         /// ExistedFiles の各値に対応する文字列を取得します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static string ExistedFileString(Parameter.ExistedFiles id)
+        public static string GetString(Parameter.ExistedFiles id)
         {
             switch (id)
             {
@@ -120,14 +90,14 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// PostProcessString
+        /// GetString
         ///
         /// <summary>
         /// PostProcesses の各値に対応する文字列を取得します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static string PostProcessString(Parameter.PostProcesses id)
+        public static string GetString(Parameter.PostProcesses id)
         {
             switch (id)
             {
@@ -141,28 +111,28 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ResolutionString
+        /// GetString
         ///
         /// <summary>
         /// Resolutions の各値に対応する文字列を取得します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static string ResolutionString(Parameter.Resolutions id)
+        public static string GetString(Parameter.Resolutions id)
         {
             return Parameter.ResolutionValue(id).ToString();
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// DownSamplingString
+        /// GetString
         ///
         /// <summary>
         /// DownSamplings の各値に対応する文字列を取得します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public static string DownSamplingString(Parameter.DownSamplings id)
+        public static string GetString(Parameter.DownSamplings id)
         {
             switch (id)
             {

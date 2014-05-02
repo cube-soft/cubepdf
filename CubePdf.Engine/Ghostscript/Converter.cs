@@ -267,10 +267,54 @@ namespace CubePdf.Ghostscript
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        public void AddOption<Type>(string key, Type value) { _options.Add(key, value.ToString()); }
-        public void AddOption(string key, string value) { _options.Add(key, value); }
-        public void AddOption(string key, bool value) { _options.Add(key, value.ToString().ToLower()); }
-        public void AddOption(string key) { _options.Add(key, null); }
+        public void AddOption(string key, string value)
+        {
+            if (_options.ContainsKey(key)) _options[key] = value;
+            else _options.Add(key, value);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddOption
+        ///
+        /// <summary>
+        /// オプションを追加します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void AddOption(string key)
+        {
+            if (_options.ContainsKey(key)) _options[key] = null;
+            else _options.Add(key, null);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddOption
+        ///
+        /// <summary>
+        /// オプションを追加します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void AddOption<Type>(string key, Type value)
+        {
+            AddOption(key, value.ToString());
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddOption
+        ///
+        /// <summary>
+        /// オプションを追加します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public void AddOption(string key, bool value)
+        {
+            AddOption(key, value.ToString().ToLower());
+        }
 
         /* ----------------------------------------------------------------- */
         ///

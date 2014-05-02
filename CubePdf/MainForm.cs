@@ -52,90 +52,93 @@ namespace CubePdf
         public MainForm(UserSetting setting)
         {
             InitializeComponent();
-            InitializeComboAppearance();
+            InitializeComboBox();
 
-            this._setting = setting;
-            this.UpgradeSetting(_setting);
-            this.LoadSetting(_setting);
+            _setting = setting;
+            UpgradeSetting(_setting);
+            LoadSetting(_setting);
 
+            var name    = Properties.Resources.ProductName;
+            var version = _setting.Version;
             var edition = (IntPtr.Size == 4) ? "x86" : "x64";
-            this.Text = String.Format("CubePDF {0} ({1})", _setting.Version, edition);
+            Text = string.Format("{0} {1} ({2})", name, version, edition);
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// InitializeComboAppearance
+        /// InitializeComboBox
         /// 
         /// <summary>
         /// 各種コンボボックスに表示される文字列を初期化します。
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        private void InitializeComboAppearance()
+        private void InitializeComboBox()
         {
             // FileType
-            this.FileTypeCombBox.Items.Clear();
+            FileTypeCombBox.Items.Clear();
             foreach (Parameter.FileTypes id in Enum.GetValues(typeof(Parameter.FileTypes)))
             {
-                this.FileTypeCombBox.Items.Add(Appearance.FileTypeString(id));
+                FileTypeCombBox.Items.Add(Appearance.GetString(id));
             }
-            this.FileTypeCombBox.SelectedIndex = 0;
+            FileTypeCombBox.SelectedIndex = 0;
 
-            // PDFVersion
-            this.PDFVersionComboBox.Items.Clear();
+            // PDF Version
+            PdfVersionComboBox.Items.Clear();
             foreach (Parameter.PdfVersions id in Enum.GetValues(typeof(Parameter.PdfVersions)))
             {
-                string s = Appearance.PDFVersionString(id);
-                if (s.Length > 0) this.PDFVersionComboBox.Items.Add(s);
+                var str = Appearance.GetString(id);
+                if (string.IsNullOrEmpty(str)) continue;
+                PdfVersionComboBox.Items.Add(str);
             }
-            this.PDFVersionComboBox.SelectedIndex = 0;
+            PdfVersionComboBox.SelectedIndex = 0;
 
             // Resolution
-            this.ResolutionComboBox.Items.Clear();
+            ResolutionComboBox.Items.Clear();
             foreach (Parameter.Resolutions id in Enum.GetValues(typeof(Parameter.Resolutions)))
             {
-                this.ResolutionComboBox.Items.Add(Appearance.ResolutionString(id));
+                ResolutionComboBox.Items.Add(Appearance.GetString(id));
             }
-            this.ResolutionComboBox.SelectedIndex = 0;
+            ResolutionComboBox.SelectedIndex = 0;
 
             // ExistedFile
-            this.ExistedFileComboBox.Items.Clear();
+            ExistedFileComboBox.Items.Clear();
             foreach (Parameter.ExistedFiles id in Enum.GetValues(typeof(Parameter.ExistedFiles)))
             {
-                this.ExistedFileComboBox.Items.Add(Appearance.ExistedFileString(id));
+                ExistedFileComboBox.Items.Add(Appearance.GetString(id));
             }
-            this.ExistedFileComboBox.SelectedIndex = 0;
+            ExistedFileComboBox.SelectedIndex = 0;
 
             // PostProcess
-            this.PostProcessComboBox.Items.Clear();
+            PostProcessComboBox.Items.Clear();
             foreach (Parameter.PostProcesses id in Enum.GetValues(typeof(Parameter.PostProcesses)))
             {
-                this.PostProcessComboBox.Items.Add(Appearance.PostProcessString(id));
+                PostProcessComboBox.Items.Add(Appearance.GetString(id));
             }
-            this.PostProcessComboBox.SelectedIndex = 0;
+            PostProcessComboBox.SelectedIndex = 0;
 
             // Advance モードに設定されていない PostProcess
-            this.PostProcessLiteComboBox.Items.Clear();
-            this.PostProcessLiteComboBox.Items.Add(Appearance.PostProcessString(Parameter.PostProcesses.Open));
-            this.PostProcessLiteComboBox.Items.Add(Appearance.PostProcessString(Parameter.PostProcesses.None));
-            this.PostProcessLiteComboBox.SelectedIndex = 0;
+            PostProcessLiteComboBox.Items.Clear();
+            PostProcessLiteComboBox.Items.Add(Appearance.GetString(Parameter.PostProcesses.Open));
+            PostProcessLiteComboBox.Items.Add(Appearance.GetString(Parameter.PostProcesses.None));
+            PostProcessLiteComboBox.SelectedIndex = 0;
 
             // DownSampling
-            this.DownSamplingComboBox.Items.Clear();
+            DownSamplingComboBox.Items.Clear();
             foreach (Parameter.DownSamplings id in Enum.GetValues(typeof(Parameter.DownSamplings)))
             {
-                this.DownSamplingComboBox.Items.Add(Appearance.DownSamplingString(id));
+                DownSamplingComboBox.Items.Add(Appearance.GetString(id));
             }
-            this.DownSamplingComboBox.SelectedIndex = 0;
+            DownSamplingComboBox.SelectedIndex = 0;
         }
 
         #endregion
 
-        #region Checking methods when the convert button is pushed
+        #region Varlidation methods when the convert button is pushed
 
         /* ----------------------------------------------------------------- */
         ///
-        /// CheckPassword
+        /// IsValidPassword
         ///
         /// <summary>
         /// パスワードのチェックを行います。パスワードダイアログと
@@ -144,7 +147,7 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private bool CheckPassword(bool enabled, string password, string confirm)
+        private bool IsValidPassword(bool enabled, string password, string confirm)
         {
             if (enabled && password != confirm)
             {
@@ -157,7 +160,7 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// CheckOutput
+        /// IsValidOutput
         /// 
         /// <summary>
         /// 出力先パスが正しいかどうかをチェックします。出力先パスが指定
@@ -166,36 +169,28 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private bool CheckOutput(int do_existed_file)
+        private bool IsValidOutput(int do_existed_file)
         {
-            if (this.OutputPathTextBox.Text.Length == 0)
+            if (string.IsNullOrEmpty(OutputPathTextBox.Text))
             {
                 ShowError(Properties.Resources.FileNotSpecified);
                 return false;
             }
-            else
-            {
-                var ext = System.IO.Path.GetExtension(this.OutputPathTextBox.Text);
-                var compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
-                if (ext != compared) OutputPathTextBox.Text += compared;
 
-                if (System.IO.File.Exists(this.OutputPathTextBox.Text) &&
-                    Translator.IndexToExistedFile(ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
-                {
-                    // {0} は既に存在します。{1}しますか？
-                    string message = String.Format(Properties.Resources.FileExists,
-                        this.OutputPathTextBox.Text, Appearance.ExistedFileString((Parameter.ExistedFiles)do_existed_file));
-                    if (MessageBox.Show(
-                            message,
-                            Properties.Resources.OverwritePrompt,
-                            MessageBoxButtons.OKCancel,
-                            MessageBoxIcon.Warning) == DialogResult.Cancel)
-                    {
-                        return false;
-                    }
-                }
+            var extension = System.IO.Path.GetExtension(OutputPathTextBox.Text);
+            var compared = Parameter.Extension(Translator.ToFileType(FileTypeCombBox.SelectedIndex));
+            if (extension != compared) OutputPathTextBox.Text += compared;
+
+            if (System.IO.File.Exists(OutputPathTextBox.Text) &&
+                Translator.ToExistedFile(ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
+            {
+                var message = string.Format(Properties.Resources.FileExists, OutputPathTextBox.Text,
+                    Appearance.GetString((Parameter.ExistedFiles)do_existed_file));
+                var result = MessageBox.Show(message, Properties.Resources.OverwritePrompt,
+                    MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                return result != DialogResult.Cancel;
             }
-            return true;
+            else return true;
         }
 
         #endregion
@@ -217,42 +212,41 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void LoadSetting(UserSetting setting)
         {
-            this.UserProgramTextBox.Text = setting.UserProgram;
-            this.OutputPathTextBox.Text = setting.OutputPath;
-            this.InputPathTextBox.Text = setting.InputPath;
-            this.ConvertButton.Enabled = !string.IsNullOrEmpty(InputPathTextBox.Text);
+            UserProgramTextBox.Text = setting.UserProgram;
+            OutputPathTextBox.Text  = setting.OutputPath;
+            InputPathTextBox.Text   = setting.InputPath;
+            ConvertButton.Enabled   = !string.IsNullOrEmpty(InputPathTextBox.Text);
 
             // コンボボックスのインデックス関連
-            this.FileTypeCombBox.SelectedIndex = Translator.FileTypeToIndex(setting.FileType);
-            this.PDFVersionComboBox.SelectedIndex = Translator.PDFVersionToIndex(setting.PDFVersion);
-            this.ResolutionComboBox.SelectedIndex = Translator.ResolutionToIndex(setting.Resolution);
-            this.ExistedFileComboBox.SelectedIndex = Translator.ExistedFileToIndex(setting.ExistedFile);
-            this.DownSamplingComboBox.SelectedIndex = Translator.DownSamplingToIndex(setting.DownSampling);
+            FileTypeCombBox.SelectedIndex      = Translator.ToIndex(setting.FileType);
+            PdfVersionComboBox.SelectedIndex   = Translator.ToIndex(setting.PDFVersion);
+            ResolutionComboBox.SelectedIndex   = Translator.ToIndex(setting.Resolution);
+            ExistedFileComboBox.SelectedIndex  = Translator.ToIndex(setting.ExistedFile);
+            DownSamplingComboBox.SelectedIndex = Translator.ToIndex(setting.DownSampling);
 
             // チェックボックスのフラグ関連
-            this.PageLotationCheckBox.Checked = setting.PageRotation;
-            this.EmbedFontCheckBox.Checked = setting.EmbedFont;
-            this.GrayscaleCheckBox.Checked = setting.Grayscale;
-            this.ImageFilterCheckBox.Checked = (setting.ImageFilter == Parameter.ImageFilters.DCTEncode) ? true : false;
-            this.WebOptimizeCheckBox.Checked = setting.WebOptimize;
-            this.UpdateCheckBox.Checked = setting.CheckUpdate;
+            PageLotationCheckBox.Checked = setting.PageRotation;
+            EmbedFontCheckBox.Checked    = setting.EmbedFont;
+            GrayscaleCheckBox.Checked    = setting.Grayscale;
+            ImageFilterCheckBox.Checked  = (setting.ImageFilter == Parameter.ImageFilters.DCTEncode) ? true : false;
+            WebOptimizeCheckBox.Checked  = setting.WebOptimize;
+            UpdateCheckBox.Checked       = setting.CheckUpdate;
 
             // ポストプロセス関連
-            _postproc = setting.AdvancedMode ? this.PostProcessComboBox : this.PostProcessLiteComboBox;
-            _postproc.SelectedIndex = Math.Min(Translator.PostProcessToIndex(setting.PostProcess), Math.Max(_postproc.Items.Count - 1, 0));
-            this.PostProcessPanel.Enabled = setting.AdvancedMode;
-            this.PostProcessPanel.Visible = setting.AdvancedMode;
-            this.PostProcessLabel.Visible = setting.AdvancedMode;
-            this.PostProcessLiteComboBox.Enabled = !setting.AdvancedMode;
-            this.PostProcessLiteComboBox.Visible = !setting.AdvancedMode;
-            this.PostProcessLiteLabel.Visible = !setting.AdvancedMode;
+            _postproc = setting.AdvancedMode ? PostProcessComboBox : PostProcessLiteComboBox;
+            _postproc.SelectedIndex = Math.Min(Translator.ToIndex(setting.PostProcess), Math.Max(_postproc.Items.Count - 1, 0));
+            PostProcessPanel.Enabled = setting.AdvancedMode;
+            PostProcessPanel.Visible = setting.AdvancedMode;
+            PostProcessLabel.Visible = setting.AdvancedMode;
+            PostProcessLiteComboBox.Enabled = !setting.AdvancedMode;
+            PostProcessLiteComboBox.Visible = !setting.AdvancedMode;
+            PostProcessLiteLabel.Visible    = !setting.AdvancedMode;
 
             // 入力パスを選択可能にするかどうか
-            this.InputPathLabel.Visible = setting.SelectInputFile;
-            this.InputPathPanel.Visible = setting.SelectInputFile;
-            this.InputPathPanel.Enabled = setting.SelectInputFile && setting.InputPath.Length == 0;
+            InputPathLabel.Visible = setting.SelectInputFile;
+            InputPathPanel.Visible = setting.SelectInputFile;
+            InputPathPanel.Enabled = setting.SelectInputFile && setting.InputPath.Length == 0;
 
-            // ログ出力
             _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.LoadSetting"));
             _messages.Add(new Message(Message.Levels.Debug, setting.ToString()));
         }
@@ -268,50 +262,47 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void SaveSetting(UserSetting setting)
         {
-            string path = this.OutputPathTextBox.Text;
-            setting.OutputPath = (path.Length == 0 || System.IO.Directory.Exists(path)) ? path : System.IO.Path.GetDirectoryName(path);
-            path = this.InputPathTextBox.Text;
-            setting.InputPath = (path.Length == 0 || System.IO.Directory.Exists(path)) ? path : System.IO.Path.GetDirectoryName(path);
-            setting.UserProgram = this.UserProgramTextBox.Text;
+            setting.OutputPath  = GetDirectoryName(OutputPathTextBox.Text);
+            setting.InputPath   = GetDirectoryName(InputPathTextBox.Text);
+            setting.UserProgram = UserProgramTextBox.Text;
 
             // コンボボックスのインデックス関連
-            setting.FileType = Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex);
-            setting.PDFVersion = Translator.IndexToPDFVersion(this.PDFVersionComboBox.SelectedIndex);
-            setting.Resolution = Translator.IndexToResolution(this.ResolutionComboBox.SelectedIndex);
-            setting.ExistedFile = Translator.IndexToExistedFile(this.ExistedFileComboBox.SelectedIndex);
-            setting.PostProcess = Translator.IndexToPostProcess(_postproc.SelectedIndex);
-            setting.DownSampling = Translator.IndexToDownSampling(this.DownSamplingComboBox.SelectedIndex);
+            setting.FileType     = Translator.ToFileType(FileTypeCombBox.SelectedIndex);
+            setting.PDFVersion   = Translator.ToPdfVersion(PdfVersionComboBox.SelectedIndex);
+            setting.Resolution   = Translator.ToResolution(ResolutionComboBox.SelectedIndex);
+            setting.ExistedFile  = Translator.ToExistedFile(ExistedFileComboBox.SelectedIndex);
+            setting.PostProcess  = Translator.ToPostProcess(_postproc.SelectedIndex);
+            setting.DownSampling = Translator.ToDownSampling(DownSamplingComboBox.SelectedIndex);
 
             // チェックボックスのフラグ関連
-            setting.PageRotation = this.PageLotationCheckBox.Checked;
-            setting.EmbedFont = this.EmbedFontCheckBox.Checked;
-            setting.Grayscale = this.GrayscaleCheckBox.Checked;
-            setting.ImageFilter = this.ImageFilterCheckBox.Checked ? Parameter.ImageFilters.DCTEncode : Parameter.ImageFilters.FlateEncode;
-            setting.WebOptimize = this.WebOptimizeCheckBox.Checked;
-            setting.CheckUpdate = this.UpdateCheckBox.Checked;
+            setting.PageRotation = PageLotationCheckBox.Checked;
+            setting.EmbedFont    = EmbedFontCheckBox.Checked;
+            setting.Grayscale    = GrayscaleCheckBox.Checked;
+            setting.ImageFilter  = ImageFilterCheckBox.Checked ? Parameter.ImageFilters.DCTEncode : Parameter.ImageFilters.FlateEncode;
+            setting.WebOptimize  = WebOptimizeCheckBox.Checked;
+            setting.CheckUpdate  = UpdateCheckBox.Checked;
 
             // 文書プロパティ
-            setting.Document.Title = this.DocTitleTextBox.Text;
-            setting.Document.Author = this.DocAuthorTextBox.Text;
-            setting.Document.Subtitle = this.DocSubtitleTextBox.Text;
-            setting.Document.Keyword = this.DocKeywordTextBox.Text;
+            setting.Document.Title    = DocTitleTextBox.Text;
+            setting.Document.Author   = DocAuthorTextBox.Text;
+            setting.Document.Subtitle = DocSubtitleTextBox.Text;
+            setting.Document.Keyword  = DocKeywordTextBox.Text;
 
-            // パスワード
-            if (this.OwnerPasswordCheckBox.Checked)
+            // セキュリティ
+            if (OwnerPasswordCheckBox.Checked)
             {
-                setting.Permission.Password = String.Copy(this.OwnerPasswordTextBox.Text);
-                setting.Permission.AllowPrint = this.AllowPrintCheckBox.Checked;
-                setting.Permission.AllowCopy = this.AllowCopyCheckBox.Checked;
-                setting.Permission.AllowFormInput = this.AllowFormInputCheckBox.Checked;
-                setting.Permission.AllowModify = this.AllowModifyCheckBox.Checked;
+                setting.Permission.Password       = OwnerPasswordTextBox.Text;
+                setting.Permission.AllowPrint     = AllowPrintCheckBox.Checked;
+                setting.Permission.AllowCopy      = AllowCopyCheckBox.Checked;
+                setting.Permission.AllowFormInput = AllowFormInputCheckBox.Checked;
+                setting.Permission.AllowModify    = AllowModifyCheckBox.Checked;
 
-                if (this.RequiredUserPasswordCheckBox.Checked)
+                if (RequiredUserPasswordCheckBox.Checked)
                 {
-                    setting.Password = String.Copy(this.UserPasswordCheckBox.Checked ? this.UserPasswordTextBox.Text : this.OwnerPasswordTextBox.Text);
+                    setting.Password = UserPasswordCheckBox.Checked ? UserPasswordTextBox.Text : OwnerPasswordTextBox.Text;
                 }
             }
 
-            // ログ出力
             _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.SaveSetting"));
             _messages.Add(new Message(Message.Levels.Debug, setting.ToString()));
         }
@@ -328,7 +319,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void UpgradeSetting(UserSetting setting)
         {
-            string v1 = @"Software\CubePDF";
+            var v1 = @"Software\CubePDF";
             if (Microsoft.Win32.Registry.CurrentUser.OpenSubKey(v1, false) != null)
             {
                 setting.UpgradeFromV1(v1);
@@ -375,7 +366,7 @@ namespace CubePdf
         protected override void OnKeyDown(KeyEventArgs e)
         {
             base.OnKeyDown(e);
-            if (e.KeyCode == Keys.Enter) ConvertButton_Click(this.ConvertButton, e);
+            if (e.KeyCode == Keys.Enter) ConvertButton_Click(ConvertButton, e);
         }
 
         #endregion
@@ -395,23 +386,23 @@ namespace CubePdf
         private void ConvertButton_Click(object sender, EventArgs e)
         {
             // 各種チェック
-            if (!this.CheckPassword(this.OwnerPasswordCheckBox.Checked, this.OwnerPasswordTextBox.Text, this.ConfirmOwnerPasswordTextBox.Text)) return;
-            if (!this.CheckPassword(this.OwnerPasswordCheckBox.Checked & this.UserPasswordCheckBox.Checked, this.UserPasswordTextBox.Text, this.ConfirmUserPasswordTextBox.Text)) return;
-            if (!this.CheckOutput(this.ExistedFileComboBox.SelectedIndex)) return;
+            if (!IsValidPassword(OwnerPasswordCheckBox.Checked, OwnerPasswordTextBox.Text, ConfirmOwnerPasswordTextBox.Text)) return;
+            if (!IsValidPassword(OwnerPasswordCheckBox.Checked & UserPasswordCheckBox.Checked, UserPasswordTextBox.Text, ConfirmUserPasswordTextBox.Text)) return;
+            if (!IsValidOutput(ExistedFileComboBox.SelectedIndex)) return;
 
             // ライブラリが存在してるかどうかをログに記録。
-            if (!System.IO.Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}: file not found", _setting.LibPath)));
-            if (!System.IO.Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Warn, String.Format("{0}\\lib: file not found", _setting.LibPath)));
+            if (!System.IO.Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Debug, string.Format("{0}: file not found", _setting.LibPath)));
+            if (!System.IO.Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Debug, string.Format("{0}\\lib: file not found", _setting.LibPath)));
 
-            this.ConvertButton.Enabled = false;
-            this.SettingButton.Visible = false;            
-            this.ExecProgressBar.Visible = true;
+            ConvertButton.Enabled   = false;
+            SettingButton.Visible   = false;            
+            ExecProgressBar.Visible = true;
 
-            this.SaveSetting(_setting);
-            _setting.InputPath = this.InputPathTextBox.Text;
-            _setting.OutputPath = this.OutputPathTextBox.Text;
+            SaveSetting(_setting);
+            _setting.InputPath  = InputPathTextBox.Text;
+            _setting.OutputPath = OutputPathTextBox.Text;
 
-            this.ConvertBackgroundWorker.RunWorkerAsync();
+            ConvertBackgroundWorker.RunWorkerAsync();
         }
 
         /* ----------------------------------------------------------------- */
@@ -425,10 +416,10 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void ExitButton_Click(object sender, EventArgs e)
         {
-            if (_setting.DeleteOnClose && System.IO.File.Exists(_setting.InputPath)) System.IO.File.Delete(_setting.InputPath);
+            if (_setting.DeleteOnClose) System.IO.File.Delete(_setting.InputPath);
             _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.ExitButton_Click"));
-            this.ShowMessage();
-            this.Close();
+            ShowMessage();
+            Close();
         }
 
         /* ----------------------------------------------------------------- */
@@ -443,11 +434,11 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void SettingButton_Click(object sender, EventArgs e)
         {
-            this.SaveSetting(_setting);
-            _setting.SaveSetting = Parameter.SaveSettings.None; // 「設定を保存」の項目は、1.0.0RC4 以降使用しない
+            SaveSetting(_setting);
+            _setting.SaveSetting = Parameter.SaveSettings.None; // deprecated
             _setting.Save();
-            this.SettingButton.BackgroundImage = Properties.Resources.button_setting_disable;
-            this.SettingButton.Enabled = false;
+            SettingButton.BackgroundImage = Properties.Resources.button_setting_disable;
+            SettingButton.Enabled = false;
         }
 
         /* ----------------------------------------------------------------- */
@@ -462,28 +453,29 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void OutputPathButton_Click(object sender, EventArgs e)
         {
-            SaveFileDialog dialog = new SaveFileDialog();
+            var dialog = new SaveFileDialog();
             dialog.AddExtension = true;
-            dialog.FileName = (this.OutputPathTextBox.TextLength > 0) ?
-                System.IO.Path.GetFileNameWithoutExtension(this.OutputPathTextBox.Text) :
-                System.IO.Path.GetFileNameWithoutExtension(this.InputPathTextBox.Text);
-            dialog.Filter = Appearance.FileFilterString();
-            dialog.FilterIndex = this.FileTypeCombBox.SelectedIndex + 1;
+            dialog.FileName = !string.IsNullOrEmpty(OutputPathTextBox.Text) ?
+                System.IO.Path.GetFileNameWithoutExtension(OutputPathTextBox.Text) :
+                System.IO.Path.GetFileNameWithoutExtension(InputPathTextBox.Text);
+            dialog.Filter = Properties.Resources.OutputPathFilter;
+            dialog.FilterIndex = FileTypeCombBox.SelectedIndex + 1;
             dialog.OverwritePrompt = false;
             if (dialog.ShowDialog() != DialogResult.OK) return;
 
-            if (dialog.FilterIndex != 0 && dialog.FilterIndex - 1 != this.FileTypeCombBox.SelectedIndex)
+            if (dialog.FilterIndex != 0 && dialog.FilterIndex - 1 != FileTypeCombBox.SelectedIndex)
             {
-                this.FileTypeCombBox.SelectedIndex = dialog.FilterIndex - 1;
+                FileTypeCombBox.SelectedIndex = dialog.FilterIndex - 1;
             }
 
             // 拡張子が選択されているファイルタイプと異なる場合は、末尾に拡張子を追加する。
             // ただし、入力された拡張子がユーザのコンピュータに登録されている場合は、それを優先する。
-            string ext = System.IO.Path.GetExtension(this.OutputPathTextBox.Text);
-            string compared = Parameter.Extension(Translator.IndexToFileType(this.FileTypeCombBox.SelectedIndex));
-            this.OutputPathTextBox.Text = dialog.FileName;
-            if (ext != compared) OutputPathTextBox.Text += compared;
-            this.SettingChanged(sender, e);
+            var extension = System.IO.Path.GetExtension(OutputPathTextBox.Text);
+            var type = Translator.ToFileType(FileTypeCombBox.SelectedIndex);
+            var compared = Parameter.Extension(type);
+            OutputPathTextBox.Text = dialog.FileName;
+            if (extension != compared) OutputPathTextBox.Text += compared;
+            SettingChanged(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
@@ -503,15 +495,15 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void InputPathButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
+            var dialog = new OpenFileDialog();
             dialog.CheckFileExists = true;
             dialog.Filter = Properties.Resources.InputPathFilter;
-            if (this.InputPathTextBox.Text.Length > 0) dialog.FileName = this.InputPathTextBox.Text;
+            if (!string.IsNullOrEmpty(InputPathTextBox.Text)) dialog.FileName = InputPathTextBox.Text;
             if (dialog.ShowDialog() != DialogResult.OK) return;
 
-            this.InputPathTextBox.Text = dialog.FileName;
-            this.ConvertButton.Enabled = !string.IsNullOrEmpty(InputPathTextBox.Text);
-            this.SettingChanged(sender, e);
+            InputPathTextBox.Text = dialog.FileName;
+            ConvertButton.Enabled = !string.IsNullOrEmpty(InputPathTextBox.Text);
+            SettingChanged(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
@@ -530,14 +522,14 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void UserProgramButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
+            var dialog = new OpenFileDialog();
             dialog.CheckFileExists = true;
             dialog.Filter = Properties.Resources.UserProgramFilter;
-            if (this.UserProgramTextBox.Text.Length > 0) dialog.FileName = this.UserProgramTextBox.Text;
+            if (!string.IsNullOrEmpty(UserProgramTextBox.Text)) dialog.FileName = UserProgramTextBox.Text;
             if (dialog.ShowDialog() != DialogResult.OK) return;
 
-            this.UserProgramTextBox.Text = dialog.FileName;
-            this.SettingChanged(sender, e);
+            UserProgramTextBox.Text = dialog.FileName;
+            SettingChanged(sender, e);
         }
 
         #endregion
@@ -557,11 +549,10 @@ namespace CubePdf
         /// <remarks>
         /// ファイルタイプに依存するオプションは以下の通りです。
         /// 
-        /// PDF, PS, EPS, SVG: フォントの埋め込み
+        /// PDF, PS, EPS: フォントの埋め込み
         /// PDF: バージョン、 文書プロパティ、セキュリティ、Web 最適化
-        /// BMP, JPEG, PNG: 解像度
         /// 
-        /// 尚、Ghostscript のバグで現在のところ PS, EPS, SVG は
+        /// 尚、Ghostscript のバグで現在のところ PS, EPS は
         /// グレースケール設定ができないようです。また，フォント埋め込みを
         /// 無効にすると文字化けが発生するので、暫定的に強制無効設定にして
         /// います。
@@ -570,31 +561,28 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void FileTypeCombBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboBox control = sender as ComboBox;
+            var control = sender as ComboBox;
             if (control == null) return;
 
-            Parameter.FileTypes id = Translator.IndexToFileType(control.SelectedIndex);
-            bool is_pdf = (id == Parameter.FileTypes.PDF);
-            bool is_bitmap = (id == Parameter.FileTypes.BMP || id == Parameter.FileTypes.JPEG || id == Parameter.FileTypes.PNG || id == Parameter.FileTypes.TIFF);
-            bool is_grayscale = !(id == Parameter.FileTypes.PS || id == Parameter.FileTypes.EPS || id == Parameter.FileTypes.SVG);
-            bool is_webopt = this.WebOptimizeCheckBox.Checked;
-            bool is_security = (this.RequiredUserPasswordCheckBox.Checked || this.OwnerPasswordCheckBox.Checked);
+            var id = Translator.ToFileType(control.SelectedIndex);
+            var ispdf = (id == Parameter.FileTypes.PDF);
+            var isbmp = (id == Parameter.FileTypes.BMP || id == Parameter.FileTypes.JPEG || id == Parameter.FileTypes.PNG || id == Parameter.FileTypes.TIFF);
+            var isweb = WebOptimizeCheckBox.Checked;
+            var issecurity = (RequiredUserPasswordCheckBox.Checked || OwnerPasswordCheckBox.Checked);
 
-            this.PDFVersionComboBox.Enabled = is_pdf;
-            this.ResolutionComboBox.Enabled = is_bitmap;
-            this.DocPanel.Enabled = is_pdf;
-            this.SecurityGroupBox.Enabled = is_pdf && !is_webopt;
-            this.EmbedFontCheckBox.Enabled = false; //!is_bitmap;
-            this.GrayscaleCheckBox.Enabled = is_grayscale;
-            this.ImageFilterCheckBox.Enabled = !is_bitmap;
-            this.WebOptimizeCheckBox.Enabled = is_pdf && !is_security;
+            PdfVersionComboBox.Enabled  = ispdf;
+            DocPanel.Enabled            = ispdf;
+            SecurityGroupBox.Enabled    = ispdf && !isweb;
+            EmbedFontCheckBox.Enabled   = false; //!is_bitmap;
+            ImageFilterCheckBox.Enabled = !isbmp;
+            WebOptimizeCheckBox.Enabled = ispdf && !issecurity;
 
             // 出力パスの拡張子を変更後のファイルタイプに合わせる．
-            if (this.OutputPathTextBox.Text.Length > 0)
+            if (!string.IsNullOrEmpty(OutputPathTextBox.Text))
             {
-                this.OutputPathTextBox.Text = System.IO.Path.ChangeExtension(this.OutputPathTextBox.Text, Parameter.Extension(id));
+                OutputPathTextBox.Text = System.IO.Path.ChangeExtension(OutputPathTextBox.Text, Parameter.Extension(id));
             }
-            this.SettingChanged(sender, e);
+            SettingChanged(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
@@ -610,15 +598,15 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void PostProcessComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboBox control = sender as ComboBox;
+            var control = sender as ComboBox;
             if (control == null) return;
 
-            Parameter.PostProcesses id = Translator.IndexToPostProcess(control.SelectedIndex);
-            bool is_user_program = (id == Parameter.PostProcesses.UserProgram);
+            var id = Translator.ToPostProcess(control.SelectedIndex);
+            var isuser = (id == Parameter.PostProcesses.UserProgram);
 
-            this.UserProgramTextBox.Enabled = is_user_program;
-            this.UserProgramButton.Enabled = is_user_program;
-            this.SettingChanged(sender, e);
+            UserProgramTextBox.Enabled = isuser;
+            UserProgramButton.Enabled  = isuser;
+            SettingChanged(sender, e);
         }
 
         #endregion
@@ -646,8 +634,8 @@ namespace CubePdf
             CheckBox control = sender as CheckBox;
             if (control == null) return;
 
-            this.SecurityGroupBox.Enabled = !control.Checked;
-            this.SettingChanged(sender, e);
+            SecurityGroupBox.Enabled = !control.Checked;
+            SettingChanged(sender, e);
         }
 
         /* ----------------------------------------------------------------- */
@@ -671,9 +659,9 @@ namespace CubePdf
             CheckBox control = sender as CheckBox;
             if (control == null) return;
 
-            this.ConfirmOwnerPasswordTextBox.BackColor = control.Checked ? SystemColors.Window : SystemColors.Control;
-            this.SecurityPanel.Enabled = control.Checked;
-            this.WebOptimizeCheckBox.Enabled = !control.Checked;
+            ConfirmOwnerPasswordTextBox.BackColor = control.Checked ? SystemColors.Window : SystemColors.Control;
+            SecurityPanel.Enabled = control.Checked;
+            WebOptimizeCheckBox.Enabled = !control.Checked;
         }
 
         /* ----------------------------------------------------------------- */
@@ -691,8 +679,8 @@ namespace CubePdf
             var control = sender as CheckBox;
             if (control == null) return;
 
-            this.UserPasswordCheckBox.Enabled = control.Checked;
-            this.UserPasswordPanel.Enabled = (control.Checked & this.UserPasswordCheckBox.Checked);
+            UserPasswordCheckBox.Enabled = control.Checked;
+            UserPasswordPanel.Enabled = (control.Checked & UserPasswordCheckBox.Checked);
         }
 
         /* ----------------------------------------------------------------- */
@@ -712,7 +700,7 @@ namespace CubePdf
             CheckBox control = sender as CheckBox;
             if (control == null) return;
 
-            this.UserPasswordPanel.Enabled = control.Checked;
+            UserPasswordPanel.Enabled = control.Checked;
         }
 
         #endregion
@@ -751,7 +739,7 @@ namespace CubePdf
             Control control = sender as Control;
             if (control == null) return;
 
-            this.Cursor = Cursors.Hand;
+            Cursor = Cursors.Hand;
 
             _tips.Hide(control);
             _tips.ToolTipTitle = string.Empty;
@@ -774,7 +762,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void HeaderPictureBox_MouseLeave(object sender, EventArgs e)
         {
-            this.Cursor = Cursors.Default;
+            Cursor = Cursors.Default;
 
             var control = sender as Control;
             if (control == null) return;
@@ -960,8 +948,8 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void UserPasswordTextBox_TextChanged(object sender, EventArgs e)
         {
-            this.ConfirmUserPasswordTextBox.BackColor = SystemColors.Window;
-            if (this.ConfirmUserPasswordTextBox.Text.Length > 0) this.ConfirmUserPasswordTextBox.Text = "";
+            ConfirmUserPasswordTextBox.BackColor = SystemColors.Window;
+            if (ConfirmUserPasswordTextBox.Text.Length > 0) ConfirmUserPasswordTextBox.Text = "";
         }
 
         /* ----------------------------------------------------------------- */
@@ -989,7 +977,7 @@ namespace CubePdf
         {
             TextBox control = sender as TextBox;
             if (control == null) return;
-            if (control.Text.Length > 0 && this.UserPasswordTextBox.Text != control.Text)
+            if (control.Text.Length > 0 && UserPasswordTextBox.Text != control.Text)
             {
                 control.BackColor = Color.FromArgb(255, 102, 102);
             }
@@ -1009,8 +997,8 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void OwnerPasswordTextBox_TextChanged(object sender, EventArgs e)
         {
-            this.ConfirmOwnerPasswordTextBox.BackColor = SystemColors.Window;
-            if (this.ConfirmOwnerPasswordTextBox.Text.Length > 0) this.ConfirmOwnerPasswordTextBox.Text = "";
+            ConfirmOwnerPasswordTextBox.BackColor = SystemColors.Window;
+            if (ConfirmOwnerPasswordTextBox.Text.Length > 0) ConfirmOwnerPasswordTextBox.Text = "";
         }
 
         /* ----------------------------------------------------------------- */
@@ -1038,7 +1026,7 @@ namespace CubePdf
         {
             TextBox control = sender as TextBox;
             if (control == null) return;
-            if (control.Text.Length > 0 && this.OwnerPasswordTextBox.Text != control.Text)
+            if (control.Text.Length > 0 && OwnerPasswordTextBox.Text != control.Text)
             {
                 control.BackColor = Color.FromArgb(255, 102, 102);
             }
@@ -1083,9 +1071,9 @@ namespace CubePdf
         private void ConvertBackgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             if (e.Result != null) _messages.AddRange((List<CubePdf.Message>)e.Result);
-            this.ShowMessage();
+            ShowMessage();
             if (_setting.DeleteOnClose && System.IO.File.Exists(_setting.InputPath)) System.IO.File.Delete(_setting.InputPath);
-            this.Close();
+            Close();
         }
 
         #endregion
@@ -1161,6 +1149,25 @@ namespace CubePdf
 
             if (iserror) ShowError(description);
             else ShowWarning(description);
+        }
+
+        #endregion
+
+        #region Other methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// GetDirectoryName
+        ///
+        /// <summary>
+        /// パスからディレクトリ部分の名前を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private string GetDirectoryName(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return string.Empty;
+            return System.IO.Directory.Exists(path) ? path : System.IO.Path.GetDirectoryName(path);
         }
 
         #endregion

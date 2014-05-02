@@ -194,6 +194,15 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
+        ///   PDF ファイル (*.pdf)|*.pdf|PS ファイル (*.ps)|*.ps|EPS ファイル (*.eps)|*.eps|PNG ファイル (*.png)|*.png|JPEG ファイル (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP ファイル (*.bmp)|*.bmp|TIFF ファイル (*.tiff;*.tif)|*.tiff;*.tif に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string OutputPathFilter {
+            get {
+                return ResourceManager.GetString("OutputPathFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   上書きの確認 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string OverwritePrompt {
@@ -208,6 +217,15 @@ namespace CubePdf.Properties {
         internal static string PasswordUnmatched {
             get {
                 return ResourceManager.GetString("PasswordUnmatched", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   CubePDF に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string ProductName {
+            get {
+                return ResourceManager.GetString("ProductName", resourceCulture);
             }
         }
         

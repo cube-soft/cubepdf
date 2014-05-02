@@ -175,4 +175,10 @@
   <data name="WarningTitle" xml:space="preserve">
     <value>CubePDF 警告</value>
   </data>
+  <data name="OutputPathFilter" xml:space="preserve">
+    <value>PDF ファイル (*.pdf)|*.pdf|PS ファイル (*.ps)|*.ps|EPS ファイル (*.eps)|*.eps|PNG ファイル (*.png)|*.png|JPEG ファイル (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP ファイル (*.bmp)|*.bmp|TIFF ファイル (*.tiff;*.tif)|*.tiff;*.tif</value>
+  </data>
+  <data name="ProductName" xml:space="preserve">
+    <value>CubePDF</value>
+  </data>
 </root>
