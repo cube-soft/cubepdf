@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
   CubePDF
-  Copyright (c) 2010 - 2013 CubeSoft, Inc. All rights reserved.
+  Copyright (c) 2010 - 2014 CubeSoft, Inc. All rights reserved.
 
   開発・配布：株式会社キューブ・ソフト
   Mailto: support@cube-soft.jp
@@ -13,23 +13,33 @@ CubePDFは、お使いの様々なアプリケーションから、いつでも�
 印刷するのと同じ操作でサッとデータ書き出しが行えるので、操作に戸惑うこともありません。
 詳細な利用方法については、同梱した CubePDF_ユーザーズマニュアル.pdf を参照して下さい。
 
-CubePDF を使用するためには、Microsoft .NetFramework 2.0 がインストールされている必要があります。
-Microsoft .NetFramework 2.0 は、以下の URL からダウンロードして下さい。
-http://www.microsoft.com/ja-jp/download/details.aspx?id=1639
+CubePDF を使用するためには Microsoft .NetFramework 2.0 以上がインストールされている必要があります。
+Microsoft .NetFramework は、以下の URL からダウンロードして下さい。
+http://www.microsoft.com/ja-jp/download/details.aspx?id=22
 
 CubePDFは、以下のライブラリを利用しています。それぞれのライブラリについては、記載した URL から取得することができます。
-- GPL Ghostscript 9.07
+- GPL Ghostscript 9.14
   Copyright (c) Artifex Software, Inc. All rights reserved.
   URL: http://www.ghostscript.com/
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
-- iTextSharp 5.4.2
-  Copyright (c) 2010 - 2013 1T3XT BVBA. All rights reserved.
+- iTextSharp 5.5.0
+  Copyright (c) iText Group NV, iText Software Corp., iText Software BVBA. All rights reserved.
   URL: http://sourceforge.net/projects/itextsharp/
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
 ■バージョン履歴
 2014/05/12 version 1.0.0RC7
 - 変換可能なファイルの種類から SVG を削除
+- ダウンサンプリングに関連する項目を修正
+- ページの向きの項目を追加
+- 暗号化方式を PDF バージョンによって変更するように修正
+- 結合方法をファイルサイズが小さくなるように修正
+- ファイル作成時に一時領域で処理を行うように修正
+- ポストプロセスの実行方法等を修正
+- 出力ファイル名の初期値の決定方法を一部修正
+- バージョン情報画面に使用環境のシステム（Windows、および .NET Framework）のバージョンを表示するように修正
+- メイン画面の見た目を微調整
+- CubePDF プリンタの用紙サイズのリストを修正
 
 2013/08/13 version 1.0.0RC6
 - デスクトップに保存時、手動で「最新の情報に更新」されるまで保存したファイルが表示されない不都合を修正
