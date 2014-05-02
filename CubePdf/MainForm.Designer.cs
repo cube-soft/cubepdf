@@ -830,6 +830,7 @@
             this.AutoRadioButton.TabStop = true;
             this.AutoRadioButton.Text = "自動";
             this.AutoRadioButton.UseVisualStyleBackColor = true;
+            this.AutoRadioButton.CheckedChanged += new System.EventHandler(this.SettingChanged);
             // 
             // LandscapeRadioButton
             // 
@@ -840,6 +841,7 @@
             this.LandscapeRadioButton.TabIndex = 72;
             this.LandscapeRadioButton.Text = "横";
             this.LandscapeRadioButton.UseVisualStyleBackColor = true;
+            this.LandscapeRadioButton.CheckedChanged += new System.EventHandler(this.SettingChanged);
             // 
             // PortraitRadioButton
             // 
@@ -850,6 +852,7 @@
             this.PortraitRadioButton.TabIndex = 71;
             this.PortraitRadioButton.Text = "縦";
             this.PortraitRadioButton.UseVisualStyleBackColor = true;
+            this.PortraitRadioButton.CheckedChanged += new System.EventHandler(this.SettingChanged);
             // 
             // OrientationLabel
             // 
