@@ -487,11 +487,8 @@ namespace CubePdf {
         private void RecoverIf(UserSetting setting)
         {
             if (string.IsNullOrEmpty(_escaped) || !System.IO.File.Exists(_escaped)) return;
-            if (!System.IO.File.Exists(setting.OutputPath))
-            {
-                CubePdf.Misc.File.Move(_escaped, setting.OutputPath, true);
-                AddMessage(string.Format("Recover: {0} -> {1}", _escaped, setting.OutputPath));
-            }
+            CubePdf.Misc.File.Move(_escaped, setting.OutputPath, true);
+            AddMessage(string.Format("Recover: {0} -> {1}", _escaped, setting.OutputPath));
         }
 
         /* ----------------------------------------------------------------- */
