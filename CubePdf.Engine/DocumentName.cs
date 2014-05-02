@@ -59,14 +59,14 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         public static string CreateFileName(string src)
         {
-            string default_value = Properties.Resources.ProductName;
+            var default_value = Properties.Resources.ProductName;
 
-            if (src == null || src.Length == 0) return default_value;
-            string docname = ModifyFilename(src);
-            if (docname == null || docname.Length == 0) return default_value;
+            if (string.IsNullOrEmpty(src)) return default_value;
+            var docname = ModifyFilename(src);
+            if (string.IsNullOrEmpty(docname)) return default_value;
 
-            string search = " - ";
-            int pos = docname.LastIndexOf(search);
+            var search = " - ";
+            var pos = docname.LastIndexOf(search);
             if (pos == -1) return docname;
             else if (System.IO.Path.HasExtension(docname.Substring(0, pos)))
             {
@@ -96,14 +96,12 @@ namespace CubePdf
         /// 
         /* ----------------------------------------------------------------- */
         private static string ModifyFilename(string filename) {
-            string dest = CubePdf.Misc.Path.NormalizeFilename(filename, '_');
-
+            var dest = CubePdf.Misc.Path.NormalizeFilename(filename, '_');
             if (dest.ToLower() == "pptview") {
-                string s = FindFromRecent(".ppt");
+                var s = FindFromRecent(".ppt");
                 if (s == null) s = FindFromRecent(".pptx");
                 if (s != null) dest = s;
             }
-
             return dest;
         }
         
