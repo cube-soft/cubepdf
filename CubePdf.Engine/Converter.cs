@@ -183,8 +183,8 @@ namespace CubePdf {
             editor.UserPassword = setting.Password;
             
             // 結合順序を考慮してファイルを追加する。
-            var head = setting.ExistedFile == Parameter.ExistedFiles.MergeHead || !string.IsNullOrEmpty(_escaped);
-            var tail = setting.ExistedFile == Parameter.ExistedFiles.MergeTail || !string.IsNullOrEmpty(_escaped);
+            var head = setting.ExistedFile == Parameter.ExistedFiles.MergeHead && !string.IsNullOrEmpty(_escaped);
+            var tail = setting.ExistedFile == Parameter.ExistedFiles.MergeTail && !string.IsNullOrEmpty(_escaped);
             if (tail) editor.Files.Add(_escaped);
             editor.Files.Add(setting.OutputPath);
             if (head) editor.Files.Add(_escaped);
