@@ -465,6 +465,7 @@ namespace CubePdf.Ghostscript
                 if (_first < _last) args.Add(string.Format("-dLastPage={0}", _last));
             }
             if (_rotate) args.Add("-dAutoRotatePages=/PageByPage");
+            else args.Add("-dAutoRotatePages=/No");
 
             // Add default options
             foreach (string option in _DefaultSettings) args.Add(option);
@@ -479,10 +480,16 @@ namespace CubePdf.Ghostscript
                 args.Add(s);
             }
 
-            //args.Add("-sstdout=ghostscript.log");
+            // Add output
+            args.Add(string.Format("-sOutputFile={0}", dest));
+
+            args.Add("-c");
+
+            // Add orientation
+            args.Add(string.Format("<</Orientation {0}>> setpagedevice", _orientation));
 
             // Add input (source filename) and output (destination filename)
-            args.Add(string.Format("-sOutputFile={0}", dest));
+            args.Add("-f");
             foreach (var src in sources) args.Add(src);
 
             return args.ToArray();
