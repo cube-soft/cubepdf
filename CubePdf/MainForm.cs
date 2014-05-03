@@ -467,7 +467,6 @@ namespace CubePdf
             }
 
             // 拡張子が選択されているファイルタイプと異なる場合は、末尾に拡張子を追加する。
-            // ただし、入力された拡張子がユーザのコンピュータに登録されている場合は、それを優先する。
             var extension = System.IO.Path.GetExtension(OutputPathTextBox.Text);
             var type = Translator.ToFileType(FileTypeCombBox.SelectedIndex);
             var compared = Parameter.GetExtension(type);
@@ -717,7 +716,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void HeaderPictureBox_Click(object sender, EventArgs e)
         {
-            CubePdf.VersionDialog version = new VersionDialog(_setting.Version);
+            var version = new VersionDialog(_setting.Version);
             version.ShowDialog(this);
         }
 
@@ -734,7 +733,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void HeaderPictureBox_MouseEnter(object sender, EventArgs e)
         {
-            Control control = sender as Control;
+            var control = sender as Control;
             if (control == null) return;
 
             Cursor = Cursors.Hand;
@@ -789,9 +788,6 @@ namespace CubePdf
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        /// テキストボックス上での出力パスに関する仕掛け
-        /* ----------------------------------------------------------------- */
         #region Gimmicks for helping to input output path
 
         /* ----------------------------------------------------------------- */
@@ -871,7 +867,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void OutputPathTextBox_Click(object sender, EventArgs e)
         {
-            TextBox control = sender as TextBox;
+            var control = sender as TextBox;
             if (control == null) return;
 
             if (control.Tag == null && control.Text.Length > 0)
@@ -901,7 +897,7 @@ namespace CubePdf
         private void OutputPathTextBox_Leave(object sender, EventArgs e)
         {
             PathTextBox_Leave(sender, e);
-            Control control = sender as Control;
+            var control = sender as Control;
             if (control == null) return;
             control.Tag = null;
         }
@@ -928,9 +924,6 @@ namespace CubePdf
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        //  パスワードの打ち間違えに関する仕掛け
-        /* ----------------------------------------------------------------- */
         #region Gimicks for password dialogs
 
         /* ----------------------------------------------------------------- */
@@ -1033,9 +1026,6 @@ namespace CubePdf
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        //  バックグラウンドワーカ（メイン処理）
-        /* ----------------------------------------------------------------- */
         #region Event handlers for background worker
 
         /* ----------------------------------------------------------------- */
@@ -1050,9 +1040,10 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void ConvertBackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            Converter converter = new Converter();
-            bool status = converter.Run(_setting);
-            converter.Messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.Converter.Run: {0}", status.ToString())));
+            var converter = new Converter();
+            var status = converter.Run(_setting);
+            var message = string.Format("CubePdf.Converter.Run: {0}", status);
+            converter.Messages.Add(new Message(Message.Levels.Debug, message));
             e.Result = converter.Messages;
         }
 
@@ -1070,7 +1061,6 @@ namespace CubePdf
         {
             if (e.Result != null) _messages.AddRange((List<CubePdf.Message>)e.Result);
             ShowMessage();
-            if (_setting.DeleteOnClose && System.IO.File.Exists(_setting.InputPath)) System.IO.File.Delete(_setting.InputPath);
             Close();
         }
 
