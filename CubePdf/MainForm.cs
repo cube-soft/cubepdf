@@ -53,6 +53,7 @@ namespace CubePdf
         {
             InitializeComponent();
             InitializeComboBox();
+            InitializePasswordTextBox();
 
             _setting = setting;
             UpgradeSetting(_setting);
@@ -122,6 +123,28 @@ namespace CubePdf
             PostProcessLiteComboBox.Items.Add(Appearance.GetString(Parameter.PostProcesses.Open));
             PostProcessLiteComboBox.Items.Add(Appearance.GetString(Parameter.PostProcesses.None));
             PostProcessLiteComboBox.SelectedIndex = 0;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// InitializePasswordTextBox
+        /// 
+        /// <summary>
+        /// 各種パスワード用のテキストボックスを初期化します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Tag プロパティを用いて、パスワード用と確認用との関連が分かる
+        /// ように設定します。
+        /// </remarks>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void InitializePasswordTextBox()
+        {
+            OwnerPasswordTextBox.Tag = ConfirmOwnerPasswordTextBox;
+            ConfirmOwnerPasswordTextBox.Tag = OwnerPasswordTextBox;
+            UserPasswordTextBox.Tag = ConfirmUserPasswordTextBox;
+            ConfirmUserPasswordTextBox.Tag = UserPasswordTextBox;
         }
 
         #endregion
@@ -931,21 +954,26 @@ namespace CubePdf
         /// UserPasswordTextBox_TextChanged
         ///
         /// <summary>
-        /// ユーザパスワードのテキストボックスの内容が変更された時に実行
-        /// されるイベントハンドラです。
-        /// パスワード確認のためのテキストボックスの内容を消去します。
+        /// パスワードのテキストボックスの内容が変更された時に実行される
+        /// イベントハンドラです。パスワード確認のためのテキストボックスの
+        /// 内容を消去します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void UserPasswordTextBox_TextChanged(object sender, EventArgs e)
+        private void PasswordTextBox_TextChanged(object sender, EventArgs e)
         {
-            ConfirmUserPasswordTextBox.BackColor = SystemColors.Window;
-            if (ConfirmUserPasswordTextBox.Text.Length > 0) ConfirmUserPasswordTextBox.Text = "";
+            var password = sender as TextBox;
+            if (password == null) return;
+            var confirm = password.Tag as TextBox;
+            if (confirm == null) return;
+
+            confirm.BackColor = SystemColors.Window;
+            if (!string.IsNullOrEmpty(confirm.Text)) confirm.Text = string.Empty;
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ConfirmUserPasswordTextBox_TextChanged
+        /// ConfirmPasswordTextBox_TextChanged
         ///
         /// <summary>
         /// パスワード確認のためのテキストボックスの内容が変更された時に
@@ -964,64 +992,18 @@ namespace CubePdf
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private void ConfirmUserPasswordTextBox_TextChanged(object sender, EventArgs e)
+        private void ConfirmPasswordTextBox_TextChanged(object sender, EventArgs e)
         {
-            TextBox control = sender as TextBox;
-            if (control == null) return;
-            if (control.Text.Length > 0 && UserPasswordTextBox.Text != control.Text)
-            {
-                control.BackColor = Color.FromArgb(255, 102, 102);
-            }
-            else control.BackColor = SystemColors.Window;
-        }
+            var confirm = sender as TextBox;
+            if (confirm == null) return;
+            var password = confirm.Tag as TextBox;
+            if (password == null) return;
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// OwnerPasswordTextBox_TextChanged
-        ///
-        /// <summary>
-        /// オーナパスワードのテキストボックスの内容が変更された時に実行
-        /// されるイベントハンドラです。
-        /// パスワード確認のためのテキストボックスの内容を消去します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void OwnerPasswordTextBox_TextChanged(object sender, EventArgs e)
-        {
-            ConfirmOwnerPasswordTextBox.BackColor = SystemColors.Window;
-            if (ConfirmOwnerPasswordTextBox.Text.Length > 0) ConfirmOwnerPasswordTextBox.Text = "";
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ConfirmOwnerPasswordTextBox_TextChanged
-        /// 
-        /// <summary>
-        /// パスワード確認のためのテキストボックスの内容が変更された時に
-        /// 実行されるイベントハンドラです。
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// パスワードダイアログと確認ダイアログの値が異なる間は、
-        /// 背景色を赤色に設定します。背景色が白色に戻るタイミングは、以下の
-        /// 通りです。
-        /// 
-        /// 1. パスワードが一致した場合
-        /// 2. パスワードダイアログの入力が変化した場合
-        /// 3. 確認ダイアログの入力値が空になった場合
-        /// 4. チェックボックスで有効/無効が変化した場合
-        /// </remarks>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void ConfirmOwnerPasswordTextBox_TextChanged(object sender, EventArgs e)
-        {
-            TextBox control = sender as TextBox;
-            if (control == null) return;
-            if (control.Text.Length > 0 && OwnerPasswordTextBox.Text != control.Text)
+            if (!string.IsNullOrEmpty(confirm.Text) && password.Text != confirm.Text)
             {
-                control.BackColor = Color.FromArgb(255, 102, 102);
+                confirm.BackColor = Color.FromArgb(255, 102, 102);
             }
-            else control.BackColor = SystemColors.Window;
+            else confirm.BackColor = SystemColors.Window;
         }
 
         #endregion

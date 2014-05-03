@@ -639,7 +639,7 @@
             this.UserPasswordTextBox.PasswordChar = '*';
             this.UserPasswordTextBox.Size = new System.Drawing.Size(162, 19);
             this.UserPasswordTextBox.TabIndex = 56;
-            this.UserPasswordTextBox.TextChanged += new System.EventHandler(this.UserPasswordTextBox_TextChanged);
+            this.UserPasswordTextBox.TextChanged += new System.EventHandler(this.PasswordTextBox_TextChanged);
             // 
             // ConfirmUserPasswordTextBox
             // 
@@ -649,7 +649,7 @@
             this.ConfirmUserPasswordTextBox.PasswordChar = '*';
             this.ConfirmUserPasswordTextBox.Size = new System.Drawing.Size(162, 19);
             this.ConfirmUserPasswordTextBox.TabIndex = 57;
-            this.ConfirmUserPasswordTextBox.TextChanged += new System.EventHandler(this.ConfirmUserPasswordTextBox_TextChanged);
+            this.ConfirmUserPasswordTextBox.TextChanged += new System.EventHandler(this.ConfirmPasswordTextBox_TextChanged);
             // 
             // UserPasswordCheckBox
             // 
@@ -671,7 +671,7 @@
             this.OwnerPasswordTextBox.PasswordChar = '*';
             this.OwnerPasswordTextBox.Size = new System.Drawing.Size(280, 19);
             this.OwnerPasswordTextBox.TabIndex = 52;
-            this.OwnerPasswordTextBox.TextChanged += new System.EventHandler(this.OwnerPasswordTextBox_TextChanged);
+            this.OwnerPasswordTextBox.TextChanged += new System.EventHandler(this.PasswordTextBox_TextChanged);
             // 
             // ConfirmOwnerPasswordTextBox
             // 
@@ -681,7 +681,7 @@
             this.ConfirmOwnerPasswordTextBox.PasswordChar = '*';
             this.ConfirmOwnerPasswordTextBox.Size = new System.Drawing.Size(280, 19);
             this.ConfirmOwnerPasswordTextBox.TabIndex = 53;
-            this.ConfirmOwnerPasswordTextBox.TextChanged += new System.EventHandler(this.ConfirmOwnerPasswordTextBox_TextChanged);
+            this.ConfirmOwnerPasswordTextBox.TextChanged += new System.EventHandler(this.ConfirmPasswordTextBox_TextChanged);
             // 
             // AllowPrintCheckBox
             // 
