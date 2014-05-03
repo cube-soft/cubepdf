@@ -244,8 +244,8 @@ namespace CubePdf
                 case Parameter.PdfVersions.Ver1_5:  return 5;
                 case Parameter.PdfVersions.Ver1_6:  return 6;
                 case Parameter.PdfVersions.Ver1_7:  return 7;
-                case Parameter.PdfVersions.VerPDFA: return 4;
-                case Parameter.PdfVersions.VerPDFX: return 4;
+                case Parameter.PdfVersions.VerPDFA: return 3;
+                case Parameter.PdfVersions.VerPDFX: return 3;
                 default: return 7;
             }
         }
