@@ -109,6 +109,7 @@ namespace CubePdf {
                 RunConverter(setting);
                 RunEditor(setting);
                 RunPostProcess(setting);
+                return true;
             }
             catch (Exception err)
             {
@@ -117,8 +118,6 @@ namespace CubePdf {
                 return false;
             }
             finally { Sweep(setting); }
-
-            return true;
         }
 
         #endregion

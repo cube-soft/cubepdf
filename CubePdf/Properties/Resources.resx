@@ -121,20 +121,20 @@
     <value>CubePDF について</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="background" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\background.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Background" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Background.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="button_cancel" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\button_cancel.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="CancelButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CancelButton.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="button_convert" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\button_convert.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ConvertButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ConvertButton.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="button_setting" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\button_setting.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SettingButton" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SettingButton.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="button_setting_disable" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\button_setting_disable.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="SettingButtonDisable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SettingButtonDisable.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="FileExists" xml:space="preserve">
     <value>{0} は既に存在します。{1}しますか？</value>
@@ -142,14 +142,14 @@
   <data name="FileNotSpecified" xml:space="preserve">
     <value>ファイルが指定されていません。</value>
   </data>
-  <data name="header" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\header.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Header" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Header.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="InputPathFilter" xml:space="preserve">
     <value>PS ファイル (*.ps)|*.ps|EPS ファイル (*.eps)|*.eps|PDF ファイル (*.pdf)|*.pdf</value>
   </data>
-  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\logo.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Logo.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="OverwritePrompt" xml:space="preserve">
     <value>上書きの確認</value>
@@ -157,8 +157,8 @@
   <data name="PasswordUnmatched" xml:space="preserve">
     <value>入力されたパスワードが一致しません。</value>
   </data>
-  <data name="title" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\title.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Title" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Title.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="UserProgramFilter" xml:space="preserve">
     <value>実行可能プログラム (*.exe;*.bat)|*.exe;*.bat|すべてのファイル(*.*)|*.*</value>

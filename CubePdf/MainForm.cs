@@ -53,6 +53,7 @@ namespace CubePdf
         {
             InitializeComponent();
             InitializeComboBox();
+            InitializePasswordTextBox();
 
             _setting = setting;
             UpgradeSetting(_setting);
@@ -122,6 +123,28 @@ namespace CubePdf
             PostProcessLiteComboBox.Items.Add(Appearance.GetString(Parameter.PostProcesses.Open));
             PostProcessLiteComboBox.Items.Add(Appearance.GetString(Parameter.PostProcesses.None));
             PostProcessLiteComboBox.SelectedIndex = 0;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// InitializePasswordTextBox
+        /// 
+        /// <summary>
+        /// 各種パスワード用のテキストボックスを初期化します。
+        /// </summary>
+        /// 
+        /// <remarks>
+        /// Tag プロパティを用いて、パスワード用と確認用との関連が分かる
+        /// ように設定します。
+        /// </remarks>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void InitializePasswordTextBox()
+        {
+            OwnerPasswordTextBox.Tag = ConfirmOwnerPasswordTextBox;
+            ConfirmOwnerPasswordTextBox.Tag = OwnerPasswordTextBox;
+            UserPasswordTextBox.Tag = ConfirmUserPasswordTextBox;
+            ConfirmUserPasswordTextBox.Tag = UserPasswordTextBox;
         }
 
         #endregion
@@ -344,7 +367,7 @@ namespace CubePdf
         {
             base.OnShown(e);
 
-            SettingButton.BackgroundImage = Properties.Resources.button_setting_disable;
+            SettingButton.BackgroundImage = Properties.Resources.SettingButtonDisable;
             SettingButton.Enabled = false;
             Activate();
             TopMost = true;
@@ -435,7 +458,7 @@ namespace CubePdf
             SaveSetting(_setting);
             _setting.SaveSetting = Parameter.SaveSettings.None; // deprecated
             _setting.Save();
-            SettingButton.BackgroundImage = Properties.Resources.button_setting_disable;
+            SettingButton.BackgroundImage = Properties.Resources.SettingButtonDisable;
             SettingButton.Enabled = false;
         }
 
@@ -467,7 +490,6 @@ namespace CubePdf
             }
 
             // 拡張子が選択されているファイルタイプと異なる場合は、末尾に拡張子を追加する。
-            // ただし、入力された拡張子がユーザのコンピュータに登録されている場合は、それを優先する。
             var extension = System.IO.Path.GetExtension(OutputPathTextBox.Text);
             var type = Translator.ToFileType(FileTypeCombBox.SelectedIndex);
             var compared = Parameter.GetExtension(type);
@@ -717,7 +739,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void HeaderPictureBox_Click(object sender, EventArgs e)
         {
-            CubePdf.VersionDialog version = new VersionDialog(_setting.Version);
+            var version = new VersionDialog(_setting.Version);
             version.ShowDialog(this);
         }
 
@@ -734,7 +756,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void HeaderPictureBox_MouseEnter(object sender, EventArgs e)
         {
-            Control control = sender as Control;
+            var control = sender as Control;
             if (control == null) return;
 
             Cursor = Cursors.Hand;
@@ -783,15 +805,12 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void SettingChanged(object sender, EventArgs e)
         {
-            SettingButton.BackgroundImage = Properties.Resources.button_setting;
+            SettingButton.BackgroundImage = Properties.Resources.SettingButton;
             SettingButton.Enabled = true;
         }
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        /// テキストボックス上での出力パスに関する仕掛け
-        /* ----------------------------------------------------------------- */
         #region Gimmicks for helping to input output path
 
         /* ----------------------------------------------------------------- */
@@ -871,7 +890,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void OutputPathTextBox_Click(object sender, EventArgs e)
         {
-            TextBox control = sender as TextBox;
+            var control = sender as TextBox;
             if (control == null) return;
 
             if (control.Tag == null && control.Text.Length > 0)
@@ -901,7 +920,7 @@ namespace CubePdf
         private void OutputPathTextBox_Leave(object sender, EventArgs e)
         {
             PathTextBox_Leave(sender, e);
-            Control control = sender as Control;
+            var control = sender as Control;
             if (control == null) return;
             control.Tag = null;
         }
@@ -928,9 +947,6 @@ namespace CubePdf
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        //  パスワードの打ち間違えに関する仕掛け
-        /* ----------------------------------------------------------------- */
         #region Gimicks for password dialogs
 
         /* ----------------------------------------------------------------- */
@@ -938,21 +954,26 @@ namespace CubePdf
         /// UserPasswordTextBox_TextChanged
         ///
         /// <summary>
-        /// ユーザパスワードのテキストボックスの内容が変更された時に実行
-        /// されるイベントハンドラです。
-        /// パスワード確認のためのテキストボックスの内容を消去します。
+        /// パスワードのテキストボックスの内容が変更された時に実行される
+        /// イベントハンドラです。パスワード確認のためのテキストボックスの
+        /// 内容を消去します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void UserPasswordTextBox_TextChanged(object sender, EventArgs e)
+        private void PasswordTextBox_TextChanged(object sender, EventArgs e)
         {
-            ConfirmUserPasswordTextBox.BackColor = SystemColors.Window;
-            if (ConfirmUserPasswordTextBox.Text.Length > 0) ConfirmUserPasswordTextBox.Text = "";
+            var password = sender as TextBox;
+            if (password == null) return;
+            var confirm = password.Tag as TextBox;
+            if (confirm == null) return;
+
+            confirm.BackColor = SystemColors.Window;
+            if (!string.IsNullOrEmpty(confirm.Text)) confirm.Text = string.Empty;
         }
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ConfirmUserPasswordTextBox_TextChanged
+        /// ConfirmPasswordTextBox_TextChanged
         ///
         /// <summary>
         /// パスワード確認のためのテキストボックスの内容が変更された時に
@@ -971,71 +992,22 @@ namespace CubePdf
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private void ConfirmUserPasswordTextBox_TextChanged(object sender, EventArgs e)
+        private void ConfirmPasswordTextBox_TextChanged(object sender, EventArgs e)
         {
-            TextBox control = sender as TextBox;
-            if (control == null) return;
-            if (control.Text.Length > 0 && UserPasswordTextBox.Text != control.Text)
-            {
-                control.BackColor = Color.FromArgb(255, 102, 102);
-            }
-            else control.BackColor = SystemColors.Window;
-        }
+            var confirm = sender as TextBox;
+            if (confirm == null) return;
+            var password = confirm.Tag as TextBox;
+            if (password == null) return;
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// OwnerPasswordTextBox_TextChanged
-        ///
-        /// <summary>
-        /// オーナパスワードのテキストボックスの内容が変更された時に実行
-        /// されるイベントハンドラです。
-        /// パスワード確認のためのテキストボックスの内容を消去します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void OwnerPasswordTextBox_TextChanged(object sender, EventArgs e)
-        {
-            ConfirmOwnerPasswordTextBox.BackColor = SystemColors.Window;
-            if (ConfirmOwnerPasswordTextBox.Text.Length > 0) ConfirmOwnerPasswordTextBox.Text = "";
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ConfirmOwnerPasswordTextBox_TextChanged
-        /// 
-        /// <summary>
-        /// パスワード確認のためのテキストボックスの内容が変更された時に
-        /// 実行されるイベントハンドラです。
-        /// </summary>
-        /// 
-        /// <remarks>
-        /// パスワードダイアログと確認ダイアログの値が異なる間は、
-        /// 背景色を赤色に設定します。背景色が白色に戻るタイミングは、以下の
-        /// 通りです。
-        /// 
-        /// 1. パスワードが一致した場合
-        /// 2. パスワードダイアログの入力が変化した場合
-        /// 3. 確認ダイアログの入力値が空になった場合
-        /// 4. チェックボックスで有効/無効が変化した場合
-        /// </remarks>
-        /// 
-        /* ----------------------------------------------------------------- */
-        private void ConfirmOwnerPasswordTextBox_TextChanged(object sender, EventArgs e)
-        {
-            TextBox control = sender as TextBox;
-            if (control == null) return;
-            if (control.Text.Length > 0 && OwnerPasswordTextBox.Text != control.Text)
+            if (!string.IsNullOrEmpty(confirm.Text) && password.Text != confirm.Text)
             {
-                control.BackColor = Color.FromArgb(255, 102, 102);
+                confirm.BackColor = Color.FromArgb(255, 102, 102);
             }
-            else control.BackColor = SystemColors.Window;
+            else confirm.BackColor = SystemColors.Window;
         }
 
         #endregion
 
-        /* ----------------------------------------------------------------- */
-        //  バックグラウンドワーカ（メイン処理）
-        /* ----------------------------------------------------------------- */
         #region Event handlers for background worker
 
         /* ----------------------------------------------------------------- */
@@ -1050,9 +1022,10 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void ConvertBackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            Converter converter = new Converter();
-            bool status = converter.Run(_setting);
-            converter.Messages.Add(new Message(Message.Levels.Info, String.Format("CubePdf.Converter.Run: {0}", status.ToString())));
+            var converter = new Converter();
+            var status = converter.Run(_setting);
+            var message = string.Format("CubePdf.Converter.Run: {0}", status);
+            converter.Messages.Add(new Message(Message.Levels.Debug, message));
             e.Result = converter.Messages;
         }
 
@@ -1070,7 +1043,6 @@ namespace CubePdf
         {
             if (e.Result != null) _messages.AddRange((List<CubePdf.Message>)e.Result);
             ShowMessage();
-            if (_setting.DeleteOnClose && System.IO.File.Exists(_setting.InputPath)) System.IO.File.Delete(_setting.InputPath);
             Close();
         }
 
