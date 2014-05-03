@@ -129,7 +129,7 @@
             // 
             // MainPanel
             // 
-            this.MainPanel.BackgroundImage = global::CubePdf.Properties.Resources.background;
+            this.MainPanel.BackgroundImage = global::CubePdf.Properties.Resources.Background;
             this.MainPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.MainPanel.Controls.Add(this.SettingButton);
             this.MainPanel.Controls.Add(this.ExecProgressBar);
@@ -145,7 +145,7 @@
             // SettingButton
             // 
             this.SettingButton.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.SettingButton.BackgroundImage = global::CubePdf.Properties.Resources.button_setting;
+            this.SettingButton.BackgroundImage = global::CubePdf.Properties.Resources.SettingButton;
             this.SettingButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.SettingButton.Location = new System.Drawing.Point(12, 378);
             this.SettingButton.Margin = new System.Windows.Forms.Padding(0);
@@ -167,7 +167,7 @@
             // ExitButton
             // 
             this.ExitButton.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ExitButton.BackgroundImage = global::CubePdf.Properties.Resources.button_cancel;
+            this.ExitButton.BackgroundImage = global::CubePdf.Properties.Resources.CancelButton;
             this.ExitButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ExitButton.Location = new System.Drawing.Point(369, 362);
             this.ExitButton.Name = "ExitButton";
@@ -179,7 +179,7 @@
             // ConvertButton
             // 
             this.ConvertButton.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ConvertButton.BackgroundImage = global::CubePdf.Properties.Resources.button_convert;
+            this.ConvertButton.BackgroundImage = global::CubePdf.Properties.Resources.ConvertButton;
             this.ConvertButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ConvertButton.Location = new System.Drawing.Point(227, 362);
             this.ConvertButton.Margin = new System.Windows.Forms.Padding(0);
@@ -964,7 +964,7 @@
             // HeaderPictureBox
             // 
             this.HeaderPictureBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.HeaderPictureBox.Image = global::CubePdf.Properties.Resources.header;
+            this.HeaderPictureBox.Image = global::CubePdf.Properties.Resources.Header;
             this.HeaderPictureBox.Location = new System.Drawing.Point(0, 0);
             this.HeaderPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.HeaderPictureBox.Name = "HeaderPictureBox";

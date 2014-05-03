@@ -367,7 +367,7 @@ namespace CubePdf
         {
             base.OnShown(e);
 
-            SettingButton.BackgroundImage = Properties.Resources.button_setting_disable;
+            SettingButton.BackgroundImage = Properties.Resources.SettingButtonDisable;
             SettingButton.Enabled = false;
             Activate();
             TopMost = true;
@@ -458,7 +458,7 @@ namespace CubePdf
             SaveSetting(_setting);
             _setting.SaveSetting = Parameter.SaveSettings.None; // deprecated
             _setting.Save();
-            SettingButton.BackgroundImage = Properties.Resources.button_setting_disable;
+            SettingButton.BackgroundImage = Properties.Resources.SettingButtonDisable;
             SettingButton.Enabled = false;
         }
 
@@ -805,7 +805,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void SettingChanged(object sender, EventArgs e)
         {
-            SettingButton.BackgroundImage = Properties.Resources.button_setting;
+            SettingButton.BackgroundImage = Properties.Resources.SettingButton;
             SettingButton.Enabled = true;
         }
 

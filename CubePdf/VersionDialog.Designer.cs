@@ -94,7 +94,7 @@
             // 
             // TitlePictureBox
             // 
-            this.TitlePictureBox.Image = global::CubePdf.Properties.Resources.title;
+            this.TitlePictureBox.Image = global::CubePdf.Properties.Resources.Title;
             this.TitlePictureBox.Location = new System.Drawing.Point(147, 12);
             this.TitlePictureBox.Name = "TitlePictureBox";
             this.TitlePictureBox.Size = new System.Drawing.Size(98, 48);
@@ -114,7 +114,7 @@
             // 
             // LogoPictureBox
             // 
-            this.LogoPictureBox.Image = global::CubePdf.Properties.Resources.logo;
+            this.LogoPictureBox.Image = global::CubePdf.Properties.Resources.Logo;
             this.LogoPictureBox.Location = new System.Drawing.Point(105, 12);
             this.LogoPictureBox.Name = "LogoPictureBox";
             this.LogoPictureBox.Size = new System.Drawing.Size(32, 42);
