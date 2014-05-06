@@ -44,9 +44,13 @@ namespace CubePdf
             var setting = new UserSetting(false);
 
             SetupLog(dir + @"\cubepdf.log");
-            Trace.WriteLine(String.Format("{0} [INFO] CubePDF version {1} ({2})", DateTime.Now.ToString(), setting.Version, ((IntPtr.Size == 4) ? "x86" : "x64")));
-            Trace.WriteLine(String.Format("{0} [INFO] Arguments", DateTime.Now.ToString()));
-            foreach (var s in args) Trace.WriteLine("\t" + s);
+            var edition = (IntPtr.Size == 4) ? "x86" : "x64";
+            CubePdf.Message.Trace(string.Format("CubePDF {0} ({1})", setting.Version, edition));
+            CubePdf.Message.Trace(Environment.OSVersion.ToString());
+            CubePdf.Message.Trace(string.Format(".NET Framework {0}", Environment.Version.ToString()));
+            var message = "Arguments";
+            foreach (var s in args) message += string.Format("{0}\t{1}", Environment.NewLine, s);
+            CubePdf.Message.Trace(message);
 
             SetupUserSetting(setting, args);
             CheckUpdate(setting);
@@ -87,7 +91,7 @@ namespace CubePdf
             {
                 // docname に Windows のファイル名に使用できない記号が含まれる
                 // 場合に例外が送出されるので、その対策。
-                Trace.TraceError(err.ToString());
+                CubePdf.Message.Trace(err.ToString());
                 is_config = false;
             }
 
@@ -135,7 +139,7 @@ namespace CubePdf
                 Trace.Listeners.Add(new TextWriterTraceListener(src));
                 Trace.AutoFlush = true;
             }
-            catch (Exception err) { Trace.TraceError(err.ToString()); }
+            catch (Exception err) { CubePdf.Message.Trace(err.ToString()); }
         }
 
         /* ----------------------------------------------------------------- */
@@ -158,7 +162,7 @@ namespace CubePdf
                 var path = System.IO.Path.Combine(setting.InstallPath, "cubepdf-checker.exe");
                 Process.Start(path);
             }
-            catch (Exception err) { Trace.TraceError(err.ToString()); }
+            catch (Exception err) { CubePdf.Message.Trace(err.ToString()); }
         }
     }
 }

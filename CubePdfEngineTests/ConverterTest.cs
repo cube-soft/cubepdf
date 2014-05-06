@@ -277,7 +277,9 @@ namespace CubePdf
             setting.OutputPath = dest;
             setting.ExistedFile = existed;
             var converter = new Converter();
-            Assert.IsFalse(converter.Run(setting));
+            converter.Run(setting);
+            var error = GetErrorMessage(converter);
+            Assert.IsFalse(string.IsNullOrEmpty(error));
             Assert.IsTrue(System.IO.File.Exists(dest));
         }
 
@@ -305,7 +307,9 @@ namespace CubePdf
             setting.OutputPath = dest;
             setting.ExistedFile = Parameter.ExistedFiles.MergeTail;
             var converter = new Converter();
-            Assert.IsFalse(converter.Run(setting));
+            converter.Run(setting);
+            var error = GetErrorMessage(converter);
+            Assert.IsFalse(string.IsNullOrEmpty(error));
             Assert.IsTrue(System.IO.File.Exists(dest));
         }
 
@@ -368,9 +372,9 @@ namespace CubePdf
             if (setting.ExistedFile == Parameter.ExistedFiles.Overwrite) System.IO.File.Delete(setting.OutputPath);
 
             var converter = new Converter();
-            var result = converter.Run(setting);
-            foreach (var message in converter.Messages) System.Diagnostics.Trace.WriteLine(message.ToString());
-            Assert.IsTrue(result, setting.InputPath);
+            converter.Run(setting);
+            var error = GetErrorMessage(converter);
+            Assert.IsTrue(string.IsNullOrEmpty(error), string.Format("{0}:{1}", setting.InputPath, error));
             if (!System.IO.File.Exists(setting.OutputPath))
             {
                 var dest = String.Format("{0}\\{1}-001{2}",
@@ -439,10 +443,32 @@ namespace CubePdf
                 case Parameter.PdfVersions.Ver1_5:  return 5;
                 case Parameter.PdfVersions.Ver1_6:  return 6;
                 case Parameter.PdfVersions.Ver1_7:  return 7;
-                case Parameter.PdfVersions.VerPDFA: return 4;
-                case Parameter.PdfVersions.VerPDFX: return 4;
+                case Parameter.PdfVersions.VerPDFA: return 3;
+                case Parameter.PdfVersions.VerPDFX: return 3;
                 default: return 7;
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// GetErrorMessage
+        ///
+        /// <summary>
+        /// エラーメッセージを取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private string GetErrorMessage(CubePdf.Converter converter)
+        {
+            var dest = string.Empty;
+            foreach (var message in converter.Messages)
+            {
+                if (message.Level == Message.Levels.Fatal ||
+                    message.Level == Message.Levels.Error ||
+                    message.Level == Message.Levels.Warn) dest = message.Value;
+                System.Diagnostics.Trace.WriteLine(message.ToString());
+            }
+            return dest;
         }
 
         #endregion

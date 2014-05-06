@@ -1023,9 +1023,7 @@ namespace CubePdf
         private void ConvertBackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             var converter = new Converter();
-            var status = converter.Run(_setting);
-            var message = string.Format("CubePdf.Converter.Run: {0}", status);
-            converter.Messages.Add(new Message(Message.Levels.Debug, message));
+            converter.Run(_setting);
             e.Result = converter.Messages;
         }
 
