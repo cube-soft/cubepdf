@@ -188,11 +188,13 @@ namespace CubePdf
             setting.InputPath = copy;
             var suffix = string.Format("-{0}", merge);
             AssertRun(setting, suffix);
+            var hash = GetHash(setting.OutputPath);
 
             src = System.IO.Path.Combine(_examples, "example.ps");
             System.IO.File.Copy(src, copy, true);
             setting.ExistedFile = merge;
             AssertRun(setting, suffix);
+            Assert.AreNotEqual(hash, GetHash(setting.OutputPath));
         }
 
         /* ----------------------------------------------------------------- */
@@ -259,7 +261,7 @@ namespace CubePdf
         /// </summary>
         /// 
         /// <remarks>
-        /// 既に存在するファイルは削除されない事を確認します。
+        /// 既に存在するファイルは削除、または上書きされない事を確認します。
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
@@ -271,6 +273,7 @@ namespace CubePdf
             var src =  System.IO.Path.Combine(_examples, "dummy.txt");
             var dest = System.IO.Path.Combine(_results, "dummy.pdf");
             System.IO.File.Copy(src, dest, true);
+            var hash = GetHash(dest);
 
             var setting = CreateSetting();
             setting.InputPath = src;
@@ -281,6 +284,7 @@ namespace CubePdf
             var error = GetErrorMessage(converter);
             Assert.IsFalse(string.IsNullOrEmpty(error));
             Assert.IsTrue(System.IO.File.Exists(dest));
+            Assert.AreEqual(hash, GetHash(dest));
         }
 
         /* ----------------------------------------------------------------- */
@@ -292,25 +296,34 @@ namespace CubePdf
         /// </summary>
         /// 
         /// <remarks>
-        /// 既に存在するファイルは削除されない事を確認します。
+        /// 既に存在するファイルは削除、または上書きされない事を確認します。
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        [Test]
-        public void TestErrorInMerge()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void TestErrorInMerge(bool caused_by_security)
         {
-            var src = System.IO.Path.Combine(_examples, "dummy.txt");
-            var dest = System.IO.Path.Combine(_results, "error-in-merge.pdf");
-            System.IO.File.Copy(src, dest, true);
-
             var setting = CreateSetting();
+            var suffix = "-error-in-merge";
+            var dest = System.IO.Path.Combine(_results, string.Format("example{0}.pdf", suffix));
+            if (caused_by_security)
+            {
+                setting.Permission.Password = "owner";
+                AssertRun(setting, suffix);
+            }
+            else System.IO.File.Copy(System.IO.Path.Combine(_examples, "dummy.txt"), dest, true);
+            var hash = GetHash(dest);
+
             setting.OutputPath = dest;
+            setting.Permission.Password = string.Empty;
             setting.ExistedFile = Parameter.ExistedFiles.MergeTail;
             var converter = new Converter();
             converter.Run(setting);
             var error = GetErrorMessage(converter);
             Assert.IsFalse(string.IsNullOrEmpty(error));
             Assert.IsTrue(System.IO.File.Exists(dest));
+            Assert.AreEqual(hash, GetHash(dest));
         }
 
         #endregion
@@ -422,6 +435,24 @@ namespace CubePdf
             setting.Grayscale    = false;
             setting.WebOptimize  = false;
             return setting;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// GetHash
+        /// 
+        /// <summary>
+        /// ファイルの MD5 チェックサムを取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private byte[] GetHash(string filename)
+        {
+            var info = new System.IO.FileInfo(filename);
+            using (var stream = new System.IO.FileStream(info.FullName, System.IO.FileMode.Open))
+            {
+                return System.Security.Cryptography.MD5.Create().ComputeHash(stream);
+            }
         }
 
         /* ----------------------------------------------------------------- */
