@@ -49,7 +49,7 @@ namespace CubePdf
             CubePdf.Message.Trace(Environment.OSVersion.ToString());
             CubePdf.Message.Trace(string.Format(".NET Framework {0}", Environment.Version.ToString()));
             var message = "Arguments";
-            foreach (var s in args) message += string.Format("\t{0}{1}", s, Environment.NewLine);
+            foreach (var s in args) message += string.Format("{0}\t{1}", Environment.NewLine, s);
             CubePdf.Message.Trace(message);
 
             SetupUserSetting(setting, args);
