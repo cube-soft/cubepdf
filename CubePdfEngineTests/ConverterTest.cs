@@ -165,6 +165,7 @@ namespace CubePdf
 
             var suffix = string.Format("-{0}-{1}", setting.Permission.Password, setting.Password);
             AssertRun(setting, suffix);
+            var hash = GetHash(setting.OutputPath);
         }
 
         /* ----------------------------------------------------------------- */
@@ -176,9 +177,10 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        [TestCase(Parameter.ExistedFiles.MergeHead)]
-        [TestCase(Parameter.ExistedFiles.MergeTail)]
-        public void TestRunAsPdfAndMerge(Parameter.ExistedFiles merge)
+        [TestCase(Parameter.ExistedFiles.MergeHead, false)]
+        [TestCase(Parameter.ExistedFiles.MergeTail, false)]
+        [TestCase(Parameter.ExistedFiles.MergeHead, true)]
+        public void TestRunAsPdfAndMerge(Parameter.ExistedFiles merge, bool security)
         {
             var src  = System.IO.Path.Combine(_examples, "example-min.ps");
             var copy = System.IO.Path.Combine(_results, "merge.ps");
@@ -186,7 +188,8 @@ namespace CubePdf
 
             var setting = CreateSetting();
             setting.InputPath = copy;
-            var suffix = string.Format("-{0}", merge);
+            if (security) setting.Permission.Password = "owner";
+            var suffix = string.Format("-{0}-{1}", merge, security);
             AssertRun(setting, suffix);
             var hash = GetHash(setting.OutputPath);
 
