@@ -137,6 +137,15 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
+        ///   CubePDF に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string InfoTitle {
+            get {
+                return ResourceManager.GetString("InfoTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   PS ファイル (*.ps)|*.ps|EPS ファイル (*.eps)|*.eps|PDF ファイル (*.pdf)|*.pdf に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string InputPathFilter {
@@ -179,15 +188,6 @@ namespace CubePdf.Properties {
         internal static string OutputPathFilter {
             get {
                 return ResourceManager.GetString("OutputPathFilter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   上書きの確認 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        internal static string OverwritePrompt {
-            get {
-                return ResourceManager.GetString("OverwritePrompt", resourceCulture);
             }
         }
         
@@ -249,7 +249,7 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   CubePDF 警告 に類似しているローカライズされた文字列を検索します。
+        ///   CubePDF 確認 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string WarningTitle {
             get {

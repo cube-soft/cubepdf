@@ -166,7 +166,7 @@ namespace CubePdf
         {
             if (enabled && password != confirm)
             {
-                ShowError(Properties.Resources.PasswordUnmatched);
+                ShowMessage(new CubePdf.Message(Message.Levels.Error, Properties.Resources.PasswordUnmatched));
                 MainTabControl.SelectedTab = SecurityTabPage;
                 return false;
             }
@@ -188,7 +188,7 @@ namespace CubePdf
         {
             if (string.IsNullOrEmpty(OutputPathTextBox.Text))
             {
-                ShowError(Properties.Resources.FileNotSpecified);
+                ShowMessage(new CubePdf.Message(Message.Levels.Error, Properties.Resources.FileNotSpecified));
                 return false;
             }
 
@@ -199,11 +199,9 @@ namespace CubePdf
             if (System.IO.File.Exists(OutputPathTextBox.Text) &&
                 Translator.ToExistedFile(ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
             {
-                var message = string.Format(Properties.Resources.FileExists, OutputPathTextBox.Text,
-                    Appearance.GetString((Parameter.ExistedFiles)do_existed_file));
-                var result = MessageBox.Show(message, Properties.Resources.OverwritePrompt,
-                    MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
-                return result != DialogResult.Cancel;
+                var message = new CubePdf.Message(Message.Levels.Warn, string.Format(Properties.Resources.FileExists,
+                    OutputPathTextBox.Text, Appearance.GetString((Parameter.ExistedFiles)do_existed_file)));
+                return ShowMessage(message, MessageBoxButtons.OKCancel) != DialogResult.Cancel;
             }
             else return true;
         }
@@ -651,7 +649,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void WebOptimizeCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox control = sender as CheckBox;
+            var control = sender as CheckBox;
             if (control == null) return;
 
             SecurityGroupBox.Enabled = !control.Checked;
@@ -676,7 +674,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void OwnerPasswordCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox control = sender as CheckBox;
+            var control = sender as CheckBox;
             if (control == null) return;
 
             ConfirmOwnerPasswordTextBox.BackColor = control.Checked ? SystemColors.Window : SystemColors.Control;
@@ -717,7 +715,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void UserPasswordCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox control = sender as CheckBox;
+            var control = sender as CheckBox;
             if (control == null) return;
 
             UserPasswordPanel.Enabled = control.Checked;
@@ -1050,40 +1048,34 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
-        /// ShowError
+        /// ShowMessage
         /// 
         /// <summary>
-        /// エラーメッセージを表示します。
+        /// メッセージを表示します。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void ShowError(string message)
+        private DialogResult ShowMessage(CubePdf.Message message, MessageBoxButtons button = MessageBoxButtons.OK)
         {
-            MessageBox.Show(
-                message,
-                Properties.Resources.ErrorTitle,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
-            );
-        }
+            var title = Properties.Resources.InfoTitle;
+            var icon  = MessageBoxIcon.Information;
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// ShowWarning
-        /// 
-        /// <summary>
-        /// 警告メッセージを表示します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        private void ShowWarning(string message)
-        {
-            MessageBox.Show(
-                message,
-                Properties.Resources.WarningTitle,
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            );
+            switch (message.Level)
+            {
+                case Message.Levels.Fatal:
+                case Message.Levels.Error:
+                    title = Properties.Resources.ErrorTitle;
+                    icon  = MessageBoxIcon.Error;
+                    break;
+                case Message.Levels.Warn:
+                    title = Properties.Resources.WarningTitle;
+                    icon  = MessageBoxIcon.Warning;
+                    break;
+                default:
+                    break;
+            }
+
+            return MessageBox.Show(message.Value, title, button, icon);
         }
 
         /* ----------------------------------------------------------------- */
@@ -1102,21 +1094,15 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void ShowMessage()
         {
-            var error = string.Empty;
-            var warn  = string.Empty;
+            CubePdf.Message error = null;
             foreach (var message in _messages)
             {
                 Trace.WriteLine(message.ToString());
-                if (message.Level == Message.Levels.Error || message.Level == Message.Levels.Fatal) error = message.Value;
-                else if (message.Level == Message.Levels.Warn) warn = message.Value;
+                if (message.Level == Message.Levels.Fatal ||
+                    message.Level == Message.Levels.Error ||
+                    message.Level == Message.Levels.Warn) error = message;
             }
-
-            var iserror = !string.IsNullOrEmpty(error);
-            var description = iserror ? error : warn;
-            if (string.IsNullOrEmpty(description)) return;
-
-            if (iserror) ShowError(description);
-            else ShowWarning(description);
+            if (error != null) ShowMessage(error);
         }
 
         #endregion
