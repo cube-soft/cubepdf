@@ -277,7 +277,9 @@ namespace CubePdf
             setting.OutputPath = dest;
             setting.ExistedFile = existed;
             var converter = new Converter();
-            Assert.IsFalse(converter.Run(setting));
+            converter.Run(setting);
+            var error = GetErrorMessage(converter);
+            Assert.IsFalse(string.IsNullOrEmpty(error));
             Assert.IsTrue(System.IO.File.Exists(dest));
         }
 
@@ -305,7 +307,9 @@ namespace CubePdf
             setting.OutputPath = dest;
             setting.ExistedFile = Parameter.ExistedFiles.MergeTail;
             var converter = new Converter();
-            Assert.IsFalse(converter.Run(setting));
+            converter.Run(setting);
+            var error = GetErrorMessage(converter);
+            Assert.IsFalse(string.IsNullOrEmpty(error));
             Assert.IsTrue(System.IO.File.Exists(dest));
         }
 
@@ -369,14 +373,7 @@ namespace CubePdf
 
             var converter = new Converter();
             converter.Run(setting);
-            var error = string.Empty;
-            foreach (var message in converter.Messages)
-            {
-                if (message.Level == Message.Levels.Fatal ||
-                    message.Level == Message.Levels.Error ||
-                    message.Level == Message.Levels.Warn) error = message.Value;
-                System.Diagnostics.Trace.WriteLine(message.ToString());
-            }
+            var error = GetErrorMessage(converter);
             Assert.IsTrue(string.IsNullOrEmpty(error), string.Format("{0}:{1}", setting.InputPath, error));
             if (!System.IO.File.Exists(setting.OutputPath))
             {
@@ -450,6 +447,28 @@ namespace CubePdf
                 case Parameter.PdfVersions.VerPDFX: return 3;
                 default: return 7;
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// GetErrorMessage
+        ///
+        /// <summary>
+        /// エラーメッセージを取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private string GetErrorMessage(CubePdf.Converter converter)
+        {
+            var dest = string.Empty;
+            foreach (var message in converter.Messages)
+            {
+                if (message.Level == Message.Levels.Fatal ||
+                    message.Level == Message.Levels.Error ||
+                    message.Level == Message.Levels.Warn) dest = message.Value;
+                System.Diagnostics.Trace.WriteLine(message.ToString());
+            }
+            return dest;
         }
 
         #endregion
