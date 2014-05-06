@@ -101,7 +101,7 @@ namespace CubePdf
         {
             var control = sender as LinkLabel;
             try { System.Diagnostics.Process.Start(control.Text); }
-            catch (Exception err) { System.Diagnostics.Trace.WriteLine(err.ToString()); }
+            catch (Exception err) { CubePdf.Message.Trace(err.ToString()); }
         }
 
         #endregion

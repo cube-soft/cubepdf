@@ -103,6 +103,7 @@ namespace CubePdf
                 if (s == null) s = FindFromRecent(".pptx");
                 if (s != null) dest = s;
             }
+            CubePdf.Message.Trace(string.Format("ModifyFileName: {0} -> {1} -> {2}", filename, normalize, dest));
             return dest;
         }
         
