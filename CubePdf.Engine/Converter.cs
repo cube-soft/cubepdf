@@ -102,20 +102,18 @@ namespace CubePdf {
         /// </remarks>
         /// 
         /* ----------------------------------------------------------------- */
-        public bool Run(UserSetting setting) {
+        public void Run(UserSetting setting) {
             try
             {
                 CreateWorkDirectory(setting);
                 RunConverter(setting);
                 RunEditor(setting);
                 RunPostProcess(setting);
-                return true;
             }
             catch (Exception err)
             {
                 RecoverIf(setting);
                 AddMessage(err);
-                return false;
             }
             finally { Sweep(setting); }
         }
