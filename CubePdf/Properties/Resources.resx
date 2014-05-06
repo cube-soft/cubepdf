@@ -181,4 +181,7 @@
   <data name="ProductName" xml:space="preserve">
     <value>CubePDF</value>
   </data>
+  <data name="InfoTitle" xml:space="preserve">
+    <value>CubePDF</value>
+  </data>
 </root>

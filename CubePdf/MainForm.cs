@@ -1050,6 +1050,38 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
+        /// ShowMessage
+        /// 
+        /// <summary>
+        /// メッセージを表示します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private DialogResult ShowMessage(CubePdf.Message message, MessageBoxButtons button = MessageBoxButtons.OK)
+        {
+            var title = Properties.Resources.InfoTitle;
+            var icon  = MessageBoxIcon.Information;
+
+            switch (message.Level)
+            {
+                case Message.Levels.Fatal:
+                case Message.Levels.Error:
+                    title = Properties.Resources.ErrorTitle;
+                    icon  = MessageBoxIcon.Error;
+                    break;
+                case Message.Levels.Warn:
+                    title = Properties.Resources.WarningTitle;
+                    icon  = MessageBoxIcon.Warning;
+                    break;
+                default:
+                    break;
+            }
+
+            return MessageBox.Show(message.Value, title, button, icon);
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// ShowError
         /// 
         /// <summary>

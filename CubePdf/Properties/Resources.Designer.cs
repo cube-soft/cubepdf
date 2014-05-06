@@ -137,6 +137,15 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
+        ///   CubePDF に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string InfoTitle {
+            get {
+                return ResourceManager.GetString("InfoTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   PS ファイル (*.ps)|*.ps|EPS ファイル (*.eps)|*.eps|PDF ファイル (*.pdf)|*.pdf に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string InputPathFilter {
