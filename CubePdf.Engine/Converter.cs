@@ -106,6 +106,7 @@ namespace CubePdf {
             try
             {
                 CreateWorkDirectory(setting);
+                EscapeIf(setting);
                 RunConverter(setting);
                 RunEditor(setting);
                 RunPostProcess(setting);
@@ -133,7 +134,6 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         private void RunConverter(UserSetting setting)
         {
-            EscapeIf(setting);
             var gs = Configure(setting, setting.InputPath, setting.OutputPath);
             gs.Run();
             AddMessage("CubePdf.Converter.RunConverter: success");
