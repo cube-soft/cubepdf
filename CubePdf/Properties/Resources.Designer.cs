@@ -192,15 +192,6 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   上書きの確認 に類似しているローカライズされた文字列を検索します。
-        /// </summary>
-        internal static string OverwritePrompt {
-            get {
-                return ResourceManager.GetString("OverwritePrompt", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   入力されたパスワードが一致しません。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string PasswordUnmatched {
