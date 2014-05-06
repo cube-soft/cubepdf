@@ -188,11 +188,13 @@ namespace CubePdf
             setting.InputPath = copy;
             var suffix = string.Format("-{0}", merge);
             AssertRun(setting, suffix);
+            var hash = GetHash(setting.OutputPath);
 
             src = System.IO.Path.Combine(_examples, "example.ps");
             System.IO.File.Copy(src, copy, true);
             setting.ExistedFile = merge;
             AssertRun(setting, suffix);
+            Assert.AreNotEqual(hash, GetHash(setting.OutputPath));
         }
 
         /* ----------------------------------------------------------------- */
