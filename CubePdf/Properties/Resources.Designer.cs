@@ -258,7 +258,7 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   CubePDF 警告 に類似しているローカライズされた文字列を検索します。
+        ///   CubePDF 確認 に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string WarningTitle {
             get {
