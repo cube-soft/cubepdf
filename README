@@ -13,9 +13,14 @@ CubePDFは、お使いの様々なアプリケーションから、いつでも�
 印刷するのと同じ操作でサッとデータ書き出しが行えるので、操作に戸惑うこともありません。
 詳細な利用方法については、同梱した CubePDF_ユーザーズマニュアル.pdf を参照して下さい。
 
+■動作環境
+
+対応 OS: Windows XP / Vista / 7 / 8 / 8.1
+
 CubePDF を使用するためには Microsoft .NetFramework 2.0 以上がインストールされている必要があります。
 Microsoft .NetFramework は、以下の URL からダウンロードして下さい。
 http://www.microsoft.com/ja-jp/download/details.aspx?id=22
+また、Windows 8 / 8.1 に関しては、ストアアプリからの動作は未対応となっています。
 
 CubePDFは、以下のライブラリを利用しています。それぞれのライブラリについては、記載した URL から取得することができます。
 - GPL Ghostscript 9.14
