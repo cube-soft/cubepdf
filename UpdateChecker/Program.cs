@@ -71,6 +71,7 @@ namespace CubePdfUtility
                 }
             }
             catch (Exception err) { Trace.TraceError(err.ToString()); }
+            finally { System.Environment.Exit(0); }
         }
 
         /* ----------------------------------------------------------------- */
