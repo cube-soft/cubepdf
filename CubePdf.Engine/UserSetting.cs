@@ -870,6 +870,24 @@ namespace CubePdf
         /// <summary>
         /// ユーザ毎の設定情報をレジストリからロードします。
         /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool Load()
+        {
+            try
+            {
+                using (var root = Registry.CurrentUser.OpenSubKey(_RegRoot, false)) return Load(root);
+            }
+            catch (Exception /* err */) { return false; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Load
+        /// 
+        /// <summary>
+        /// ユーザ毎の設定情報をレジストリからロードします。
+        /// </summary>
         /// 
         /// <remarks>
         /// LastCheckUpdate の項目のみ、保存場所が異なるので別途処理を行って
@@ -877,31 +895,23 @@ namespace CubePdf
         /// </remarks>
         /// 
         /* ----------------------------------------------------------------- */
-        public bool Load()
+        public bool Load(Microsoft.Win32.RegistryKey root)
         {
-            bool status = true;
-
             try
             {
-                using (var root = Registry.CurrentUser.OpenSubKey(_RegRoot + '\\' + _RegVersion, false))
+                using (var subkey = root.OpenSubKey(_RegVersion, false))
                 {
                     var document = new CubePdf.Settings.Document();
-                    document.Read(root);
+                    document.Read(subkey);
                     Load(document);
                 }
 
-                using (var root = Registry.CurrentUser.OpenSubKey(_RegRoot, false))
-                {
-                    var date = root.GetValue(_RegLastCheck, string.Empty) as string;
-                    if (!string.IsNullOrEmpty(date)) _lastcheck = DateTime.Parse(date as string);
-                }
-            }
-            catch (Exception /* err */)
-            {
-                status = false;
-            }
+                var date = root.GetValue(_RegLastCheck, string.Empty) as string;
+                if (!string.IsNullOrEmpty(date)) _lastcheck = DateTime.Parse(date as string);
 
-            return status;
+                return true;
+            }
+            catch (Exception /* err */) { return false; }
         }
 
         /* ----------------------------------------------------------------- */
