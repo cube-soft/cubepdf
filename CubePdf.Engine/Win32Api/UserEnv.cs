@@ -21,7 +21,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace CubePdf.Win32Api
+namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
     ///

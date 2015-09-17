@@ -19,6 +19,7 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -274,13 +275,79 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void RunOpenFolder(string path)
         {
-            var info = CreateProcessStartInfo();
-            info.FileName = "explorer.exe";
-            info.Arguments = "\"" + System.IO.Path.GetDirectoryName(path) + "\"";
+            if (EmergencyMode) RunOpenFolderEm(path);
+            else
+            {
+                var info = CreateProcessStartInfo();
+                info.FileName = "explorer.exe";
+                info.Arguments = "\"" + System.IO.Path.GetDirectoryName(path) + "\"";
 
-            var process = new System.Diagnostics.Process();
-            process.StartInfo = info;
-            process.Start();
+                var process = new System.Diagnostics.Process();
+                process.StartInfo = info;
+                process.Start();
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// RunOpenFolderEm
+        ///
+        /// <summary>
+        /// EmergencyMode 下で、フォルダを開くポストプロセスを実行します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void RunOpenFolderEm(string path)
+        {
+            const uint TOKEN_ASSIGN_PRIMARY = 0x00000001;
+            const uint TOKEN_DUPLICATE      = 0x00000002;
+            const uint TOKEN_IMPERSONATE    = 0X00000004;
+            const uint TOKEN_READ           = 0x00020008;
+
+            var empty = new SecurityAttributes();
+            empty.nLength = (uint)Marshal.SizeOf(empty);
+
+            var hsrc = IntPtr.Zero;
+            AdvApi32.OpenThreadToken(Kernel32.GetCurrentThread(), TOKEN_DUPLICATE, true, ref hsrc);
+
+            var hdup = IntPtr.Zero;
+            AdvApi32.DuplicateTokenEx(hsrc,
+                TOKEN_IMPERSONATE | TOKEN_READ | TOKEN_ASSIGN_PRIMARY | TOKEN_DUPLICATE,
+                ref empty,
+                2 /* SecurityImpersonation */,
+                1 /* TokenPrimary */,
+                ref hdup
+            );
+
+            Kernel32.CloseHandle(hsrc);
+            AdvApi32.RevertToSelf();
+
+            var env = IntPtr.Zero;
+            UserEnv.CreateEnvironmentBlock(ref env, hdup, false);
+
+            var cmdline = string.Format("explorer.exe \"{0}\"", System.IO.Path.GetDirectoryName(path));
+            var message = string.Format("RunOpenFolderEm: {0}", cmdline);
+            _messages.Add(new Message(Message.Levels.Debug, message));
+
+            var pi = new ProcessInformation();
+            var startup = new StartupInfo();
+            startup.cb = (uint)Marshal.SizeOf(startup);
+            startup.lpDesktop = @"winsta0\default";
+
+            var status = AdvApi32.CreateProcessAsUser(hdup,
+                null,
+                cmdline,
+                ref empty, /* SecurityAttributes for process */
+                ref empty, /* SecurityAttributes for thread */
+                false,
+                0x0400, /* CREATE_UNICODE_ENVIRONMENT */
+                env,
+                null,
+                ref startup,
+                out pi
+            );
+
+            if (!status) throw new Win32Exception(Marshal.GetLastWin32Error());
         }
 
         /* ----------------------------------------------------------------- */
