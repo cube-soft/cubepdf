@@ -112,6 +112,10 @@ namespace CubePdf
 
             setting.InputPath = cmdline.Options.ContainsKey("InputFile") ? cmdline.Options["InputFile"] : "";
             setting.DeleteOnClose = cmdline.Options.ContainsKey("DeleteOnClose");
+
+            if (System.IO.Directory.Exists(setting.LibPath))
+                System.Environment.SetEnvironmentVariable("TEMP", setting.LibPath, EnvironmentVariableTarget.Process);
+            else CubePdf.Message.Trace("LibPath Not Found");
         }
 
         /* ----------------------------------------------------------------- */
