@@ -868,17 +868,31 @@ namespace CubePdf
         /// Load
         /// 
         /// <summary>
-        /// ユーザ毎の設定情報をレジストリからロードします。
+        /// レジストリの HKEY_CURRENT_USER 下からユーザ毎の設定情報を
+        /// ロードします。
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
         public bool Load()
         {
-            try
-            {
-                using (var root = Registry.CurrentUser.OpenSubKey(_RegRoot, false)) return Load(root);
-            }
+            try { return Load(Registry.CurrentUser); }
             catch (Exception /* err */) { return false; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Load
+        /// 
+        /// <summary>
+        /// レジストリの HKEY_USERS 下から指定されたユーザ名に対応する
+        /// 設定情報をロードします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool Load(string username)
+        {
+            // TODO: HKEY_USERS\(username) に相当するレジストリキーを開いて Load(root) メソッドを実行する。
+            throw new NotImplementedException();
         }
 
         /* ----------------------------------------------------------------- */
@@ -899,16 +913,18 @@ namespace CubePdf
         {
             try
             {
-                using (var subkey = root.OpenSubKey(_RegVersion, false))
+                using (var subkey = root.OpenSubKey(_RegRoot, false))
                 {
-                    var document = new CubePdf.Settings.Document();
-                    document.Read(subkey);
-                    Load(document);
+                    using (var child = subkey.OpenSubKey(_RegVersion, false))
+                    {
+                        var document = new CubePdf.Settings.Document();
+                        document.Read(child);
+                        Load(document);
+                    }
+
+                    var date = subkey.GetValue(_RegLastCheck, string.Empty) as string;
+                    if (!string.IsNullOrEmpty(date)) _lastcheck = DateTime.Parse(date as string);
                 }
-
-                var date = root.GetValue(_RegLastCheck, string.Empty) as string;
-                if (!string.IsNullOrEmpty(date)) _lastcheck = DateTime.Parse(date as string);
-
                 return true;
             }
             catch (Exception /* err */) { return false; }
@@ -924,7 +940,7 @@ namespace CubePdf
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public bool Load(string path)
+        public bool LoadXml(string path)
         {
             bool status = true;
 

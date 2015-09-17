@@ -98,10 +98,10 @@ namespace CubePdf
                 is_config = false;
             }
 
-            if (is_config) setting.Load(docname);
+            if (is_config) setting.LoadXml(docname);
             else
             {
-                setting.Load();
+                LoadUserSetting(setting, cmdline);
                 var filename = DocumentName.CreateFileName(docname);
                 if (filename != null)
                 {
@@ -115,8 +115,25 @@ namespace CubePdf
 
             setting.InputPath = cmdline.Options.ContainsKey("InputFile") ? cmdline.Options["InputFile"] : "";
             setting.DeleteOnClose = cmdline.Options.ContainsKey("DeleteOnClose");
+        }
 
-            if (cmdline.Options.ContainsKey("Em")) setting.PostProcess = Parameter.PostProcesses.Explorer;
+        /* ----------------------------------------------------------------- */
+        ///
+        /// LoadUserSetting
+        ///
+        /// <summary>
+        /// レジストリからユーザ設定をロードします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private static void LoadUserSetting(UserSetting setting, CubePdf.Settings.CommandLine cmdline)
+        {
+            if (cmdline.Options.ContainsKey("Em"))
+            {
+                setting.Load(cmdline.Options["UserName"]);
+                setting.PostProcess = Parameter.PostProcesses.Explorer;
+            }
+            else setting.Load();
         }
 
         /* ----------------------------------------------------------------- */
