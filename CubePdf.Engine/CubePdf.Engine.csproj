@@ -93,12 +93,14 @@
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converter.cs" />
     <Compile Include="DocumentName.cs" />
     <Compile Include="Editor.cs" />
+    <Compile Include="ForCreateProcessAsUser.cs" />
     <Compile Include="Ghostscript\Converter.cs">
       <SubType>Code</SubType>
     </Compile>

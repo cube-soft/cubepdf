@@ -20,6 +20,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Diagnostics;
+using System.Management;
 using Microsoft.Win32;
 
 namespace CubePdf
@@ -859,6 +860,20 @@ namespace CubePdf
             get { return _lastcheck; }
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// UserName
+        /// 
+        /// <summary>
+        /// CreateProcessAsUser用のユーザー名を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public string UserName
+        {
+            get { return _username; }
+        }
+
         #endregion
 
         #region Public methods
@@ -892,7 +907,21 @@ namespace CubePdf
         public bool Load(string username)
         {
             // TODO: HKEY_USERS\(username) に相当するレジストリキーを開いて Load(root) メソッドを実行する。
-            throw new NotImplementedException();
+            try {
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher(String.Format("SELECT * FROM Win32_UserAccount WHERE Name='{0}'", username));
+                ManagementObjectCollection queryCollection = searcher.Get();
+                string sid = null;
+                foreach (var query in queryCollection)
+                {
+                    if ((string)query["Name"] == username)
+                    {
+                        sid = (string)query["SID"];
+                        break;
+                    }
+                }
+                    return Load(Registry.Users.OpenSubKey(sid));
+            }
+            catch (Exception /* err */) { return false; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -1488,6 +1517,7 @@ namespace CubePdf
         private DocumentProperty _doc = new DocumentProperty();
         private PermissionProperty _permission = new PermissionProperty();
         private DateTime _lastcheck = new DateTime();
+        private string _username = null;
         #endregion
 
         #region Constant variables

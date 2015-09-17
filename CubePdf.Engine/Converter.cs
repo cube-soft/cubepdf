@@ -217,6 +217,7 @@ namespace CubePdf {
             process.FileName      = setting.OutputPath;
             process.UserProgram   = setting.UserProgram;
             process.UserArguments = setting.UserArguments;
+            process.UserName = setting.UserName;
             process.Run();
             AddMessage("CubePdf.Converter.RunPostProcess: success");
         }

@@ -145,6 +145,21 @@ namespace CubePdf
             get { return _messages; }
         }
 
+        /* ----------------------------------------------------------------- */
+        ///
+        /// UserName
+        /// 
+        /// <summary>
+        /// CreateProcessAsUser用のユーザー名を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public string UserName
+        {
+            set { _username = value; }
+            get { return _username; }
+        }
+
         #endregion
 
         #region Public methods
@@ -177,8 +192,19 @@ namespace CubePdf
                 if (Verb == Parameter.PostProcesses.Open) info.FileName = path;
                 else if (Verb == Parameter.PostProcesses.Explorer)
                 {
-                    // TODO: Explorer を起動するために必要な設定を行う。
-                    info.FileName = "explorer.exe";
+                    if (UserName != null)
+                    {
+                        string cmd = "C:\\Windows\\explorer.exe " + "\"" + System.IO.Path.GetDirectoryName(path) + "\"";
+                        System.IO.Path.GetDirectoryName(path);
+                        PROCESS_INFORMATION pi;
+                        if(!ForCreateProcessAsUser.Launch(cmd, UserName, out pi))CubePdf.Message.Debug("CreateProcessAsUser: Failed");
+                        return;
+                    }
+                    else
+                    {
+                        info.FileName = "C:\\Windows\\explorer.exe";
+                        info.Arguments = "\"" + System.IO.Path.GetDirectoryName(path) + "\"";
+                    }
                 }
                 else
                 {
@@ -254,6 +280,7 @@ namespace CubePdf
         private string _filename = string.Empty;
         private string _program = string.Empty;
         private string _args = string.Empty;
+        private string _username = null;
         #endregion
     }
 }

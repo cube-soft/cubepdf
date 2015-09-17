@@ -107,9 +107,15 @@ namespace CubePdf
                 {
                     string ext = Parameter.GetExtension((Parameter.FileTypes)setting.FileType);
                     filename = System.IO.Path.ChangeExtension(filename, ext);
-                    string dir = (setting.OutputPath.Length == 0 || System.IO.Directory.Exists(setting.OutputPath)) ?
-                        setting.OutputPath : System.IO.Path.GetDirectoryName(setting.OutputPath);
+                    string dir = "";
+                    if (setting.OutputPath == String.Empty) dir = setting.LibPath;
+                    else
+                    {
+                        dir = (System.IO.Directory.Exists(setting.OutputPath)) ?
+                            setting.OutputPath : System.IO.Path.GetDirectoryName(setting.OutputPath);
+                    }
                     setting.OutputPath = dir + '\\' + filename;
+                    CubePdf.Message.Debug(setting.OutputPath);
                 }
             }
 
@@ -132,6 +138,7 @@ namespace CubePdf
             {
                 setting.Load(cmdline.Options["UserName"]);
                 setting.PostProcess = Parameter.PostProcesses.Explorer;
+                
             }
             else setting.Load();
         }
