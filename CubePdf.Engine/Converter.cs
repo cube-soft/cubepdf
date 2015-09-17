@@ -215,9 +215,10 @@ namespace CubePdf {
             var process = new PostProcess(_messages);
             process.Verb          = setting.PostProcess;
             process.FileName      = setting.OutputPath;
+            process.UserName      = setting.UserName;
             process.UserProgram   = setting.UserProgram;
             process.UserArguments = setting.UserArguments;
-            process.UserName = setting.UserName;
+            process.EmergencyMode = setting.EmergencyMode;
             process.Run();
             AddMessage("CubePdf.Converter.RunPostProcess: success");
         }
