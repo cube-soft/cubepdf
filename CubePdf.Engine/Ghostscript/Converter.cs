@@ -83,9 +83,14 @@ namespace CubePdf.Ghostscript
             if (copies.Count == 0) return;
 
             var tmp = System.IO.Path.Combine(work, GetTempFileName(_device) + extension);
-            var args = MakeArgs(copies.ToArray(), tmp);
+            var log = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
+            var args = MakeArgs(copies.ToArray(), tmp, log);
+
             AddMessages(args);
-            if (!Run(args)) throw new ArgumentException(Properties.Resources.GhostscriptError);
+            var status = Run(args);
+            AddGsMessages(log);
+            if (!status) throw new ArgumentException(Properties.Resources.GhostscriptError);
+
             DeleteCopiedSources(copies);
             MoveFiles(_dest, work);
         }
@@ -435,12 +440,15 @@ namespace CubePdf.Ghostscript
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private string[] MakeArgs(string[] sources, string dest)
+        private string[] MakeArgs(string[] sources, string dest, string log)
         {
             var args = new List<string>();
 
             // args[0] is ignored.
             args.Add("dummy");
+
+            // Add logfile
+            args.Add(string.Format("-sstdout={0}", log));
 
             // Add device
             if (_device != Devices.Unknown) args.Add(DeviceExt.Argument(_device));
@@ -650,6 +658,22 @@ namespace CubePdf.Ghostscript
                 foreach (string s in args) message += ("\r\n\t" + s);
                 AddDebug(message);
             }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// AddGsMessages
+        /// 
+        /// <summary>
+        /// Ghostscript が出力したログをメッセージに追加します。
+        /// </summary>
+        /// 
+        /* ----------------------------------------------------------------- */
+        private void AddGsMessages(string log)
+        {
+            foreach (var line in System.IO.File.ReadAllLines(log)) AddDebug(line);
+            try { System.IO.File.Delete(log); }
+            catch (Exception err) { AddDebug(err.ToString()); }
         }
 
         /* ----------------------------------------------------------------- */
