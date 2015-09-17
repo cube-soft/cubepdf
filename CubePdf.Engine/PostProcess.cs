@@ -88,6 +88,21 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
+        /// UserName
+        /// 
+        /// <summary>
+        /// ユーザー名を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public string UserName
+        {
+            set { _username = value; }
+            get { return _username; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// UserProgram
         /// 
         /// <summary>
@@ -133,6 +148,22 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
+        /// EmergencyMode
+        /// 
+        /// <summary>
+        /// プロセスが EmergencyMode で実行されているかどうかを表す値を
+        /// 取得または設定します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool EmergencyMode
+        {
+            get { return _em; }
+            set { _em = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// Messages
         ///
         /// <summary>
@@ -143,21 +174,6 @@ namespace CubePdf
         public List<CubePdf.Message> Messages
         {
             get { return _messages; }
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// UserName
-        /// 
-        /// <summary>
-        /// CreateProcessAsUser用のユーザー名を取得します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public string UserName
-        {
-            set { _username = value; }
-            get { return _username; }
         }
 
         #endregion
@@ -339,9 +355,10 @@ namespace CubePdf
         List<CubePdf.Message> _messages = null;
         Parameter.PostProcesses _verb = Parameter.PostProcesses.None;
         private string _filename = string.Empty;
+        private string _username = string.Empty;
         private string _program = string.Empty;
         private string _args = string.Empty;
-        private string _username = null;
+        private bool _em = false;
         #endregion
     }
 }
