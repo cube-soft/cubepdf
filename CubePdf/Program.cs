@@ -56,9 +56,13 @@ namespace CubePdf
             SetupUserSetting(setting, cmdline);
             CheckUpdate(setting);
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm(setting));
+            if (cmdline.Options.ContainsKey("Em")) ExecConvert(setting);
+            else
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new MainForm(setting));
+            }
 
             Trace.Close();
         }
@@ -111,6 +115,8 @@ namespace CubePdf
 
             setting.InputPath = cmdline.Options.ContainsKey("InputFile") ? cmdline.Options["InputFile"] : "";
             setting.DeleteOnClose = cmdline.Options.ContainsKey("DeleteOnClose");
+
+            if (cmdline.Options.ContainsKey("Em")) setting.PostProcess = Parameter.PostProcesses.Explorer;
         }
 
         /* ----------------------------------------------------------------- */
@@ -162,6 +168,27 @@ namespace CubePdf
                 Process.Start(path);
             }
             catch (Exception err) { CubePdf.Message.Trace(err.ToString()); }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ExecConvert
+        ///
+        /// <summary>
+        /// 変換処理を実行します。このメソッドは、CubePDF メイン画面が表示
+        /// されない設定の場合に実行されます。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private static void ExecConvert(UserSetting setting)
+        {
+            var converter = new Converter();
+            converter.Run(setting);
+            foreach (var message in converter.Messages) Trace.WriteLine(message.ToString());
+            if (setting.DeleteOnClose && System.IO.File.Exists(setting.InputPath))
+            {
+                System.IO.File.Delete(setting.InputPath);
+            }
         }
     }
 }
