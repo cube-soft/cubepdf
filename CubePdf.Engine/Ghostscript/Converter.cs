@@ -458,7 +458,6 @@ namespace CubePdf.Ghostscript
 
             // Add page settings
             if (_paper != Papers.Unknown) args.Add(PaperExt.Argument(_paper));
-            else if (_device == Devices.PDF) args.Add("-dPDFFitPage");
             if (_first > 1 || _first < _last)
             {
                 args.Add(string.Format("-dFirstPage={0}", _first));
