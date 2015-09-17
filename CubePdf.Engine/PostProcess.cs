@@ -187,41 +187,20 @@ namespace CubePdf
                 var path = GetNormalizedPath();
                 if (!System.IO.File.Exists(path)) return;
 
-                var info = new System.Diagnostics.ProcessStartInfo();
-                var process = new System.Diagnostics.Process();
-                if (Verb == Parameter.PostProcesses.Open) info.FileName = path;
-                else if (Verb == Parameter.PostProcesses.OpenFolder)
+                switch (Verb)
                 {
-                    if (UserName != null)
-                    {
-                        string cmd = "C:\\Windows\\explorer.exe " + "\"" + System.IO.Path.GetDirectoryName(path) + "\"";
-                        System.IO.Path.GetDirectoryName(path);
-                        PROCESS_INFORMATION pi;
-                        if(!ForCreateProcessAsUser.Launch(cmd, UserName, out pi))CubePdf.Message.Debug("CreateProcessAsUser: Failed");
-                        return;
-                    }
-                    else
-                    {
-                        info.FileName = "C:\\Windows\\explorer.exe";
-                        info.Arguments = "\"" + System.IO.Path.GetDirectoryName(path) + "\"";
-                    }
+                    case Parameter.PostProcesses.Open:
+                        RunOpen(path);
+                        break;
+                    case Parameter.PostProcesses.OpenFolder:
+                        RunOpenFolder(path);
+                        break;
+                    case Parameter.PostProcesses.UserProgram:
+                        RunUserProgram(path);
+                        break;
+                    default:
+                        break;
                 }
-                else
-                {
-                    info.FileName = UserProgram;
-                    if (!string.IsNullOrEmpty(UserArguments))
-                    {
-                        var replaced = "\"" + path + "\"";
-                        info.Arguments = UserArguments.Replace("%%FILE%%", replaced);
-                    }
-                }
-                info.CreateNoWindow = false;
-                info.UseShellExecute = true;
-                info.LoadUserProfile = false;
-                info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-
-                process.StartInfo = info;
-                process.Start();
             }
             catch (Exception err) { AddMessage(err); }
         }
@@ -229,6 +208,88 @@ namespace CubePdf
         #endregion
 
         #region Other methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CreateProcessStartInfo
+        ///
+        /// <summary>
+        /// ProcessStartInfo を初期化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private System.Diagnostics.ProcessStartInfo CreateProcessStartInfo()
+        {
+            var dest = new System.Diagnostics.ProcessStartInfo();
+            dest.CreateNoWindow = false;
+            dest.UseShellExecute = true;
+            dest.LoadUserProfile = false;
+            dest.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            return dest;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// RunOpen
+        ///
+        /// <summary>
+        /// ファイルを開くポストプロセスを実行します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void RunOpen(string path)
+        {
+            var info = CreateProcessStartInfo();
+            info.FileName = path;
+
+            var process = new System.Diagnostics.Process();
+            process.StartInfo = info;
+            process.Start();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// RunOpenFolder
+        ///
+        /// <summary>
+        /// フォルダを開くポストプロセスを実行します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void RunOpenFolder(string path)
+        {
+            var info = CreateProcessStartInfo();
+            info.FileName = "explorer.exe";
+            info.Arguments = "\"" + System.IO.Path.GetDirectoryName(path) + "\"";
+
+            var process = new System.Diagnostics.Process();
+            process.StartInfo = info;
+            process.Start();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// RunUserProgram
+        ///
+        /// <summary>
+        /// ユーザプログラムを実行します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void RunUserProgram(string path)
+        {
+            var info = CreateProcessStartInfo();
+            info.FileName = UserProgram;
+            if (!string.IsNullOrEmpty(UserArguments))
+            {
+                var replaced = "\"" + path + "\"";
+                info.Arguments = UserArguments.Replace("%%FILE%%", replaced);
+            }
+
+            var process = new System.Diagnostics.Process();
+            process.StartInfo = info;
+            process.Start();
+        }
 
         /* ----------------------------------------------------------------- */
         ///
