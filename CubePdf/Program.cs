@@ -52,7 +52,8 @@ namespace CubePdf
             foreach (var s in args) message += string.Format("{0}\t{1}", Environment.NewLine, s);
             CubePdf.Message.Trace(message);
 
-            SetupUserSetting(setting, args);
+            var cmdline = new CubePdf.Settings.CommandLine(args);
+            SetupUserSetting(setting, cmdline);
             CheckUpdate(setting);
 
             Application.EnableVisualStyles();
@@ -72,10 +73,8 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private static void SetupUserSetting(UserSetting setting, string[] args)
+        private static void SetupUserSetting(UserSetting setting, CubePdf.Settings.CommandLine cmdline)
         {
-            var cmdline = new CubePdf.Settings.CommandLine(args);
-
             var docname = cmdline.Options.ContainsKey("DocumentName") ? cmdline.Options["DocumentName"] : "";
             bool is_config = false;
             try
