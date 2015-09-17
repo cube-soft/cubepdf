@@ -36,6 +36,18 @@ namespace CubePdf
     {
         /* ----------------------------------------------------------------- */
         ///
+        /// GetCurrentThread
+        ///
+        /// <summary>
+        /// https://msdn.microsoft.com/en-us/library/windows/desktop/ms683182.aspx
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        [DllImport("kernel32.dll", SetLastError = false)]
+        public static extern IntPtr GetCurrentThread();
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// CloseHandle
         ///
         /// <summary>
