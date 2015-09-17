@@ -177,6 +177,7 @@ namespace CubePdf
                 if (Verb == Parameter.PostProcesses.Open) info.FileName = path;
                 else
                 {
+                    if (Verb == Parameter.PostProcesses.Explorer) info.FileName = "explorer.exe";
                     info.FileName = UserProgram;
                     if (!string.IsNullOrEmpty(UserArguments))
                     {
