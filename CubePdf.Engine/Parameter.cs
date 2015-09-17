@@ -86,7 +86,7 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         public enum PostProcesses : int
         {
-            Open, None, UserProgram,
+            Open, None, UserProgram, Explorer
         };
 
         /* ----------------------------------------------------------------- */
