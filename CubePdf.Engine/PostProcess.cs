@@ -175,9 +175,13 @@ namespace CubePdf
                 var info = new System.Diagnostics.ProcessStartInfo();
                 var process = new System.Diagnostics.Process();
                 if (Verb == Parameter.PostProcesses.Open) info.FileName = path;
+                else if (Verb == Parameter.PostProcesses.Explorer)
+                {
+                    // TODO: Explorer を起動するために必要な設定を行う。
+                    info.FileName = "explorer.exe";
+                }
                 else
                 {
-                    if (Verb == Parameter.PostProcesses.Explorer) info.FileName = "explorer.exe";
                     info.FileName = UserProgram;
                     if (!string.IsNullOrEmpty(UserArguments))
                     {
