@@ -100,7 +100,6 @@
     <Compile Include="Converter.cs" />
     <Compile Include="DocumentName.cs" />
     <Compile Include="Editor.cs" />
-    <Compile Include="ForCreateProcessAsUser.cs" />
     <Compile Include="Ghostscript\Converter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -123,6 +122,12 @@
     <Compile Include="Path.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Win32Api\AdvApi32.cs" />
+    <Compile Include="Win32Api\Kernel32.cs" />
+    <Compile Include="Win32Api\ProcessInformation.cs" />
+    <Compile Include="Win32Api\SecurityAttributes.cs" />
+    <Compile Include="Win32Api\StartupInfo.cs" />
+    <Compile Include="Win32Api\UserEnv.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -174,6 +179,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
