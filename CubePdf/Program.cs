@@ -56,7 +56,7 @@ namespace CubePdf
             SetupUserSetting(setting, cmdline);
             CheckUpdate(setting);
 
-            if (cmdline.Options.ContainsKey("Em")) ExecConvert(setting);
+            if (setting.EmergencyMode) ExecConvert(setting);
             else
             {
                 Application.EnableVisualStyles();
@@ -119,6 +119,7 @@ namespace CubePdf
                 }
             }
 
+            setting.UserName = cmdline.Options.ContainsKey("UserName") ? cmdline.Options["UserName"] : "";
             setting.InputPath = cmdline.Options.ContainsKey("InputFile") ? cmdline.Options["InputFile"] : "";
             setting.DeleteOnClose = cmdline.Options.ContainsKey("DeleteOnClose");
         }
@@ -137,6 +138,7 @@ namespace CubePdf
             if (cmdline.Options.ContainsKey("Em"))
             {
                 setting.Load(cmdline.Options["UserName"]);
+                setting.EmergencyMode = true;
                 setting.PostProcess = Parameter.PostProcesses.OpenFolder;
                 
             }

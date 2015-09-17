@@ -342,6 +342,21 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
+        /// UserName
+        /// 
+        /// <summary>
+        /// CreateProcessAsUser用のユーザー名を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public string UserName
+        {
+            get { return _username; }
+            set { _username = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// InstallPath
         ///
         /// <summary>
@@ -749,6 +764,22 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
+        /// EmergencyMode
+        ///
+        /// <summary>
+        /// CubePDF が EmergencyMode で実行されているかどうかを表す値を
+        /// 取得または設定します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool EmergencyMode
+        {
+            get { return _em; }
+            set { _em = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// AdvancedMode
         ///
         /// <summary>
@@ -860,20 +891,6 @@ namespace CubePdf
             get { return _lastcheck; }
         }
 
-        /* ----------------------------------------------------------------- */
-        ///
-        /// UserName
-        /// 
-        /// <summary>
-        /// CreateProcessAsUser用のユーザー名を取得します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public string UserName
-        {
-            get { return _username; }
-        }
-
         #endregion
 
         #region Public methods
@@ -906,20 +923,24 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         public bool Load(string username)
         {
-            // TODO: HKEY_USERS\(username) に相当するレジストリキーを開いて Load(root) メソッドを実行する。
             try {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(String.Format("SELECT * FROM Win32_UserAccount WHERE Name='{0}'", username));
-                ManagementObjectCollection queryCollection = searcher.Get();
-                string sid = null;
-                foreach (var query in queryCollection)
+                var sid = string.Empty;
+                var query = String.Format("SELECT * FROM Win32_UserAccount WHERE Name='{0}'", username);
+
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+                foreach (var item in searcher.Get())
                 {
-                    if ((string)query["Name"] == username)
+                    if (item["Name"].ToString() == username)
                     {
-                        sid = (string)query["SID"];
+                        sid = item["SID"].ToString();
                         break;
                     }
                 }
-                    return Load(Registry.Users.OpenSubKey(sid));
+
+                using (var root = Registry.Users.OpenSubKey(sid, false))
+                {
+                    return Load(root);
+                }
             }
             catch (Exception /* err */) { return false; }
         }
@@ -1492,6 +1513,7 @@ namespace CubePdf
         private string _install = _RegUnknown;
         private string _lib = _RegUnknown;
         private string _version = _RegUnknown;
+        private string _username = string.Empty;
         private string _input = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         private string _output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         private string _program = "";
@@ -1514,10 +1536,10 @@ namespace CubePdf
         private bool _advance = false;
         private bool _selectable = false;
         private bool _delete_input = false;
+        private bool _em = false;
         private DocumentProperty _doc = new DocumentProperty();
         private PermissionProperty _permission = new PermissionProperty();
         private DateTime _lastcheck = new DateTime();
-        private string _username = null;
         #endregion
 
         #region Constant variables
