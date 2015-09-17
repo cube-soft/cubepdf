@@ -86,7 +86,10 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         public enum PostProcesses : int
         {
-            Open, None, UserProgram, Explorer
+            Open = 0,
+            OpenFolder = 3,
+            None = 1,
+            UserProgram = 2,
         };
 
         /* ----------------------------------------------------------------- */
@@ -100,7 +103,7 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         public enum Resolutions : int
         {
-            Resolution72, Resolution150, Resolution300, Resolution450, Resolution600,
+            Resolution72, Resolution150, Resolution300, Resolution450, Resolution600
         };
 
         /* ----------------------------------------------------------------- */

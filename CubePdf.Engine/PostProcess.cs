@@ -190,7 +190,7 @@ namespace CubePdf
                 var info = new System.Diagnostics.ProcessStartInfo();
                 var process = new System.Diagnostics.Process();
                 if (Verb == Parameter.PostProcesses.Open) info.FileName = path;
-                else if (Verb == Parameter.PostProcesses.Explorer)
+                else if (Verb == Parameter.PostProcesses.OpenFolder)
                 {
                     if (UserName != null)
                     {

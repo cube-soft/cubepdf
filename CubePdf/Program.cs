@@ -137,7 +137,7 @@ namespace CubePdf
             if (cmdline.Options.ContainsKey("Em"))
             {
                 setting.Load(cmdline.Options["UserName"]);
-                setting.PostProcess = Parameter.PostProcesses.Explorer;
+                setting.PostProcess = Parameter.PostProcesses.OpenFolder;
                 
             }
             else setting.Load();
