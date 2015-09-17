@@ -435,6 +435,9 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void ExitButton_Click(object sender, EventArgs e)
         {
+            _setting.InputPath = InputPathTextBox.Text;
+            _setting.OutputPath = OutputPathTextBox.Text;
+
             if (_setting.DeleteOnClose) System.IO.File.Delete(_setting.InputPath);
             _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.ExitButton_Click"));
             ShowMessage();
