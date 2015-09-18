@@ -52,12 +52,17 @@ namespace CubePdf
             foreach (var s in args) message += string.Format("{0}\t{1}", Environment.NewLine, s);
             CubePdf.Message.Trace(message);
 
-            SetupUserSetting(setting, args);
+            var cmdline = new CubePdf.Settings.CommandLine(args);
+            SetupUserSetting(setting, cmdline);
             CheckUpdate(setting);
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm(setting));
+            if (setting.EmergencyMode) ExecConvert(setting);
+            else
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new MainForm(setting));
+            }
 
             Trace.Close();
         }
@@ -72,10 +77,8 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private static void SetupUserSetting(UserSetting setting, string[] args)
+        private static void SetupUserSetting(UserSetting setting, CubePdf.Settings.CommandLine cmdline)
         {
-            var cmdline = new CubePdf.Settings.CommandLine(args);
-
             var docname = cmdline.Options.ContainsKey("DocumentName") ? cmdline.Options["DocumentName"] : "";
             bool is_config = false;
             try
@@ -95,27 +98,55 @@ namespace CubePdf
                 is_config = false;
             }
 
-            if (is_config) setting.Load(docname);
+            if (is_config) setting.LoadXml(docname);
             else
             {
-                setting.Load();
+                LoadUserSetting(setting, cmdline);
                 var filename = DocumentName.CreateFileName(docname);
                 if (filename != null)
                 {
                     string ext = Parameter.GetExtension((Parameter.FileTypes)setting.FileType);
                     filename = System.IO.Path.ChangeExtension(filename, ext);
-                    string dir = (setting.OutputPath.Length == 0 || System.IO.Directory.Exists(setting.OutputPath)) ?
-                        setting.OutputPath : System.IO.Path.GetDirectoryName(setting.OutputPath);
+                    string dir = "";
+                    if (setting.OutputPath == String.Empty) dir = setting.LibPath;
+                    else
+                    {
+                        dir = (System.IO.Directory.Exists(setting.OutputPath)) ?
+                            setting.OutputPath : System.IO.Path.GetDirectoryName(setting.OutputPath);
+                    }
                     setting.OutputPath = dir + '\\' + filename;
+                    CubePdf.Message.Debug(setting.OutputPath);
                 }
             }
 
+            setting.UserName = cmdline.Options.ContainsKey("UserName") ? cmdline.Options["UserName"] : "";
             setting.InputPath = cmdline.Options.ContainsKey("InputFile") ? cmdline.Options["InputFile"] : "";
             setting.DeleteOnClose = cmdline.Options.ContainsKey("DeleteOnClose");
 
             if (System.IO.Directory.Exists(setting.LibPath))
                 System.Environment.SetEnvironmentVariable("TEMP", setting.LibPath, EnvironmentVariableTarget.Process);
             else CubePdf.Message.Trace("LibPath Not Found");
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// LoadUserSetting
+        ///
+        /// <summary>
+        /// レジストリからユーザ設定をロードします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private static void LoadUserSetting(UserSetting setting, CubePdf.Settings.CommandLine cmdline)
+        {
+            if (cmdline.Options.ContainsKey("Em"))
+            {
+                setting.Load(cmdline.Options["UserName"]);
+                setting.EmergencyMode = true;
+                setting.PostProcess = Parameter.PostProcesses.OpenFolder;
+                
+            }
+            else setting.Load();
         }
 
         /* ----------------------------------------------------------------- */
@@ -167,6 +198,27 @@ namespace CubePdf
                 Process.Start(path);
             }
             catch (Exception err) { CubePdf.Message.Trace(err.ToString()); }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// ExecConvert
+        ///
+        /// <summary>
+        /// 変換処理を実行します。このメソッドは、CubePDF メイン画面が表示
+        /// されない設定の場合に実行されます。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private static void ExecConvert(UserSetting setting)
+        {
+            var converter = new Converter();
+            converter.Run(setting);
+            foreach (var message in converter.Messages) Trace.WriteLine(message.ToString());
+            if (setting.DeleteOnClose && System.IO.File.Exists(setting.InputPath))
+            {
+                System.IO.File.Delete(setting.InputPath);
+            }
         }
     }
 }

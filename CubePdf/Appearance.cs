@@ -102,6 +102,7 @@ namespace CubePdf
             switch (id)
             {
             case Parameter.PostProcesses.Open: return "開く";
+            case Parameter.PostProcesses.OpenFolder: return "フォルダを開く";
             case Parameter.PostProcesses.None: return "何もしない";
             case Parameter.PostProcesses.UserProgram: return "ユーザープログラム";
             default: break;

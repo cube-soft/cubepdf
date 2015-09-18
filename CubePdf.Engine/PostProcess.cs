@@ -19,6 +19,7 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
@@ -88,6 +89,21 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
+        /// UserName
+        /// 
+        /// <summary>
+        /// ユーザー名を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public string UserName
+        {
+            set { _username = value; }
+            get { return _username; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// UserProgram
         /// 
         /// <summary>
@@ -133,6 +149,22 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
+        /// EmergencyMode
+        /// 
+        /// <summary>
+        /// プロセスが EmergencyMode で実行されているかどうかを表す値を
+        /// 取得または設定します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool EmergencyMode
+        {
+            get { return _em; }
+            set { _em = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// Messages
         ///
         /// <summary>
@@ -172,25 +204,20 @@ namespace CubePdf
                 var path = GetNormalizedPath();
                 if (!System.IO.File.Exists(path)) return;
 
-                var info = new System.Diagnostics.ProcessStartInfo();
-                var process = new System.Diagnostics.Process();
-                if (Verb == Parameter.PostProcesses.Open) info.FileName = path;
-                else
+                switch (Verb)
                 {
-                    info.FileName = UserProgram;
-                    if (!string.IsNullOrEmpty(UserArguments))
-                    {
-                        var replaced = "\"" + path + "\"";
-                        info.Arguments = UserArguments.Replace("%%FILE%%", replaced);
-                    }
+                    case Parameter.PostProcesses.Open:
+                        RunOpen(path);
+                        break;
+                    case Parameter.PostProcesses.OpenFolder:
+                        RunOpenFolder(path);
+                        break;
+                    case Parameter.PostProcesses.UserProgram:
+                        RunUserProgram(path);
+                        break;
+                    default:
+                        break;
                 }
-                info.CreateNoWindow = false;
-                info.UseShellExecute = true;
-                info.LoadUserProfile = false;
-                info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
-
-                process.StartInfo = info;
-                process.Start();
             }
             catch (Exception err) { AddMessage(err); }
         }
@@ -198,6 +225,154 @@ namespace CubePdf
         #endregion
 
         #region Other methods
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// CreateProcessStartInfo
+        ///
+        /// <summary>
+        /// ProcessStartInfo を初期化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private System.Diagnostics.ProcessStartInfo CreateProcessStartInfo()
+        {
+            var dest = new System.Diagnostics.ProcessStartInfo();
+            dest.CreateNoWindow = false;
+            dest.UseShellExecute = true;
+            dest.LoadUserProfile = false;
+            dest.WindowStyle = System.Diagnostics.ProcessWindowStyle.Normal;
+            return dest;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// RunOpen
+        ///
+        /// <summary>
+        /// ファイルを開くポストプロセスを実行します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void RunOpen(string path)
+        {
+            var info = CreateProcessStartInfo();
+            info.FileName = path;
+
+            var process = new System.Diagnostics.Process();
+            process.StartInfo = info;
+            process.Start();
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// RunOpenFolder
+        ///
+        /// <summary>
+        /// フォルダを開くポストプロセスを実行します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void RunOpenFolder(string path)
+        {
+            if (EmergencyMode) RunOpenFolderEm(path);
+            else
+            {
+                var info = CreateProcessStartInfo();
+                info.FileName = "explorer.exe";
+                info.Arguments = "\"" + System.IO.Path.GetDirectoryName(path) + "\"";
+
+                var process = new System.Diagnostics.Process();
+                process.StartInfo = info;
+                process.Start();
+            }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// RunOpenFolderEm
+        ///
+        /// <summary>
+        /// EmergencyMode 下で、フォルダを開くポストプロセスを実行します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void RunOpenFolderEm(string path)
+        {
+            const uint TOKEN_ASSIGN_PRIMARY = 0x00000001;
+            const uint TOKEN_DUPLICATE      = 0x00000002;
+            const uint TOKEN_IMPERSONATE    = 0X00000004;
+            const uint TOKEN_READ           = 0x00020008;
+
+            var empty = new SecurityAttributes();
+            empty.nLength = (uint)Marshal.SizeOf(empty);
+
+            var hsrc = IntPtr.Zero;
+            AdvApi32.OpenThreadToken(Kernel32.GetCurrentThread(), TOKEN_DUPLICATE, true, ref hsrc);
+
+            var hdup = IntPtr.Zero;
+            AdvApi32.DuplicateTokenEx(hsrc,
+                TOKEN_IMPERSONATE | TOKEN_READ | TOKEN_ASSIGN_PRIMARY | TOKEN_DUPLICATE,
+                ref empty,
+                2 /* SecurityImpersonation */,
+                1 /* TokenPrimary */,
+                ref hdup
+            );
+
+            Kernel32.CloseHandle(hsrc);
+            AdvApi32.RevertToSelf();
+
+            var env = IntPtr.Zero;
+            UserEnv.CreateEnvironmentBlock(ref env, hdup, false);
+
+            var cmdline = string.Format("explorer.exe \"{0}\"", System.IO.Path.GetDirectoryName(path));
+            var message = string.Format("CubePdf.PostProcess.RunOpenFolderEm: {0}", cmdline);
+            _messages.Add(new Message(Message.Levels.Debug, message));
+
+            var pi = new ProcessInformation();
+            var startup = new StartupInfo();
+            startup.cb = (uint)Marshal.SizeOf(startup);
+            startup.lpDesktop = @"winsta0\default";
+
+            var status = AdvApi32.CreateProcessAsUser(hdup,
+                null,
+                cmdline,
+                ref empty, /* SecurityAttributes for process */
+                ref empty, /* SecurityAttributes for thread */
+                false,
+                0x0400, /* CREATE_UNICODE_ENVIRONMENT */
+                env,
+                null,
+                ref startup,
+                out pi
+            );
+
+            if (!status) throw new Win32Exception(Marshal.GetLastWin32Error());
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// RunUserProgram
+        ///
+        /// <summary>
+        /// ユーザプログラムを実行します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private void RunUserProgram(string path)
+        {
+            var info = CreateProcessStartInfo();
+            info.FileName = UserProgram;
+            if (!string.IsNullOrEmpty(UserArguments))
+            {
+                var replaced = "\"" + path + "\"";
+                info.Arguments = UserArguments.Replace("%%FILE%%", replaced);
+            }
+
+            var process = new System.Diagnostics.Process();
+            process.StartInfo = info;
+            process.Start();
+        }
 
         /* ----------------------------------------------------------------- */
         ///
@@ -247,8 +422,10 @@ namespace CubePdf
         List<CubePdf.Message> _messages = null;
         Parameter.PostProcesses _verb = Parameter.PostProcesses.None;
         private string _filename = string.Empty;
+        private string _username = string.Empty;
         private string _program = string.Empty;
         private string _args = string.Empty;
+        private bool _em = false;
         #endregion
     }
 }

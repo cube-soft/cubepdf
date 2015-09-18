@@ -20,6 +20,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Diagnostics;
+using System.Management;
 using Microsoft.Win32;
 
 namespace CubePdf
@@ -337,6 +338,21 @@ namespace CubePdf
         {
             get { return _version; }
             set { _version = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// UserName
+        /// 
+        /// <summary>
+        /// CreateProcessAsUser用のユーザー名を取得します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public string UserName
+        {
+            get { return _username; }
+            set { _username = value; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -748,6 +764,22 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
+        /// EmergencyMode
+        ///
+        /// <summary>
+        /// CubePDF が EmergencyMode で実行されているかどうかを表す値を
+        /// 取得または設定します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool EmergencyMode
+        {
+            get { return _em; }
+            set { _em = value; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// AdvancedMode
         ///
         /// <summary>
@@ -868,6 +900,56 @@ namespace CubePdf
         /// Load
         /// 
         /// <summary>
+        /// レジストリの HKEY_CURRENT_USER 下からユーザ毎の設定情報を
+        /// ロードします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool Load()
+        {
+            try { return Load(Registry.CurrentUser); }
+            catch (Exception /* err */) { return false; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Load
+        /// 
+        /// <summary>
+        /// レジストリの HKEY_USERS 下から指定されたユーザ名に対応する
+        /// 設定情報をロードします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        public bool Load(string username)
+        {
+            try {
+                var sid = string.Empty;
+                var query = String.Format("SELECT * FROM Win32_UserAccount WHERE Name='{0}'", username);
+
+                using (var searcher = new ManagementObjectSearcher(query))
+                foreach (var item in searcher.Get())
+                {
+                    if (item["Name"].ToString() == username)
+                    {
+                        sid = item["SID"].ToString();
+                        break;
+                    }
+                }
+
+                using (var root = Registry.Users.OpenSubKey(sid, false))
+                {
+                    return Load(root);
+                }
+            }
+            catch (Exception /* err */) { return false; }
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
+        /// Load
+        /// 
+        /// <summary>
         /// ユーザ毎の設定情報をレジストリからロードします。
         /// </summary>
         /// 
@@ -877,31 +959,25 @@ namespace CubePdf
         /// </remarks>
         /// 
         /* ----------------------------------------------------------------- */
-        public bool Load()
+        public bool Load(Microsoft.Win32.RegistryKey root)
         {
-            bool status = true;
-
             try
             {
-                using (var root = Registry.CurrentUser.OpenSubKey(_RegRoot + '\\' + _RegVersion, false))
+                using (var subkey = root.OpenSubKey(_RegRoot, false))
                 {
-                    var document = new CubePdf.Settings.Document();
-                    document.Read(root);
-                    Load(document);
-                }
+                    using (var child = subkey.OpenSubKey(_RegVersion, false))
+                    {
+                        var document = new CubePdf.Settings.Document();
+                        document.Read(child);
+                        Load(document);
+                    }
 
-                using (var root = Registry.CurrentUser.OpenSubKey(_RegRoot, false))
-                {
-                    var date = root.GetValue(_RegLastCheck, string.Empty) as string;
+                    var date = subkey.GetValue(_RegLastCheck, string.Empty) as string;
                     if (!string.IsNullOrEmpty(date)) _lastcheck = DateTime.Parse(date as string);
                 }
+                return true;
             }
-            catch (Exception /* err */)
-            {
-                status = false;
-            }
-
-            return status;
+            catch (Exception /* err */) { return false; }
         }
 
         /* ----------------------------------------------------------------- */
@@ -914,7 +990,7 @@ namespace CubePdf
         /// </summary>
         /// 
         /* ----------------------------------------------------------------- */
-        public bool Load(string path)
+        public bool LoadXml(string path)
         {
             bool status = true;
 
@@ -1027,6 +1103,8 @@ namespace CubePdf
             dest.AppendLine("\t\tUpdateCheck     = " + _update.ToString());
             dest.AppendLine("\t\tVisible         = " + _visible.ToString());
             dest.AppendLine("\t\tDeleteOnClose   = " + _delete_input.ToString());
+            dest.AppendLine("\t\tAdvancedMode    = " + _advance.ToString());
+            dest.AppendLine("\t\tEmergencyMode   = " + _em.ToString());
             dest.AppendLine("\tDocument Properties");
             dest.AppendLine("\t\tTitle           = " + _doc.Title);
             dest.AppendLine("\t\tAuthor          = " + _doc.Author);
@@ -1437,6 +1515,7 @@ namespace CubePdf
         private string _install = _RegUnknown;
         private string _lib = _RegUnknown;
         private string _version = _RegUnknown;
+        private string _username = string.Empty;
         private string _input = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         private string _output = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
         private string _program = "";
@@ -1459,6 +1538,7 @@ namespace CubePdf
         private bool _advance = false;
         private bool _selectable = false;
         private bool _delete_input = false;
+        private bool _em = false;
         private DocumentProperty _doc = new DocumentProperty();
         private PermissionProperty _permission = new PermissionProperty();
         private DateTime _lastcheck = new DateTime();
