@@ -326,7 +326,7 @@ namespace CubePdf
             UserEnv.CreateEnvironmentBlock(ref env, hdup, false);
 
             var cmdline = string.Format("explorer.exe \"{0}\"", System.IO.Path.GetDirectoryName(path));
-            var message = string.Format("RunOpenFolderEm: {0}", cmdline);
+            var message = string.Format("CubePdf.PostProcess.RunOpenFolderEm: {0}", cmdline);
             _messages.Add(new Message(Message.Levels.Debug, message));
 
             var pi = new ProcessInformation();
