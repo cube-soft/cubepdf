@@ -123,9 +123,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy $(TargetPath) $(ProjectDir)..\Release\$(PlatformName)\
-copy $(TargetPath).config $(ProjectDir)..\Release\$(PlatformName)\
-copy $(TargetDir)*.dll $(ProjectDir)..\Release\$(PlatformName)\</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
