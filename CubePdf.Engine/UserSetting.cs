@@ -927,7 +927,7 @@ namespace CubePdf
                 var sid = string.Empty;
                 var query = String.Format("SELECT * FROM Win32_UserAccount WHERE Name='{0}'", username);
 
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+                using (var searcher = new ManagementObjectSearcher(query))
                 foreach (var item in searcher.Get())
                 {
                     if (item["Name"].ToString() == username)
@@ -1103,6 +1103,8 @@ namespace CubePdf
             dest.AppendLine("\t\tUpdateCheck     = " + _update.ToString());
             dest.AppendLine("\t\tVisible         = " + _visible.ToString());
             dest.AppendLine("\t\tDeleteOnClose   = " + _delete_input.ToString());
+            dest.AppendLine("\t\tAdvancedMode    = " + _advance.ToString());
+            dest.AppendLine("\t\tEmergencyMode   = " + _em.ToString());
             dest.AppendLine("\tDocument Properties");
             dest.AppendLine("\t\tTitle           = " + _doc.Title);
             dest.AppendLine("\t\tAuthor          = " + _doc.Author);
