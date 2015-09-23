@@ -18,10 +18,10 @@ CubePDFは、お使いの様々なアプリケーションから、いつでも�
 
 対応 OS: Windows Vista / 7 / 8 / 8.1 / 10
 
-CubePDF を使用するためには Microsoft .NetFramework 2.0 以上がインストールされている必要があります。
+CubePDF を使用するためには Microsoft .NetFramework 3.5 以上がインストールされている必要があります。
 Microsoft .NetFramework は、以下の URL からダウンロードして下さい。
 http://www.microsoft.com/ja-jp/download/details.aspx?id=22
-また、Windows 8 / 8.1 / 10 に関しては、ストアアプリからの動作は未対応となっています。
+また、Windows 8 / 8.1 / 10 に関しては、ストアアプリからの動作は暫定的な対応となっています。
 
 CubePDFは、以下のライブラリを利用しています。それぞれのライブラリについては、記載した URL から取得することができます。
 * GPL Ghostscript
