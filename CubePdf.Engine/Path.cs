@@ -20,6 +20,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Runtime.InteropServices;
+using IoEx = System.IO;
 
 namespace CubePdf
 {
@@ -68,13 +69,13 @@ namespace CubePdf
             get
             {
                 var exec = System.Reflection.Assembly.GetEntryAssembly();
-                if (exec != null) return System.IO.Path.GetDirectoryName(exec.Location);
+                if (exec != null) return IoEx.Path.GetDirectoryName(exec.Location);
                 else return System.Environment.CurrentDirectory;
             }
         }
 
         #region Variables
-        private static string _WorkingDirectory = System.IO.Path.GetTempPath();
+        private static string _WorkingDirectory = IoEx.Path.GetTempPath();
         #endregion
     }
 }

@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics;
 using System.Management;
 using Microsoft.Win32;
+using IoEx = System.IO;
 
 namespace CubePdf
 {
@@ -1148,11 +1149,11 @@ namespace CubePdf
                 // パス関連
                 string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 string path = subkey.GetValue(_RegLastAccess, desktop) as string;
-                if (path != null && path.Length > 0 && System.IO.Directory.Exists(path)) _output = path;
+                if (path != null && path.Length > 0 && IoEx.Directory.Exists(path)) _output = path;
                 path = subkey.GetValue(_RegLastInputAccess, desktop) as string;
-                if (path != null && path.Length > 0 && System.IO.Directory.Exists(path)) _input = path;
+                if (path != null && path.Length > 0 && IoEx.Directory.Exists(path)) _input = path;
                 path = subkey.GetValue(_RegUserProgram, "") as string;
-                if (path != null && path.Length > 0 && System.IO.File.Exists(path)) _program = path;
+                if (path != null && path.Length > 0 && IoEx.File.Exists(path)) _program = path;
 
                 // チェックボックスのフラグ関連
                 int flag = (int)subkey.GetValue(_RegEmbedFont, 1);

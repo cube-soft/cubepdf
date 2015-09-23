@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using IoEx = System.IO;
 
 namespace CubePdf
 {
@@ -40,7 +41,7 @@ namespace CubePdf
         static void Main(string[] args)
         {
             var exec = System.Reflection.Assembly.GetEntryAssembly();
-            var dir = System.IO.Path.GetDirectoryName(exec.Location);
+            var dir = IoEx.Path.GetDirectoryName(exec.Location);
             var setting = new UserSetting(false);
 
             SetupLog(dir + @"\cubepdf.log");
@@ -84,8 +85,8 @@ namespace CubePdf
             try
             {
                 if (!string.IsNullOrEmpty(docname) &&
-                    System.IO.Path.GetExtension(docname) == setting.Extension &&
-                    System.IO.File.Exists(docname))
+                    IoEx.Path.GetExtension(docname) == setting.Extension &&
+                    IoEx.File.Exists(docname))
                 {
                     is_config = true;
                 }
@@ -106,13 +107,13 @@ namespace CubePdf
                 if (filename != null)
                 {
                     string ext = Parameter.GetExtension((Parameter.FileTypes)setting.FileType);
-                    filename = System.IO.Path.ChangeExtension(filename, ext);
+                    filename = IoEx.Path.ChangeExtension(filename, ext);
                     string dir = "";
                     if (setting.OutputPath == String.Empty) dir = setting.LibPath;
                     else
                     {
-                        dir = (System.IO.Directory.Exists(setting.OutputPath)) ?
-                            setting.OutputPath : System.IO.Path.GetDirectoryName(setting.OutputPath);
+                        dir = (IoEx.Directory.Exists(setting.OutputPath)) ?
+                            setting.OutputPath : IoEx.Path.GetDirectoryName(setting.OutputPath);
                     }
                     setting.OutputPath = dir + '\\' + filename;
                     CubePdf.Message.Debug(setting.OutputPath);
@@ -123,7 +124,7 @@ namespace CubePdf
             setting.InputPath = cmdline.Options.ContainsKey("InputFile") ? cmdline.Options["InputFile"] : "";
             setting.DeleteOnClose = cmdline.Options.ContainsKey("DeleteOnClose");
 
-            if (System.IO.Directory.Exists(setting.LibPath))
+            if (IoEx.Directory.Exists(setting.LibPath))
                 System.Environment.SetEnvironmentVariable("TEMP", setting.LibPath, EnvironmentVariableTarget.Process);
             else CubePdf.Message.Trace("LibPath Not Found");
         }
@@ -162,9 +163,9 @@ namespace CubePdf
         {
             try
             {
-                if (System.IO.File.Exists(src))
+                if (IoEx.File.Exists(src))
                 {
-                    using (System.IO.StreamWriter stream = new System.IO.StreamWriter(src, false))
+                    using (IoEx.StreamWriter stream = new IoEx.StreamWriter(src, false))
                     {
                         // 空の内容で上書きする
                     }
@@ -194,7 +195,7 @@ namespace CubePdf
                 if (!setting.CheckUpdate ||
                     string.IsNullOrEmpty(setting.InstallPath) ||
                     DateTime.Now <= setting.LastCheckUpdate.AddDays(1)) return;
-                var path = System.IO.Path.Combine(setting.InstallPath, "cubepdf-checker.exe");
+                var path = IoEx.Path.Combine(setting.InstallPath, "cubepdf-checker.exe");
                 Process.Start(path);
             }
             catch (Exception err) { CubePdf.Message.Trace(err.ToString()); }
@@ -215,9 +216,9 @@ namespace CubePdf
             var converter = new Converter();
             converter.Run(setting);
             foreach (var message in converter.Messages) Trace.WriteLine(message.ToString());
-            if (setting.DeleteOnClose && System.IO.File.Exists(setting.InputPath))
+            if (setting.DeleteOnClose && IoEx.File.Exists(setting.InputPath))
             {
-                System.IO.File.Delete(setting.InputPath);
+                IoEx.File.Delete(setting.InputPath);
             }
         }
     }

@@ -21,6 +21,7 @@
 using System;
 using System.Text;
 using NUnit.Framework;
+using IoEx = System.IO;
 
 namespace CubePdf
 {
@@ -61,9 +62,9 @@ namespace CubePdf
         public void Setup()
         {
             _root = System.Environment.CurrentDirectory;
-            _examples = System.IO.Path.Combine(_root, "Examples");
-            _results = System.IO.Path.Combine(_root, "Results");
-            if (!System.IO.Directory.Exists(_results)) System.IO.Directory.CreateDirectory(_results);
+            _examples = IoEx.Path.Combine(_root, "Examples");
+            _results = IoEx.Path.Combine(_root, "Results");
+            if (!IoEx.Directory.Exists(_results)) IoEx.Directory.CreateDirectory(_results);
         }
 
         /* ----------------------------------------------------------------- */
@@ -149,7 +150,7 @@ namespace CubePdf
         public void TestRunAsPdfWithProperties()
         {
             var setting = CreateSetting();
-            setting.InputPath = System.IO.Path.Combine(_examples, "example-min.ps");
+            setting.InputPath = IoEx.Path.Combine(_examples, "example-min.ps");
 
             setting.Document.Title = "テスト";
             setting.Document.Author = "株式会社キューブ・ソフト";
@@ -182,9 +183,9 @@ namespace CubePdf
         [TestCase(Parameter.ExistedFiles.MergeHead, true)]
         public void TestRunAsPdfAndMerge(Parameter.ExistedFiles merge, bool security)
         {
-            var src  = System.IO.Path.Combine(_examples, "example-min.ps");
-            var copy = System.IO.Path.Combine(_results, "merge.ps");
-            System.IO.File.Copy(src, copy, true);
+            var src  = IoEx.Path.Combine(_examples, "example-min.ps");
+            var copy = IoEx.Path.Combine(_results, "merge.ps");
+            IoEx.File.Copy(src, copy, true);
 
             var setting = CreateSetting();
             setting.InputPath = copy;
@@ -193,8 +194,8 @@ namespace CubePdf
             AssertRun(setting, suffix);
             var hash = GetHash(setting.OutputPath);
 
-            src = System.IO.Path.Combine(_examples, "example.ps");
-            System.IO.File.Copy(src, copy, true);
+            src = IoEx.Path.Combine(_examples, "example.ps");
+            IoEx.File.Copy(src, copy, true);
             setting.ExistedFile = merge;
             AssertRun(setting, suffix);
             Assert.AreNotEqual(hash, GetHash(setting.OutputPath));
@@ -246,9 +247,9 @@ namespace CubePdf
         [TestCase("日本語のファイル.ps")]
         public void TestFilename(string filename)
         {
-            var src  = System.IO.Path.Combine(_examples, "example-min.ps");
-            var dest = System.IO.Path.Combine(_results, filename);
-            System.IO.File.Copy(src, dest, true);
+            var src  = IoEx.Path.Combine(_examples, "example-min.ps");
+            var dest = IoEx.Path.Combine(_results, filename);
+            IoEx.File.Copy(src, dest, true);
 
             var setting = CreateSetting();
             setting.InputPath = dest;
@@ -273,9 +274,9 @@ namespace CubePdf
         [TestCase(Parameter.ExistedFiles.Rename)]
         public void TestErrorInGhostscript(Parameter.ExistedFiles existed)
         {
-            var src =  System.IO.Path.Combine(_examples, "dummy.txt");
-            var dest = System.IO.Path.Combine(_results, "dummy.pdf");
-            System.IO.File.Copy(src, dest, true);
+            var src = IoEx.Path.Combine(_examples, "dummy.txt");
+            var dest = IoEx.Path.Combine(_results, "dummy.pdf");
+            IoEx.File.Copy(src, dest, true);
             var hash = GetHash(dest);
 
             var setting = CreateSetting();
@@ -286,7 +287,7 @@ namespace CubePdf
             converter.Run(setting);
             var error = GetErrorMessage(converter);
             Assert.IsFalse(string.IsNullOrEmpty(error));
-            Assert.IsTrue(System.IO.File.Exists(dest));
+            Assert.IsTrue(IoEx.File.Exists(dest));
             Assert.AreEqual(hash, GetHash(dest));
         }
 
@@ -309,13 +310,13 @@ namespace CubePdf
         {
             var setting = CreateSetting();
             var suffix = "-error-in-merge";
-            var dest = System.IO.Path.Combine(_results, string.Format("example{0}.pdf", suffix));
+            var dest = IoEx.Path.Combine(_results, string.Format("example{0}.pdf", suffix));
             if (caused_by_security)
             {
                 setting.Permission.Password = "owner";
                 AssertRun(setting, suffix);
             }
-            else System.IO.File.Copy(System.IO.Path.Combine(_examples, "dummy.txt"), dest, true);
+            else IoEx.File.Copy(IoEx.Path.Combine(_examples, "dummy.txt"), dest, true);
             var hash = GetHash(dest);
 
             setting.OutputPath = dest;
@@ -325,7 +326,7 @@ namespace CubePdf
             converter.Run(setting);
             var error = GetErrorMessage(converter);
             Assert.IsFalse(string.IsNullOrEmpty(error));
-            Assert.IsTrue(System.IO.File.Exists(dest));
+            Assert.IsTrue(IoEx.File.Exists(dest));
             Assert.AreEqual(hash, GetHash(dest));
         }
 
@@ -380,25 +381,25 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private void AssertRun(UserSetting setting, string suffix)
         {
-            var basename = System.IO.Path.GetFileNameWithoutExtension(setting.InputPath);
+            var basename = IoEx.Path.GetFileNameWithoutExtension(setting.InputPath);
             var extension = Parameter.GetExtension((Parameter.FileTypes)setting.FileType);
 
-            setting.LibPath = System.IO.Path.Combine(_root, "Ghostscript");
-            setting.OutputPath = System.IO.Path.Combine(_results, basename + suffix + extension);
-            if (setting.ExistedFile == Parameter.ExistedFiles.Overwrite) System.IO.File.Delete(setting.OutputPath);
+            setting.LibPath = IoEx.Path.Combine(_root, "Ghostscript");
+            setting.OutputPath = IoEx.Path.Combine(_results, basename + suffix + extension);
+            if (setting.ExistedFile == Parameter.ExistedFiles.Overwrite) IoEx.File.Delete(setting.OutputPath);
 
             var converter = new Converter();
             converter.Run(setting);
             var error = GetErrorMessage(converter);
             Assert.IsTrue(string.IsNullOrEmpty(error), string.Format("{0}:{1}", setting.InputPath, error));
-            if (!System.IO.File.Exists(setting.OutputPath))
+            if (!IoEx.File.Exists(setting.OutputPath))
             {
                 var dest = String.Format("{0}\\{1}-001{2}",
-                    System.IO.Path.GetDirectoryName(setting.OutputPath),
-                    System.IO.Path.GetFileNameWithoutExtension(setting.OutputPath),
-                    System.IO.Path.GetExtension(setting.OutputPath)
+                    IoEx.Path.GetDirectoryName(setting.OutputPath),
+                    IoEx.Path.GetFileNameWithoutExtension(setting.OutputPath),
+                    IoEx.Path.GetExtension(setting.OutputPath)
                 );
-                Assert.IsTrue(System.IO.File.Exists(dest), setting.OutputPath);
+                Assert.IsTrue(IoEx.File.Exists(dest), setting.OutputPath);
             }
             else if (setting.FileType == Parameter.FileTypes.PDF) AssertPdf(setting);
         }
@@ -425,7 +426,7 @@ namespace CubePdf
         private UserSetting CreateSetting()
         {
             var setting = new UserSetting(false);
-            setting.InputPath    = System.IO.Path.Combine(_examples, "example.ps");
+            setting.InputPath    = IoEx.Path.Combine(_examples, "example.ps");
             setting.FileType     = Parameter.FileTypes.PDF;
             setting.PDFVersion   = Parameter.PdfVersions.Ver1_7;
             setting.Resolution   = Parameter.Resolutions.Resolution300;
@@ -451,8 +452,8 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private byte[] GetHash(string filename)
         {
-            var info = new System.IO.FileInfo(filename);
-            using (var stream = new System.IO.FileStream(info.FullName, System.IO.FileMode.Open))
+            var info = new IoEx.FileInfo(filename);
+            using (var stream = new IoEx.FileStream(info.FullName, IoEx.FileMode.Open))
             {
                 return System.Security.Cryptography.MD5.Create().ComputeHash(stream);
             }
