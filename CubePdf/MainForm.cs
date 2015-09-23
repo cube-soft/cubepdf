@@ -192,6 +192,14 @@ namespace CubePdf
                 return false;
             }
 
+            // パスは 260 文字未満、ディレクトリ名は 248 文字未満と言う Windows パス制限のチェック
+            if (OutputPathTextBox.TextLength >= 260 ||
+                IoEx.Path.GetDirectoryName(OutputPathTextBox.Text).Length >= 248)
+            {
+                ShowMessage(new CubePdf.Message(Message.Levels.Error, Properties.Resources.TooLongFilenam));
+                return false;
+            }
+
             var extension = IoEx.Path.GetExtension(OutputPathTextBox.Text);
             var compared = Parameter.GetExtension(Translator.ToFileType(FileTypeCombBox.SelectedIndex));
             if (extension != compared) OutputPathTextBox.Text += compared;
