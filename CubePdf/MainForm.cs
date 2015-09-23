@@ -23,7 +23,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using IoEx = System.IO;
+using IoEx = Alphaleonis.Win32.Filesystem;
 
 namespace CubePdf
 {
@@ -192,6 +192,10 @@ namespace CubePdf
                 return false;
             }
 
+            var extension = IoEx.Path.GetExtension(OutputPathTextBox.Text);
+            var compared = Parameter.GetExtension(Translator.ToFileType(FileTypeCombBox.SelectedIndex));
+            if (extension != compared) OutputPathTextBox.Text += compared;
+
             // パスは 260 文字未満、ディレクトリ名は 248 文字未満と言う Windows パス制限のチェック
             if (OutputPathTextBox.TextLength >= 260 ||
                 IoEx.Path.GetDirectoryName(OutputPathTextBox.Text).Length >= 248)
@@ -199,10 +203,6 @@ namespace CubePdf
                 ShowMessage(new CubePdf.Message(Message.Levels.Error, Properties.Resources.TooLongFilenam));
                 return false;
             }
-
-            var extension = IoEx.Path.GetExtension(OutputPathTextBox.Text);
-            var compared = Parameter.GetExtension(Translator.ToFileType(FileTypeCombBox.SelectedIndex));
-            if (extension != compared) OutputPathTextBox.Text += compared;
 
             if (IoEx.File.Exists(OutputPathTextBox.Text) &&
                 Translator.ToExistedFile(ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
