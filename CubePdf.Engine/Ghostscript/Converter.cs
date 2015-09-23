@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using IoEx = System.IO;
 
 namespace CubePdf.Ghostscript
 {
@@ -75,15 +76,15 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         public void Run()
         {
-            var filename = System.IO.Path.GetFileNameWithoutExtension(_dest);
-            var extension = System.IO.Path.GetExtension(_dest);
+            var filename = IoEx.Path.GetFileNameWithoutExtension(_dest);
+            var extension = IoEx.Path.GetExtension(_dest);
 
             var work = CreateWorkDirectory();
             var copies = CopySources(_sources, work);
             if (copies.Count == 0) return;
 
-            var tmp = System.IO.Path.Combine(work, GetTempFileName(_device) + extension);
-            var log = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
+            var tmp = IoEx.Path.Combine(work, GetTempFileName(_device) + extension);
+            var log = IoEx.Path.Combine(Path.WorkingDirectory, IoEx.Path.GetRandomFileName());
             var args = MakeArgs(copies.ToArray(), tmp, log);
 
             AddMessages(args);
@@ -457,7 +458,7 @@ namespace CubePdf.Ghostscript
             if (_includes.Count > 0) args.Add("-I" + string.Join(";", _includes.ToArray()));
 
             // Add font paths
-            var win = System.IO.Path.Combine(Environment.GetEnvironmentVariable("windir"), "Fonts");
+            var win = IoEx.Path.Combine(Environment.GetEnvironmentVariable("windir"), "Fonts");
             if (!_fonts.Contains(win)) _fonts.Add(win);
             args.Add("-sFONTPATH=" + string.Join(";", _fonts.ToArray()));
 
@@ -527,9 +528,9 @@ namespace CubePdf.Ghostscript
             var dest = new List<string>();
             foreach (var src in sources)
             {
-                var filename = System.IO.Path.GetRandomFileName().Replace('.', '_');
-                var extension = System.IO.Path.GetExtension(src);
-                var tmp = System.IO.Path.Combine(work, filename + extension);
+                var filename = IoEx.Path.GetRandomFileName().Replace('.', '_');
+                var extension = IoEx.Path.GetExtension(src);
+                var tmp = IoEx.Path.Combine(work, filename + extension);
                 if (CubePdf.Misc.File.Exists(src))
                 {
                     CubePdf.Misc.File.Copy(src, tmp, true);
@@ -555,7 +556,7 @@ namespace CubePdf.Ghostscript
             {
                 try
                 {
-                    System.IO.File.Delete(copy);
+                    IoEx.File.Delete(copy);
                     AddDebug(string.Format("DeleteCopiedSource: {0}", copy));
                 }
                 catch (Exception err) { _messages.Add(new Message(Message.Levels.Debug, err)); }
@@ -573,18 +574,18 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private void MoveFiles(string dest, string work)
         {
-            var root = System.IO.Path.GetDirectoryName(dest);
-            var filename = System.IO.Path.GetFileNameWithoutExtension(dest);
-            var extension = System.IO.Path.GetExtension(dest);
+            var root = IoEx.Path.GetDirectoryName(dest);
+            var filename = IoEx.Path.GetFileNameWithoutExtension(dest);
+            var extension = IoEx.Path.GetExtension(dest);
 
             try
             {
-                var files = System.IO.Directory.GetFiles(work);
+                var files = IoEx.Directory.GetFiles(work);
                 if (files.Length == 0) return;
                 else if (files.Length == 1)
                 {
-                    if (System.IO.File.Exists(dest)) CubePdf.Misc.File.Delete(dest, true);
-                    var src = System.IO.Path.Combine(work, System.IO.Path.GetFileName(files[0]));
+                    if (IoEx.File.Exists(dest)) CubePdf.Misc.File.Delete(dest, true);
+                    var src = IoEx.Path.Combine(work, IoEx.Path.GetFileName(files[0]));
                     CubePdf.Misc.File.Move(src, dest, true);
                 }
                 else
@@ -592,11 +593,11 @@ namespace CubePdf.Ghostscript
                     var index = 1;
                     foreach (var path in files)
                     {
-                        if (System.IO.Path.GetExtension(path) == ".ps") continue;
-                        var leaf = System.IO.Path.GetFileName(path);
+                        if (IoEx.Path.GetExtension(path) == ".ps") continue;
+                        var leaf = IoEx.Path.GetFileName(path);
                         var target = string.Format("{0}\\{1}-{2:D3}{3}", root, filename, index, extension);
-                        if (System.IO.File.Exists(target)) CubePdf.Misc.File.Delete(target, true);
-                        var src = System.IO.Path.Combine(work, leaf);
+                        if (IoEx.File.Exists(target)) CubePdf.Misc.File.Delete(target, true);
+                        var src = IoEx.Path.Combine(work, leaf);
                         CubePdf.Misc.File.Move(src, target, true);
                         ++index;
                     }
@@ -607,7 +608,7 @@ namespace CubePdf.Ghostscript
                 _messages.Add(new Message(Message.Levels.Debug, err));
                 throw err;
             }
-            finally { System.IO.Directory.Delete(work, true); }
+            finally { IoEx.Directory.Delete(work, true); }
         }
 
         #endregion
@@ -646,7 +647,7 @@ namespace CubePdf.Ghostscript
             if (_includes.Count > 0)
             {
                 message += _includes[0];
-                if (!System.IO.Directory.Exists(_includes[0])) message += " (NotFound)";
+                if (!IoEx.Directory.Exists(_includes[0])) message += " (NotFound)";
             }
             else message += "unknown";
             AddDebug(message);
@@ -671,8 +672,8 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private void AddGsMessages(string log)
         {
-            foreach (var line in System.IO.File.ReadAllLines(log)) AddDebug(line);
-            try { System.IO.File.Delete(log); }
+            foreach (var line in IoEx.File.ReadAllLines(log)) AddDebug(line);
+            try { IoEx.File.Delete(log); }
             catch (Exception err) { AddDebug(err.ToString()); }
         }
 
@@ -687,10 +688,10 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private string CreateWorkDirectory()
         {
-            var dest = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
-            if (System.IO.Directory.Exists(dest)) System.IO.Directory.Delete(dest, true);
-            else if (System.IO.File.Exists(dest)) System.IO.File.Delete(dest);
-            System.IO.Directory.CreateDirectory(dest);
+            var dest = IoEx.Path.Combine(Path.WorkingDirectory, IoEx.Path.GetRandomFileName());
+            if (IoEx.Directory.Exists(dest)) IoEx.Directory.Delete(dest, true);
+            else if (IoEx.File.Exists(dest)) IoEx.File.Delete(dest);
+            IoEx.Directory.CreateDirectory(dest);
             AddDebug(string.Format("CreateWorkDirectory: {0}", dest));
             return dest;
         }
@@ -706,8 +707,8 @@ namespace CubePdf.Ghostscript
         /* ----------------------------------------------------------------- */
         private string GetTempFileName(Devices device)
         {
-            if (device == Devices.PDF || device == Devices.PS) return System.IO.Path.GetRandomFileName();
-            else return System.IO.Path.GetRandomFileName().Replace('.', '_') + "-%08d";
+            if (device == Devices.PDF || device == Devices.PS) return IoEx.Path.GetRandomFileName();
+            else return IoEx.Path.GetRandomFileName().Replace('.', '_') + "-%08d";
         }
 
         #endregion

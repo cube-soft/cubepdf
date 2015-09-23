@@ -23,7 +23,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
+using IoEx = System.IO;
 
 namespace CubePdf
 {
@@ -192,11 +192,11 @@ namespace CubePdf
                 return false;
             }
 
-            var extension = System.IO.Path.GetExtension(OutputPathTextBox.Text);
+            var extension = IoEx.Path.GetExtension(OutputPathTextBox.Text);
             var compared = Parameter.GetExtension(Translator.ToFileType(FileTypeCombBox.SelectedIndex));
             if (extension != compared) OutputPathTextBox.Text += compared;
 
-            if (System.IO.File.Exists(OutputPathTextBox.Text) &&
+            if (IoEx.File.Exists(OutputPathTextBox.Text) &&
                 Translator.ToExistedFile(ExistedFileComboBox.SelectedIndex) != Parameter.ExistedFiles.Rename)
             {
                 var message = new CubePdf.Message(Message.Levels.Warn, string.Format(Properties.Resources.FileExists,
@@ -410,8 +410,8 @@ namespace CubePdf
             if (!IsValidOutput(ExistedFileComboBox.SelectedIndex)) return;
 
             // ライブラリが存在してるかどうかをログに記録。
-            if (!System.IO.Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Debug, string.Format("{0}: file not found", _setting.LibPath)));
-            if (!System.IO.Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Debug, string.Format("{0}\\lib: file not found", _setting.LibPath)));
+            if (!IoEx.Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Debug, string.Format("{0}: file not found", _setting.LibPath)));
+            if (!IoEx.Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Debug, string.Format("{0}\\lib: file not found", _setting.LibPath)));
 
             ConvertButton.Enabled   = false;
             SettingButton.Visible   = false;            
@@ -438,7 +438,7 @@ namespace CubePdf
             _setting.InputPath = InputPathTextBox.Text;
             _setting.OutputPath = OutputPathTextBox.Text;
 
-            if (_setting.DeleteOnClose) System.IO.File.Delete(_setting.InputPath);
+            if (_setting.DeleteOnClose) IoEx.File.Delete(_setting.InputPath);
             _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.ExitButton_Click"));
             ShowMessage();
             Close();
@@ -478,8 +478,8 @@ namespace CubePdf
             var dialog = new SaveFileDialog();
             dialog.AddExtension = true;
             dialog.FileName = !string.IsNullOrEmpty(OutputPathTextBox.Text) ?
-                System.IO.Path.GetFileNameWithoutExtension(OutputPathTextBox.Text) :
-                System.IO.Path.GetFileNameWithoutExtension(InputPathTextBox.Text);
+                IoEx.Path.GetFileNameWithoutExtension(OutputPathTextBox.Text) :
+                IoEx.Path.GetFileNameWithoutExtension(InputPathTextBox.Text);
             dialog.Filter = Properties.Resources.OutputPathFilter;
             dialog.FilterIndex = FileTypeCombBox.SelectedIndex + 1;
             dialog.OverwritePrompt = false;
@@ -491,7 +491,7 @@ namespace CubePdf
             }
 
             // 拡張子が選択されているファイルタイプと異なる場合は、末尾に拡張子を追加する。
-            var extension = System.IO.Path.GetExtension(OutputPathTextBox.Text);
+            var extension = IoEx.Path.GetExtension(OutputPathTextBox.Text);
             var type = Translator.ToFileType(FileTypeCombBox.SelectedIndex);
             var compared = Parameter.GetExtension(type);
             OutputPathTextBox.Text = dialog.FileName;
@@ -601,7 +601,7 @@ namespace CubePdf
             // 出力パスの拡張子を変更後のファイルタイプに合わせる．
             if (!string.IsNullOrEmpty(OutputPathTextBox.Text))
             {
-                OutputPathTextBox.Text = System.IO.Path.ChangeExtension(OutputPathTextBox.Text, Parameter.GetExtension(id));
+                OutputPathTextBox.Text = IoEx.Path.ChangeExtension(OutputPathTextBox.Text, Parameter.GetExtension(id));
             }
             SettingChanged(sender, e);
         }
@@ -899,7 +899,7 @@ namespace CubePdf
                 if (control.Text[control.Text.Length - 1] == '\\') control.SelectionStart = control.Text.Length;
                 else
                 {
-                    string dir = System.IO.Path.GetDirectoryName(control.Text);
+                    string dir = IoEx.Path.GetDirectoryName(control.Text);
                     int pos = (dir != null) ? dir.Length : 0;
                     while (pos < control.Text.Length && control.Text[pos] == '\\') pos += 1;
                     control.Select(pos, Math.Max(control.Text.Length - pos, 0));
@@ -1124,7 +1124,7 @@ namespace CubePdf
         private string GetDirectoryName(string path)
         {
             if (string.IsNullOrEmpty(path)) return string.Empty;
-            return System.IO.Directory.Exists(path) ? path : System.IO.Path.GetDirectoryName(path);
+            return IoEx.Directory.Exists(path) ? path : IoEx.Path.GetDirectoryName(path);
         }
 
         #endregion

@@ -19,6 +19,7 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
+using IoEx = System.IO;
 
 namespace CubePdf
 {
@@ -68,11 +69,11 @@ namespace CubePdf
             var search = " - ";
             var pos = docname.LastIndexOf(search);
             if (pos == -1) return docname;
-            else if (System.IO.Path.HasExtension(docname.Substring(0, pos)))
+            else if (IoEx.Path.HasExtension(docname.Substring(0, pos)))
             {
                 return docname.Substring(0, pos);
             }
-            else if (System.IO.Path.HasExtension(docname.Substring(pos, docname.Length - pos)))
+            else if (IoEx.Path.HasExtension(docname.Substring(pos, docname.Length - pos)))
             {
                 pos = docname.IndexOf(search);
                 System.Diagnostics.Debug.Assert(pos != -1);
@@ -97,7 +98,7 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private static string ModifyFilename(string filename) {
             var normalize = CubePdf.Misc.Path.Normalize(filename, '_');
-            var dest = System.IO.Path.GetFileName(normalize);
+            var dest = IoEx.Path.GetFileName(normalize);
             if (dest.ToLower() == "pptview") {
                 var s = FindFromRecent(".ppt");
                 if (s == null) s = FindFromRecent(".pptx");
@@ -123,22 +124,22 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private static string FindFromRecent(string ext) {
             var dir = System.Environment.GetFolderPath(Environment.SpecialFolder.Recent);
-            var info = new System.IO.DirectoryInfo(dir);
+            var info = new IoEx.DirectoryInfo(dir);
             string dest = null;
 
             foreach (var file in info.GetFiles()) {
-                System.String filename = System.IO.Path.GetFileNameWithoutExtension(file.FullName);
-                System.String s = System.IO.Path.GetExtension(filename).ToLower();
+                System.String filename = IoEx.Path.GetFileNameWithoutExtension(file.FullName);
+                System.String s = IoEx.Path.GetExtension(filename).ToLower();
                 if (s == ext.ToLower()) {
                     if (dest == null) dest = file.FullName;
                     else {
-                        System.DateTime prev = System.IO.File.GetLastWriteTime(dest);
-                        System.DateTime cur = System.IO.File.GetLastWriteTime(file.FullName);
+                        System.DateTime prev = IoEx.File.GetLastWriteTime(dest);
+                        System.DateTime cur = IoEx.File.GetLastWriteTime(file.FullName);
                         if (cur.CompareTo(prev) >= 0) dest = file.FullName;
                     }
                 }
             }
-            return (dest == null) ? null : System.IO.Path.GetFileNameWithoutExtension(dest);
+            return (dest == null) ? null : IoEx.Path.GetFileNameWithoutExtension(dest);
         }
 
         #endregion

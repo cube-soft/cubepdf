@@ -20,6 +20,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Collections.Generic;
+using IoEx = System.IO;
 
 namespace CubePdf {
     /* --------------------------------------------------------------------- */
@@ -186,18 +187,18 @@ namespace CubePdf {
             editor.Files.Add(setting.OutputPath);
             if (head) editor.Files.Add(_escaped);
 
-            var tmp = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
+            var tmp = IoEx.Path.Combine(Path.WorkingDirectory, IoEx.Path.GetRandomFileName());
             editor.Run(tmp);
             AddMessage(string.Format("CubePdf.PageBinder.Save: {0}", tmp));
 
             if (setting.WebOptimize)
             {
                 var src = tmp;
-                tmp = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
+                tmp = IoEx.Path.Combine(Path.WorkingDirectory, IoEx.Path.GetRandomFileName());
                 RunWebOptimize(setting, src, tmp);
             }
 
-            if (System.IO.File.Exists(tmp)) CubePdf.Misc.File.Copy(tmp, setting.OutputPath, true);
+            if (IoEx.File.Exists(tmp)) CubePdf.Misc.File.Copy(tmp, setting.OutputPath, true);
             AddMessage("CubePdf.Converter.RunEditor: success");
         }
 
@@ -239,7 +240,7 @@ namespace CubePdf {
         private Ghostscript.Converter Configure(UserSetting setting, string src, string dest)
         {
             var gs = new Ghostscript.Converter(_messages);
-            if (!string.IsNullOrEmpty(setting.LibPath)) gs.AddInclude(System.IO.Path.Combine(setting.LibPath, "lib"));
+            if (!string.IsNullOrEmpty(setting.LibPath)) gs.AddInclude(IoEx.Path.Combine(setting.LibPath, "lib"));
             gs.Device = Parameter.GetDevice(setting.FileType, setting.Grayscale);
             gs.Resolution = Parameter.ToValue(setting.Resolution);
             if (setting.Orientation == Parameter.Orientations.Auto) gs.AutoRotatePages = true;
@@ -416,17 +417,17 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         private bool FileExists(UserSetting setting)
         {
-            if (System.IO.File.Exists(setting.OutputPath)) return true;
+            if (IoEx.File.Exists(setting.OutputPath)) return true;
             else if (setting.FileType == Parameter.FileTypes.EPS ||
                      setting.FileType == Parameter.FileTypes.BMP ||
                      setting.FileType == Parameter.FileTypes.JPEG ||
                      setting.FileType == Parameter.FileTypes.PNG ||
                      setting.FileType == Parameter.FileTypes.TIFF)
             {
-                var dir = System.IO.Path.GetDirectoryName(setting.OutputPath);
-                var basename = System.IO.Path.GetFileNameWithoutExtension(setting.OutputPath);
-                var ext = System.IO.Path.GetExtension(setting.OutputPath);
-                if (System.IO.File.Exists(System.IO.Path.Combine(dir, basename + "-001" + ext))) return true;
+                var dir = IoEx.Path.GetDirectoryName(setting.OutputPath);
+                var basename = IoEx.Path.GetFileNameWithoutExtension(setting.OutputPath);
+                var ext = IoEx.Path.GetExtension(setting.OutputPath);
+                if (IoEx.File.Exists(IoEx.Path.Combine(dir, basename + "-001" + ext))) return true;
             }
             return false;
         }
@@ -454,23 +455,23 @@ namespace CubePdf {
 
             if (setting.ExistedFile == Parameter.ExistedFiles.Rename)
             {
-                var directory = System.IO.Path.GetDirectoryName(setting.OutputPath);
-                var basename  = System.IO.Path.GetFileNameWithoutExtension(setting.OutputPath);
-                var extension = System.IO.Path.GetExtension(setting.OutputPath);
+                var directory = IoEx.Path.GetDirectoryName(setting.OutputPath);
+                var basename  = IoEx.Path.GetFileNameWithoutExtension(setting.OutputPath);
+                var extension = IoEx.Path.GetExtension(setting.OutputPath);
 
                 for (var i = 2; i < 10000; ++i)
                 {
-                    var old = System.IO.Path.GetFileName(setting.OutputPath);
+                    var old = IoEx.Path.GetFileName(setting.OutputPath);
                     var filename = string.Format("{0}({1}){2}", basename, i, extension);
-                    setting.OutputPath = System.IO.Path.Combine(directory, filename);
+                    setting.OutputPath = IoEx.Path.Combine(directory, filename);
                     AddMessage(string.Format("Rename: {0} -> {1}", old, filename));
                     if (!FileExists(setting)) break;
                 }
             }
             else if (setting.FileType == Parameter.FileTypes.PDF && is_merge)
             {
-                _escaped = System.IO.Path.Combine(Path.WorkingDirectory, System.IO.Path.GetRandomFileName());
-                System.IO.File.Copy(setting.OutputPath, _escaped, true);
+                _escaped = IoEx.Path.Combine(Path.WorkingDirectory, IoEx.Path.GetRandomFileName());
+                IoEx.File.Copy(setting.OutputPath, _escaped, true);
                 AddMessage(string.Format("Escape: {0} -> {1}", setting.OutputPath, _escaped));
             }
         }
@@ -487,7 +488,7 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         private void RecoverIf(UserSetting setting)
         {
-            if (string.IsNullOrEmpty(_escaped) || !System.IO.File.Exists(_escaped)) return;
+            if (string.IsNullOrEmpty(_escaped) || !IoEx.File.Exists(_escaped)) return;
             CubePdf.Misc.File.Move(_escaped, setting.OutputPath, true);
             AddMessage(string.Format("Recover: {0} -> {1}", _escaped, setting.OutputPath));
         }
@@ -506,15 +507,15 @@ namespace CubePdf {
             try
             {
                 var work = Path.WorkingDirectory;
-                if (System.IO.Directory.Exists(work))
+                if (IoEx.Directory.Exists(work))
                 {
-                    System.IO.Directory.Delete(work, true);
+                    IoEx.Directory.Delete(work, true);
                     AddMessage(string.Format("DeleteWorkingDirectory: {0}", work));
                 }
 
-                if (setting.DeleteOnClose && System.IO.File.Exists(setting.InputPath))
+                if (setting.DeleteOnClose && IoEx.File.Exists(setting.InputPath))
                 {
-                    System.IO.File.Delete(setting.InputPath);
+                    IoEx.File.Delete(setting.InputPath);
                     AddMessage(string.Format("DeleteOnClose: {0}", setting.InputPath));
                 }
             }
@@ -532,10 +533,10 @@ namespace CubePdf {
         /* ----------------------------------------------------------------- */
         private void CreateWorkDirectory(UserSetting setting)
         {
-            var work = System.IO.Path.Combine(setting.LibPath, System.IO.Path.GetRandomFileName());
-            if (System.IO.File.Exists(work)) System.IO.File.Delete(work);
-            if (System.IO.Directory.Exists(work)) System.IO.Directory.Delete(work, true);
-            System.IO.Directory.CreateDirectory(work);
+            var work = IoEx.Path.Combine(setting.LibPath, IoEx.Path.GetRandomFileName());
+            if (IoEx.File.Exists(work)) IoEx.File.Delete(work);
+            if (IoEx.Directory.Exists(work)) IoEx.Directory.Delete(work, true);
+            IoEx.Directory.CreateDirectory(work);
             Path.WorkingDirectory = work;
             AddMessage(string.Format("CreateWorkDirectory: {0}", work));
         }

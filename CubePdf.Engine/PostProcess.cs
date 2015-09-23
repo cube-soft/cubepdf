@@ -22,6 +22,7 @@ using System;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using IoEx = System.IO;
 
 namespace CubePdf
 {
@@ -202,7 +203,7 @@ namespace CubePdf
             try
             {
                 var path = GetNormalizedPath();
-                if (!System.IO.File.Exists(path)) return;
+                if (!IoEx.File.Exists(path)) return;
 
                 switch (Verb)
                 {
@@ -280,7 +281,7 @@ namespace CubePdf
             {
                 var info = CreateProcessStartInfo();
                 info.FileName = "explorer.exe";
-                info.Arguments = "\"" + System.IO.Path.GetDirectoryName(path) + "\"";
+                info.Arguments = "\"" + IoEx.Path.GetDirectoryName(path) + "\"";
 
                 var process = new System.Diagnostics.Process();
                 process.StartInfo = info;
@@ -325,7 +326,7 @@ namespace CubePdf
             var env = IntPtr.Zero;
             UserEnv.CreateEnvironmentBlock(ref env, hdup, false);
 
-            var cmdline = string.Format("explorer.exe \"{0}\"", System.IO.Path.GetDirectoryName(path));
+            var cmdline = string.Format("explorer.exe \"{0}\"", IoEx.Path.GetDirectoryName(path));
             var message = string.Format("CubePdf.PostProcess.RunOpenFolderEm: {0}", cmdline);
             _messages.Add(new Message(Message.Levels.Debug, message));
 
@@ -385,11 +386,11 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private string GetNormalizedPath()
         {
-            if (System.IO.File.Exists(FileName)) return FileName;
-            var directory = System.IO.Path.GetDirectoryName(FileName);
-            var basename  = System.IO.Path.GetFileNameWithoutExtension(FileName) + "-001";
-            var extension = System.IO.Path.GetExtension(FileName);
-            return System.IO.Path.Combine(directory, basename + extension);
+            if (IoEx.File.Exists(FileName)) return FileName;
+            var directory = IoEx.Path.GetDirectoryName(FileName);
+            var basename  = IoEx.Path.GetFileNameWithoutExtension(FileName) + "-001";
+            var extension = IoEx.Path.GetExtension(FileName);
+            return IoEx.Path.Combine(directory, basename + extension);
         }
 
         /* ----------------------------------------------------------------- */
