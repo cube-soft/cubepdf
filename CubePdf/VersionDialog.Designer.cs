@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.DotNetVersionLabel = new System.Windows.Forms.Label();
+            this.OSVersionLabel = new System.Windows.Forms.Label();
             this.CopyrightLabel = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.TitlePictureBox = new System.Windows.Forms.PictureBox();
             this.CubePDFLinkLabel = new System.Windows.Forms.LinkLabel();
             this.LogoPictureBox = new System.Windows.Forms.PictureBox();
             this.CloseButton = new System.Windows.Forms.Button();
-            this.OSVersionLabel = new System.Windows.Forms.Label();
-            this.DotNetVersionLabel = new System.Windows.Forms.Label();
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
             this.MainSplitContainer.SuspendLayout();
@@ -71,6 +71,24 @@
             this.MainSplitContainer.SplitterDistance = 200;
             this.MainSplitContainer.SplitterWidth = 2;
             this.MainSplitContainer.TabIndex = 0;
+            // 
+            // DotNetVersionLabel
+            // 
+            this.DotNetVersionLabel.Location = new System.Drawing.Point(20, 110);
+            this.DotNetVersionLabel.Name = "DotNetVersionLabel";
+            this.DotNetVersionLabel.Size = new System.Drawing.Size(300, 12);
+            this.DotNetVersionLabel.TabIndex = 100;
+            this.DotNetVersionLabel.Text = ".NET Framework 4.0.30319.18408";
+            this.DotNetVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // OSVersionLabel
+            // 
+            this.OSVersionLabel.Location = new System.Drawing.Point(20, 92);
+            this.OSVersionLabel.Name = "OSVersionLabel";
+            this.OSVersionLabel.Size = new System.Drawing.Size(300, 12);
+            this.OSVersionLabel.TabIndex = 100;
+            this.OSVersionLabel.Text = "Microsoft Windows NT 6.1.7601 Service Pack 1";
+            this.OSVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CopyrightLabel
             // 
@@ -130,31 +148,13 @@
             this.CloseButton.Text = "OK";
             this.CloseButton.UseVisualStyleBackColor = true;
             // 
-            // OSVersionLabel
-            // 
-            this.OSVersionLabel.Location = new System.Drawing.Point(20, 92);
-            this.OSVersionLabel.Name = "OSVersionLabel";
-            this.OSVersionLabel.Size = new System.Drawing.Size(300, 12);
-            this.OSVersionLabel.TabIndex = 100;
-            this.OSVersionLabel.Text = "Microsoft Windows NT 6.1.7601 Service Pack 1";
-            this.OSVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // DotNetVersionLabel
-            // 
-            this.DotNetVersionLabel.Location = new System.Drawing.Point(20, 110);
-            this.DotNetVersionLabel.Name = "DotNetVersionLabel";
-            this.DotNetVersionLabel.Size = new System.Drawing.Size(300, 12);
-            this.DotNetVersionLabel.TabIndex = 100;
-            this.DotNetVersionLabel.Text = ".NET Framework 4.0.30319.18408";
-            this.DotNetVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // VersionDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(344, 252);
             this.Controls.Add(this.MainSplitContainer);
             this.DoubleBuffered = true;
+            this.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(128)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

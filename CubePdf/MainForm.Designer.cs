@@ -983,6 +983,7 @@
             this.ClientSize = new System.Drawing.Size(500, 501);
             this.Controls.Add(this.MainPanel);
             this.Controls.Add(this.HeaderPictureBox);
+            this.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(128)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
