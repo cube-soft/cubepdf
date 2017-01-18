@@ -20,6 +20,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Windows.Forms;
+using Cube.Log;
 
 namespace CubePdf
 {
@@ -101,7 +102,7 @@ namespace CubePdf
         {
             var control = sender as LinkLabel;
             try { System.Diagnostics.Process.Start(control.Text); }
-            catch (Exception err) { CubePdf.Message.Trace(err.ToString()); }
+            catch (Exception err) { this.LogWarn(err.Message, err); }
         }
 
         #endregion

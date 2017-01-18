@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Cube.Log;
 using IoEx = System.IO;
 
 namespace CubePdf.Ghostscript
@@ -414,7 +415,7 @@ namespace CubePdf.Ghostscript
                 }
                 catch (Exception err)
                 {
-                    _messages.Add(new Message(Message.Levels.Debug, err));
+                    this.LogError(err.Message, err);
                     return false;
                 }
                 finally
@@ -559,7 +560,7 @@ namespace CubePdf.Ghostscript
                     IoEx.File.Delete(copy);
                     AddDebug(string.Format("DeleteCopiedSource: {0}", copy));
                 }
-                catch (Exception err) { _messages.Add(new Message(Message.Levels.Debug, err)); }
+                catch (Exception err) { this.LogWarn(err.Message, err); }
             }
         }
 
@@ -605,7 +606,7 @@ namespace CubePdf.Ghostscript
             }
             catch (Exception err)
             {
-                _messages.Add(new Message(Message.Levels.Debug, err));
+                this.LogError(err.Message, err);
                 throw err;
             }
             finally { IoEx.Directory.Delete(work, true); }
@@ -624,10 +625,7 @@ namespace CubePdf.Ghostscript
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void AddDebug(string message)
-        {
-            _messages.Add(new Message(Message.Levels.Debug, message));
-        }
+        private void AddDebug(string message) => this.LogDebug(message);
 
         /* ----------------------------------------------------------------- */
         ///

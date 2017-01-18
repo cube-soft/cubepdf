@@ -19,10 +19,10 @@
 ///
 /* ------------------------------------------------------------------------- */
 using System;
-using System.Diagnostics;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Cube.Log;
 using IoEx = Alphaleonis.Win32.Filesystem;
 
 namespace CubePdf
@@ -271,8 +271,8 @@ namespace CubePdf
             InputPathPanel.Visible = setting.SelectInputFile;
             InputPathPanel.Enabled = setting.SelectInputFile && setting.InputPath.Length == 0;
 
-            _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.LoadSetting"));
-            _messages.Add(new Message(Message.Levels.Debug, setting.ToString()));
+            this.LogDebug("LoadSetting");
+            this.LogDebug(setting.ToString());
         }
 
         /* ----------------------------------------------------------------- */
@@ -330,8 +330,8 @@ namespace CubePdf
                 }
             }
 
-            _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.SaveSetting"));
-            _messages.Add(new Message(Message.Levels.Debug, setting.ToString()));
+            this.LogDebug("SaveSetting");
+            this.LogDebug(setting.ToString());
         }
 
         /* ----------------------------------------------------------------- */
@@ -418,8 +418,8 @@ namespace CubePdf
             if (!IsValidOutput(ExistedFileComboBox.SelectedIndex)) return;
 
             // ライブラリが存在してるかどうかをログに記録。
-            if (!IoEx.Directory.Exists(_setting.LibPath)) _messages.Add(new Message(Message.Levels.Debug, string.Format("{0}: file not found", _setting.LibPath)));
-            if (!IoEx.Directory.Exists(_setting.LibPath + @"\lib")) _messages.Add(new Message(Message.Levels.Debug, string.Format("{0}\\lib: file not found", _setting.LibPath)));
+            if (!IoEx.Directory.Exists(_setting.LibPath)) this.LogDebug($"{_setting.LibPath}: file not found");
+            if (!IoEx.Directory.Exists(_setting.LibPath + @"\lib")) this.LogDebug($"{_setting.LibPath}\\lib: file not found");
 
             ConvertButton.Enabled   = false;
             SettingButton.Visible   = false;            
@@ -447,7 +447,7 @@ namespace CubePdf
             _setting.OutputPath = OutputPathTextBox.Text;
 
             if (_setting.DeleteOnClose) IoEx.File.Delete(_setting.InputPath);
-            _messages.Add(new Message(Message.Levels.Debug, "CubePdf.MainForm.ExitButton_Click"));
+            this.LogDebug("ExitButton_Click");
             ShowMessage();
             Close();
         }
@@ -1094,7 +1094,7 @@ namespace CubePdf
         /// ShowMessage
         ///
         /// <summary>
-        /// エラーメッセージの表示、およびログファイルへの書き込みを行います。
+        /// エラーメッセージの表示を行います。
         /// </summary>
         /// 
         /// <remarks>
@@ -1108,7 +1108,6 @@ namespace CubePdf
             CubePdf.Message error = null;
             foreach (var message in _messages)
             {
-                Trace.WriteLine(message.ToString());
                 if (message.Level == Message.Levels.Fatal ||
                     message.Level == Message.Levels.Error ||
                     message.Level == Message.Levels.Warn) error = message;
