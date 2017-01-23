@@ -615,9 +615,9 @@
             this.UserPasswordLabel.Location = new System.Drawing.Point(2, 6);
             this.UserPasswordLabel.Margin = new System.Windows.Forms.Padding(0);
             this.UserPasswordLabel.Name = "UserPasswordLabel";
-            this.UserPasswordLabel.Size = new System.Drawing.Size(58, 12);
+            this.UserPasswordLabel.Size = new System.Drawing.Size(82, 12);
             this.UserPasswordLabel.TabIndex = 100;
-            this.UserPasswordLabel.Text = "パスワード：";
+            this.UserPasswordLabel.Text = "閲覧パスワード：";
             this.UserPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ConfirmUserPasswordLabel
@@ -711,9 +711,9 @@
             this.OwnerPasswordLabel.Location = new System.Drawing.Point(17, 11);
             this.OwnerPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
             this.OwnerPasswordLabel.Name = "OwnerPasswordLabel";
-            this.OwnerPasswordLabel.Size = new System.Drawing.Size(58, 12);
+            this.OwnerPasswordLabel.Size = new System.Drawing.Size(82, 12);
             this.OwnerPasswordLabel.TabIndex = 100;
-            this.OwnerPasswordLabel.Text = "パスワード：";
+            this.OwnerPasswordLabel.Text = "編集パスワード：";
             this.OwnerPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ConfirmOwnerPasswordLabel

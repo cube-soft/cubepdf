@@ -175,6 +175,37 @@ namespace CubePdf
 
         /* ----------------------------------------------------------------- */
         ///
+        /// IsValidSecurity
+        /// 
+        /// <summary>
+        /// セキュリティ設定が正しいかどうかをチェックします。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private bool IsValidSecurity()
+        {
+            if (!OwnerPasswordCheckBox.Checked ||
+                !RequiredUserPasswordCheckBox.Checked) return true;
+
+            var allows = AllowCopyCheckBox.Checked &&
+                         AllowFormInputCheckBox.Checked &&
+                         AllowModifyCheckBox.Checked &&
+                         AllowPrintCheckBox.Checked;
+
+            var userpass = UserPasswordCheckBox.Checked &&
+                           !string.IsNullOrEmpty(UserPasswordTextBox.Text) &&
+                           UserPasswordTextBox.Text != OwnerPasswordTextBox.Text;
+
+            if (!userpass && !allows)
+            {
+                ShowMessage(new CubePdf.Message(Message.Levels.Error, Properties.Resources.UserPasswordRequired));
+                return false;
+            }
+            else return true;
+        }
+
+        /* ----------------------------------------------------------------- */
+        ///
         /// IsValidOutput
         /// 
         /// <summary>
@@ -415,6 +446,7 @@ namespace CubePdf
             // 各種チェック
             if (!IsValidPassword(OwnerPasswordCheckBox.Checked, OwnerPasswordTextBox.Text, ConfirmOwnerPasswordTextBox.Text)) return;
             if (!IsValidPassword(OwnerPasswordCheckBox.Checked & UserPasswordCheckBox.Checked, UserPasswordTextBox.Text, ConfirmUserPasswordTextBox.Text)) return;
+            if (!IsValidSecurity()) return;
             if (!IsValidOutput(ExistedFileComboBox.SelectedIndex)) return;
 
             // ライブラリが存在してるかどうかをログに記録。

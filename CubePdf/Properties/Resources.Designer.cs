@@ -250,6 +250,16 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
+        ///   編集パスワードと閲覧パスワードを共用すると、各種操作の制限が正常に機能しない可能性があります。
+        ///閲覧パスワードに編集パスワードとは異なるものを設定するか、または、全ての操作を許可して下さい。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string UserPasswordRequired {
+            get {
+                return ResourceManager.GetString("UserPasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   実行可能プログラム (*.exe;*.bat)|*.exe;*.bat|すべてのファイル(*.*)|*.* に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string UserProgramFilter {
