@@ -1722,9 +1722,6 @@
   <data name="EmbedFontCheckBox.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="EmbedFontCheckBox.Enabled" type="System.Boolean, mscorlib">
-    <value>False</value>
-  </data>
   <data name="EmbedFontCheckBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>120, 47</value>
   </data>

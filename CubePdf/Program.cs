@@ -73,6 +73,16 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private static void SetupUserSetting(UserSetting setting, CubePdf.Settings.CommandLine cmdline)
         {
+            try
+            {
+                if (cmdline.Options.ContainsKey("Language"))
+                {
+                    System.Threading.Thread.CurrentThread.CurrentUICulture =
+                        new System.Globalization.CultureInfo(cmdline.Options["Language"]);
+                }
+            }
+            catch (Exception err) { Cube.Log.Operations.Warn(typeof(Program), err.Message, err); }
+
             var docname = cmdline.Options.ContainsKey("DocumentName") ? cmdline.Options["DocumentName"] : "";
             bool is_config = false;
             try

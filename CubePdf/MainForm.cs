@@ -53,9 +53,9 @@ namespace CubePdf
         public MainForm(UserSetting setting)
         {
             InitializeComponent();
+            InitializeEvents();
             InitializeComboBox();
             InitializePasswordTextBox();
-            InitializeEvents();
 
             _setting = setting;
             UpgradeSetting(_setting);
