@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
   CubePDF
-  Copyright (c) 2010 - 2014 CubeSoft, Inc. All rights reserved.
+  Copyright (c) 2010 CubeSoft, Inc. All rights reserved.
 
   開発・配布：株式会社キューブ・ソフト
   Mailto: support@cube-soft.jp
@@ -34,6 +34,13 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
 # バージョン履歴
+
+* 2017/01/27 version 1.0.0RC9
+ - Windows ストアアプリから変換できない不都合を修正
+ - セキュリティ画面において、何らかの操作を制限している状況で閲覧専用のパスワードを省略した場合、エラーメッセージを表示するように修正
+ - メイン画面を日本語および英語に対応
+ - メイン画面のレイアウトを修正
+ - ログ出力方法を変更
 
 * 2015/09/24 version 1.0.0RC8
  - Windows ストアアプリから変換できない不都合に暫定的に対応

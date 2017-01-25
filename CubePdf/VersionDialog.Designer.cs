@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VersionDialog));
             this.MainSplitContainer = new System.Windows.Forms.SplitContainer();
             this.DotNetVersionLabel = new System.Windows.Forms.Label();
             this.OSVersionLabel = new System.Windows.Forms.Label();
@@ -46,15 +47,13 @@
             // 
             // MainSplitContainer
             // 
+            resources.ApplyResources(this.MainSplitContainer, "MainSplitContainer");
             this.MainSplitContainer.BackColor = System.Drawing.SystemColors.Control;
-            this.MainSplitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainSplitContainer.IsSplitterFixed = true;
-            this.MainSplitContainer.Location = new System.Drawing.Point(0, 0);
             this.MainSplitContainer.Name = "MainSplitContainer";
-            this.MainSplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // MainSplitContainer.Panel1
             // 
+            resources.ApplyResources(this.MainSplitContainer.Panel1, "MainSplitContainer.Panel1");
             this.MainSplitContainer.Panel1.BackColor = System.Drawing.Color.White;
             this.MainSplitContainer.Panel1.Controls.Add(this.DotNetVersionLabel);
             this.MainSplitContainer.Panel1.Controls.Add(this.OSVersionLabel);
@@ -66,103 +65,70 @@
             // 
             // MainSplitContainer.Panel2
             // 
+            resources.ApplyResources(this.MainSplitContainer.Panel2, "MainSplitContainer.Panel2");
             this.MainSplitContainer.Panel2.Controls.Add(this.CloseButton);
-            this.MainSplitContainer.Size = new System.Drawing.Size(344, 252);
-            this.MainSplitContainer.SplitterDistance = 200;
-            this.MainSplitContainer.SplitterWidth = 2;
-            this.MainSplitContainer.TabIndex = 0;
             // 
             // DotNetVersionLabel
             // 
-            this.DotNetVersionLabel.Location = new System.Drawing.Point(20, 110);
+            resources.ApplyResources(this.DotNetVersionLabel, "DotNetVersionLabel");
             this.DotNetVersionLabel.Name = "DotNetVersionLabel";
-            this.DotNetVersionLabel.Size = new System.Drawing.Size(300, 12);
-            this.DotNetVersionLabel.TabIndex = 100;
-            this.DotNetVersionLabel.Text = ".NET Framework 4.0.30319.18408";
-            this.DotNetVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // OSVersionLabel
             // 
-            this.OSVersionLabel.Location = new System.Drawing.Point(20, 92);
+            resources.ApplyResources(this.OSVersionLabel, "OSVersionLabel");
             this.OSVersionLabel.Name = "OSVersionLabel";
-            this.OSVersionLabel.Size = new System.Drawing.Size(300, 12);
-            this.OSVersionLabel.TabIndex = 100;
-            this.OSVersionLabel.Text = "Microsoft Windows NT 6.1.7601 Service Pack 1";
-            this.OSVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CopyrightLabel
             // 
+            resources.ApplyResources(this.CopyrightLabel, "CopyrightLabel");
             this.CopyrightLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.CopyrightLabel.Location = new System.Drawing.Point(20, 142);
             this.CopyrightLabel.Name = "CopyrightLabel";
-            this.CopyrightLabel.Size = new System.Drawing.Size(300, 12);
-            this.CopyrightLabel.TabIndex = 100;
-            this.CopyrightLabel.Text = "Copyright (c) 2010 CubeSoft, Inc.";
-            this.CopyrightLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // VersionLabel
             // 
+            resources.ApplyResources(this.VersionLabel, "VersionLabel");
             this.VersionLabel.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.VersionLabel.Location = new System.Drawing.Point(20, 72);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(300, 12);
-            this.VersionLabel.TabIndex = 100;
-            this.VersionLabel.Text = "Version 1.0.0 (x86)";
-            this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // TitlePictureBox
             // 
+            resources.ApplyResources(this.TitlePictureBox, "TitlePictureBox");
             this.TitlePictureBox.Image = global::CubePdf.Properties.Resources.Title;
-            this.TitlePictureBox.Location = new System.Drawing.Point(147, 12);
             this.TitlePictureBox.Name = "TitlePictureBox";
-            this.TitlePictureBox.Size = new System.Drawing.Size(98, 48);
-            this.TitlePictureBox.TabIndex = 12;
             this.TitlePictureBox.TabStop = false;
             // 
             // CubePDFLinkLabel
             // 
-            this.CubePDFLinkLabel.Location = new System.Drawing.Point(20, 160);
+            resources.ApplyResources(this.CubePDFLinkLabel, "CubePDFLinkLabel");
             this.CubePDFLinkLabel.Name = "CubePDFLinkLabel";
-            this.CubePDFLinkLabel.Size = new System.Drawing.Size(300, 12);
-            this.CubePDFLinkLabel.TabIndex = 2;
             this.CubePDFLinkLabel.TabStop = true;
-            this.CubePDFLinkLabel.Text = "http://www.cube-soft.jp/cubepdf/";
-            this.CubePDFLinkLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.CubePDFLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.CubePdfLinkLabel_LinkClicked);
             // 
             // LogoPictureBox
             // 
+            resources.ApplyResources(this.LogoPictureBox, "LogoPictureBox");
             this.LogoPictureBox.Image = global::CubePdf.Properties.Resources.Logo;
-            this.LogoPictureBox.Location = new System.Drawing.Point(105, 12);
             this.LogoPictureBox.Name = "LogoPictureBox";
-            this.LogoPictureBox.Size = new System.Drawing.Size(32, 42);
-            this.LogoPictureBox.TabIndex = 11;
             this.LogoPictureBox.TabStop = false;
             // 
             // CloseButton
             // 
-            this.CloseButton.Location = new System.Drawing.Point(125, 13);
+            resources.ApplyResources(this.CloseButton, "CloseButton");
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(100, 25);
-            this.CloseButton.TabIndex = 1;
-            this.CloseButton.Text = "OK";
             this.CloseButton.UseVisualStyleBackColor = true;
             // 
             // VersionDialog
             // 
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(344, 252);
             this.Controls.Add(this.MainSplitContainer);
             this.DoubleBuffered = true;
-            this.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(128)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "VersionDialog";
             this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "CubePDF について";
             this.Shown += new System.EventHandler(this.VersionDialog_Shown);
             this.MainSplitContainer.Panel1.ResumeLayout(false);
             this.MainSplitContainer.Panel2.ResumeLayout(false);

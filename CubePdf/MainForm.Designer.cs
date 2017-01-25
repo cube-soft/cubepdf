@@ -125,20 +125,11 @@
             // 
             // LayoutPanel
             // 
-            this.LayoutPanel.ColumnCount = 1;
-            this.LayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            resources.ApplyResources(this.LayoutPanel, "LayoutPanel");
             this.LayoutPanel.Controls.Add(this.MainTabControl, 0, 1);
             this.LayoutPanel.Controls.Add(this.HeaderPictureBox, 0, 0);
             this.LayoutPanel.Controls.Add(this.ButtonsPanel, 0, 2);
-            this.LayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.LayoutPanel.Location = new System.Drawing.Point(0, 0);
             this.LayoutPanel.Name = "LayoutPanel";
-            this.LayoutPanel.RowCount = 3;
-            this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.LayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
-            this.LayoutPanel.Size = new System.Drawing.Size(500, 501);
-            this.LayoutPanel.TabIndex = 0;
             // 
             // MainTabControl
             // 
@@ -146,26 +137,18 @@
             this.MainTabControl.Controls.Add(this.DocTabPage);
             this.MainTabControl.Controls.Add(this.SecurityTabPage);
             this.MainTabControl.Controls.Add(this.DetailTabPage);
-            this.MainTabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(this.MainTabControl, "MainTabControl");
             this.MainTabControl.HotTrack = true;
-            this.MainTabControl.Location = new System.Drawing.Point(12, 70);
-            this.MainTabControl.Margin = new System.Windows.Forms.Padding(12, 20, 12, 10);
             this.MainTabControl.Name = "MainTabControl";
             this.MainTabControl.SelectedIndex = 0;
-            this.MainTabControl.Size = new System.Drawing.Size(476, 351);
             this.MainTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
-            this.MainTabControl.TabIndex = 4;
             // 
             // GeneralTabPage
             // 
             this.GeneralTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.GeneralTabPage.Controls.Add(this.GeneralPanel);
-            this.GeneralTabPage.Location = new System.Drawing.Point(4, 24);
+            resources.ApplyResources(this.GeneralTabPage, "GeneralTabPage");
             this.GeneralTabPage.Name = "GeneralTabPage";
-            this.GeneralTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.GeneralTabPage.Size = new System.Drawing.Size(468, 323);
-            this.GeneralTabPage.TabIndex = 0;
-            this.GeneralTabPage.Text = "一般";
             // 
             // GeneralPanel
             // 
@@ -182,222 +165,139 @@
             this.GeneralPanel.Controls.Add(this.ResolutionLabel);
             this.GeneralPanel.Controls.Add(this.PDFVersionLabel);
             this.GeneralPanel.Controls.Add(this.FileTypeLabel);
-            this.GeneralPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GeneralPanel.Location = new System.Drawing.Point(3, 3);
+            resources.ApplyResources(this.GeneralPanel, "GeneralPanel");
             this.GeneralPanel.Name = "GeneralPanel";
-            this.GeneralPanel.Size = new System.Drawing.Size(462, 317);
-            this.GeneralPanel.TabIndex = 1;
             // 
             // InputPathPanel
             // 
             this.InputPathPanel.Controls.Add(this.InputPathButton);
             this.InputPathPanel.Controls.Add(this.InputPathTextBox);
-            this.InputPathPanel.Location = new System.Drawing.Point(120, 168);
+            resources.ApplyResources(this.InputPathPanel, "InputPathPanel");
             this.InputPathPanel.Name = "InputPathPanel";
-            this.InputPathPanel.Size = new System.Drawing.Size(316, 24);
-            this.InputPathPanel.TabIndex = 26;
             // 
             // InputPathButton
             // 
             this.InputPathButton.BackColor = System.Drawing.SystemColors.Control;
-            this.InputPathButton.Location = new System.Drawing.Point(276, 0);
-            this.InputPathButton.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.InputPathButton, "InputPathButton");
             this.InputPathButton.Name = "InputPathButton";
-            this.InputPathButton.Size = new System.Drawing.Size(40, 24);
-            this.InputPathButton.TabIndex = 20;
-            this.InputPathButton.Text = "...";
             this.InputPathButton.UseVisualStyleBackColor = false;
             // 
             // InputPathTextBox
             // 
-            this.InputPathTextBox.Location = new System.Drawing.Point(0, 1);
+            resources.ApplyResources(this.InputPathTextBox, "InputPathTextBox");
             this.InputPathTextBox.Name = "InputPathTextBox";
-            this.InputPathTextBox.Size = new System.Drawing.Size(273, 23);
-            this.InputPathTextBox.TabIndex = 19;
             // 
             // OutputPathPanel
             // 
             this.OutputPathPanel.Controls.Add(this.ExistedFileComboBox);
             this.OutputPathPanel.Controls.Add(this.OutputPathButton);
             this.OutputPathPanel.Controls.Add(this.OutputPathTextBox);
-            this.OutputPathPanel.Location = new System.Drawing.Point(120, 108);
+            resources.ApplyResources(this.OutputPathPanel, "OutputPathPanel");
             this.OutputPathPanel.Name = "OutputPathPanel";
-            this.OutputPathPanel.Size = new System.Drawing.Size(316, 24);
-            this.OutputPathPanel.TabIndex = 12;
             // 
             // ExistedFileComboBox
             // 
             this.ExistedFileComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ExistedFileComboBox.FormattingEnabled = true;
-            this.ExistedFileComboBox.Location = new System.Drawing.Point(236, 0);
-            this.ExistedFileComboBox.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.ExistedFileComboBox, "ExistedFileComboBox");
             this.ExistedFileComboBox.Name = "ExistedFileComboBox";
-            this.ExistedFileComboBox.Size = new System.Drawing.Size(80, 23);
-            this.ExistedFileComboBox.TabIndex = 15;
             // 
             // OutputPathButton
             // 
             this.OutputPathButton.BackColor = System.Drawing.SystemColors.Control;
-            this.OutputPathButton.Location = new System.Drawing.Point(193, 0);
-            this.OutputPathButton.Margin = new System.Windows.Forms.Padding(3, 0, 3, 0);
+            resources.ApplyResources(this.OutputPathButton, "OutputPathButton");
             this.OutputPathButton.Name = "OutputPathButton";
-            this.OutputPathButton.Size = new System.Drawing.Size(40, 24);
-            this.OutputPathButton.TabIndex = 14;
-            this.OutputPathButton.Text = "...";
             this.OutputPathButton.UseVisualStyleBackColor = false;
             // 
             // OutputPathTextBox
             // 
-            this.OutputPathTextBox.Location = new System.Drawing.Point(0, 1);
-            this.OutputPathTextBox.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.OutputPathTextBox, "OutputPathTextBox");
             this.OutputPathTextBox.Name = "OutputPathTextBox";
-            this.OutputPathTextBox.Size = new System.Drawing.Size(190, 23);
-            this.OutputPathTextBox.TabIndex = 13;
             // 
             // PostProcessPanel
             // 
             this.PostProcessPanel.Controls.Add(this.UserProgramTextBox);
             this.PostProcessPanel.Controls.Add(this.UserProgramButton);
             this.PostProcessPanel.Controls.Add(this.PostProcessComboBox);
-            this.PostProcessPanel.Location = new System.Drawing.Point(120, 138);
+            resources.ApplyResources(this.PostProcessPanel, "PostProcessPanel");
             this.PostProcessPanel.Name = "PostProcessPanel";
-            this.PostProcessPanel.Size = new System.Drawing.Size(316, 24);
-            this.PostProcessPanel.TabIndex = 11;
             // 
             // UserProgramTextBox
             // 
-            this.UserProgramTextBox.Location = new System.Drawing.Point(98, 0);
-            this.UserProgramTextBox.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.UserProgramTextBox, "UserProgramTextBox");
             this.UserProgramTextBox.Name = "UserProgramTextBox";
-            this.UserProgramTextBox.Size = new System.Drawing.Size(175, 23);
-            this.UserProgramTextBox.TabIndex = 17;
             // 
             // UserProgramButton
             // 
             this.UserProgramButton.BackColor = System.Drawing.SystemColors.Control;
-            this.UserProgramButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.UserProgramButton.Location = new System.Drawing.Point(276, 0);
-            this.UserProgramButton.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.UserProgramButton, "UserProgramButton");
             this.UserProgramButton.Name = "UserProgramButton";
-            this.UserProgramButton.Size = new System.Drawing.Size(40, 24);
-            this.UserProgramButton.TabIndex = 18;
-            this.UserProgramButton.Text = "...";
             this.UserProgramButton.UseVisualStyleBackColor = false;
             // 
             // PostProcessComboBox
             // 
-            this.PostProcessComboBox.Dock = System.Windows.Forms.DockStyle.Left;
+            resources.ApplyResources(this.PostProcessComboBox, "PostProcessComboBox");
             this.PostProcessComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PostProcessComboBox.FormattingEnabled = true;
-            this.PostProcessComboBox.Location = new System.Drawing.Point(0, 0);
-            this.PostProcessComboBox.Margin = new System.Windows.Forms.Padding(0);
             this.PostProcessComboBox.Name = "PostProcessComboBox";
-            this.PostProcessComboBox.Size = new System.Drawing.Size(95, 23);
-            this.PostProcessComboBox.TabIndex = 16;
             // 
             // ResolutionComboBox
             // 
             this.ResolutionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ResolutionComboBox.FormattingEnabled = true;
-            this.ResolutionComboBox.Location = new System.Drawing.Point(120, 79);
+            resources.ApplyResources(this.ResolutionComboBox, "ResolutionComboBox");
             this.ResolutionComboBox.Name = "ResolutionComboBox";
-            this.ResolutionComboBox.Size = new System.Drawing.Size(316, 23);
-            this.ResolutionComboBox.TabIndex = 12;
             // 
             // PdfVersionComboBox
             // 
             this.PdfVersionComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PdfVersionComboBox.FormattingEnabled = true;
-            this.PdfVersionComboBox.Location = new System.Drawing.Point(120, 50);
+            resources.ApplyResources(this.PdfVersionComboBox, "PdfVersionComboBox");
             this.PdfVersionComboBox.Name = "PdfVersionComboBox";
-            this.PdfVersionComboBox.Size = new System.Drawing.Size(316, 23);
-            this.PdfVersionComboBox.TabIndex = 11;
             // 
             // FileTypeCombBox
             // 
             this.FileTypeCombBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.FileTypeCombBox.FormattingEnabled = true;
-            this.FileTypeCombBox.Location = new System.Drawing.Point(120, 21);
+            resources.ApplyResources(this.FileTypeCombBox, "FileTypeCombBox");
             this.FileTypeCombBox.Name = "FileTypeCombBox";
-            this.FileTypeCombBox.Size = new System.Drawing.Size(316, 23);
-            this.FileTypeCombBox.TabIndex = 10;
             // 
             // InputPathLabel
             // 
-            this.InputPathLabel.AutoSize = true;
-            this.InputPathLabel.Location = new System.Drawing.Point(20, 172);
-            this.InputPathLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.InputPathLabel, "InputPathLabel");
             this.InputPathLabel.Name = "InputPathLabel";
-            this.InputPathLabel.Size = new System.Drawing.Size(77, 15);
-            this.InputPathLabel.TabIndex = 100;
-            this.InputPathLabel.Text = "入力ファイル：";
-            this.InputPathLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // PostProcessLabel
             // 
-            this.PostProcessLabel.AutoSize = true;
-            this.PostProcessLabel.Location = new System.Drawing.Point(20, 141);
-            this.PostProcessLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.PostProcessLabel, "PostProcessLabel");
             this.PostProcessLabel.Name = "PostProcessLabel";
-            this.PostProcessLabel.Size = new System.Drawing.Size(83, 15);
-            this.PostProcessLabel.TabIndex = 100;
-            this.PostProcessLabel.Text = "ポストプロセス：";
-            this.PostProcessLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // OutputPathLabel
             // 
-            this.OutputPathLabel.AutoSize = true;
-            this.OutputPathLabel.Location = new System.Drawing.Point(20, 113);
-            this.OutputPathLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.OutputPathLabel, "OutputPathLabel");
             this.OutputPathLabel.Name = "OutputPathLabel";
-            this.OutputPathLabel.Size = new System.Drawing.Size(77, 15);
-            this.OutputPathLabel.TabIndex = 100;
-            this.OutputPathLabel.Text = "出力ファイル：";
-            this.OutputPathLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ResolutionLabel
             // 
-            this.ResolutionLabel.AutoSize = true;
-            this.ResolutionLabel.Location = new System.Drawing.Point(20, 82);
-            this.ResolutionLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.ResolutionLabel, "ResolutionLabel");
             this.ResolutionLabel.Name = "ResolutionLabel";
-            this.ResolutionLabel.Size = new System.Drawing.Size(55, 15);
-            this.ResolutionLabel.TabIndex = 100;
-            this.ResolutionLabel.Text = "解像度：";
-            this.ResolutionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // PDFVersionLabel
             // 
-            this.PDFVersionLabel.AutoSize = true;
-            this.PDFVersionLabel.Location = new System.Drawing.Point(20, 53);
-            this.PDFVersionLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.PDFVersionLabel, "PDFVersionLabel");
             this.PDFVersionLabel.Name = "PDFVersionLabel";
-            this.PDFVersionLabel.Size = new System.Drawing.Size(91, 15);
-            this.PDFVersionLabel.TabIndex = 100;
-            this.PDFVersionLabel.Text = "PDF バージョン：";
-            this.PDFVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // FileTypeLabel
             // 
-            this.FileTypeLabel.AutoSize = true;
-            this.FileTypeLabel.Location = new System.Drawing.Point(20, 24);
-            this.FileTypeLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.FileTypeLabel, "FileTypeLabel");
             this.FileTypeLabel.Name = "FileTypeLabel";
-            this.FileTypeLabel.Size = new System.Drawing.Size(79, 15);
-            this.FileTypeLabel.TabIndex = 100;
-            this.FileTypeLabel.Text = "ファイルタイプ：";
-            this.FileTypeLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // DocTabPage
             // 
             this.DocTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.DocTabPage.Controls.Add(this.DocPanel);
-            this.DocTabPage.Location = new System.Drawing.Point(4, 22);
+            resources.ApplyResources(this.DocTabPage, "DocTabPage");
             this.DocTabPage.Name = "DocTabPage";
-            this.DocTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DocTabPage.Size = new System.Drawing.Size(468, 325);
-            this.DocTabPage.TabIndex = 1;
-            this.DocTabPage.Text = "文書プロパティ";
             // 
             // DocPanel
             // 
@@ -410,95 +310,56 @@
             this.DocPanel.Controls.Add(this.DocAuthorTextBox);
             this.DocPanel.Controls.Add(this.DocSubtitleTextBox);
             this.DocPanel.Controls.Add(this.DocKeywordTextBox);
-            this.DocPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DocPanel.Location = new System.Drawing.Point(3, 3);
+            resources.ApplyResources(this.DocPanel, "DocPanel");
             this.DocPanel.Name = "DocPanel";
-            this.DocPanel.Size = new System.Drawing.Size(462, 319);
-            this.DocPanel.TabIndex = 1;
             // 
             // DocTitleLabel
             // 
-            this.DocTitleLabel.AutoSize = true;
-            this.DocTitleLabel.Location = new System.Drawing.Point(20, 24);
-            this.DocTitleLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.DocTitleLabel, "DocTitleLabel");
             this.DocTitleLabel.Name = "DocTitleLabel";
-            this.DocTitleLabel.Size = new System.Drawing.Size(54, 15);
-            this.DocTitleLabel.TabIndex = 7;
-            this.DocTitleLabel.Text = "タイトル：";
-            this.DocTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // DocAuthorLabel
             // 
-            this.DocAuthorLabel.AutoSize = true;
-            this.DocAuthorLabel.Location = new System.Drawing.Point(19, 53);
-            this.DocAuthorLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.DocAuthorLabel, "DocAuthorLabel");
             this.DocAuthorLabel.Name = "DocAuthorLabel";
-            this.DocAuthorLabel.Size = new System.Drawing.Size(55, 15);
-            this.DocAuthorLabel.TabIndex = 8;
-            this.DocAuthorLabel.Text = "作成者：";
-            this.DocAuthorLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // DocSubtitleLabel
             // 
-            this.DocSubtitleLabel.AutoSize = true;
-            this.DocSubtitleLabel.Location = new System.Drawing.Point(20, 82);
-            this.DocSubtitleLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.DocSubtitleLabel, "DocSubtitleLabel");
             this.DocSubtitleLabel.Name = "DocSubtitleLabel";
-            this.DocSubtitleLabel.Size = new System.Drawing.Size(73, 15);
-            this.DocSubtitleLabel.TabIndex = 5;
-            this.DocSubtitleLabel.Text = "サブタイトル：";
-            this.DocSubtitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // DocKeywordLabel
             // 
-            this.DocKeywordLabel.AutoSize = true;
-            this.DocKeywordLabel.Location = new System.Drawing.Point(20, 111);
-            this.DocKeywordLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.DocKeywordLabel, "DocKeywordLabel");
             this.DocKeywordLabel.Name = "DocKeywordLabel";
-            this.DocKeywordLabel.Size = new System.Drawing.Size(66, 15);
-            this.DocKeywordLabel.TabIndex = 100;
-            this.DocKeywordLabel.Text = "キーワード：";
-            this.DocKeywordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // DocTitleTextBox
             // 
-            this.DocTitleTextBox.Location = new System.Drawing.Point(120, 21);
+            resources.ApplyResources(this.DocTitleTextBox, "DocTitleTextBox");
             this.DocTitleTextBox.Name = "DocTitleTextBox";
-            this.DocTitleTextBox.Size = new System.Drawing.Size(316, 23);
-            this.DocTitleTextBox.TabIndex = 30;
             // 
             // DocAuthorTextBox
             // 
-            this.DocAuthorTextBox.Location = new System.Drawing.Point(120, 50);
+            resources.ApplyResources(this.DocAuthorTextBox, "DocAuthorTextBox");
             this.DocAuthorTextBox.Name = "DocAuthorTextBox";
-            this.DocAuthorTextBox.Size = new System.Drawing.Size(316, 23);
-            this.DocAuthorTextBox.TabIndex = 31;
             // 
             // DocSubtitleTextBox
             // 
-            this.DocSubtitleTextBox.Location = new System.Drawing.Point(120, 79);
+            resources.ApplyResources(this.DocSubtitleTextBox, "DocSubtitleTextBox");
             this.DocSubtitleTextBox.Name = "DocSubtitleTextBox";
-            this.DocSubtitleTextBox.Size = new System.Drawing.Size(316, 23);
-            this.DocSubtitleTextBox.TabIndex = 32;
             // 
             // DocKeywordTextBox
             // 
-            this.DocKeywordTextBox.Location = new System.Drawing.Point(120, 108);
+            resources.ApplyResources(this.DocKeywordTextBox, "DocKeywordTextBox");
             this.DocKeywordTextBox.Name = "DocKeywordTextBox";
-            this.DocKeywordTextBox.Size = new System.Drawing.Size(316, 23);
-            this.DocKeywordTextBox.TabIndex = 33;
             // 
             // SecurityTabPage
             // 
             this.SecurityTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.SecurityTabPage.Controls.Add(this.SecurityPanel);
             this.SecurityTabPage.Controls.Add(this.OwnerPasswordCheckBox);
-            this.SecurityTabPage.Location = new System.Drawing.Point(4, 22);
+            resources.ApplyResources(this.SecurityTabPage, "SecurityTabPage");
             this.SecurityTabPage.Name = "SecurityTabPage";
-            this.SecurityTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.SecurityTabPage.Size = new System.Drawing.Size(468, 325);
-            this.SecurityTabPage.TabIndex = 2;
-            this.SecurityTabPage.Text = "セキュリティ";
             // 
             // SecurityPanel
             // 
@@ -514,12 +375,8 @@
             this.SecurityPanel.Controls.Add(this.AllowFormInputCheckBox);
             this.SecurityPanel.Controls.Add(this.AllowModifyCheckBox);
             this.SecurityPanel.Controls.Add(this.RequiredUserPasswordCheckBox);
-            this.SecurityPanel.Enabled = false;
-            this.SecurityPanel.Location = new System.Drawing.Point(20, 42);
-            this.SecurityPanel.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.SecurityPanel, "SecurityPanel");
             this.SecurityPanel.Name = "SecurityPanel";
-            this.SecurityPanel.Size = new System.Drawing.Size(420, 265);
-            this.SecurityPanel.TabIndex = 52;
             // 
             // UserPasswordPanel
             // 
@@ -527,186 +384,102 @@
             this.UserPasswordPanel.Controls.Add(this.ConfirmUserPasswordLabel);
             this.UserPasswordPanel.Controls.Add(this.UserPasswordTextBox);
             this.UserPasswordPanel.Controls.Add(this.ConfirmUserPasswordTextBox);
-            this.UserPasswordPanel.Enabled = false;
-            this.UserPasswordPanel.Location = new System.Drawing.Point(120, 103);
-            this.UserPasswordPanel.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.UserPasswordPanel, "UserPasswordPanel");
             this.UserPasswordPanel.Name = "UserPasswordPanel";
-            this.UserPasswordPanel.Size = new System.Drawing.Size(297, 58);
-            this.UserPasswordPanel.TabIndex = 37;
             // 
             // UserPasswordLabel
             // 
-            this.UserPasswordLabel.AutoSize = true;
-            this.UserPasswordLabel.Location = new System.Drawing.Point(0, 6);
-            this.UserPasswordLabel.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.UserPasswordLabel, "UserPasswordLabel");
             this.UserPasswordLabel.Name = "UserPasswordLabel";
-            this.UserPasswordLabel.Size = new System.Drawing.Size(89, 15);
-            this.UserPasswordLabel.TabIndex = 100;
-            this.UserPasswordLabel.Text = "閲覧パスワード：";
-            this.UserPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ConfirmUserPasswordLabel
             // 
-            this.ConfirmUserPasswordLabel.AutoSize = true;
-            this.ConfirmUserPasswordLabel.Location = new System.Drawing.Point(0, 35);
-            this.ConfirmUserPasswordLabel.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.ConfirmUserPasswordLabel, "ConfirmUserPasswordLabel");
             this.ConfirmUserPasswordLabel.Name = "ConfirmUserPasswordLabel";
-            this.ConfirmUserPasswordLabel.Size = new System.Drawing.Size(99, 15);
-            this.ConfirmUserPasswordLabel.TabIndex = 100;
-            this.ConfirmUserPasswordLabel.Text = "パスワードの確認：";
-            this.ConfirmUserPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // UserPasswordTextBox
             // 
-            this.UserPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.UserPasswordTextBox.Location = new System.Drawing.Point(110, 3);
+            resources.ApplyResources(this.UserPasswordTextBox, "UserPasswordTextBox");
             this.UserPasswordTextBox.Name = "UserPasswordTextBox";
-            this.UserPasswordTextBox.PasswordChar = '*';
-            this.UserPasswordTextBox.Size = new System.Drawing.Size(184, 23);
-            this.UserPasswordTextBox.TabIndex = 56;
             // 
             // ConfirmUserPasswordTextBox
             // 
-            this.ConfirmUserPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.ConfirmUserPasswordTextBox.Location = new System.Drawing.Point(110, 32);
+            resources.ApplyResources(this.ConfirmUserPasswordTextBox, "ConfirmUserPasswordTextBox");
             this.ConfirmUserPasswordTextBox.Name = "ConfirmUserPasswordTextBox";
-            this.ConfirmUserPasswordTextBox.PasswordChar = '*';
-            this.ConfirmUserPasswordTextBox.Size = new System.Drawing.Size(184, 23);
-            this.ConfirmUserPasswordTextBox.TabIndex = 57;
             // 
             // UserPasswordCheckBox
             // 
-            this.UserPasswordCheckBox.AutoSize = true;
-            this.UserPasswordCheckBox.Enabled = false;
-            this.UserPasswordCheckBox.Location = new System.Drawing.Point(120, 84);
-            this.UserPasswordCheckBox.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.UserPasswordCheckBox, "UserPasswordCheckBox");
             this.UserPasswordCheckBox.Name = "UserPasswordCheckBox";
-            this.UserPasswordCheckBox.Size = new System.Drawing.Size(182, 19);
-            this.UserPasswordCheckBox.TabIndex = 55;
-            this.UserPasswordCheckBox.Text = "閲覧専用のパスワードを設定する";
             this.UserPasswordCheckBox.UseVisualStyleBackColor = true;
             // 
             // OwnerPasswordTextBox
             // 
-            this.OwnerPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.OwnerPasswordTextBox.Location = new System.Drawing.Point(100, 4);
+            resources.ApplyResources(this.OwnerPasswordTextBox, "OwnerPasswordTextBox");
             this.OwnerPasswordTextBox.Name = "OwnerPasswordTextBox";
-            this.OwnerPasswordTextBox.PasswordChar = '*';
-            this.OwnerPasswordTextBox.Size = new System.Drawing.Size(317, 23);
-            this.OwnerPasswordTextBox.TabIndex = 52;
             // 
             // ConfirmOwnerPasswordTextBox
             // 
-            this.ConfirmOwnerPasswordTextBox.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.ConfirmOwnerPasswordTextBox.Location = new System.Drawing.Point(100, 33);
+            resources.ApplyResources(this.ConfirmOwnerPasswordTextBox, "ConfirmOwnerPasswordTextBox");
             this.ConfirmOwnerPasswordTextBox.Name = "ConfirmOwnerPasswordTextBox";
-            this.ConfirmOwnerPasswordTextBox.PasswordChar = '*';
-            this.ConfirmOwnerPasswordTextBox.Size = new System.Drawing.Size(317, 23);
-            this.ConfirmOwnerPasswordTextBox.TabIndex = 53;
             // 
             // AllowPrintCheckBox
             // 
-            this.AllowPrintCheckBox.AutoSize = true;
-            this.AllowPrintCheckBox.Location = new System.Drawing.Point(100, 164);
+            resources.ApplyResources(this.AllowPrintCheckBox, "AllowPrintCheckBox");
             this.AllowPrintCheckBox.Name = "AllowPrintCheckBox";
-            this.AllowPrintCheckBox.Size = new System.Drawing.Size(102, 19);
-            this.AllowPrintCheckBox.TabIndex = 58;
-            this.AllowPrintCheckBox.Text = "印刷を許可する";
             this.AllowPrintCheckBox.UseVisualStyleBackColor = true;
             // 
             // AllowCopyCheckBox
             // 
-            this.AllowCopyCheckBox.AutoSize = true;
-            this.AllowCopyCheckBox.Location = new System.Drawing.Point(100, 189);
+            resources.ApplyResources(this.AllowCopyCheckBox, "AllowCopyCheckBox");
             this.AllowCopyCheckBox.Name = "AllowCopyCheckBox";
-            this.AllowCopyCheckBox.Size = new System.Drawing.Size(185, 19);
-            this.AllowCopyCheckBox.TabIndex = 59;
-            this.AllowCopyCheckBox.Text = "テキストや画像のコピーを許可する";
             this.AllowCopyCheckBox.UseVisualStyleBackColor = true;
             // 
             // OwnerPasswordLabel
             // 
-            this.OwnerPasswordLabel.AutoSize = true;
-            this.OwnerPasswordLabel.Location = new System.Drawing.Point(0, 7);
-            this.OwnerPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.OwnerPasswordLabel, "OwnerPasswordLabel");
             this.OwnerPasswordLabel.Name = "OwnerPasswordLabel";
-            this.OwnerPasswordLabel.Size = new System.Drawing.Size(89, 15);
-            this.OwnerPasswordLabel.TabIndex = 100;
-            this.OwnerPasswordLabel.Text = "編集パスワード：";
-            this.OwnerPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // ConfirmOwnerPasswordLabel
             // 
-            this.ConfirmOwnerPasswordLabel.AutoSize = true;
-            this.ConfirmOwnerPasswordLabel.Location = new System.Drawing.Point(-3, 36);
-            this.ConfirmOwnerPasswordLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.ConfirmOwnerPasswordLabel, "ConfirmOwnerPasswordLabel");
             this.ConfirmOwnerPasswordLabel.Name = "ConfirmOwnerPasswordLabel";
-            this.ConfirmOwnerPasswordLabel.Size = new System.Drawing.Size(99, 15);
-            this.ConfirmOwnerPasswordLabel.TabIndex = 100;
-            this.ConfirmOwnerPasswordLabel.Text = "パスワードの確認：";
-            this.ConfirmOwnerPasswordLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // PermissionLabel
             // 
-            this.PermissionLabel.AutoSize = true;
-            this.PermissionLabel.Location = new System.Drawing.Point(0, 63);
-            this.PermissionLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.PermissionLabel, "PermissionLabel");
             this.PermissionLabel.Name = "PermissionLabel";
-            this.PermissionLabel.Size = new System.Drawing.Size(43, 15);
-            this.PermissionLabel.TabIndex = 100;
-            this.PermissionLabel.Text = "操作：";
-            this.PermissionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // AllowFormInputCheckBox
             // 
-            this.AllowFormInputCheckBox.AutoSize = true;
-            this.AllowFormInputCheckBox.Location = new System.Drawing.Point(100, 214);
+            resources.ApplyResources(this.AllowFormInputCheckBox, "AllowFormInputCheckBox");
             this.AllowFormInputCheckBox.Name = "AllowFormInputCheckBox";
-            this.AllowFormInputCheckBox.Size = new System.Drawing.Size(201, 19);
-            this.AllowFormInputCheckBox.TabIndex = 60;
-            this.AllowFormInputCheckBox.Text = "フォームフィールドへの入力を許可する";
             this.AllowFormInputCheckBox.UseVisualStyleBackColor = true;
             // 
             // AllowModifyCheckBox
             // 
-            this.AllowModifyCheckBox.AutoSize = true;
-            this.AllowModifyCheckBox.Location = new System.Drawing.Point(100, 239);
+            resources.ApplyResources(this.AllowModifyCheckBox, "AllowModifyCheckBox");
             this.AllowModifyCheckBox.Name = "AllowModifyCheckBox";
-            this.AllowModifyCheckBox.Size = new System.Drawing.Size(235, 19);
-            this.AllowModifyCheckBox.TabIndex = 61;
-            this.AllowModifyCheckBox.Text = "ページの挿入、回転、および削除を許可する";
             this.AllowModifyCheckBox.UseVisualStyleBackColor = true;
             // 
             // RequiredUserPasswordCheckBox
             // 
-            this.RequiredUserPasswordCheckBox.AutoSize = true;
-            this.RequiredUserPasswordCheckBox.Location = new System.Drawing.Point(100, 62);
+            resources.ApplyResources(this.RequiredUserPasswordCheckBox, "RequiredUserPasswordCheckBox");
             this.RequiredUserPasswordCheckBox.Name = "RequiredUserPasswordCheckBox";
-            this.RequiredUserPasswordCheckBox.Size = new System.Drawing.Size(229, 19);
-            this.RequiredUserPasswordCheckBox.TabIndex = 54;
-            this.RequiredUserPasswordCheckBox.Text = "PDFファイルを開く際にパスワードを要求する";
             this.RequiredUserPasswordCheckBox.UseVisualStyleBackColor = true;
             // 
             // OwnerPasswordCheckBox
             // 
-            this.OwnerPasswordCheckBox.AutoSize = true;
-            this.OwnerPasswordCheckBox.Location = new System.Drawing.Point(20, 22);
+            resources.ApplyResources(this.OwnerPasswordCheckBox, "OwnerPasswordCheckBox");
             this.OwnerPasswordCheckBox.Name = "OwnerPasswordCheckBox";
-            this.OwnerPasswordCheckBox.Size = new System.Drawing.Size(202, 19);
-            this.OwnerPasswordCheckBox.TabIndex = 53;
-            this.OwnerPasswordCheckBox.Text = "パスワードによるセキュリティを設定する";
             this.OwnerPasswordCheckBox.UseVisualStyleBackColor = true;
             // 
             // DetailTabPage
             // 
             this.DetailTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.DetailTabPage.Controls.Add(this.DetailPanel);
-            this.DetailTabPage.Location = new System.Drawing.Point(4, 24);
+            resources.ApplyResources(this.DetailTabPage, "DetailTabPage");
             this.DetailTabPage.Name = "DetailTabPage";
-            this.DetailTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DetailTabPage.Size = new System.Drawing.Size(468, 323);
-            this.DetailTabPage.TabIndex = 3;
-            this.DetailTabPage.Text = "詳細設定";
             // 
             // DetailPanel
             // 
@@ -722,168 +495,99 @@
             this.DetailPanel.Controls.Add(this.UpdateCheckBox);
             this.DetailPanel.Controls.Add(this.PostProcessLiteLabel);
             this.DetailPanel.Controls.Add(this.PostProcessLiteComboBox);
-            this.DetailPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.DetailPanel.Location = new System.Drawing.Point(3, 3);
+            resources.ApplyResources(this.DetailPanel, "DetailPanel");
             this.DetailPanel.Name = "DetailPanel";
-            this.DetailPanel.Size = new System.Drawing.Size(462, 317);
-            this.DetailPanel.TabIndex = 0;
             // 
             // OrientationPanel
             // 
             this.OrientationPanel.Controls.Add(this.PortraitRadioButton);
             this.OrientationPanel.Controls.Add(this.LandscapeRadioButton);
             this.OrientationPanel.Controls.Add(this.AutoRadioButton);
-            this.OrientationPanel.Location = new System.Drawing.Point(120, 17);
+            resources.ApplyResources(this.OrientationPanel, "OrientationPanel");
             this.OrientationPanel.Name = "OrientationPanel";
-            this.OrientationPanel.Size = new System.Drawing.Size(316, 24);
-            this.OrientationPanel.TabIndex = 101;
             // 
             // PortraitRadioButton
             // 
-            this.PortraitRadioButton.AutoSize = true;
-            this.PortraitRadioButton.Location = new System.Drawing.Point(3, 3);
-            this.PortraitRadioButton.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
+            resources.ApplyResources(this.PortraitRadioButton, "PortraitRadioButton");
             this.PortraitRadioButton.Name = "PortraitRadioButton";
-            this.PortraitRadioButton.Size = new System.Drawing.Size(37, 19);
-            this.PortraitRadioButton.TabIndex = 74;
-            this.PortraitRadioButton.Text = "縦";
             this.PortraitRadioButton.UseVisualStyleBackColor = true;
             // 
             // LandscapeRadioButton
             // 
-            this.LandscapeRadioButton.AutoSize = true;
-            this.LandscapeRadioButton.Location = new System.Drawing.Point(55, 3);
-            this.LandscapeRadioButton.Margin = new System.Windows.Forms.Padding(3, 3, 12, 3);
+            resources.ApplyResources(this.LandscapeRadioButton, "LandscapeRadioButton");
             this.LandscapeRadioButton.Name = "LandscapeRadioButton";
-            this.LandscapeRadioButton.Size = new System.Drawing.Size(37, 19);
-            this.LandscapeRadioButton.TabIndex = 75;
-            this.LandscapeRadioButton.Text = "横";
             this.LandscapeRadioButton.UseVisualStyleBackColor = true;
             // 
             // AutoRadioButton
             // 
-            this.AutoRadioButton.AutoSize = true;
+            resources.ApplyResources(this.AutoRadioButton, "AutoRadioButton");
             this.AutoRadioButton.Checked = true;
-            this.AutoRadioButton.Location = new System.Drawing.Point(107, 3);
             this.AutoRadioButton.Name = "AutoRadioButton";
-            this.AutoRadioButton.Size = new System.Drawing.Size(49, 19);
-            this.AutoRadioButton.TabIndex = 76;
             this.AutoRadioButton.TabStop = true;
-            this.AutoRadioButton.Text = "自動";
             this.AutoRadioButton.UseVisualStyleBackColor = true;
             // 
             // OrientationLabel
             // 
-            this.OrientationLabel.AutoSize = true;
-            this.OrientationLabel.Location = new System.Drawing.Point(20, 24);
+            resources.ApplyResources(this.OrientationLabel, "OrientationLabel");
             this.OrientationLabel.Name = "OrientationLabel";
-            this.OrientationLabel.Size = new System.Drawing.Size(80, 15);
-            this.OrientationLabel.TabIndex = 100;
-            this.OrientationLabel.Text = "ページの向き：";
             // 
             // OptionLabel
             // 
-            this.OptionLabel.AutoSize = true;
-            this.OptionLabel.Location = new System.Drawing.Point(20, 48);
-            this.OptionLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.OptionLabel, "OptionLabel");
             this.OptionLabel.Name = "OptionLabel";
-            this.OptionLabel.Size = new System.Drawing.Size(62, 15);
-            this.OptionLabel.TabIndex = 100;
-            this.OptionLabel.Text = "オプション：";
-            this.OptionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // OthersLabel
             // 
-            this.OthersLabel.AutoSize = true;
-            this.OthersLabel.Location = new System.Drawing.Point(20, 148);
-            this.OthersLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.OthersLabel, "OthersLabel");
             this.OthersLabel.Name = "OthersLabel";
-            this.OthersLabel.Size = new System.Drawing.Size(50, 15);
-            this.OthersLabel.TabIndex = 100;
-            this.OthersLabel.Text = "その他：";
-            this.OthersLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // EmbedFontCheckBox
             // 
-            this.EmbedFontCheckBox.AutoSize = true;
-            this.EmbedFontCheckBox.Enabled = false;
-            this.EmbedFontCheckBox.Location = new System.Drawing.Point(120, 47);
+            resources.ApplyResources(this.EmbedFontCheckBox, "EmbedFontCheckBox");
             this.EmbedFontCheckBox.Name = "EmbedFontCheckBox";
-            this.EmbedFontCheckBox.Size = new System.Drawing.Size(114, 19);
-            this.EmbedFontCheckBox.TabIndex = 74;
-            this.EmbedFontCheckBox.Text = "フォントの埋め込み";
             this.EmbedFontCheckBox.UseVisualStyleBackColor = true;
             // 
             // GrayscaleCheckBox
             // 
-            this.GrayscaleCheckBox.AutoSize = true;
-            this.GrayscaleCheckBox.Location = new System.Drawing.Point(120, 72);
+            resources.ApplyResources(this.GrayscaleCheckBox, "GrayscaleCheckBox");
             this.GrayscaleCheckBox.Name = "GrayscaleCheckBox";
-            this.GrayscaleCheckBox.Size = new System.Drawing.Size(92, 19);
-            this.GrayscaleCheckBox.TabIndex = 75;
-            this.GrayscaleCheckBox.Text = "グレースケール";
             this.GrayscaleCheckBox.UseVisualStyleBackColor = true;
             // 
             // ImageFilterCheckBox
             // 
-            this.ImageFilterCheckBox.AutoSize = true;
-            this.ImageFilterCheckBox.Location = new System.Drawing.Point(120, 97);
+            resources.ApplyResources(this.ImageFilterCheckBox, "ImageFilterCheckBox");
             this.ImageFilterCheckBox.Name = "ImageFilterCheckBox";
-            this.ImageFilterCheckBox.Size = new System.Drawing.Size(144, 19);
-            this.ImageFilterCheckBox.TabIndex = 76;
-            this.ImageFilterCheckBox.Text = "画像をJPEG形式に圧縮";
             this.ImageFilterCheckBox.UseVisualStyleBackColor = true;
             // 
             // WebOptimizeCheckBox
             // 
-            this.WebOptimizeCheckBox.AutoSize = true;
-            this.WebOptimizeCheckBox.Location = new System.Drawing.Point(120, 122);
+            resources.ApplyResources(this.WebOptimizeCheckBox, "WebOptimizeCheckBox");
             this.WebOptimizeCheckBox.Name = "WebOptimizeCheckBox";
-            this.WebOptimizeCheckBox.Size = new System.Drawing.Size(132, 19);
-            this.WebOptimizeCheckBox.TabIndex = 77;
-            this.WebOptimizeCheckBox.Text = "Web表示用に最適化";
             this.WebOptimizeCheckBox.UseVisualStyleBackColor = true;
             // 
             // UpdateCheckBox
             // 
-            this.UpdateCheckBox.AutoSize = true;
-            this.UpdateCheckBox.Location = new System.Drawing.Point(120, 147);
+            resources.ApplyResources(this.UpdateCheckBox, "UpdateCheckBox");
             this.UpdateCheckBox.Name = "UpdateCheckBox";
-            this.UpdateCheckBox.Size = new System.Drawing.Size(176, 19);
-            this.UpdateCheckBox.TabIndex = 78;
-            this.UpdateCheckBox.Text = "起動時にアップデートを確認する";
             this.UpdateCheckBox.UseVisualStyleBackColor = true;
             // 
             // PostProcessLiteLabel
             // 
-            this.PostProcessLiteLabel.AutoSize = true;
-            this.PostProcessLiteLabel.Location = new System.Drawing.Point(20, 175);
-            this.PostProcessLiteLabel.Margin = new System.Windows.Forms.Padding(3);
+            resources.ApplyResources(this.PostProcessLiteLabel, "PostProcessLiteLabel");
             this.PostProcessLiteLabel.Name = "PostProcessLiteLabel";
-            this.PostProcessLiteLabel.Size = new System.Drawing.Size(83, 15);
-            this.PostProcessLiteLabel.TabIndex = 100;
-            this.PostProcessLiteLabel.Text = "ポストプロセス：";
-            this.PostProcessLiteLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // PostProcessLiteComboBox
             // 
             this.PostProcessLiteComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.PostProcessLiteComboBox.FormattingEnabled = true;
-            this.PostProcessLiteComboBox.Location = new System.Drawing.Point(120, 172);
+            resources.ApplyResources(this.PostProcessLiteComboBox, "PostProcessLiteComboBox");
             this.PostProcessLiteComboBox.Name = "PostProcessLiteComboBox";
-            this.PostProcessLiteComboBox.Size = new System.Drawing.Size(316, 23);
-            this.PostProcessLiteComboBox.TabIndex = 79;
             // 
             // HeaderPictureBox
             // 
-            this.HeaderPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            resources.ApplyResources(this.HeaderPictureBox, "HeaderPictureBox");
             this.HeaderPictureBox.Image = global::CubePdf.Properties.Resources.Header;
-            this.HeaderPictureBox.Location = new System.Drawing.Point(0, 0);
-            this.HeaderPictureBox.Margin = new System.Windows.Forms.Padding(0);
             this.HeaderPictureBox.Name = "HeaderPictureBox";
-            this.HeaderPictureBox.Size = new System.Drawing.Size(500, 50);
-            this.HeaderPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.HeaderPictureBox.TabIndex = 3;
             this.HeaderPictureBox.TabStop = false;
             // 
             // ButtonsPanel
@@ -892,49 +596,32 @@
             this.ButtonsPanel.Controls.Add(this.ExecProgressBar);
             this.ButtonsPanel.Controls.Add(this.ConvertButton);
             this.ButtonsPanel.Controls.Add(this.ExitButton);
-            this.ButtonsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ButtonsPanel.Location = new System.Drawing.Point(0, 431);
-            this.ButtonsPanel.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.ButtonsPanel, "ButtonsPanel");
             this.ButtonsPanel.Name = "ButtonsPanel";
-            this.ButtonsPanel.Padding = new System.Windows.Forms.Padding(12, 10, 12, 20);
-            this.ButtonsPanel.Size = new System.Drawing.Size(500, 70);
-            this.ButtonsPanel.TabIndex = 5;
             // 
             // SettingButton
             // 
             this.SettingButton.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.SettingButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
             this.SettingButton.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.SettingButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.SettingButton.Location = new System.Drawing.Point(12, 22);
-            this.SettingButton.Margin = new System.Windows.Forms.Padding(0);
+            resources.ApplyResources(this.SettingButton, "SettingButton");
             this.SettingButton.Name = "SettingButton";
-            this.SettingButton.Size = new System.Drawing.Size(99, 28);
-            this.SettingButton.TabIndex = 7;
-            this.SettingButton.Text = "設定の保存";
             this.SettingButton.UseVisualStyleBackColor = false;
             // 
             // ExecProgressBar
             // 
-            this.ExecProgressBar.Location = new System.Drawing.Point(12, 35);
+            resources.ApplyResources(this.ExecProgressBar, "ExecProgressBar");
             this.ExecProgressBar.Name = "ExecProgressBar";
-            this.ExecProgressBar.Size = new System.Drawing.Size(200, 15);
             this.ExecProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-            this.ExecProgressBar.TabIndex = 8;
-            this.ExecProgressBar.Visible = false;
             // 
             // ConvertButton
             // 
             this.ConvertButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(142)))), ((int)(((byte)(39)))), ((int)(((byte)(45)))));
             this.ConvertButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
             this.ConvertButton.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.ConvertButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            resources.ApplyResources(this.ConvertButton, "ConvertButton");
             this.ConvertButton.ForeColor = System.Drawing.Color.White;
-            this.ConvertButton.Location = new System.Drawing.Point(220, 10);
             this.ConvertButton.Name = "ConvertButton";
-            this.ConvertButton.Size = new System.Drawing.Size(139, 40);
-            this.ConvertButton.TabIndex = 6;
-            this.ConvertButton.Text = "変換";
             this.ConvertButton.UseVisualStyleBackColor = false;
             // 
             // ExitButton
@@ -942,28 +629,21 @@
             this.ExitButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(153)))), ((int)(((byte)(153)))));
             this.ExitButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
             this.ExitButton.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            this.ExitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            resources.ApplyResources(this.ExitButton, "ExitButton");
             this.ExitButton.ForeColor = System.Drawing.Color.White;
-            this.ExitButton.Location = new System.Drawing.Point(365, 10);
             this.ExitButton.Name = "ExitButton";
-            this.ExitButton.Size = new System.Drawing.Size(119, 40);
-            this.ExitButton.TabIndex = 5;
-            this.ExitButton.Text = "キャンセル";
             this.ExitButton.UseVisualStyleBackColor = false;
             // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(500, 501);
+            resources.ApplyResources(this, "$this");
             this.Controls.Add(this.LayoutPanel);
-            this.Font = new System.Drawing.Font("Meiryo UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(128)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "CubePDF";
             this.LayoutPanel.ResumeLayout(false);
             this.MainTabControl.ResumeLayout(false);
             this.GeneralTabPage.ResumeLayout(false);
