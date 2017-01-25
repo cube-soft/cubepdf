@@ -174,4 +174,31 @@
     <value>編集パスワードと閲覧パスワードを共用すると、各種操作の制限が正常に機能しない可能性があります。
 閲覧パスワードに編集パスワードとは異なるものを設定するか、または、全ての操作を許可して下さい。</value>
   </data>
+  <data name="MergeHead" xml:space="preserve">
+    <value>先頭に結合</value>
+  </data>
+  <data name="MergeTail" xml:space="preserve">
+    <value>末尾に結合</value>
+  </data>
+  <data name="None" xml:space="preserve">
+    <value>何もしない</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>開く</value>
+  </data>
+  <data name="OpenFolder" xml:space="preserve">
+    <value>フォルダを開く</value>
+  </data>
+  <data name="Overwrite" xml:space="preserve">
+    <value>上書き</value>
+  </data>
+  <data name="Rename" xml:space="preserve">
+    <value>リネーム</value>
+  </data>
+  <data name="Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="UserProgram" xml:space="preserve">
+    <value>ユーザープログラム</value>
+  </data>
 </root>
