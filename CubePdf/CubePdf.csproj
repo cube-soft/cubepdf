@@ -108,6 +108,9 @@
     <Reference Include="Cube.Core">
       <HintPath>..\..\lib\net35\Cube.Core.dll</HintPath>
     </Reference>
+    <Reference Include="Cube.Forms">
+      <HintPath>..\..\lib\net35\Cube.Forms.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\..\packages\log4net.2.0.7\lib\net35-full\log4net.dll</HintPath>
       <Private>True</Private>
