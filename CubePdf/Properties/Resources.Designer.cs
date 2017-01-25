@@ -70,36 +70,6 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        internal static System.Drawing.Bitmap Background {
-            get {
-                object obj = ResourceManager.GetObject("Background", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        internal static System.Drawing.Bitmap CancelButton {
-            get {
-                object obj = ResourceManager.GetObject("CancelButton", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        internal static System.Drawing.Bitmap ConvertButton {
-            get {
-                object obj = ResourceManager.GetObject("ConvertButton", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   CubePDF エラー に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ErrorTitle {
@@ -206,26 +176,6 @@ namespace CubePdf.Properties {
         internal static string ProductName {
             get {
                 return ResourceManager.GetString("ProductName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        internal static System.Drawing.Bitmap SettingButton {
-            get {
-                object obj = ResourceManager.GetObject("SettingButton", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        internal static System.Drawing.Bitmap SettingButtonDisable {
-            get {
-                object obj = ResourceManager.GetObject("SettingButtonDisable", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
             }
         }
         
