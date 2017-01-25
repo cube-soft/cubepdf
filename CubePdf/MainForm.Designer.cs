@@ -701,10 +701,10 @@
             // 
             this.DetailTabPage.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.DetailTabPage.Controls.Add(this.DetailPanel);
-            this.DetailTabPage.Location = new System.Drawing.Point(4, 22);
+            this.DetailTabPage.Location = new System.Drawing.Point(4, 24);
             this.DetailTabPage.Name = "DetailTabPage";
             this.DetailTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DetailTabPage.Size = new System.Drawing.Size(468, 325);
+            this.DetailTabPage.Size = new System.Drawing.Size(468, 323);
             this.DetailTabPage.TabIndex = 3;
             this.DetailTabPage.Text = "詳細設定";
             // 
@@ -725,7 +725,7 @@
             this.DetailPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.DetailPanel.Location = new System.Drawing.Point(3, 3);
             this.DetailPanel.Name = "DetailPanel";
-            this.DetailPanel.Size = new System.Drawing.Size(462, 319);
+            this.DetailPanel.Size = new System.Drawing.Size(462, 317);
             this.DetailPanel.TabIndex = 0;
             // 
             // OrientationPanel
@@ -806,6 +806,7 @@
             // EmbedFontCheckBox
             // 
             this.EmbedFontCheckBox.AutoSize = true;
+            this.EmbedFontCheckBox.Enabled = false;
             this.EmbedFontCheckBox.Location = new System.Drawing.Point(120, 47);
             this.EmbedFontCheckBox.Name = "EmbedFontCheckBox";
             this.EmbedFontCheckBox.Size = new System.Drawing.Size(114, 19);
