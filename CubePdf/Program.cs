@@ -44,14 +44,7 @@ namespace CubePdf
             var dir = IoEx.Path.GetDirectoryName(exec.Location);
             var setting = new UserSetting(false);
 
-            SetupLog(dir + @"\cubepdf.log");
-            var edition = (IntPtr.Size == 4) ? "x86" : "x64";
-            CubePdf.Message.Trace(string.Format("CubePDF {0} ({1})", setting.Version, edition));
-            CubePdf.Message.Trace(Environment.OSVersion.ToString());
-            CubePdf.Message.Trace(string.Format(".NET Framework {0}", Environment.Version.ToString()));
-            var message = "Arguments";
-            foreach (var s in args) message += string.Format("{0}\t{1}", Environment.NewLine, s);
-            CubePdf.Message.Trace(message);
+            SetupLog(args);
 
             var cmdline = new CubePdf.Settings.CommandLine(args);
             SetupUserSetting(setting, cmdline);
@@ -80,6 +73,16 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private static void SetupUserSetting(UserSetting setting, CubePdf.Settings.CommandLine cmdline)
         {
+            try
+            {
+                if (cmdline.Options.ContainsKey("Language"))
+                {
+                    System.Threading.Thread.CurrentThread.CurrentUICulture =
+                        new System.Globalization.CultureInfo(cmdline.Options["Language"]);
+                }
+            }
+            catch (Exception err) { Cube.Log.Operations.Warn(typeof(Program), err.Message, err); }
+
             var docname = cmdline.Options.ContainsKey("DocumentName") ? cmdline.Options["DocumentName"] : "";
             bool is_config = false;
             try
@@ -95,7 +98,7 @@ namespace CubePdf
             {
                 // docname に Windows のファイル名に使用できない記号が含まれる
                 // 場合に例外が送出されるので、その対策。
-                CubePdf.Message.Trace(err.ToString());
+                Cube.Log.Operations.Warn(typeof(Program), err.Message, err);
                 is_config = false;
             }
 
@@ -116,7 +119,7 @@ namespace CubePdf
                             setting.OutputPath : IoEx.Path.GetDirectoryName(setting.OutputPath);
                     }
                     setting.OutputPath = dir + '\\' + filename;
-                    CubePdf.Message.Debug(setting.OutputPath);
+                    Cube.Log.Operations.Debug(typeof(Program), setting.OutputPath);
                 }
             }
 
@@ -126,7 +129,7 @@ namespace CubePdf
 
             if (IoEx.Directory.Exists(setting.LibPath))
                 System.Environment.SetEnvironmentVariable("TEMP", setting.LibPath, EnvironmentVariableTarget.Process);
-            else CubePdf.Message.Trace("LibPath Not Found");
+            else Cube.Log.Operations.Debug(typeof(Program), "LibPath Not Found");
         }
 
         /* ----------------------------------------------------------------- */
@@ -159,23 +162,16 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private static void SetupLog(string src)
+        private static void SetupLog(string[] args)
         {
-            try
-            {
-                if (IoEx.File.Exists(src))
-                {
-                    using (IoEx.StreamWriter stream = new IoEx.StreamWriter(src, false))
-                    {
-                        // 空の内容で上書きする
-                    }
-                }
+            Cube.Log.Operations.Configure();
+            Cube.Log.Operations.Info(typeof(Program), System.Reflection.Assembly.GetEntryAssembly());
 
-                Trace.Listeners.Remove("Default");
-                Trace.Listeners.Add(new TextWriterTraceListener(src));
-                Trace.AutoFlush = true;
-            }
-            catch (Exception err) { CubePdf.Message.Trace(err.ToString()); }
+            var message = new System.Text.StringBuilder();
+            message.AppendLine("Arguments");
+            foreach (var s in args) message.AppendLine($"\t{s}");
+            Cube.Log.Operations.Info(typeof(Program), message.ToString());
+
         }
 
         /* ----------------------------------------------------------------- */
@@ -196,9 +192,9 @@ namespace CubePdf
                     string.IsNullOrEmpty(setting.InstallPath) ||
                     DateTime.Now <= setting.LastCheckUpdate.AddDays(1)) return;
                 var path = IoEx.Path.Combine(setting.InstallPath, "cubepdf-checker.exe");
-                Process.Start(path);
+                if (IoEx.File.Exists(path)) Process.Start(path);
             }
-            catch (Exception err) { CubePdf.Message.Trace(err.ToString()); }
+            catch (Exception err) { Cube.Log.Operations.Warn(typeof(Program), err.Message, err); }
         }
 
         /* ----------------------------------------------------------------- */
@@ -215,7 +211,6 @@ namespace CubePdf
         {
             var converter = new Converter();
             converter.Run(setting);
-            foreach (var message in converter.Messages) Trace.WriteLine(message.ToString());
             if (setting.DeleteOnClose && IoEx.File.Exists(setting.InputPath))
             {
                 IoEx.File.Delete(setting.InputPath);

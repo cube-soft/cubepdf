@@ -22,6 +22,7 @@ using System;
 using System.ComponentModel;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Cube.Log;
 using IoEx = System.IO;
 
 namespace CubePdf
@@ -327,8 +328,8 @@ namespace CubePdf
             UserEnv.CreateEnvironmentBlock(ref env, hdup, false);
 
             var cmdline = string.Format("explorer.exe \"{0}\"", IoEx.Path.GetDirectoryName(path));
-            var message = string.Format("CubePdf.PostProcess.RunOpenFolderEm: {0}", cmdline);
-            _messages.Add(new Message(Message.Levels.Debug, message));
+            var message = string.Format("RunOpenFolderEm: {0}", cmdline);
+            this.LogDebug(message);
 
             var pi = new ProcessInformation();
             var startup = new StartupInfo();
@@ -412,9 +413,8 @@ namespace CubePdf
             var isopen  = (Verb == Parameter.PostProcesses.Open);
             var descr   = isopen ? Properties.Resources.FileNotRelated : err.Message;
             var message = string.Format("{0}{1}({2})", descr, Environment.NewLine, Properties.Resources.AnnotWithPostProcess);
-            var level   = isopen ? Message.Levels.Debug : Message.Levels.Error;
-            _messages.Add(new Message(level, message));
-            _messages.Add(new Message(Message.Levels.Debug, err));
+            if (!isopen) _messages.Add(new Message(Message.Levels.Error, message));
+            this.LogError(err.Message, err);
         }
 
         #endregion

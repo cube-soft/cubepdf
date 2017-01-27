@@ -105,10 +105,12 @@ namespace CubePdf
                 if (s != null) dest = s;
             }
 
-            CubePdf.Message.Trace(string.Format("ModifyFileName: {0}{1}\t-> {2}{3}\t-> {4}",
+            Cube.Log.Operations.Debug(typeof(DocumentName),
+                string.Format("{0}{1}\t-> {2}{3}\t-> {4}",
                 filename,  Environment.NewLine,
                 normalize, Environment.NewLine,
-                dest));
+                dest
+            ));
             return dest;
         }
         

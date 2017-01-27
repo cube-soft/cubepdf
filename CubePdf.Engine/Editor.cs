@@ -167,7 +167,7 @@ namespace CubePdf
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private CubePdf.Data.IMetadata ToMetadata()
+        private CubePdf.Data.Metadata ToMetadata()
         {
             var dest = new CubePdf.Data.Metadata();
             dest.Version  = new System.Version(1, GetMinorVersion());
@@ -194,7 +194,7 @@ namespace CubePdf
         /// </remarks>
         ///
         /* ----------------------------------------------------------------- */
-        private CubePdf.Data.IEncryption ToEncryption()
+        private CubePdf.Data.Encryption ToEncryption()
         {
             var dest = new CubePdf.Data.Encryption();
             if (string.IsNullOrEmpty(Permission.Password)) return dest;
@@ -259,7 +259,7 @@ namespace CubePdf
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void AddPages(ICollection<CubePdf.Data.IPage> dest)
+        private void AddPages(ICollection<CubePdf.Data.PageBase> dest)
         {
             foreach (var file in _files)
             {

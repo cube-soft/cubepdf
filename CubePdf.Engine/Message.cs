@@ -49,42 +49,6 @@ namespace CubePdf {
 
         #endregion
 
-        #region Static methods
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// Trace
-        /// 
-        /// <summary>
-        /// Message オブジェクトのフォーマットで Trace に出力します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static void Trace(string message) { Trace(Levels.Debug, message); }
-        public static void Trace(Levels level, string message)
-        {
-            var m = new Message(level, message);
-            System.Diagnostics.Trace.WriteLine(m.ToString());
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// Trace
-        /// 
-        /// <summary>
-        /// Message オブジェクトのフォーマットで Debug に出力します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static void Debug(string message) { Debug(Levels.Debug, message); }
-        public static void Debug(Levels level, string message)
-        {
-            var m = new Message(level, message);
-            System.Diagnostics.Debug.WriteLine(m.ToString());
-        }
-
-        #endregion
-
         #region Initialization and Termination
 
         /* ----------------------------------------------------------------- */

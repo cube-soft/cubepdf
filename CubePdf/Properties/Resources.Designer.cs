@@ -70,36 +70,6 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        internal static System.Drawing.Bitmap Background {
-            get {
-                object obj = ResourceManager.GetObject("Background", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        internal static System.Drawing.Bitmap CancelButton {
-            get {
-                object obj = ResourceManager.GetObject("CancelButton", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        internal static System.Drawing.Bitmap ConvertButton {
-            get {
-                object obj = ResourceManager.GetObject("ConvertButton", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   CubePDF エラー に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string ErrorTitle {
@@ -183,11 +153,65 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
+        ///   先頭に結合 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MergeHead {
+            get {
+                return ResourceManager.GetString("MergeHead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   末尾に結合 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string MergeTail {
+            get {
+                return ResourceManager.GetString("MergeTail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   何もしない に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string None {
+            get {
+                return ResourceManager.GetString("None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   開く に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Open {
+            get {
+                return ResourceManager.GetString("Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   フォルダを開く に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string OpenFolder {
+            get {
+                return ResourceManager.GetString("OpenFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   PDF ファイル (*.pdf)|*.pdf|PS ファイル (*.ps)|*.ps|EPS ファイル (*.eps)|*.eps|PNG ファイル (*.png)|*.png|JPEG ファイル (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP ファイル (*.bmp)|*.bmp|TIFF ファイル (*.tiff;*.tif)|*.tiff;*.tif に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string OutputPathFilter {
             get {
                 return ResourceManager.GetString("OutputPathFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   上書き に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Overwrite {
+            get {
+                return ResourceManager.GetString("Overwrite", resourceCulture);
             }
         }
         
@@ -210,22 +234,11 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
+        ///   リネーム に類似しているローカライズされた文字列を検索します。
         /// </summary>
-        internal static System.Drawing.Bitmap SettingButton {
+        internal static string Rename {
             get {
-                object obj = ResourceManager.GetObject("SettingButton", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        internal static System.Drawing.Bitmap SettingButtonDisable {
-            get {
-                object obj = ResourceManager.GetObject("SettingButtonDisable", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
+                return ResourceManager.GetString("Rename", resourceCulture);
             }
         }
         
@@ -246,6 +259,34 @@ namespace CubePdf.Properties {
         internal static string TooLongFilenam {
             get {
                 return ResourceManager.GetString("TooLongFilenam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Unknown に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string Unknown {
+            get {
+                return ResourceManager.GetString("Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   編集パスワードと閲覧パスワードを共用すると、各種操作の制限が正常に機能しない可能性があります。
+        ///閲覧パスワードに編集パスワードとは異なるものを設定するか、または、全ての操作を許可して下さい。 に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string UserPasswordRequired {
+            get {
+                return ResourceManager.GetString("UserPasswordRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   ユーザープログラム に類似しているローカライズされた文字列を検索します。
+        /// </summary>
+        internal static string UserProgram {
+            get {
+                return ResourceManager.GetString("UserProgram", resourceCulture);
             }
         }
         

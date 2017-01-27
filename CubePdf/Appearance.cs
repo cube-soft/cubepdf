@@ -18,9 +18,6 @@
 /// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ///
 /* ------------------------------------------------------------------------- */
-using System;
-using System.Text;
-
 namespace CubePdf
 {
     /* --------------------------------------------------------------------- */
@@ -79,13 +76,13 @@ namespace CubePdf
         {
             switch (id)
             {
-            case Parameter.ExistedFiles.Overwrite: return "上書き";
-            case Parameter.ExistedFiles.MergeHead: return "先頭に結合";
-            case Parameter.ExistedFiles.MergeTail: return "末尾に結合";
-            case Parameter.ExistedFiles.Rename: return "リネーム";
+            case Parameter.ExistedFiles.Overwrite: return Properties.Resources.Overwrite;
+            case Parameter.ExistedFiles.MergeHead: return Properties.Resources.MergeHead;
+            case Parameter.ExistedFiles.MergeTail: return Properties.Resources.MergeTail;
+            case Parameter.ExistedFiles.Rename: return Properties.Resources.Rename;
             default: break;
             }
-            return "Unknown";
+            return Properties.Resources.Unknown;
         }
 
         /* ----------------------------------------------------------------- */
@@ -101,13 +98,13 @@ namespace CubePdf
         {
             switch (id)
             {
-            case Parameter.PostProcesses.Open: return "開く";
-            case Parameter.PostProcesses.OpenFolder: return "フォルダを開く";
-            case Parameter.PostProcesses.None: return "何もしない";
-            case Parameter.PostProcesses.UserProgram: return "ユーザープログラム";
+            case Parameter.PostProcesses.Open: return Properties.Resources.Open;
+            case Parameter.PostProcesses.OpenFolder: return Properties.Resources.OpenFolder;
+            case Parameter.PostProcesses.None: return Properties.Resources.None;
+            case Parameter.PostProcesses.UserProgram: return Properties.Resources.UserProgram;
             default: break;
             }
-            return "Unknown";
+            return Properties.Resources.Unknown;
         }
 
         /* ----------------------------------------------------------------- */
@@ -122,28 +119,6 @@ namespace CubePdf
         public static string GetString(Parameter.Resolutions id)
         {
             return Parameter.ToValue(id).ToString();
-        }
-
-        /* ----------------------------------------------------------------- */
-        ///
-        /// GetString
-        ///
-        /// <summary>
-        /// DownSamplings の各値に対応する文字列を取得します。
-        /// </summary>
-        ///
-        /* ----------------------------------------------------------------- */
-        public static string GetString(Parameter.DownSamplings id)
-        {
-            switch (id)
-            {
-            case Parameter.DownSamplings.None: return "なし";
-            case Parameter.DownSamplings.Average: return "平均化";
-            case Parameter.DownSamplings.Bicubic: return "バイキュービック";
-            case Parameter.DownSamplings.Subsample: return "サブサンプル";
-            default: break;
-            }
-            return "Unknown";
         }
     }
 }

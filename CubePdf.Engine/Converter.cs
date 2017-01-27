@@ -20,6 +20,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Collections.Generic;
+using Cube.Log;
 using IoEx = System.IO;
 
 namespace CubePdf {
@@ -137,7 +138,7 @@ namespace CubePdf {
         {
             var gs = Configure(setting, setting.InputPath, setting.OutputPath);
             gs.Run();
-            AddMessage("CubePdf.Converter.RunConverter: success");
+            AddMessage("RunConverter: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -154,7 +155,7 @@ namespace CubePdf {
             var gs = Configure(setting, src, dest);
             gs.AddOption("FastWebView");
             gs.Run();
-            AddMessage("CubePdf.Converter.RunWebOptimize: success");
+            AddMessage("RunWebOptimize: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -189,7 +190,7 @@ namespace CubePdf {
 
             var tmp = IoEx.Path.Combine(Path.WorkingDirectory, IoEx.Path.GetRandomFileName());
             editor.Run(tmp);
-            AddMessage(string.Format("CubePdf.PageBinder.Save: {0}", tmp));
+            AddMessage(string.Format("Save: {0}", tmp));
 
             if (setting.WebOptimize)
             {
@@ -199,7 +200,7 @@ namespace CubePdf {
             }
 
             if (IoEx.File.Exists(tmp)) CubePdf.Misc.File.Copy(tmp, setting.OutputPath, true);
-            AddMessage("CubePdf.Converter.RunEditor: success");
+            AddMessage("RunEditor: success");
         }
 
         /* ----------------------------------------------------------------- */
@@ -221,7 +222,7 @@ namespace CubePdf {
             process.UserArguments = setting.UserArguments;
             process.EmergencyMode = setting.EmergencyMode;
             process.Run();
-            AddMessage("CubePdf.Converter.RunPostProcess: success");
+            AddMessage("RunPostProcess: success");
         }
 
         #endregion
@@ -550,10 +551,7 @@ namespace CubePdf {
         /// </summary>
         ///
         /* ----------------------------------------------------------------- */
-        private void AddMessage(string message)
-        {
-            _messages.Add(new Message(Message.Levels.Debug, message));
-        }
+        private void AddMessage(string message) => this.LogDebug(message);
 
         /* ----------------------------------------------------------------- */
         ///
@@ -572,7 +570,7 @@ namespace CubePdf {
         private void AddMessage(Exception error, bool debug_only = false)
         {
             if (!debug_only) _messages.Add(new Message(Message.Levels.Error, error));
-            _messages.Add(new Message(Message.Levels.Debug, error));
+            this.LogError(error.Message, error);
         }
 
         #endregion
