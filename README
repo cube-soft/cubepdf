@@ -1,29 +1,29 @@
--------------------------------------------------------------------------------
-  CubePDF
-  Copyright (c) 2010 CubeSoft, Inc. All rights reserved.
+# CubePDF
 
-  開発・配布：株式会社キューブ・ソフト
-  Mailto: support@cube-soft.jp
-  URL: http://www.cube-soft.jp/cubepdf/
--------------------------------------------------------------------------------
+Copyright (c) 2010 CubeSoft, Inc. All rights reserved.
 
-# What's this
+* License: GNU Affero General Public License version 3 (AGPLv3)
+* Mail: support@cube-soft.jp
+* Web: http://www.cube-soft.jp/cubepdf/
 
-CubePDFは、お使いの様々なアプリケーションから、いつでも必要な時に、
-すばやくPDF形式などの文書を書き出すことができる、とても便利なPDF作成ソフトです。
-印刷するのと同じ操作でサッとデータ書き出しが行えるので、操作に戸惑うこともありません。
-詳細な利用方法については、同梱した CubePDF_ユーザーズマニュアル.pdf を参照して下さい。
+## What's this
 
-# 動作環境
+CubePDF は、お使いの様々なアプリケーションから、いつでも必要な時に
+すばやくPDF形式などの文書を書き出すことができる、とても便利なソフトです。
+印刷と同じ操作でサッとデータの書き出しが行えるので、操作に戸惑うこともありません。
+詳細な利用方法については、同梱した CubePDF ユーザーズマニュアル.pdf を参照して下さい。
+
+## 動作環境
 
 対応 OS: Windows Vista / 7 / 8 / 8.1 / 10
 
 CubePDF を使用するためには Microsoft .NetFramework 3.5 以上がインストールされている必要があります。
 Microsoft .NetFramework は、以下の URL からダウンロードして下さい。
 http://www.microsoft.com/ja-jp/download/details.aspx?id=22
-また、Windows 8 / 8.1 / 10 に関しては、ストアアプリからの動作は暫定的な対応となっています。
 
-CubePDFは、以下のライブラリを利用しています。それぞれのライブラリについては、記載した URL から取得することができます。
+CubePDFは、以下のライブラリを利用しています。
+それぞれのライブラリについては、記載した URL から取得することができます。
+
 * GPL Ghostscript
   Copyright (c) Artifex Software, Inc. All rights reserved.
   URL: http://www.ghostscript.com/
@@ -33,8 +33,11 @@ CubePDFは、以下のライブラリを利用しています。それぞれの�
   URL: http://sourceforge.net/projects/itextsharp/
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
-# バージョン履歴
+## バージョン履歴
 
+* 2017/02/17 version 1.0.0RC10
+ - 特定の条件下で CubePDF メイン画面が表示されない不都合を修正
+ 
 * 2017/01/27 version 1.0.0RC9
  - Windows ストアアプリから変換できない不都合を修正
  - セキュリティ画面において、何らかの操作を制限している状況で閲覧専用のパスワードを省略した場合、エラーメッセージを表示するように修正

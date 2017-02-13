@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("UpdateChecker")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("株式会社キューブ・ソフト")]
+[assembly: AssemblyCompany("CubeSoft")]
 [assembly: AssemblyProduct("UpdateChecker")]
-[assembly: AssemblyCopyright("Copyright ©  2013 CubeSoft, Inc.")]
+[assembly: AssemblyCopyright("Copyright © 2013 CubeSoft, Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
