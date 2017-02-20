@@ -15,7 +15,7 @@ CubePDF は、お使いの様々なアプリケーションから、いつでも
 
 ## 動作環境
 
-対応 OS: Windows Vista / 7 / 8 / 8.1 / 10
+対応 OS: Windows 7 以降
 
 CubePDF を使用するためには Microsoft .NetFramework 3.5 以上がインストールされている必要があります。
 Microsoft .NetFramework は、以下の URL からダウンロードして下さい。
@@ -33,9 +33,21 @@ CubePDFは、以下のライブラリを利用しています。
   URL: http://sourceforge.net/projects/itextsharp/
   GNU Affero General Public License ( http://www.gnu.org/licenses/agpl.html )
 
+## 問題が発生した場合
+
+CubePDF は、以下のファイルに実行ログを出力しています。
+問題が発生した時は、以下のファイルを添付して
+サポート ( support@cube-soft.jp ) までご連絡お願いいたします。
+
+* C:\Program Files\CubePDF\install.log (*1)
+* C:\ProgramData\CubeSoft\CubePdf\Log\CubePdf.log
+* C:\ProgramData\CubeSoft\CubePdf\Log\CubeProxy.log
+
+(*1) インストール時に指定したフォルダの中にあります。
+
 ## バージョン履歴
 
-* 2017/02/17 version 1.0.0RC10
+* 2017/02/20 version 1.0.0RC10
  - 特定の条件下で CubePDF メイン画面が表示されない不都合を修正
  
 * 2017/01/27 version 1.0.0RC9
