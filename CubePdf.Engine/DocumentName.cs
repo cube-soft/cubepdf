@@ -62,25 +62,33 @@ namespace CubePdf
         {
             var default_value = Properties.Resources.ProductName;
 
-            if (string.IsNullOrEmpty(src)) return default_value;
-            var docname = ModifyFilename(src);
-            if (string.IsNullOrEmpty(docname)) return default_value;
+            try
+            {
+                if (string.IsNullOrEmpty(src)) return default_value;
+                var docname = ModifyFilename(src);
+                if (string.IsNullOrEmpty(docname)) return default_value;
 
-            var search = " - ";
-            var pos = docname.LastIndexOf(search);
-            if (pos == -1) return docname;
-            else if (IoEx.Path.HasExtension(docname.Substring(0, pos)))
-            {
-                return docname.Substring(0, pos);
+                var search = " - ";
+                var pos = docname.LastIndexOf(search);
+                if (pos == -1) return docname;
+                else if (IoEx.Path.HasExtension(docname.Substring(0, pos)))
+                {
+                    return docname.Substring(0, pos);
+                }
+                else if (IoEx.Path.HasExtension(docname.Substring(pos, docname.Length - pos)))
+                {
+                    pos = docname.IndexOf(search);
+                    System.Diagnostics.Debug.Assert(pos != -1);
+                    pos += search.Length;
+                    return docname.Substring(pos, docname.Length - pos);
+                }
+                else return docname;
             }
-            else if (IoEx.Path.HasExtension(docname.Substring(pos, docname.Length - pos)))
+            catch (Exception err)
             {
-                pos = docname.IndexOf(search);
-                System.Diagnostics.Debug.Assert(pos != -1);
-                pos += search.Length;
-                return docname.Substring(pos, docname.Length - pos);
+                Cube.Log.Operations.Warn(typeof(DocumentName), err.Message, err);
+                return default_value;
             }
-            else return docname;
         }
 
         #endregion
