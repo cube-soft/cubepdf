@@ -20,7 +20,7 @@
 /* ------------------------------------------------------------------------- */
 using System;
 using System.Diagnostics;
-using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 using IoEx = System.IO;
 
@@ -77,8 +77,9 @@ namespace CubePdf
             {
                 if (cmdline.Options.ContainsKey("Language"))
                 {
-                    System.Threading.Thread.CurrentThread.CurrentUICulture =
+                    Thread.CurrentThread.CurrentUICulture =
                         new System.Globalization.CultureInfo(cmdline.Options["Language"]);
+                    Cube.Log.Operations.Debug(typeof(Program), $"SetCulture:{Thread.CurrentThread.CurrentUICulture}");
                 }
             }
             catch (Exception err) { Cube.Log.Operations.Warn(typeof(Program), err.Message, err); }
@@ -166,6 +167,7 @@ namespace CubePdf
         {
             Cube.Log.Operations.Configure();
             Cube.Log.Operations.Info(typeof(Program), System.Reflection.Assembly.GetEntryAssembly());
+            Cube.Log.Operations.Info(typeof(Program), Thread.CurrentThread.CurrentUICulture.ToString());
 
             var message = new System.Text.StringBuilder();
             message.AppendLine("Arguments");
