@@ -2038,7 +2038,7 @@
     <value>SettingButton</value>
   </data>
   <data name="&gt;&gt;SettingButton.Type" xml:space="preserve">
-    <value>Cube.Forms.Button, Cube.Forms, Version=1.2.1.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>Cube.Forms.Button, Cube.Forms, Version=1.4.1.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;SettingButton.Parent" xml:space="preserve">
     <value>ButtonsPanel</value>
@@ -2089,7 +2089,7 @@
     <value>ConvertButton</value>
   </data>
   <data name="&gt;&gt;ConvertButton.Type" xml:space="preserve">
-    <value>Cube.Forms.Button, Cube.Forms, Version=1.2.1.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>Cube.Forms.Button, Cube.Forms, Version=1.4.1.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;ConvertButton.Parent" xml:space="preserve">
     <value>ButtonsPanel</value>
@@ -2116,7 +2116,7 @@
     <value>ExitButton</value>
   </data>
   <data name="&gt;&gt;ExitButton.Type" xml:space="preserve">
-    <value>Cube.Forms.Button, Cube.Forms, Version=1.2.1.0, Culture=neutral, PublicKeyToken=null</value>
+    <value>Cube.Forms.Button, Cube.Forms, Version=1.4.1.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;ExitButton.Parent" xml:space="preserve">
     <value>ButtonsPanel</value>
