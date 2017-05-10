@@ -902,4 +902,7 @@
         AQAAgAEAAIABAACAAQAAwAEAAOADAAD4DwAA/j8AAA==
 </value>
   </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>About CubePDF</value>
+  </data>
 </root>

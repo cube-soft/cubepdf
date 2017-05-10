@@ -45,12 +45,13 @@
             // 
             // MainSplitContainer
             // 
-            this.MainSplitContainer.BackColor = System.Drawing.SystemColors.Control;
             resources.ApplyResources(this.MainSplitContainer, "MainSplitContainer");
+            this.MainSplitContainer.BackColor = System.Drawing.SystemColors.Control;
             this.MainSplitContainer.Name = "MainSplitContainer";
             // 
             // MainSplitContainer.Panel1
             // 
+            resources.ApplyResources(this.MainSplitContainer.Panel1, "MainSplitContainer.Panel1");
             this.MainSplitContainer.Panel1.BackColor = System.Drawing.Color.White;
             this.MainSplitContainer.Panel1.Controls.Add(this.DotNetVersionLabel);
             this.MainSplitContainer.Panel1.Controls.Add(this.OSVersionLabel);
@@ -61,6 +62,7 @@
             // 
             // MainSplitContainer.Panel2
             // 
+            resources.ApplyResources(this.MainSplitContainer.Panel2, "MainSplitContainer.Panel2");
             this.MainSplitContainer.Panel2.Controls.Add(this.CloseButton);
             // 
             // DotNetVersionLabel
@@ -75,14 +77,14 @@
             // 
             // CopyrightLabel
             // 
-            this.CopyrightLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             resources.ApplyResources(this.CopyrightLabel, "CopyrightLabel");
+            this.CopyrightLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.CopyrightLabel.Name = "CopyrightLabel";
             // 
             // VersionLabel
             // 
-            this.VersionLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             resources.ApplyResources(this.VersionLabel, "VersionLabel");
+            this.VersionLabel.ForeColor = System.Drawing.SystemColors.ControlText;
             this.VersionLabel.Name = "VersionLabel";
             // 
             // CubePDFLinkLabel
@@ -94,8 +96,8 @@
             // 
             // LogoPictureBox
             // 
-            this.LogoPictureBox.Image = global::CubePdf.Properties.Resources.Logo;
             resources.ApplyResources(this.LogoPictureBox, "LogoPictureBox");
+            this.LogoPictureBox.Image = global::CubePdf.Properties.Resources.Logo;
             this.LogoPictureBox.Name = "LogoPictureBox";
             this.LogoPictureBox.TabStop = false;
             // 
@@ -107,8 +109,8 @@
             // 
             // VersionDialog
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             resources.ApplyResources(this, "$this");
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.Controls.Add(this.MainSplitContainer);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
