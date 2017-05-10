@@ -28,10 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DummyForm));
-            this.UpdateNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.UpdateContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.UpdateNotifyIcon = new System.Windows.Forms.NotifyIcon();
+            this.UpdateContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
             this.ConfirmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UpdateContextMenuStrip.SuspendLayout();
@@ -55,19 +54,19 @@
             this.ConfirmToolStripMenuItem,
             this.ExitToolStripMenuItem});
             this.UpdateContextMenuStrip.Name = "UpdateContextMenuStrip";
-            this.UpdateContextMenuStrip.Size = new System.Drawing.Size(159, 48);
+            this.UpdateContextMenuStrip.Size = new System.Drawing.Size(160, 48);
             // 
             // ConfirmToolStripMenuItem
             // 
             this.ConfirmToolStripMenuItem.Name = "ConfirmToolStripMenuItem";
-            this.ConfirmToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.ConfirmToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.ConfirmToolStripMenuItem.Text = "アップデートの確認";
             this.ConfirmToolStripMenuItem.Click += new System.EventHandler(this.Run);
             // 
             // ExitToolStripMenuItem
             // 
             this.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem";
-            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.ExitToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.ExitToolStripMenuItem.Text = "終了";
             this.ExitToolStripMenuItem.Click += new System.EventHandler(this.Exit);
             // 

@@ -139,9 +139,6 @@
   <data name="PasswordUnmatched" xml:space="preserve">
     <value>Invalid password.</value>
   </data>
-  <data name="Title" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Title.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="UserProgramFilter" xml:space="preserve">
     <value>Executable files (*.exe, *.bat)|*.exe;*.EXE;*.bat;*.BAT|All files (*.*)|*.*</value>
   </data>

@@ -34,14 +34,12 @@
             this.OSVersionLabel = new System.Windows.Forms.Label();
             this.CopyrightLabel = new System.Windows.Forms.Label();
             this.VersionLabel = new System.Windows.Forms.Label();
-            this.TitlePictureBox = new System.Windows.Forms.PictureBox();
             this.CubePDFLinkLabel = new System.Windows.Forms.LinkLabel();
             this.LogoPictureBox = new System.Windows.Forms.PictureBox();
             this.CloseButton = new System.Windows.Forms.Button();
             this.MainSplitContainer.Panel1.SuspendLayout();
             this.MainSplitContainer.Panel2.SuspendLayout();
             this.MainSplitContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TitlePictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LogoPictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -58,7 +56,6 @@
             this.MainSplitContainer.Panel1.Controls.Add(this.OSVersionLabel);
             this.MainSplitContainer.Panel1.Controls.Add(this.CopyrightLabel);
             this.MainSplitContainer.Panel1.Controls.Add(this.VersionLabel);
-            this.MainSplitContainer.Panel1.Controls.Add(this.TitlePictureBox);
             this.MainSplitContainer.Panel1.Controls.Add(this.CubePDFLinkLabel);
             this.MainSplitContainer.Panel1.Controls.Add(this.LogoPictureBox);
             // 
@@ -88,13 +85,6 @@
             resources.ApplyResources(this.VersionLabel, "VersionLabel");
             this.VersionLabel.Name = "VersionLabel";
             // 
-            // TitlePictureBox
-            // 
-            this.TitlePictureBox.Image = global::CubePdf.Properties.Resources.Title;
-            resources.ApplyResources(this.TitlePictureBox, "TitlePictureBox");
-            this.TitlePictureBox.Name = "TitlePictureBox";
-            this.TitlePictureBox.TabStop = false;
-            // 
             // CubePDFLinkLabel
             // 
             resources.ApplyResources(this.CubePDFLinkLabel, "CubePDFLinkLabel");
@@ -121,17 +111,16 @@
             resources.ApplyResources(this, "$this");
             this.Controls.Add(this.MainSplitContainer);
             this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "VersionDialog";
-            this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Shown += new System.EventHandler(this.VersionDialog_Shown);
             this.MainSplitContainer.Panel1.ResumeLayout(false);
             this.MainSplitContainer.Panel2.ResumeLayout(false);
             this.MainSplitContainer.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.TitlePictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LogoPictureBox)).EndInit();
             this.ResumeLayout(false);
 
@@ -145,7 +134,6 @@
         private System.Windows.Forms.Label CopyrightLabel;
         private System.Windows.Forms.PictureBox LogoPictureBox;
         private System.Windows.Forms.Button CloseButton;
-        private System.Windows.Forms.PictureBox TitlePictureBox;
         private System.Windows.Forms.Label OSVersionLabel;
         private System.Windows.Forms.Label DotNetVersionLabel;
 

@@ -116,7 +116,7 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   PS ファイル (*.ps)|*.ps|EPS ファイル (*.eps)|*.eps|PDF ファイル (*.pdf)|*.pdf に類似しているローカライズされた文字列を検索します。
+        ///   PS ファイル (*.ps)|*.ps;*.PS|EPS ファイル (*.eps)|*.eps;*.EPS|PDF ファイル (*.pdf)|*.pdf;*.PDF|すべてのファイル (*.*)|*.* に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string InputPathFilter {
             get {
@@ -198,7 +198,7 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   PDF ファイル (*.pdf)|*.pdf|PS ファイル (*.ps)|*.ps|EPS ファイル (*.eps)|*.eps|PNG ファイル (*.png)|*.png|JPEG ファイル (*.jpg;*.jpeg)|*.jpg;*.jpeg|BMP ファイル (*.bmp)|*.bmp|TIFF ファイル (*.tiff;*.tif)|*.tiff;*.tif に類似しているローカライズされた文字列を検索します。
+        ///   PDF ファイル (*.pdf)|*.pdf;*.PDF|PS ファイル (*.ps)|*.ps;*.PS|EPS ファイル (*.eps)|*.eps;*.EPS|PNG ファイル (*.png)|*.png;*.PNG|JPEG ファイル (*.jpg;*.jpeg)|*.jpg;*.JPG;*.jpeg;*.JPEG|BMP ファイル (*.bmp)|*.bmp;*.BMP|TIFF ファイル (*.tiff;*.tif)|*.tiff;*.TIFF;*.tif;*.TIF に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string OutputPathFilter {
             get {
@@ -243,16 +243,6 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   型 System.Drawing.Bitmap のローカライズされたリソースを検索します。
-        /// </summary>
-        internal static System.Drawing.Bitmap Title {
-            get {
-                object obj = ResourceManager.GetObject("Title", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   指定されたパスが長すぎます。
         ///パス全体は260文字未満、ディレクトリ名は248文字未満で指定して下さい。 に類似しているローカライズされた文字列を検索します。
         /// </summary>
@@ -291,7 +281,7 @@ namespace CubePdf.Properties {
         }
         
         /// <summary>
-        ///   実行可能プログラム (*.exe;*.bat)|*.exe;*.bat|すべてのファイル(*.*)|*.* に類似しているローカライズされた文字列を検索します。
+        ///   実行可能プログラム (*.exe, *.bat)|*.exe;*.EXE;*.bat;*.BAT|すべてのファイル (*.*)|*.* に類似しているローカライズされた文字列を検索します。
         /// </summary>
         internal static string UserProgramFilter {
             get {
