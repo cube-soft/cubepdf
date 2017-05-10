@@ -47,6 +47,7 @@ namespace CubePdf
             SetupLog(args);
 
             var cmdline = new CubePdf.Settings.CommandLine(args);
+            SetupUICulture(cmdline);
             SetupUserSetting(setting, cmdline);
             CheckUpdate(setting);
 
@@ -57,8 +58,31 @@ namespace CubePdf
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new MainForm(setting));
             }
+        }
 
-            Trace.Close();
+        /* ----------------------------------------------------------------- */
+        ///
+        /// SetupUICulture
+        ///
+        /// <summary>
+        /// GUI の言語設定を初期化します。
+        /// </summary>
+        ///
+        /* ----------------------------------------------------------------- */
+        private static void SetupUICulture(CubePdf.Settings.CommandLine cmdline)
+        {
+            try
+            {
+                var src = Thread.CurrentThread.CurrentUICulture.Name;
+                var cvt = cmdline.Options.ContainsKey("Language") ? cmdline.Options["Language"] :
+                          src != "ja" && src != "ja-JP" ? "en" :
+                          src;
+
+                if (src == cvt) return;
+                Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(cvt);
+                Cube.Log.Operations.Debug(typeof(Program), $"Culture:{src} -> {cvt}");
+            }
+            catch (Exception err) { Cube.Log.Operations.Warn(typeof(Program), err.ToString()); }
         }
 
         /* ----------------------------------------------------------------- */
@@ -73,17 +97,6 @@ namespace CubePdf
         /* ----------------------------------------------------------------- */
         private static void SetupUserSetting(UserSetting setting, CubePdf.Settings.CommandLine cmdline)
         {
-            try
-            {
-                if (cmdline.Options.ContainsKey("Language"))
-                {
-                    Thread.CurrentThread.CurrentUICulture =
-                        new System.Globalization.CultureInfo(cmdline.Options["Language"]);
-                    Cube.Log.Operations.Debug(typeof(Program), $"SetCulture:{Thread.CurrentThread.CurrentUICulture}");
-                }
-            }
-            catch (Exception err) { Cube.Log.Operations.Warn(typeof(Program), err.Message, err); }
-
             var docname = cmdline.Options.ContainsKey("DocumentName") ? cmdline.Options["DocumentName"] : "";
             bool is_config = false;
             try
@@ -99,7 +112,7 @@ namespace CubePdf
             {
                 // docname に Windows のファイル名に使用できない記号が含まれる
                 // 場合に例外が送出されるので、その対策。
-                Cube.Log.Operations.Warn(typeof(Program), err.Message, err);
+                Cube.Log.Operations.Warn(typeof(Program), err.ToString());
                 is_config = false;
             }
 
@@ -196,7 +209,7 @@ namespace CubePdf
                 var path = IoEx.Path.Combine(setting.InstallPath, "cubepdf-checker.exe");
                 if (IoEx.File.Exists(path)) Process.Start(path);
             }
-            catch (Exception err) { Cube.Log.Operations.Warn(typeof(Program), err.Message, err); }
+            catch (Exception err) { Cube.Log.Operations.Warn(typeof(Program), err.ToString()); }
         }
 
         /* ----------------------------------------------------------------- */

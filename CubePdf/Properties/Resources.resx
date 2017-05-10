@@ -118,47 +118,47 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="About" xml:space="preserve">
-    <value>About CubePDF</value>
+    <value>CubePDF について</value>
   </data>
   <data name="FileExists" xml:space="preserve">
-    <value>{0} already exists. {1}?</value>
+    <value>{0}は既に存在します。{1}しますか？</value>
   </data>
   <data name="FileNotSpecified" xml:space="preserve">
-    <value>File not specified.</value>
+    <value>ファイルが指定されていません。</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="Header" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Header.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="InputPathFilter" xml:space="preserve">
-    <value>PS files (*.ps)|*.ps;*.PS|EPS files (*.eps)|*.eps;*.EPS|PDF files (*.pdf)|*.pdf;*.PDF|All files (*.*)|*.*</value>
+    <value>PS ファイル (*.ps)|*.ps;*.PS|EPS ファイル (*.eps)|*.eps;*.EPS|PDF ファイル (*.pdf)|*.pdf;*.PDF|すべてのファイル (*.*)|*.*</value>
   </data>
   <data name="Logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Logo.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="PasswordUnmatched" xml:space="preserve">
-    <value>Invalid password.</value>
+    <value>入力されたパスワードが一致しません。</value>
   </data>
   <data name="Title" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Title.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="UserProgramFilter" xml:space="preserve">
-    <value>Executable files (*.exe, *.bat)|*.exe;*.EXE;*.bat;*.BAT|All files (*.*)|*.*</value>
+    <value>実行可能プログラム (*.exe, *.bat)|*.exe;*.EXE;*.bat;*.BAT|すべてのファイル (*.*)|*.*</value>
   </data>
   <data name="InvalidFilename" xml:space="preserve">
     <value>/ * : ? " &lt; &gt; |</value>
   </data>
   <data name="InvalidFilenameTitle" xml:space="preserve">
-    <value>A filename cannot contain any of the following characters.</value>
+    <value>ファイル名には次の文字は使えません。</value>
   </data>
   <data name="ErrorTitle" xml:space="preserve">
-    <value>CubePDF Error</value>
+    <value>CubePDF エラー</value>
   </data>
   <data name="WarningTitle" xml:space="preserve">
-    <value>CubePDF Confirm</value>
+    <value>CubePDF 確認</value>
   </data>
   <data name="OutputPathFilter" xml:space="preserve">
-    <value>PDF files (*.pdf)|*.pdf;*.PDF|PS files (*.ps)|*.ps;*.PS|EPS files (*.eps)|*.eps;*.EPS|PNG files (*.png)|*.png;*.PNG|JPEG files (*.jpg, *.jpeg)|*.jpg;*.JPG;*.jpeg;*.JPEG|BMP files (*.bmp)|*.bmp;*.BMP|TIFF files (*.tiff, *.tif)|*.tiff;*.TIFF;*.tif;*.TIF|All files (*.*)|*.*</value>
+    <value>PDF ファイル (*.pdf)|*.pdf;*.PDF|PS ファイル (*.ps)|*.ps;*.PS|EPS ファイル (*.eps)|*.eps;*.EPS|PNG ファイル (*.png)|*.png;*.PNG|JPEG ファイル (*.jpg;*.jpeg)|*.jpg;*.JPG;*.jpeg;*.JPEG|BMP ファイル (*.bmp)|*.bmp;*.BMP|TIFF ファイル (*.tiff;*.tif)|*.tiff;*.TIFF;*.tif;*.TIF</value>
   </data>
   <data name="ProductName" xml:space="preserve">
     <value>CubePDF</value>
@@ -167,38 +167,38 @@
     <value>CubePDF</value>
   </data>
   <data name="TooLongFilenam" xml:space="preserve">
-    <value>The filename(s) would be too long.
-You can shorten the filename and try again, or try a location that has a shorten path.</value>
+    <value>指定されたパスが長すぎます。
+パス全体は260文字未満、ディレクトリ名は248文字未満で指定して下さい。</value>
   </data>
   <data name="UserPasswordRequired" xml:space="preserve">
-    <value>Permissions would not work if you share the user password with the owner password.
-Set the unique user password, or allow all permissions.</value>
+    <value>編集パスワードと閲覧パスワードを共用すると、各種操作の制限が正常に機能しない可能性があります。
+閲覧パスワードに編集パスワードとは異なるものを設定するか、または、全ての操作を許可して下さい。</value>
   </data>
   <data name="MergeHead" xml:space="preserve">
-    <value>Merge head</value>
+    <value>先頭に結合</value>
   </data>
   <data name="MergeTail" xml:space="preserve">
-    <value>Merge tail</value>
+    <value>末尾に結合</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>None</value>
+    <value>何もしない</value>
   </data>
   <data name="Open" xml:space="preserve">
-    <value>Open</value>
+    <value>開く</value>
   </data>
   <data name="OpenFolder" xml:space="preserve">
-    <value>Open folder</value>
+    <value>フォルダを開く</value>
   </data>
   <data name="Overwrite" xml:space="preserve">
-    <value>Overwrite</value>
+    <value>上書き</value>
   </data>
   <data name="Rename" xml:space="preserve">
-    <value>Rename</value>
+    <value>リネーム</value>
   </data>
   <data name="Unknown" xml:space="preserve">
     <value>Unknown</value>
   </data>
   <data name="UserProgram" xml:space="preserve">
-    <value>User program</value>
+    <value>ユーザープログラム</value>
   </data>
 </root>

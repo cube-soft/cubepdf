@@ -117,179 +117,143 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="&gt;&gt;OSVersionLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="$this.Text" xml:space="preserve">
-    <value>About CubePDF</value>
-  </data>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>344, 252</value>
-  </data>
-  <data name="&gt;&gt;CopyrightLabel.Parent" xml:space="preserve">
-    <value>MainSplitContainer.Panel1</value>
-  </data>
-  <data name="CopyrightLabel.Text" xml:space="preserve">
-    <value>Copyright (c) 2010 CubeSoft, Inc.</value>
-  </data>
-  <data name="&gt;&gt;OSVersionLabel.Name" xml:space="preserve">
-    <value>OSVersionLabel</value>
-  </data>
-  <data name="CloseButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 25</value>
-  </data>
-  <data name="CubePDFLinkLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="MainSplitContainer.SplitterWidth" type="System.Int32, mscorlib">
-    <value>2</value>
-  </data>
-  <data name="&gt;&gt;TitlePictureBox.Name" xml:space="preserve">
-    <value>TitlePictureBox</value>
-  </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="MainSplitContainer.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
-    <value>Horizontal</value>
-  </data>
-  <data name="OSVersionLabel.Text" xml:space="preserve">
-    <value>Microsoft Windows NT 6.1.7601 Service Pack 1</value>
-  </data>
-  <data name="DotNetVersionLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 20</value>
-  </data>
-  <data name="CloseButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>125, 13</value>
-  </data>
-  <data name="DotNetVersionLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="&gt;&gt;LogoPictureBox.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="&gt;&gt;MainSplitContainer.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="VersionLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 20</value>
-  </data>
-  <data name="&gt;&gt;MainSplitContainer.Panel2.Name" xml:space="preserve">
-    <value>MainSplitContainer.Panel2</value>
-  </data>
-  <data name="&gt;&gt;DotNetVersionLabel.Name" xml:space="preserve">
-    <value>DotNetVersionLabel</value>
-  </data>
-  <data name="&gt;&gt;CopyrightLabel.Name" xml:space="preserve">
-    <value>CopyrightLabel</value>
-  </data>
-  <data name="&gt;&gt;VersionLabel.Parent" xml:space="preserve">
-    <value>MainSplitContainer.Panel1</value>
-  </data>
-  <data name="VersionLabel.Text" xml:space="preserve">
-    <value>Version 1.0.0 (x86)</value>
-  </data>
-  <data name="&gt;&gt;CubePDFLinkLabel.Name" xml:space="preserve">
-    <value>CubePDFLinkLabel</value>
-  </data>
-  <data name="CubePDFLinkLabel.Text" xml:space="preserve">
-    <value>http://www.cube-soft.jp/cubepdf/</value>
-  </data>
-  <data name="CubePDFLinkLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 160</value>
-  </data>
-  <data name="&gt;&gt;MainSplitContainer.Name" xml:space="preserve">
-    <value>MainSplitContainer</value>
-  </data>
-  <data name="CloseButton.Text" xml:space="preserve">
-    <value>OK</value>
-  </data>
-  <data name="&gt;&gt;CopyrightLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="OSVersionLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="&gt;&gt;VersionLabel.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="&gt;&gt;MainSplitContainer.Panel1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;MainSplitContainer.Panel2.Parent" xml:space="preserve">
-    <value>MainSplitContainer</value>
-  </data>
-  <data name="LogoPictureBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>32, 42</value>
-  </data>
-  <data name="&gt;&gt;MainSplitContainer.Panel1.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
   <data name="MainSplitContainer.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
     <value>Fill</value>
   </data>
-  <data name="&gt;&gt;MainSplitContainer.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;VersionLabel.Name" xml:space="preserve">
-    <value>VersionLabel</value>
-  </data>
-  <data name="MainSplitContainer.Size" type="System.Drawing.Size, System.Drawing">
-    <value>344, 252</value>
-  </data>
-  <data name="OSVersionLabel.TabIndex" type="System.Int32, mscorlib">
-    <value>100</value>
-  </data>
-  <data name="MainSplitContainer.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
-    <value>CenterScreen</value>
-  </data>
-  <data name="&gt;&gt;OSVersionLabel.Parent" xml:space="preserve">
-    <value>MainSplitContainer.Panel1</value>
-  </data>
+  <assembly alias="mscorlib" name="mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="MainSplitContainer.IsSplitterFixed" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
-  <data name="CopyrightLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 140</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="MainSplitContainer.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
   </data>
-  <data name="&gt;&gt;DotNetVersionLabel.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="DotNetVersionLabel.TabIndex" type="System.Int32, mscorlib">
-    <value>100</value>
-  </data>
-  <data name="&gt;&gt;$this.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="OSVersionLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 92</value>
+  <data name="MainSplitContainer.Orientation" type="System.Windows.Forms.Orientation, System.Windows.Forms">
+    <value>Horizontal</value>
   </data>
   <data name="DotNetVersionLabel.Location" type="System.Drawing.Point, System.Drawing">
     <value>20, 112</value>
   </data>
+  <data name="DotNetVersionLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 20</value>
+  </data>
+  <data name="DotNetVersionLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>100</value>
+  </data>
   <data name="DotNetVersionLabel.Text" xml:space="preserve">
     <value>.NET Framework 4.0.30319.18408</value>
   </data>
-  <data name="&gt;&gt;TitlePictureBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="DotNetVersionLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;DotNetVersionLabel.Name" xml:space="preserve">
+    <value>DotNetVersionLabel</value>
+  </data>
+  <data name="&gt;&gt;DotNetVersionLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;DotNetVersionLabel.Parent" xml:space="preserve">
+    <value>MainSplitContainer.Panel1</value>
+  </data>
+  <data name="&gt;&gt;DotNetVersionLabel.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="OSVersionLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 92</value>
+  </data>
+  <data name="OSVersionLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 20</value>
+  </data>
+  <data name="OSVersionLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>100</value>
+  </data>
+  <data name="OSVersionLabel.Text" xml:space="preserve">
+    <value>Microsoft Windows NT 6.1.7601 Service Pack 1</value>
+  </data>
+  <data name="OSVersionLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;OSVersionLabel.Name" xml:space="preserve">
+    <value>OSVersionLabel</value>
+  </data>
+  <data name="&gt;&gt;OSVersionLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;OSVersionLabel.Parent" xml:space="preserve">
+    <value>MainSplitContainer.Panel1</value>
+  </data>
+  <data name="&gt;&gt;OSVersionLabel.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="CopyrightLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 140</value>
+  </data>
+  <data name="CopyrightLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 20</value>
+  </data>
+  <data name="CopyrightLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>100</value>
+  </data>
+  <data name="CopyrightLabel.Text" xml:space="preserve">
+    <value>Copyright (c) 2010 CubeSoft, Inc.</value>
   </data>
   <data name="CopyrightLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleCenter</value>
   </data>
+  <data name="&gt;&gt;CopyrightLabel.Name" xml:space="preserve">
+    <value>CopyrightLabel</value>
+  </data>
+  <data name="&gt;&gt;CopyrightLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CopyrightLabel.Parent" xml:space="preserve">
+    <value>MainSplitContainer.Panel1</value>
+  </data>
   <data name="&gt;&gt;CopyrightLabel.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
-  <data name="MainSplitContainer.SplitterDistance" type="System.Int32, mscorlib">
-    <value>200</value>
+  <data name="VersionLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 72</value>
   </data>
-  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
-    <value>Meiryo UI, 12px</value>
+  <data name="VersionLabel.Size" type="System.Drawing.Size, System.Drawing">
+    <value>300, 20</value>
+  </data>
+  <data name="VersionLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>100</value>
+  </data>
+  <data name="VersionLabel.Text" xml:space="preserve">
+    <value>Version 1.0.0 (x86)</value>
+  </data>
+  <data name="VersionLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;VersionLabel.Name" xml:space="preserve">
+    <value>VersionLabel</value>
+  </data>
+  <data name="&gt;&gt;VersionLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;VersionLabel.Parent" xml:space="preserve">
+    <value>MainSplitContainer.Panel1</value>
+  </data>
+  <data name="&gt;&gt;VersionLabel.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="TitlePictureBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>147, 12</value>
   </data>
   <data name="TitlePictureBox.Size" type="System.Drawing.Size, System.Drawing">
     <value>98, 48</value>
+  </data>
+  <data name="TitlePictureBox.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="&gt;&gt;TitlePictureBox.Name" xml:space="preserve">
+    <value>TitlePictureBox</value>
+  </data>
+  <data name="&gt;&gt;TitlePictureBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;TitlePictureBox.Parent" xml:space="preserve">
     <value>MainSplitContainer.Panel1</value>
@@ -297,29 +261,134 @@
   <data name="&gt;&gt;TitlePictureBox.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="&gt;&gt;CloseButton.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="CubePDFLinkLabel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>20, 160</value>
   </data>
-  <data name="&gt;&gt;CloseButton.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="CopyrightLabel.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="CubePDFLinkLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>300, 20</value>
+  </data>
+  <data name="CubePDFLinkLabel.TabIndex" type="System.Int32, mscorlib">
+    <value>2</value>
+  </data>
+  <data name="CubePDFLinkLabel.Text" xml:space="preserve">
+    <value>http://www.cube-soft.jp/cubepdf/</value>
+  </data>
+  <data name="CubePDFLinkLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
+    <value>MiddleCenter</value>
+  </data>
+  <data name="&gt;&gt;CubePDFLinkLabel.Name" xml:space="preserve">
+    <value>CubePDFLinkLabel</value>
+  </data>
+  <data name="&gt;&gt;CubePDFLinkLabel.Type" xml:space="preserve">
+    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CubePDFLinkLabel.Parent" xml:space="preserve">
+    <value>MainSplitContainer.Panel1</value>
+  </data>
+  <data name="&gt;&gt;CubePDFLinkLabel.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="LogoPictureBox.Location" type="System.Drawing.Point, System.Drawing">
+    <value>105, 12</value>
+  </data>
+  <data name="LogoPictureBox.Size" type="System.Drawing.Size, System.Drawing">
+    <value>32, 42</value>
+  </data>
+  <data name="LogoPictureBox.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="&gt;&gt;LogoPictureBox.Name" xml:space="preserve">
+    <value>LogoPictureBox</value>
+  </data>
+  <data name="&gt;&gt;LogoPictureBox.Type" xml:space="preserve">
+    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;LogoPictureBox.Parent" xml:space="preserve">
     <value>MainSplitContainer.Panel1</value>
   </data>
-  <data name="TitlePictureBox.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
+  <data name="&gt;&gt;LogoPictureBox.ZOrder" xml:space="preserve">
+    <value>6</value>
   </data>
-  <data name="&gt;&gt;VersionLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;MainSplitContainer.Panel1.Name" xml:space="preserve">
+    <value>MainSplitContainer.Panel1</value>
   </data>
-  <data name="TitlePictureBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>147, 12</value>
+  <data name="&gt;&gt;MainSplitContainer.Panel1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="CubePDFLinkLabel.TabIndex" type="System.Int32, mscorlib">
+  <data name="&gt;&gt;MainSplitContainer.Panel1.Parent" xml:space="preserve">
+    <value>MainSplitContainer</value>
+  </data>
+  <data name="&gt;&gt;MainSplitContainer.Panel1.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="CloseButton.Location" type="System.Drawing.Point, System.Drawing">
+    <value>125, 13</value>
+  </data>
+  <data name="CloseButton.Size" type="System.Drawing.Size, System.Drawing">
+    <value>100, 25</value>
+  </data>
+  <data name="CloseButton.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="CloseButton.Text" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="&gt;&gt;CloseButton.Name" xml:space="preserve">
+    <value>CloseButton</value>
+  </data>
+  <data name="&gt;&gt;CloseButton.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;CloseButton.Parent" xml:space="preserve">
+    <value>MainSplitContainer.Panel2</value>
+  </data>
+  <data name="&gt;&gt;CloseButton.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;MainSplitContainer.Panel2.Name" xml:space="preserve">
+    <value>MainSplitContainer.Panel2</value>
+  </data>
+  <data name="&gt;&gt;MainSplitContainer.Panel2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MainSplitContainer.Panel2.Parent" xml:space="preserve">
+    <value>MainSplitContainer</value>
+  </data>
+  <data name="&gt;&gt;MainSplitContainer.Panel2.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="MainSplitContainer.Size" type="System.Drawing.Size, System.Drawing">
+    <value>344, 252</value>
+  </data>
+  <data name="MainSplitContainer.SplitterDistance" type="System.Int32, mscorlib">
+    <value>200</value>
+  </data>
+  <data name="MainSplitContainer.SplitterWidth" type="System.Int32, mscorlib">
     <value>2</value>
+  </data>
+  <data name="MainSplitContainer.TabIndex" type="System.Int32, mscorlib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;MainSplitContainer.Name" xml:space="preserve">
+    <value>MainSplitContainer</value>
+  </data>
+  <data name="&gt;&gt;MainSplitContainer.Type" xml:space="preserve">
+    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;MainSplitContainer.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;MainSplitContainer.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
+    <value>344, 252</value>
+  </data>
+  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Meiryo UI, 12px</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -1105,85 +1174,16 @@
         AQAAgAEAAIABAACAAQAAwAEAAOADAAD4DwAA/j8AAA==
 </value>
   </data>
-  <data name="&gt;&gt;LogoPictureBox.Name" xml:space="preserve">
-    <value>LogoPictureBox</value>
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
   </data>
-  <data name="VersionLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
-    <value>MiddleCenter</value>
-  </data>
-  <data name="&gt;&gt;CloseButton.Parent" xml:space="preserve">
-    <value>MainSplitContainer.Panel2</value>
-  </data>
-  <data name="VersionLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 72</value>
-  </data>
-  <data name="&gt;&gt;DotNetVersionLabel.Parent" xml:space="preserve">
-    <value>MainSplitContainer.Panel1</value>
-  </data>
-  <data name="&gt;&gt;DotNetVersionLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;MainSplitContainer.Panel2.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitterPanel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="CopyrightLabel.TabIndex" type="System.Int32, mscorlib">
-    <value>100</value>
-  </data>
-  <data name="&gt;&gt;MainSplitContainer.Panel2.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="CubePDFLinkLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 20</value>
-  </data>
-  <data name="&gt;&gt;LogoPictureBox.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;MainSplitContainer.Panel1.Parent" xml:space="preserve">
-    <value>MainSplitContainer</value>
-  </data>
-  <data name="CloseButton.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
-  <data name="LogoPictureBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>105, 12</value>
-  </data>
-  <data name="&gt;&gt;MainSplitContainer.Panel1.Name" xml:space="preserve">
-    <value>MainSplitContainer.Panel1</value>
-  </data>
-  <data name="&gt;&gt;MainSplitContainer.Type" xml:space="preserve">
-    <value>System.Windows.Forms.SplitContainer, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="OSVersionLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 20</value>
-  </data>
-  <data name="LogoPictureBox.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="&gt;&gt;CloseButton.Name" xml:space="preserve">
-    <value>CloseButton</value>
-  </data>
-  <data name="MainSplitContainer.TabIndex" type="System.Int32, mscorlib">
-    <value>0</value>
+  <data name="$this.Text" xml:space="preserve">
+    <value>CubePDF について</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>VersionDialog</value>
   </data>
-  <data name="&gt;&gt;CubePDFLinkLabel.Type" xml:space="preserve">
-    <value>System.Windows.Forms.LinkLabel, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="VersionLabel.TabIndex" type="System.Int32, mscorlib">
-    <value>100</value>
-  </data>
-  <data name="&gt;&gt;CubePDFLinkLabel.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="&gt;&gt;CubePDFLinkLabel.Parent" xml:space="preserve">
-    <value>MainSplitContainer.Panel1</value>
-  </data>
-  <data name="&gt;&gt;OSVersionLabel.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
 </root>

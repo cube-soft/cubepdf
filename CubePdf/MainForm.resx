@@ -463,13 +463,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="InputPathLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>43, 15</value>
+    <value>77, 15</value>
   </data>
   <data name="InputPathLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="InputPathLabel.Text" xml:space="preserve">
-    <value>Input:</value>
+    <value>入力ファイル：</value>
   </data>
   <data name="InputPathLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -496,13 +496,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="PostProcessLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>85, 15</value>
+    <value>83, 15</value>
   </data>
   <data name="PostProcessLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="PostProcessLabel.Text" xml:space="preserve">
-    <value>Post process:</value>
+    <value>ポストプロセス：</value>
   </data>
   <data name="PostProcessLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -529,13 +529,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="OutputPathLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>52, 15</value>
+    <value>77, 15</value>
   </data>
   <data name="OutputPathLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="OutputPathLabel.Text" xml:space="preserve">
-    <value>Output:</value>
+    <value>出力ファイル：</value>
   </data>
   <data name="OutputPathLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -562,13 +562,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="ResolutionLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>72, 15</value>
+    <value>55, 15</value>
   </data>
   <data name="ResolutionLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="ResolutionLabel.Text" xml:space="preserve">
-    <value>Resolution:</value>
+    <value>解像度：</value>
   </data>
   <data name="ResolutionLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -595,13 +595,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="PDFVersionLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>81, 15</value>
+    <value>91, 15</value>
   </data>
   <data name="PDFVersionLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="PDFVersionLabel.Text" xml:space="preserve">
-    <value>PDF version:</value>
+    <value>PDF バージョン：</value>
   </data>
   <data name="PDFVersionLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -628,13 +628,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="FileTypeLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>40, 15</value>
+    <value>79, 15</value>
   </data>
   <data name="FileTypeLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="FileTypeLabel.Text" xml:space="preserve">
-    <value>Type:</value>
+    <value>ファイルタイプ：</value>
   </data>
   <data name="FileTypeLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -688,7 +688,7 @@
     <value>0</value>
   </data>
   <data name="GeneralTabPage.Text" xml:space="preserve">
-    <value>General</value>
+    <value>一般</value>
   </data>
   <data name="&gt;&gt;GeneralTabPage.Name" xml:space="preserve">
     <value>GeneralTabPage</value>
@@ -712,13 +712,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="DocTitleLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>38, 15</value>
+    <value>54, 15</value>
   </data>
   <data name="DocTitleLabel.TabIndex" type="System.Int32, mscorlib">
     <value>7</value>
   </data>
   <data name="DocTitleLabel.Text" xml:space="preserve">
-    <value>Title:</value>
+    <value>タイトル：</value>
   </data>
   <data name="DocTitleLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -745,13 +745,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="DocAuthorLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>51, 15</value>
+    <value>55, 15</value>
   </data>
   <data name="DocAuthorLabel.TabIndex" type="System.Int32, mscorlib">
     <value>8</value>
   </data>
   <data name="DocAuthorLabel.Text" xml:space="preserve">
-    <value>Author:</value>
+    <value>作成者：</value>
   </data>
   <data name="DocAuthorLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -778,13 +778,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="DocSubtitleLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 15</value>
+    <value>73, 15</value>
   </data>
   <data name="DocSubtitleLabel.TabIndex" type="System.Int32, mscorlib">
     <value>5</value>
   </data>
   <data name="DocSubtitleLabel.Text" xml:space="preserve">
-    <value>Subject:</value>
+    <value>サブタイトル：</value>
   </data>
   <data name="DocSubtitleLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -811,13 +811,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="DocKeywordLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>69, 15</value>
+    <value>66, 15</value>
   </data>
   <data name="DocKeywordLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="DocKeywordLabel.Text" xml:space="preserve">
-    <value>Keywords:</value>
+    <value>キーワード：</value>
   </data>
   <data name="DocKeywordLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -955,7 +955,7 @@
     <value>1</value>
   </data>
   <data name="DocTabPage.Text" xml:space="preserve">
-    <value>Document</value>
+    <value>文書プロパティ</value>
   </data>
   <data name="&gt;&gt;DocTabPage.Name" xml:space="preserve">
     <value>DocTabPage</value>
@@ -979,13 +979,13 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="UserPasswordLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>98, 15</value>
+    <value>89, 15</value>
   </data>
   <data name="UserPasswordLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="UserPasswordLabel.Text" xml:space="preserve">
-    <value>User password:</value>
+    <value>閲覧パスワード：</value>
   </data>
   <data name="UserPasswordLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1012,13 +1012,13 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="ConfirmUserPasswordLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 15</value>
+    <value>99, 15</value>
   </data>
   <data name="ConfirmUserPasswordLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="ConfirmUserPasswordLabel.Text" xml:space="preserve">
-    <value>Confirm:</value>
+    <value>パスワードの確認：</value>
   </data>
   <data name="ConfirmUserPasswordLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1129,13 +1129,13 @@
     <value>0, 0, 0, 0</value>
   </data>
   <data name="UserPasswordCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>134, 19</value>
+    <value>182, 19</value>
   </data>
   <data name="UserPasswordCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>55</value>
   </data>
   <data name="UserPasswordCheckBox.Text" xml:space="preserve">
-    <value>Set user password</value>
+    <value>閲覧専用のパスワードを設定する</value>
   </data>
   <data name="&gt;&gt;UserPasswordCheckBox.Name" xml:space="preserve">
     <value>UserPasswordCheckBox</value>
@@ -1210,13 +1210,13 @@
     <value>120, 164</value>
   </data>
   <data name="AllowPrintCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>105, 19</value>
+    <value>102, 19</value>
   </data>
   <data name="AllowPrintCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>58</value>
   </data>
   <data name="AllowPrintCheckBox.Text" xml:space="preserve">
-    <value>Allow printing</value>
+    <value>印刷を許可する</value>
   </data>
   <data name="&gt;&gt;AllowPrintCheckBox.Name" xml:space="preserve">
     <value>AllowPrintCheckBox</value>
@@ -1237,13 +1237,13 @@
     <value>120, 189</value>
   </data>
   <data name="AllowCopyCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>204, 19</value>
+    <value>185, 19</value>
   </data>
   <data name="AllowCopyCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>59</value>
   </data>
   <data name="AllowCopyCheckBox.Text" xml:space="preserve">
-    <value>Allow copying text and images</value>
+    <value>テキストや画像のコピーを許可する</value>
   </data>
   <data name="&gt;&gt;AllowCopyCheckBox.Name" xml:space="preserve">
     <value>AllowCopyCheckBox</value>
@@ -1267,13 +1267,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="OwnerPasswordLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>109, 15</value>
+    <value>89, 15</value>
   </data>
   <data name="OwnerPasswordLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="OwnerPasswordLabel.Text" xml:space="preserve">
-    <value>Owner password:</value>
+    <value>編集パスワード：</value>
   </data>
   <data name="OwnerPasswordLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1300,13 +1300,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="ConfirmOwnerPasswordLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>58, 15</value>
+    <value>99, 15</value>
   </data>
   <data name="ConfirmOwnerPasswordLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="ConfirmOwnerPasswordLabel.Text" xml:space="preserve">
-    <value>Confirm:</value>
+    <value>パスワードの確認：</value>
   </data>
   <data name="ConfirmOwnerPasswordLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1333,13 +1333,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="PermissionLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>81, 15</value>
+    <value>43, 15</value>
   </data>
   <data name="PermissionLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="PermissionLabel.Text" xml:space="preserve">
-    <value>Permissions:</value>
+    <value>操作：</value>
   </data>
   <data name="PermissionLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1363,13 +1363,13 @@
     <value>120, 214</value>
   </data>
   <data name="AllowFormInputCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>143, 19</value>
+    <value>158, 19</value>
   </data>
   <data name="AllowFormInputCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>60</value>
   </data>
   <data name="AllowFormInputCheckBox.Text" xml:space="preserve">
-    <value>Allow filling in forms</value>
+    <value>フォームへの入力を許可する</value>
   </data>
   <data name="&gt;&gt;AllowFormInputCheckBox.Name" xml:space="preserve">
     <value>AllowFormInputCheckBox</value>
@@ -1390,13 +1390,13 @@
     <value>120, 239</value>
   </data>
   <data name="AllowModifyCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>291, 19</value>
+    <value>235, 19</value>
   </data>
   <data name="AllowModifyCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>61</value>
   </data>
   <data name="AllowModifyCheckBox.Text" xml:space="preserve">
-    <value>Allow inserting, rotating, and removing pages</value>
+    <value>ページの挿入、回転、および削除を許可する</value>
   </data>
   <data name="&gt;&gt;AllowModifyCheckBox.Name" xml:space="preserve">
     <value>AllowModifyCheckBox</value>
@@ -1417,13 +1417,13 @@
     <value>120, 62</value>
   </data>
   <data name="RequiredUserPasswordCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>273, 19</value>
+    <value>229, 19</value>
   </data>
   <data name="RequiredUserPasswordCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>54</value>
   </data>
   <data name="RequiredUserPasswordCheckBox.Text" xml:space="preserve">
-    <value>Require a password to open the document</value>
+    <value>PDFファイルを開く際にパスワードを要求する</value>
   </data>
   <data name="&gt;&gt;RequiredUserPasswordCheckBox.Name" xml:space="preserve">
     <value>RequiredUserPasswordCheckBox</value>
@@ -1471,13 +1471,13 @@
     <value>20, 22</value>
   </data>
   <data name="OwnerPasswordCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>254, 19</value>
+    <value>202, 19</value>
   </data>
   <data name="OwnerPasswordCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>53</value>
   </data>
   <data name="OwnerPasswordCheckBox.Text" xml:space="preserve">
-    <value>Encrypt the document with a password</value>
+    <value>パスワードによるセキュリティを設定する</value>
   </data>
   <data name="&gt;&gt;OwnerPasswordCheckBox.Name" xml:space="preserve">
     <value>OwnerPasswordCheckBox</value>
@@ -1504,7 +1504,7 @@
     <value>2</value>
   </data>
   <data name="SecurityTabPage.Text" xml:space="preserve">
-    <value>Security</value>
+    <value>セキュリティ</value>
   </data>
   <data name="&gt;&gt;SecurityTabPage.Name" xml:space="preserve">
     <value>SecurityTabPage</value>
@@ -1528,13 +1528,13 @@
     <value>3, 3, 12, 3</value>
   </data>
   <data name="PortraitRadioButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>69, 19</value>
+    <value>37, 19</value>
   </data>
   <data name="PortraitRadioButton.TabIndex" type="System.Int32, mscorlib">
     <value>74</value>
   </data>
   <data name="PortraitRadioButton.Text" xml:space="preserve">
-    <value>Portrait</value>
+    <value>縦</value>
   </data>
   <data name="&gt;&gt;PortraitRadioButton.Name" xml:space="preserve">
     <value>PortraitRadioButton</value>
@@ -1552,19 +1552,19 @@
     <value>True</value>
   </data>
   <data name="LandscapeRadioButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>87, 3</value>
+    <value>55, 3</value>
   </data>
   <data name="LandscapeRadioButton.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 12, 3</value>
   </data>
   <data name="LandscapeRadioButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>86, 19</value>
+    <value>37, 19</value>
   </data>
   <data name="LandscapeRadioButton.TabIndex" type="System.Int32, mscorlib">
     <value>75</value>
   </data>
   <data name="LandscapeRadioButton.Text" xml:space="preserve">
-    <value>Landscape</value>
+    <value>横</value>
   </data>
   <data name="&gt;&gt;LandscapeRadioButton.Name" xml:space="preserve">
     <value>LandscapeRadioButton</value>
@@ -1582,16 +1582,16 @@
     <value>True</value>
   </data>
   <data name="AutoRadioButton.Location" type="System.Drawing.Point, System.Drawing">
-    <value>188, 3</value>
+    <value>107, 3</value>
   </data>
   <data name="AutoRadioButton.Size" type="System.Drawing.Size, System.Drawing">
-    <value>52, 19</value>
+    <value>49, 19</value>
   </data>
   <data name="AutoRadioButton.TabIndex" type="System.Int32, mscorlib">
     <value>76</value>
   </data>
   <data name="AutoRadioButton.Text" xml:space="preserve">
-    <value>Auto</value>
+    <value>自動</value>
   </data>
   <data name="&gt;&gt;AutoRadioButton.Name" xml:space="preserve">
     <value>AutoRadioButton</value>
@@ -1633,13 +1633,13 @@
     <value>20, 24</value>
   </data>
   <data name="OrientationLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>77, 15</value>
+    <value>80, 15</value>
   </data>
   <data name="OrientationLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="OrientationLabel.Text" xml:space="preserve">
-    <value>Orientation:</value>
+    <value>ページの向き：</value>
   </data>
   <data name="&gt;&gt;OrientationLabel.Name" xml:space="preserve">
     <value>OrientationLabel</value>
@@ -1663,13 +1663,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="OptionLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>56, 15</value>
+    <value>62, 15</value>
   </data>
   <data name="OptionLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="OptionLabel.Text" xml:space="preserve">
-    <value>Options:</value>
+    <value>オプション：</value>
   </data>
   <data name="OptionLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1696,13 +1696,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="OthersLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>51, 15</value>
+    <value>50, 15</value>
   </data>
   <data name="OthersLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="OthersLabel.Text" xml:space="preserve">
-    <value>Others:</value>
+    <value>その他：</value>
   </data>
   <data name="OthersLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1726,13 +1726,13 @@
     <value>120, 47</value>
   </data>
   <data name="EmbedFontCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>99, 19</value>
+    <value>112, 19</value>
   </data>
   <data name="EmbedFontCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>74</value>
   </data>
   <data name="EmbedFontCheckBox.Text" xml:space="preserve">
-    <value>Embed fonts</value>
+    <value>フォントを埋め込む</value>
   </data>
   <data name="&gt;&gt;EmbedFontCheckBox.Name" xml:space="preserve">
     <value>EmbedFontCheckBox</value>
@@ -1753,13 +1753,13 @@
     <value>120, 72</value>
   </data>
   <data name="GrayscaleCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>83, 19</value>
+    <value>92, 19</value>
   </data>
   <data name="GrayscaleCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>75</value>
   </data>
   <data name="GrayscaleCheckBox.Text" xml:space="preserve">
-    <value>Grayscale</value>
+    <value>グレースケール</value>
   </data>
   <data name="&gt;&gt;GrayscaleCheckBox.Name" xml:space="preserve">
     <value>GrayscaleCheckBox</value>
@@ -1780,13 +1780,13 @@
     <value>120, 97</value>
   </data>
   <data name="ImageFilterCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>229, 19</value>
+    <value>135, 19</value>
   </data>
   <data name="ImageFilterCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>76</value>
   </data>
   <data name="ImageFilterCheckBox.Text" xml:space="preserve">
-    <value>Compress images in the document</value>
+    <value>PDFの画像を圧縮する</value>
   </data>
   <data name="&gt;&gt;ImageFilterCheckBox.Name" xml:space="preserve">
     <value>ImageFilterCheckBox</value>
@@ -1807,13 +1807,13 @@
     <value>120, 122</value>
   </data>
   <data name="WebOptimizeCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>184, 19</value>
+    <value>151, 19</value>
   </data>
   <data name="WebOptimizeCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>77</value>
   </data>
   <data name="WebOptimizeCheckBox.Text" xml:space="preserve">
-    <value>Optimize for fast Web view</value>
+    <value>Web表示用に最適化する</value>
   </data>
   <data name="&gt;&gt;WebOptimizeCheckBox.Name" xml:space="preserve">
     <value>WebOptimizeCheckBox</value>
@@ -1834,13 +1834,13 @@
     <value>120, 147</value>
   </data>
   <data name="UpdateCheckBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>221, 19</value>
+    <value>176, 19</value>
   </data>
   <data name="UpdateCheckBox.TabIndex" type="System.Int32, mscorlib">
     <value>78</value>
   </data>
   <data name="UpdateCheckBox.Text" xml:space="preserve">
-    <value>Check for updates when launched</value>
+    <value>起動時にアップデートを確認する</value>
   </data>
   <data name="&gt;&gt;UpdateCheckBox.Name" xml:space="preserve">
     <value>UpdateCheckBox</value>
@@ -1864,13 +1864,13 @@
     <value>3, 3, 3, 3</value>
   </data>
   <data name="PostProcessLiteLabel.Size" type="System.Drawing.Size, System.Drawing">
-    <value>85, 15</value>
+    <value>83, 15</value>
   </data>
   <data name="PostProcessLiteLabel.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
   </data>
   <data name="PostProcessLiteLabel.Text" xml:space="preserve">
-    <value>Post process:</value>
+    <value>ポストプロセス：</value>
   </data>
   <data name="PostProcessLiteLabel.TextAlign" type="System.Drawing.ContentAlignment, System.Drawing">
     <value>MiddleLeft</value>
@@ -1945,7 +1945,7 @@
     <value>3</value>
   </data>
   <data name="DetailTabPage.Text" xml:space="preserve">
-    <value>Details</value>
+    <value>詳細設定</value>
   </data>
   <data name="&gt;&gt;DetailTabPage.Name" xml:space="preserve">
     <value>DetailTabPage</value>
@@ -2032,7 +2032,7 @@
     <value>7</value>
   </data>
   <data name="SettingButton.Text" xml:space="preserve">
-    <value>Save settings</value>
+    <value>設定の保存</value>
   </data>
   <data name="&gt;&gt;SettingButton.Name" xml:space="preserve">
     <value>SettingButton</value>
@@ -2083,7 +2083,7 @@
     <value>6</value>
   </data>
   <data name="ConvertButton.Text" xml:space="preserve">
-    <value>Convert</value>
+    <value>変換</value>
   </data>
   <data name="&gt;&gt;ConvertButton.Name" xml:space="preserve">
     <value>ConvertButton</value>
@@ -2110,7 +2110,7 @@
     <value>5</value>
   </data>
   <data name="ExitButton.Text" xml:space="preserve">
-    <value>Cancel</value>
+    <value>キャンセル</value>
   </data>
   <data name="&gt;&gt;ExitButton.Name" xml:space="preserve">
     <value>ExitButton</value>
